@@ -2467,8 +2467,11 @@ class FixedBuild35Recovery36Tests(unittest.TestCase):
         frozen_harness_current_generated_fixture={**historical,names[2]:json.dumps(generated_descriptor).encode()}
         with self.assertRaisesRegex(ValueError,'RESUME36_GENERATED_INPUT_OR_AUTHORITY_DRIFT'):
             n.verify_reuse36_delta(names,old,frozen_harness_current_generated_fixture)
-        # Actual current ordinary05 code must also refuse old Build35, at its earlier body guard.
+        # Preserve the exact115 rejection witness; current observer harness also refuses Build35.
+        witness115={name:subprocess.check_output(['git','show','9269c1d2e7dc87bcb8c6578503e84f71e53fc638:'+name],cwd=repo) for name in names}
         with self.assertRaisesRegex(ValueError,'RESUME36_EXACT_REVIEWED_FUNCTION_BODY:execution_mode'):
+            n.verify_reuse36_delta(names,old,witness115)
+        with self.assertRaisesRegex(ValueError,'RESUME36_EXACT_REVIEWED_FUNCTION_BODY:consume_produced_app'):
             n.verify_reuse36_delta(names,old,current)
 
     def test_fixed36_accepts_only_reviewed_harness_delta(self):
@@ -3044,6 +3047,52 @@ class LocalSource05PrebuildProofTests(unittest.TestCase):
             f,output,receipt,provenance,verify=self.fixture()
             receipt['local_controls05']['profile'][key]=value
             with self.subTest(key=key),self.assertRaisesRegex(ValueError,'LOCAL_SOURCE05_EXACT_PROFILE'):verify()
+
+
+class Observation06Tests(unittest.TestCase):
+    def pair(self):
+        root=Path(__file__).resolve().parents[3];origin='9269c1d2e7dc87bcb8c6578503e84f71e53fc638'
+        paths=['scripts/release/full-app-j01/native_runtime47.py','docs/phase-9/ios-generated-input-succession47.v1.json','scripts/release/full-app-j01/native_ui47.swift']
+        args=[]
+        for p in paths:args.extend((subprocess.check_output(['git','show',origin+':'+p],cwd=root),(root/p).read_bytes()))
+        return root,paths[:2],args
+
+    def test_actual_finite_harness_delta_preserves_every_product_and_old_reader(self):
+        root,paths,args=self.pair();n.verify_reuse56_delta(paths,*args)
+
+    def test_product_and_dependency_paths_are_rejected(self):
+        _,paths,args=self.pair()
+        for p in ('apps/mobile/src/lib/storage/privateKV.ts','package-lock.json','apps/mobile/app.config.ts','scripts/release/full-app-j01/native_ui47.swift','scripts/release/full-app-j01/simulator_signing47.py'):
+            with self.subTest(p=p),self.assertRaisesRegex(ValueError,'FINITE_NON_PRODUCT_DELTA'):n.verify_reuse56_delta(paths+[p],*args)
+
+    def test_changed_old_source_or_signature_readers_and_build_are_rejected(self):
+        _,paths,args=self.pair()
+        for target in ('def verify_stage_zip(', 'def verify_build_producer(', 'def execute(', 'def verify_installed_app('):
+            mutated=list(args);mutated[1]=mutated[1].replace(target.encode(),target.replace('def ','def changed_').encode(),1)
+            with self.subTest(target=target),self.assertRaisesRegex(ValueError,'PROTECTED_BUILD'):n.verify_reuse56_delta(paths,*mutated)
+
+    def test_ordinary_assertion_or_importer_edits_are_rejected(self):
+        _,paths,args=self.pair()
+        for old,new in ((b"require(aggregate['failed'] == 0",b"require(aggregate['failed'] >= 0"),(b"'IMPORTED_APP_ARCHIVE_HASH'",b"'OTHER_ARCHIVE_HASH'")):
+            mutated=list(args);self.assertIn(old,mutated[1]);mutated[1]=mutated[1].replace(old,new)
+            with self.subTest(old=old),self.assertRaisesRegex(ValueError,'REUSE56_WHOLE_'):n.verify_reuse56_delta(paths,*mutated)
+
+    def test_generated_pin_or_swift_assertion_drift_is_rejected(self):
+        _,paths,args=self.pair();mutated=list(args);d=json.loads(mutated[3]);pin=next(p for p in d['sourcePins']if p['path']not in paths[:1]and not p['path'].endswith('native_runtime47.test.py'));pin['sha256']='0'*64;mutated[3]=json.dumps(d).encode()
+        with self.assertRaisesRegex(ValueError,'ALL_PRODUCT_NATIVE'):n.verify_reuse56_delta(paths,*mutated)
+        mutated=list(args);mutated[5]+=b'\n'
+        with self.assertRaisesRegex(ValueError,'WHOLE_CURRENT_SWIFT'):n.verify_reuse56_delta(paths,*mutated)
+
+    def test_native_frame_parser_discards_values_addresses_other_threads_and_paths(self):
+        raw=b'Private exception token=secret DOB=1990\n  200 Thread_321: com.apple.main-thread (serial)\n    200 start (in libdyld.dylib) [0x123]\n    + 200 UIApplicationMain (in UIKitCore) + 2 [0x123]\n    + ! 200 __ulock_wait2 (in libsystem_kernel.dylib) + 3 [0xabc]\n    + 200 private_secret_patient (in LayerwellStaging) [0xdead]\n  200 Thread_322: com.facebook.react.JavaScript\n    + 200 SECRET_VALUE (in UIKitCore) [0xbeef]\n'
+        frames=n.native_frames06(raw);self.assertEqual([f['symbol']for f in frames],['UIApplicationMain','__ulock_wait2']);self.assertNotIn('secret',json.dumps(frames));self.assertNotIn('0x',json.dumps(frames))
+        with self.assertRaisesRegex(ValueError,'SAMPLE_BOUND'):n.native_frames06(b'x'*(4*n.MIB+1))
+
+    def test_disabled_observer_cannot_spawn_or_write(self):
+        with patch.object(n.subprocess,'run')as run,patch.object(n,'write_json')as write:
+            with n.observe_ui06(None,None,enabled=False):pass
+            run.assert_not_called();write.assert_not_called()
+
 
 
 if __name__ == '__main__':

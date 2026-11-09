@@ -7332,6 +7332,151 @@
         "purpose": "SINGLE_DOCUMENTED_FRESH_HOST_RECOVERY_NOT_A_PROVEN_APP_REPAIR"
       },
       "validation_cutoff": "Pending actual focused/current-source/native results; no pass or owner admission inferred."
+    },
+    {
+      "authorization": "BRAIN-C47-ORDINARY-INTERNAL-RUNTIME-06",
+      "recorded_utc": "2026-11-09T09:58:52.675017+00:00",
+      "head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+      "tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+      "preedit_path": "continuation06/preedit03-observation117/PREEDIT.json",
+      "preedit_sha256": "a41021d7ab90493362d3c2053c23a94b6e28170be2856b968f5bbdf8123d7ad8",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 261567,
+            "sha256": "67980f9a3018f7e6bbac7524e576aee2731042e1d9d64c711339e3987d6fb8fd"
+          },
+          "snapshot": "000.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 200682,
+            "sha256": "e016abc1b67e41ca13dfb1a1c8f54183b209c3f32178b82789f1d95b4bb649b3"
+          },
+          "snapshot": "001.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 11886,
+            "sha256": "58d4e6c992a9d5ce8e22d0286571bfe04ece6977d68cad9146ea633a95ae0045"
+          },
+          "snapshot": "002.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 20694,
+            "sha256": "bb422c3b81fc26c330d8df04ba468a86d122a69760b48a246854921754c2e503"
+          },
+          "snapshot": "003.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "31c5daa5048dca6222319529d73007de624ba6f7118d5c40ae469a970af7e9ca"
+          },
+          "snapshot": "004.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 513997,
+            "sha256": "0b8458da15ab3fc51e99fd3ce5261d12785892be33972861c2965118e8e81f99"
+          },
+          "snapshot": "005.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 623331,
+            "sha256": "1868e0fa74553f3fe0c835db2cdfabb9910c636af899c56288357e53e6a0e21b"
+          },
+          "snapshot": "006.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 129813,
+            "sha256": "668183687cfb8034b63ab2402aaaecc014e32cf86a790f478c43eee38dcfd014"
+          },
+          "snapshot": "007.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 3893,
+            "sha256": "78e42339b21b8eb8d9dbd09e04ff1629c80a297d7ab8c9a675085a270e74a9ea"
+          },
+          "snapshot": "008.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "88292b515febe3630fd731b8923efa8114a4d41a09ec7924e92410e5ed0508c6"
+          },
+          "snapshot": "009.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "9269c1d2e7dc87bcb8c6578503e84f71e53fc638",
+          "preimage_tree": "23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "d09a2c80606bf01fd96dbd4a65d0dfd55c0999c185a18c9e6cdfe6ee75c96b0d"
+          },
+          "snapshot": "010.bin",
+          "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+          "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO."
+        }
+      ],
+      "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
+      "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO.",
+      "validation_cutoff": "New diagnostic, not a proven repair; all new local/native checks PENDING."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

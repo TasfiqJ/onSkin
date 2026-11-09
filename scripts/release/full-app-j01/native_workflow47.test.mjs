@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { parseDocument } from 'yaml';
 
 const liveSource06 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
-const currentSource = (liveSource06.startsWith('# C06 ordinary54-56;') || liveSource06.startsWith('# C06 recovery56-58;')) ? execFileSync('git', ['show', '8f68281fd13d32bf9163a1e23f4a21114e7dc66b:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource06;
+const currentSource = (liveSource06.startsWith('# C06 ordinary54-56;') || liveSource06.startsWith('# C06 recovery56-58;') || liveSource06.startsWith('# C06 observation58;')) ? execFileSync('git', ['show', '8f68281fd13d32bf9163a1e23f4a21114e7dc66b:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource06;
 function source105() {
   const value = execFileSync('git', ['show', '50cdfb2e40412746a5e38776fafc475946a4db6a:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
   assert.equal(createHash('sha256').update(value).digest('hex'), 'dcfa9701cefcd5cc693d1e56113acf40e06dea94936d02a25699b2b7232d66d4');
@@ -284,7 +284,7 @@ test('C05 final53 is one-shot107/a1 diagnostic only; original three ordinary job
 test('C06 exact113 witness and finite115 fresh-host recovery preserve whole ordinary/internal pipeline', () => {
   const parse = text => { const d = parseDocument(text, { strict: true, uniqueKeys: true, merge: false }); assert.deepEqual(d.errors, []); assert.deepEqual(d.warnings, []); return d.toJS({ maxAliasCount: 0 }); };
   const original113 = execFileSync('git', ['show', 'd2f91bd13fc5257b3101fe3642c40ea650165574:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
-  for (const [actual, count, header] of [[original113, 113, '# C06 ordinary54-56; exact PR48/113/a1; six total new Mac starts54-59 maximum.\n'], [liveSource06, 115, '# C06 recovery56-58; exact PR48/115/a1; single fresh-host recovery after native55 event-injection timeout.\n']]) {
+  for (const [actual, count, header] of [[original113, 113, '# C06 ordinary54-56; exact PR48/113/a1; six total new Mac starts54-59 maximum.\n'], [execFileSync('git', ['show', '9269c1d2e7dc87bcb8c6578503e84f71e53fc638:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }), 115, '# C06 recovery56-58; exact PR48/115/a1; single fresh-host recovery after native55 event-injection timeout.\n']]) {
     assert.ok(actual.startsWith(header));
     const expected = parse(source105());
     for (const job of Object.values(expected.jobs)) job.if = scope + ' && github.event.pull_request.number == 48 && github.event.pull_request.commits == ' + count + ' && github.run_attempt == 1';
@@ -292,4 +292,20 @@ test('C06 exact113 witness and finite115 fresh-host recovery preserve whole ordi
     check(actual);
     for (const [a,b] of [['commits == ' + count,'commits == 111'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],[' --ordinary-release05',''],[' --local-source05',''],['--stage normal','--stage internal'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(actual.includes(a)); assert.throws(() => check(actual.replaceAll(a,b)),a); }
   }
+});
+
+test('C06 exact117 observation58 has one bounded job and exact authenticated reuse56 profile', () => {
+  const parse = text => { const d = parseDocument(text, { strict: true, uniqueKeys: true, merge: false }); assert.deepEqual(d.errors, []); assert.deepEqual(d.warnings, []); return d.toJS({ maxAliasCount: 0 }); };
+  const expected = parse(execFileSync('git', ['show', '9269c1d2e7dc87bcb8c6578503e84f71e53fc638:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
+  const job = expected.jobs['native-normal'];
+  delete job.needs;
+  expected.jobs = { 'native-normal': job };
+  job.if = scope + ' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 117 && github.run_attempt == 1';
+  const execute = job.steps[2];
+  for (const key of Object.keys(execute.env)) if (key.startsWith('C47_BUILD_')) delete execute.env[key];
+  execute.run = execute.run.replace(' --local-source05', ' --reuse56-observe06');
+  const check = text => assert.deepEqual(parse(text), expected);
+  assert.ok(liveSource06.startsWith('# C06 observation58; exact PR48/117/a1;'));
+  check(liveSource06);
+  for (const [a,b] of [['commits == 117','commits == 115'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['cancel-in-progress: false','cancel-in-progress: true'],['--reuse56-observe06','--resume36'],['--stage normal','--stage internal'],['retention-days: 3','retention-days: 30'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource06.includes(a)); assert.throws(() => check(liveSource06.replaceAll(a,b)),a); }
 });

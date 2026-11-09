@@ -1032,7 +1032,7 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     require_simulator_host(architecture)
     require(re.fullmatch(r'[a-f0-9]{40}', expected_head) and
             r.receipt['source']['head'] == expected_head, 'IMPORTED_APP_CURRENT_SOURCE')
-    reuse = r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25')
+    reuse = r.receipt.get('authenticated_app_build_reuse56') or r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25')
     product_source = reuse['producer_source'] if reuse else r.receipt['source']
     product_head = product_source['head']
     producer, destination = Path(producer), Path(destination).absolute()
@@ -1888,6 +1888,8 @@ def run_normal(r, ios, products, app, bundle, head):
         child.deadline, child.env, child.evidence_root = r.deadline, ui_env, r.output
         if r.receipt.get('authenticated_app_build_reuse36'):
             child.receipt['authenticated_app_build_reuse36']=r.receipt['authenticated_app_build_reuse36']
+        if r.receipt.get('authenticated_app_build_reuse56'):
+            child.receipt['authenticated_app_build_reuse56']=r.receipt['authenticated_app_build_reuse56']
         child.receipt.update(source=r.receipt['source'], ordinary_suite_version=4, method=method,
             upstream_payload_bytes=r.receipt.get('upstream_payload_bytes', 0), job_context=r.receipt.get('job_context'))
         for stage in ('compiled', 'verified-produced-app'):
@@ -1926,7 +1928,8 @@ def run_normal(r, ios, products, app, bundle, head):
                         child.receipt['launch36_diagnostic_error_type']=type(diagnostic_error).__name__
                 raise
             child.passed('launched', {'pid': pid, 'survival_seconds': 30, 'bundle_id': bundle})
-            execution = normal_case_execution04(child,project,case_products,method,device,ui_env)
+            with observe_ui06(child,device,enabled=bool(r.receipt.get("authenticated_app_build_reuse56"))):
+                execution = normal_case_execution04(child,project,case_products,method,device,ui_env)
             detail = {'suite_version': 4, 'method': method, 'udid': device, 'data_container': data,
                 'lane': 'normal-staging', 'source': r.receipt['source'], 'runner': runner_proof,
                 **execution, 'evidence': 'ordinary-v04/' + slug,
@@ -2124,7 +2127,7 @@ def verify_installed_app(r, container, app, bundle):
         inventory_sha256 = compiled['inventory_sha256']
         authenticated = app_executable_identity(inventory['files'],executable)
     require(hashlib.sha256(raw).hexdigest() == inventory_sha256, 'INSTALLED_AUTHENTICATED_FULL_INVENTORY_HASH')
-    product_source = (r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25') or {}).get('producer_source',r.receipt['source'])
+    product_source = (r.receipt.get('authenticated_app_build_reuse56') or r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25') or {}).get('producer_source',r.receipt['source'])
     require(inventory.get('source') == product_source and
             authority.get('source_head') == product_source['head'], 'INSTALLED_INVENTORY_SOURCE')
     configuration,lane = inventory.get('configuration'),inventory.get('lane')
@@ -2150,7 +2153,7 @@ def verify_installed_app(r, container, app, bundle):
              'producer_to_installed':installed_app_inventory_proof(inventory['files'],acquired['installed'],executable)}
     write_json(evidence/'identity-validation.json',proof)
     r.passed('installed',{'udid':r.receipt['simulator']['udid'],'bundle_id':bundle,'executable':executable,
-        'source_head':(product_source['head'] if r.receipt.get('authenticated_app_build_reuse36') else r.receipt['source']['head']),'installed_executable_sha256':observed['sha256'],
+        'source_head':(product_source['head'] if r.receipt.get('authenticated_app_build_reuse56') or r.receipt.get('authenticated_app_build_reuse36') else r.receipt['source']['head']),'installed_executable_sha256':observed['sha256'],
         'expected_executable_sha256':expected['sha256'],'executable_bytes':observed['bytes'],
         'authenticated_inventory_sha256':inventory_sha256,
         'qualification':'ACTUAL_INSTALL_ZERO_AND_CONTAINER_LOOKUP_WITH_EXACT_EXECUTABLE_BYTES',
@@ -3111,7 +3114,7 @@ def normal_xctest_gate(parent):
                'executable': app_executable_identity(stage_json(inventory)['files'], compiled['executable'])}
     authenticated_raw = read_native_file(parent.output/'app-inventory.json')
     authenticated_inventory = stage_json(authenticated_raw)
-    product_source=parent.receipt.get('authenticated_app_build_reuse36',{}).get('producer_source',parent.receipt['source'])
+    product_source=(parent.receipt.get('authenticated_app_build_reuse56') or parent.receipt.get('authenticated_app_build_reuse36') or {}).get('producer_source',parent.receipt['source'])
     require(hashlib.sha256(authenticated_raw).hexdigest() == app['inventory_sha256'] and
             authenticated_inventory.get('source') == product_source and
             authenticated_inventory.get('configuration') == 'Release' and
@@ -3941,11 +3944,187 @@ def hosted_stage_context(r, role):
     return context
 
 
+REUSE56_ORIGIN = {'head':'9269c1d2e7dc87bcb8c6578503e84f71e53fc638',
+    'tree':'23da5a3e160c6e5c1cf5bddadd9db61b0bcaba3e','run_id':42581929485,'run_attempt':1,
+    'artifact_id':13660451086,'digest':'d48bc9310b5d5eab92905d19253ea3dbdfeaf10a18d9663e1bb213f6757391a9',
+    'payload_bytes':81503447,'job_id':129042471041,
+    'app_sha256':'b7738cd2d34802e4cc44e3d3337ab075d465c6a0d8f0feaa7fa0a520ae2a982a'}
+
+
+def verify_reuse56_delta(paths, old_python, new_python, old_descriptor, new_descriptor, old_ui, new_ui):
+    allowed={'scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_runtime47.test.py',
+        '.github/workflows/campaign47-native-runtime.yml','scripts/release/full-app-j01/native_workflow47.test.mjs',
+        'docs/phase-9/ios-generated-input-succession47.v1.json','docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json',
+        'docs/brain/task-specs/M1X-47/TASK.md','PROGRESS.md','ONSKIN_BRAIN_HANDOFF.txt',
+        'docs/phase-4/generated/source-worklist.json','docs/phase-4/generated/source-worklist.md'}
+    require(paths and len(paths)==len(set(paths)) and set(paths)<=allowed,'REUSE56_FINITE_NON_PRODUCT_DELTA')
+    changed={'consume_produced_app','run_normal','main','verify_installed_app','normal_xctest_gate'}
+    added={'verify_reuse56_delta','native_frames06','observe_ui06','execute_observed56'}
+    def protected(raw):
+        result=[]
+        for item in ast.parse(raw).body:
+            if isinstance(item,ast.FunctionDef) and item.name in changed|added:continue
+            if isinstance(item,ast.Assign) and len(item.targets)==1 and isinstance(item.targets[0],ast.Name) and item.targets[0].id=='REUSE56_ORIGIN':continue
+            result.append(ast.dump(item,include_attributes=False))
+        return result
+    require(protected(old_python)==protected(new_python),'REUSE56_PROTECTED_BUILD_ENVIRONMENT_AND_READERS')
+    def function(raw,name):
+        tree=ast.parse(raw);return ast.get_source_segment(raw.decode()if isinstance(raw,bytes)else raw,next(x for x in tree.body if isinstance(x,ast.FunctionDef)and x.name==name))
+    normal=function(old_python,'run_normal');tap='            execution = normal_case_execution04(child,project,case_products,method,device,ui_env)'
+    transfer="        if r.receipt.get('authenticated_app_build_reuse36'):\n            child.receipt['authenticated_app_build_reuse36']=r.receipt['authenticated_app_build_reuse36']"
+    normal=normal.replace(transfer,transfer+"\n        if r.receipt.get('authenticated_app_build_reuse56'):\n            child.receipt['authenticated_app_build_reuse56']=r.receipt['authenticated_app_build_reuse56']")
+    require(function(new_python,'run_normal')==normal.replace(tap,'            with observe_ui06(child,device,enabled=bool(r.receipt.get("authenticated_app_build_reuse56"))):\n    '+tap),'REUSE56_WHOLE_NORMAL_SUITE_UNCHANGED_EXCEPT_EXTERNAL_OBSERVER')
+    consume=function(old_python,'consume_produced_app');previous="reuse = r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25')"
+    require(function(new_python,'consume_produced_app')==consume.replace(previous,"reuse = r.receipt.get('authenticated_app_build_reuse56') or r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25')"),'REUSE56_WHOLE_APP_IMPORTER_UNCHANGED_EXCEPT_ORIGIN')
+    installed=function(old_python,'verify_installed_app')
+    previous="product_source = (r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25') or {}).get('producer_source',r.receipt['source'])"
+    installed=installed.replace(previous,previous.replace("(r.receipt.get('authenticated_app_build_reuse36')","(r.receipt.get('authenticated_app_build_reuse56') or r.receipt.get('authenticated_app_build_reuse36')"))
+    previous="'source_head':(product_source['head'] if r.receipt.get('authenticated_app_build_reuse36') else r.receipt['source']['head'])"
+    installed=installed.replace(previous,previous.replace("if r.receipt.get('authenticated_app_build_reuse36')","if r.receipt.get('authenticated_app_build_reuse56') or r.receipt.get('authenticated_app_build_reuse36')"))
+    require(function(new_python,'verify_installed_app')==installed,'REUSE56_ALL_INSTALLED_BYTE_AND_ENTITLEMENT_CHECKS_UNCHANGED')
+    gate=function(old_python,'normal_xctest_gate')
+    previous="product_source=parent.receipt.get('authenticated_app_build_reuse36',{}).get('producer_source',parent.receipt['source'])"
+    gate=gate.replace(previous,"product_source=(parent.receipt.get('authenticated_app_build_reuse56') or parent.receipt.get('authenticated_app_build_reuse36') or {}).get('producer_source',parent.receipt['source'])")
+    require(function(new_python,'normal_xctest_gate')==gate,'REUSE56_ALL_ORDINARY_ADMISSION_CHECKS_UNCHANGED')
+    main=function(old_python,'main');flag="    parser.add_argument('--resume25', action='store_true')"
+    main=main.replace(flag,flag+"\n    parser.add_argument('--reuse56-observe06', action='store_true', help='Exact build56 reuse and external native thread observation; current ordinary required')")
+    main=main.replace("        if args.consent_runtime27:\n            execute_retained_consent_runtime27(runner, token)","        if args.reuse56_observe06:\n            require(args.stage == 'normal' and not any((args.resume25,args.resume36,args.local_source05,args.ordinary_release05,args.consent_runtime27,args.consent_trace04,args.simulator_probe)), 'REUSE56_EXCLUSIVE_NORMAL_PROFILE')\n            execute_observed56(runner,context,token)\n        elif args.consent_runtime27:\n            execute_retained_consent_runtime27(runner, token)")
+    require(function(new_python,'main')==main,'REUSE56_WHOLE_ENTRYPOINT_UNCHANGED_EXCEPT_EXCLUSIVE_PROFILE')
+    old,new=stage_json(old_descriptor),stage_json(new_descriptor)
+    mutable={'scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_runtime47.test.py'}
+    for desc in (old,new):desc['sourcePins']=[pin for pin in desc['sourcePins']if pin['path']not in mutable]
+    require(old==new,'REUSE56_ALL_PRODUCT_NATIVE_SIGNING_GENERATED_PINS_EQUAL')
+    require(old_ui==new_ui,'REUSE56_WHOLE_CURRENT_SWIFT_IDENTICAL')
+
+
+def native_frames06(raw):
+    """Bounded native symbols only; discard addresses, paths, values and all arbitrary lines."""
+    require(type(raw)is bytes and len(raw)<=4*MIB,'OBSERVE06_SAMPLE_BOUND')
+    frames=[];active=False
+    for line in raw.decode('utf8','replace').splitlines():
+        if re.search(r'Thread_\d+',line):
+            active=bool(re.search(r'(?:com\.apple\.main-thread|DispatchQueue_1: com\.apple\.main-thread)',line))
+        if not active:continue
+        match=re.match(r'\s*([+!:| ]*)\s*(\d+)\s+(.+?)\s+\(in ([A-Za-z0-9_.+-]+)\)',line)
+        if not match:continue
+        symbol,image=match.group(3,4)
+        if not image.startswith(('UIKit','CoreFoundation','Foundation','libdispatch','libsystem','GraphicsServices','TextInput','Keyboard','React','hermes')):continue
+        if len(symbol)>240 or not re.fullmatch(r'[A-Za-z0-9_+\-.:<>()\[\],*&~ =]+',symbol):continue
+        frames.append({'samples':int(match.group(2)),'depth':len(match.group(1)),'symbol':symbol,'image':image})
+        require(len(frames)<=1024,'OBSERVE06_FRAME_BOUND')
+    return frames
+
+
+@contextmanager
+def observe_ui06(r,device,enabled=False):
+    """External sampling only. Never alter XCTest timing, input, app state or admission."""
+    if not enabled:
+        yield
+        return
+    stop=threading.Event();rows=[]
+    def observer():
+        try:
+            triggered=None
+            while not stop.wait(2):
+                logs=list((r.output/'logs').glob('*-native-normal-staging-ui.stdout'))
+                if not logs:continue
+                raw=read_native_file(logs[0])
+                if b'Tap "DD" TextField' not in raw:continue
+                triggered=time.monotonic();break
+            if triggered is None:return
+            for delay in (5,35,65):
+                if stop.wait(max(0,triggered+delay-time.monotonic())):break
+                row={'trigger':'ACTUAL_XCTEST_DD_FIELD_TAP','after_trigger_seconds':delay,'started_utc':utc(),
+                    'native_app_modified':False,'raw_stdout_policy':'DISCARDED; BOUNDED_NATIVE_SYMBOLS_ONLY'}
+                rows.append(row)
+                try:
+                    table=subprocess.run(['xcrun','simctl','spawn',device,'launchctl','list'],capture_output=True,env=r.env,timeout=8)
+                    require(table.returncode==0 and len(table.stdout)<=MIB,'OBSERVE06_CONTROLLED_PROCESS_TABLE')
+                    pids=[int(parts[0])for line in table.stdout.decode('utf8').splitlines()
+                          for parts in [line.split()]if len(parts)==3 and parts[0].isdigit() and
+                          parts[2].startswith('UIKitApplication:com.layerwell.app.staging[')]
+                    require(len(pids)==1 and pids[0]>0,'OBSERVE06_EXACT_SIMULATOR_APP_PID')
+                    pid=pids[0]
+                    sample=subprocess.run(['/usr/bin/sample',str(pid),'3','1','-mayDie'],capture_output=True,env=r.env,timeout=10)
+                    row.update(pid=pid,exit_code=sample.returncode,sample_stdout_sha256=hashlib.sha256(sample.stdout).hexdigest(),
+                        sample_stdout_bytes=len(sample.stdout),frames=native_frames06(sample.stdout),
+                        stderr_policy='DISCARDED; NO_ARBITRARY_MESSAGES',state='CAPTURED'if sample.returncode==0 else'FAILED')
+                except Exception as error:row.update(state='UNAVAILABLE',error_type=type(error).__name__)
+                row['finished_utc']=utc()
+                write_json(r.output/'external-native-threads06.json',{'schema':1,'source':r.receipt['source'],
+                    'sampling_only':True,'ordinary_pass_inferred':False,'observations':rows})
+        except Exception as error:
+            rows.append({'state':'OBSERVER_UNAVAILABLE','error_type':type(error).__name__})
+    thread=threading.Thread(target=observer,daemon=True);thread.start()
+    try:yield
+    finally:
+        stop.set();thread.join(timeout=25)
+        write_json(r.output/'external-native-threads06.json',{'schema':1,'source':r.receipt['source'],
+            'sampling_only':True,'ordinary_pass_inferred':False,'observer_joined':not thread.is_alive(),'observations':rows})
+
+
+def execute_observed56(r,context,token):
+    require(bool(token),'REUSE56_READ_TOKEN_REQUIRED')
+    head,tools,source47=prepare(r,source_controls=False)
+    require((head,r.receipt['source']['tree'])==(context['head'],context['tree']),'REUSE56_CURRENT_CONTEXT')
+    g=lambda *args:subprocess.check_output(['git','--no-replace-objects',*args],cwd=r.root,env=r.env)
+    origin=REUSE56_ORIGIN
+    require(head!=origin['head'] and g('merge-base','--is-ancestor',origin['head'],head)==b'' and
+        g('rev-parse',origin['head']+'^{tree}').decode().strip()==origin['tree'],'REUSE56_ANCESTRY')
+    paths=g('diff','--name-only',origin['head'],head).decode().splitlines();old=lambda name:g('show',origin['head']+':'+name)
+    current=lambda name:read_native_file(r.root/name)
+    py='scripts/release/full-app-j01/native_runtime47.py';desc='docs/phase-9/ios-generated-input-succession47.v1.json';ui='scripts/release/full-app-j01/native_ui47.swift'
+    require(hashlib.sha256(old(py)).hexdigest()=='67980f9a3018f7e6bbac7524e576aee2731042e1d9d64c711339e3987d6fb8fd','REUSE56_FROZEN_PRODUCER_READER')
+    verify_reuse56_delta(paths,old(py),current(py),old(desc),current(desc),old(ui),current(ui))
+    root=Path(context['runner_temp'])/'c47-build56-proof-only-source';require(not root.exists(),'REUSE56_FRESH_PROOF_CHECKOUT')
+    r.run('reuse56-origin-proof-checkout',['git','worktree','add','--detach',root,origin['head']],timeout=180)
+    spec=importlib.util.spec_from_file_location('c47_build56_frozen_reader',root/py)
+    frozen=importlib.util.module_from_spec(spec);sys.modules[spec.name]=frozen;spec.loader.exec_module(frozen)
+    producer_context={**context,**{key:origin[key]for key in ('head','tree','run_id','run_attempt')},'workspace':str(root)}
+    needs={'build':{key:origin[key]for key in ('artifact_id','digest','run_id','payload_bytes')}};needs['build']['producer_run_attempt']=origin['run_attempt']
+    imported=frozen.load_authenticated_stage_inputs('normal',needs,producer_context,token,
+        Path(context['runner_temp'])/'c47-build56-authenticated-proof',local_source05=True)['imported_provenance']
+    build=imported['build'];directory=Path(build['payload_directory']);source=stage_json(read_native_file(directory/'source-before.json'))
+    require(build['producer']['producer_job_id']==origin['job_id'] and source['head']==origin['head'] and source['tree']==origin['tree'] and
+        sha(directory/'source-before.json')=='a02e891eb8b1e121940539b8c4903edacbd5e4b19ad3ebd3ba299314d023a8c6','REUSE56_EXACT_CLOSED_PRODUCER')
+    # Replay the frozen producer reader against its own full checkout, never against altered current inputs.
+    verification=frozen.Runner(root,Path(context['runner_temp'])/'c47-build56-verification-only')
+    verification.receipt.update(source=source,job_context=stage_json(read_native_file(directory/'execution.json'))['job_context'],local_source05=dict(frozen.LOCAL_SOURCE05))
+    proof=frozen.verify_build_producer(verification,build,local_source05=True)
+    require(proof.receipt['stages']['compiled']['details']['sha256']==origin['app_sha256'],'REUSE56_EXACT_APP')
+    r.receipt.update(authenticated_app_build_reuse56={'producer_source':source,'producer_descriptor_sha256':hashlib.sha256(old(desc)).hexdigest(),
+        'runtime_candidate_source':r.receipt['source'],'producer':build['producer'],'exact_non_product_changed_paths':paths,
+        'all_other_tracked_product_inputs_identical':True,'protected_build_functions_and_environment_identical':True,
+        'producer_full30_replayed':proof.local_source05_proof,'producer_reader_sha256':hashlib.sha256(old(py)).hexdigest(),
+        'qualification':'PRODUCER115_COMPILATION_RETAINED; CURRENT_XCTEST_RECOMPILED; NO_OLD_RUNTIME_PASS'},
+        imported_provenance=imported,upstream_payload_bytes=build['payload_bytes'])
+    r.persist()
+    # Current source controls are additional to the producer's own authenticated full30, not substituted.
+    r.run('current-runtime06-controls',['python3','-I','-B','scripts/release/full-app-j01/native_runtime47.test.py'],timeout=300)
+    r.run('current-full30-controls',['node','--test','scripts/release/full-app-j01/native_generated47.test.mjs'],timeout=1800)
+    app,bundle,app_proof=consume_produced_app(r,directory,head,tools['architecture'],Path(context['runner_temp'])/'c47-build56-verified-app')
+    r.passed('verified-produced-app',app_proof)
+    mobile=r.root/'apps/mobile'
+    r.run('normal-ui-resolved-expo-config',['npx','--no-install','expo','config','--json'],cwd=mobile,timeout=120)
+    r.run('normal-ui-prebuild',['npx','--no-install','expo','prebuild','--platform','ios','--clean','--no-install','--template','../../node_modules/expo/template.tgz'],cwd=mobile,timeout=300)
+    r.run('normal-ui-generated-source-diff',['git','--no-replace-objects','diff','--binary','HEAD'])
+    r.source_proof('source-after-normal-ui-prebuild',head,allow_generation=True)
+    ios=mobile/'ios';compatibility=r.output/'generated-compat47'
+    r.run('normal-ui-generated47-exact-properties',['python3','-I','-B','scripts/release/full-app-j01/pods_compat47.py','--ios-directory',ios,'--source-proof',source47,'--output',compatibility],timeout=120)
+    r.run('normal-ui-generated47-native',['node','scripts/release/full-app-j01/native_generated47.mjs','--phase','GENERATED','--source-proof',source47,'--receipt',compatibility/'receipt.json','--output',r.output/'current-generated47.json'],timeout=600)
+    r.source_proof('source-after-normal-ui-generated47',head,allow_generation=True)
+    products=Path(context['runner_temp'])/'c47-native-products';products.mkdir(exist_ok=False);r.receipt['products_directory']=str(products);r.persist()
+    run_normal(r,ios,products,app,bundle,head)
+    # A native thread sample never admits internal. The unchanged complete three-case gate does.
+    execute_internal(r)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('source', 'build', 'normal', 'internal'))
     parser.add_argument('--resume25', action='store_true')
+    parser.add_argument('--reuse56-observe06', action='store_true', help='Exact build56 reuse and external native thread observation; current ordinary required')
     parser.add_argument('--local-source05',action='store_true',
         help='Explicit three-job profile; build performs own full30 controls before fresh ordinary Release')
     parser.add_argument('--ordinary-release05', action='store_true',
@@ -3975,7 +4154,10 @@ def main():
         if args.local_source05:
             runner.receipt['local_source05']=dict(LOCAL_SOURCE05)
             runner.persist()
-        if args.consent_runtime27:
+        if args.reuse56_observe06:
+            require(args.stage == 'normal' and not any((args.resume25,args.resume36,args.local_source05,args.ordinary_release05,args.consent_runtime27,args.consent_trace04,args.simulator_probe)), 'REUSE56_EXCLUSIVE_NORMAL_PROFILE')
+            execute_observed56(runner,context,token)
+        elif args.consent_runtime27:
             execute_retained_consent_runtime27(runner, token)
         elif args.stage == 'source':
             require(not token, 'SOURCE04_NO_ARTIFACT_TOKEN')
