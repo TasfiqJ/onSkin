@@ -226,13 +226,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 279581,
-      "sha256": "aecee22985e4f4ecc58e6ecf8b71d1eebdc3e2b8b3eb714146126a93c616b8f5"
+      "bytes": 284049,
+      "sha256": "522882cf9510c9ac3e73b8dfb6547368289151f579f7b56a2b6226f79e6b1fab"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 205735,
-      "sha256": "eec7ed4e7c95a49acbf93d3d509ff4d14ba7ed5e5ed1dd3f9c0266d42558c7b7"
+      "bytes": 210504,
+      "sha256": "e599f59ddae5cf28da7f4238259bf6ed06cf3f80520b64f234dc7daf1a56139a"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",

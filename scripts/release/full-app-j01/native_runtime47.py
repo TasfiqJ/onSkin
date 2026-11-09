@@ -3959,7 +3959,7 @@ def verify_reuse56_delta(paths, old_python, new_python, old_descriptor, new_desc
         'docs/phase-4/generated/source-worklist.json','docs/phase-4/generated/source-worklist.md'}
     require(paths and len(paths)==len(set(paths)) and set(paths)<=allowed,'REUSE56_FINITE_NON_PRODUCT_DELTA')
     changed={'consume_produced_app','run_normal','main','verify_installed_app','normal_xctest_gate'}
-    added={'verify_reuse56_delta','native_frames06','read_live_ui06','observe_ui06','execute_observed56'}
+    added={'verify_reuse56_delta','verify_reuse56_inputs','native_frames06','read_live_ui06','observe_ui06','execute_observed56'}
     def protected(raw):
         result=[]
         for item in ast.parse(raw).body:
@@ -4078,6 +4078,52 @@ def observe_ui06(r,device,enabled=False):
             'sampling_only':True,'ordinary_pass_inferred':False,'observer_joined':not thread.is_alive(),'observations':rows})
 
 
+def verify_reuse56_inputs(r,directory):
+    """One exact producer: actual installed dependencies/config/generated inputs, before app install."""
+    previous=stage_json(read_native_file(directory/'execution.json'))
+    old_tools=stage_json(read_native_file(directory/'toolchain.json'));tools=stage_json(read_native_file(r.output/'toolchain.json'))
+    keys=('os','architecture','node','npm','ruby','cocoapods','xcodeproj','swift','xcode','sdks','simulator-sdk',
+          'simulator_build_flags','app_simulator_build_flags','runner_image','build_environment')
+    require(all(key in old_tools and key in tools and old_tools[key]==tools[key]for key in keys),'REUSE56_ACTUAL_COMPILER_SDK_AND_TOOLCHAIN_EQUAL')
+    matched={}
+    for old_name,new_name in (('dependency-graph','dependency-graph'),('resolved-expo-config','normal-ui-resolved-expo-config')):
+        old_row,old_raw=executed_producer_command(previous,directory,old_name,read_output=True)
+        new_row,new_raw=executed_producer_command(r.receipt,r.output,new_name,read_output=True)
+        require(old_row['argv']==new_row['argv'] and old_raw==new_raw,'REUSE56_ACTUAL_DEPENDENCIES_AND_EXPO_CONFIG_EQUAL:'+old_name)
+        matched[old_name]={'stdout_sha256':old_row['stdout_sha256'],'stderr_sha256':old_row['stderr_sha256']}
+    old_generated=stage_json(read_native_file(directory/'current-generated47.json'));generated=stage_json(read_native_file(r.output/'current-generated47.json'))
+    def semantic(value,source,source_sha,descriptor_sha):
+        # These are source bindings, not product equivalence exemptions. Bind each before removing it.
+        require(value.get('sourceHead')==source['head'] and value.get('sourceTree')==source['tree'] and
+            value.get('sourceProofSHA256')==source_sha and value.get('descriptorSHA256')==descriptor_sha and
+            value.get('phase')=='GENERATED'and value.get('profile')=='staging'and value.get('status')=='CURRENT_GENERATED47_GENERATED_VERIFIED_NO_ADMISSION',
+            'REUSE56_GENERATED_OWN_SOURCE_BINDING')
+        helper=value['helperReceipt']
+        require(helper.get('sourceHead')==source['head'] and helper.get('sourceProofSHA256')==source_sha and
+            helper.get('descriptorSHA256')==descriptor_sha,'REUSE56_GENERATED_HELPER_OWN_SOURCE_BINDING')
+        for key in ('sourceHead','sourceTree','sourceProofSHA256','descriptorSHA256'):value.pop(key)
+        for key in ('sourceHead','sourceProofSHA256','descriptorSHA256'):helper.pop(key)
+        stamps=value['generatedInputVerification'].pop('stamps')
+        require(type(stamps)is dict and stamps and all(type(v)is list and len(v)==6 and
+            all(type(item)is str and item.isdigit()for item in v)and int(v[5])>=1 for v in stamps.values()),'REUSE56_GENERATED_STAMP_SHAPE')
+        # Device/inode/times differ across hosts; every entry name, byte size, link count and semantic content proof remains.
+        value['generatedInputVerification']['cross_host_entry_sizes_and_link_counts']={key:[v[2],v[5]]for key,v in stamps.items()}
+        return value
+    reuse=r.receipt['authenticated_app_build_reuse56']
+    old=semantic(old_generated,reuse['producer_source'],sha(directory/'current-generated47-source.json'),reuse['producer_descriptor_sha256'])
+    new=semantic(generated,r.receipt['source'],sha(r.output/'current-generated47-source.json'),sha(r.root/'docs/phase-9/ios-generated-input-succession47.v1.json'))
+    require(old==new,'REUSE56_ALL_ACTUAL_NATIVE_AUTOLINKING_TREES_PROPERTIES_AND_GENERATED_INPUTS_EQUAL')
+    proof={'producer':dict(REUSE56_ORIGIN),'current_source':r.receipt['source'],'toolchain_fields':list(keys),
+        'exact_command_streams':matched,'actual_generated_semantics_sha256':hashlib.sha256(json.dumps(old,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
+        'actual_native_tree_content_digests_equal':True,'all_other_generated_fields_equal':True,
+        'excluded_metadata':'ONLY_BOUND_SOURCE_REFERENCES_AND_CROSS_HOST_DEVICE_INODE_TIMESTAMPS; ENTRY_KEYS_SIZES_LINK_COUNTS_RETAINED',
+        'product_JS_native_dependency_signing_inputs_equal':True,'reused_JS_output_retains_producer_inventory_hash':True,
+        'current_source_app_compilation_claimed':False,'ordinary_admitted':False,'release':'NO_GO'}
+    write_json(r.output/'build56-current-resolved-input-equivalence06.json',proof)
+    r.receipt['actual_build56_input_equivalence06']=proof;r.persist()
+
+
+
 def execute_observed56(r,context,token):
     require(bool(token),'REUSE56_READ_TOKEN_REQUIRED')
     head,tools,source47=prepare(r,source_controls=False)
@@ -4128,6 +4174,7 @@ def execute_observed56(r,context,token):
     r.run('normal-ui-generated47-exact-properties',['python3','-I','-B','scripts/release/full-app-j01/pods_compat47.py','--ios-directory',ios,'--source-proof',source47,'--output',compatibility],timeout=120)
     r.run('normal-ui-generated47-native',['node','scripts/release/full-app-j01/native_generated47.mjs','--phase','GENERATED','--source-proof',source47,'--receipt',compatibility/'receipt.json','--output',r.output/'current-generated47.json'],timeout=600)
     r.source_proof('source-after-normal-ui-generated47',head,allow_generation=True)
+    verify_reuse56_inputs(r,directory)
     products=Path(context['runner_temp'])/'c47-native-products';products.mkdir(exist_ok=False);r.receipt['products_directory']=str(products);r.persist()
     run_normal(r,ios,products,app,bundle,head)
     # A native thread sample never admits internal. The unchanged complete three-case gate does.

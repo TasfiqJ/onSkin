@@ -1,4 +1,4 @@
-# C06 observation58; exact PR48/119/a1; finite build56 reuse plus external native thread observation.
+# C06 observation58; exact PR48/121/a1; finite build56 reuse plus external native thread observation.
 name: Campaign47 Simulator native runtime
 
 on:
@@ -34,7 +34,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 119 && github.run_attempt == 1
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 121 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:

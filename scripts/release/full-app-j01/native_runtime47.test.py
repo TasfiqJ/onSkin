@@ -3111,5 +3111,49 @@ class LiveStream06Tests(unittest.TestCase):
                 with self.assertRaises(OSError):n.read_live_ui06(path)
 
 
+class ResolvedInput06Tests(unittest.TestCase):
+    """Synthetic orchestration fixtures only; no native storage or runtime admission."""
+    def fixture(self):
+        from unittest.mock import Mock
+        temp=tempfile.TemporaryDirectory();self.addCleanup(temp.cleanup);root=Path(temp.name);old=root/'old';out=root/'out';old.mkdir();out.mkdir();(root/'docs/phase-9').mkdir(parents=True)
+        descriptor=root/'docs/phase-9/ios-generated-input-succession47.v1.json';descriptor.write_bytes(b'new-descriptor');(old/'current-generated47-source.json').write_bytes(b'old-source');(out/'current-generated47-source.json').write_bytes(b'new-source')
+        source={'head':'1'*40,'tree':'2'*40};current={'head':'3'*40,'tree':'4'*40};receipt={'source':current,'commands':[],'authenticated_app_build_reuse56':{'producer_source':source,'producer_descriptor_sha256':'a'*64}}
+        (old/'execution.json').write_text(json.dumps({'commands':[]}));keys=('os','architecture','node','npm','ruby','cocoapods','xcodeproj','swift','xcode','sdks','simulator-sdk','simulator_build_flags','app_simulator_build_flags','runner_image','build_environment');tools={key:'same-'+key for key in keys}
+        for directory in(old,out):(directory/'toolchain.json').write_text(json.dumps(tools))
+        for directory,s,desc in[(old,source,'a'*64),(out,current,n.sha(descriptor))]:
+            source_sha=n.sha(directory/'current-generated47-source.json');value={'phase':'GENERATED','profile':'staging','status':'CURRENT_GENERATED47_GENERATED_VERIFIED_NO_ADMISSION','sourceHead':s['head'],'sourceTree':s['tree'],'sourceProofSHA256':source_sha,'descriptorSHA256':desc,'helperReceipt':{'sourceHead':s['head'],'sourceProofSHA256':source_sha,'descriptorSHA256':desc,'podfilePostimageSHA256':'b'*64},'actualAutolinking':{'modules':['ExpoWidgets','ExpoSecureStore']},'generatedInputVerification':{'stamps':{'owned-native-input':['1','2','10','3','4','1']if directory==old else['5','6','10','7','8','1']},'installedNativeTrees':[{'treeSHA256':'c'*64}],'verifiedInputCount':202}}
+            (directory/'current-generated47.json').write_text(json.dumps(value))
+        runner=SimpleNamespace(root=root,output=out,receipt=receipt,persist=Mock());command={'argv':['same-reviewed-command'],'stdout_sha256':'d'*64,'stderr_sha256':'e'*64}
+        return runner,old,command
+
+    def test_exact_actual_input_comparison_tolerates_only_bound_source_and_host_stamp_metadata(self):
+        r,old,command=self.fixture()
+        with patch.object(n,'executed_producer_command',return_value=(command,(b'same-output',b''))):n.verify_reuse56_inputs(r,old)
+        self.assertTrue(r.receipt['actual_build56_input_equivalence06']['actual_native_tree_content_digests_equal']);self.assertFalse(r.receipt['actual_build56_input_equivalence06']['ordinary_admitted'])
+
+    def test_compiler_dependency_and_config_drift_refuse_without_installed_or_ordinary_pass(self):
+        r,old,command=self.fixture();p=r.output/'toolchain.json';d=json.loads(p.read_bytes());d['xcode']='DIFFERENT';p.write_text(json.dumps(d))
+        with self.assertRaisesRegex(ValueError,'COMPILER_SDK'):n.verify_reuse56_inputs(r,old)
+        r,old,command=self.fixture()
+        for name in('dependency-graph','normal-ui-resolved-expo-config'):
+            def outputs(receipt,directory,which,**kwargs):return command,((b'DIFFERENT'if directory==r.output and which==name else b'same'),b'')
+            with patch.object(n,'executed_producer_command',side_effect=outputs):
+                with self.subTest(name=name),self.assertRaisesRegex(ValueError,'DEPENDENCIES_AND_EXPO_CONFIG'):n.verify_reuse56_inputs(r,old)
+        self.assertNotIn('installed',r.receipt);self.assertNotIn('actual_build56_input_equivalence06',r.receipt)
+
+    def test_generated_native_content_size_identity_and_unknown_field_drift_refuse(self):
+        for kind in('native-tree','size','links','source-binding','unknown-field'):
+            r,old,command=self.fixture();p=r.output/'current-generated47.json';d=json.loads(p.read_bytes())
+            if kind=='native-tree':d['generatedInputVerification']['installedNativeTrees'][0]['treeSHA256']='f'*64
+            elif kind=='size':d['generatedInputVerification']['stamps']['owned-native-input'][2]='11'
+            elif kind=='links':d['generatedInputVerification']['stamps']['owned-native-input'][5]='2'
+            elif kind=='source-binding':d['sourceHead']='0'*40
+            else:d['new_unreviewed_semantic_field']=True
+            p.write_text(json.dumps(d))
+            with patch.object(n,'executed_producer_command',return_value=(command,(b'same-output',b''))):
+                with self.subTest(kind=kind),self.assertRaisesRegex(ValueError,'GENERATED_OWN_SOURCE_BINDING|ALL_ACTUAL_NATIVE'):n.verify_reuse56_inputs(r,old)
+
+
+
 if __name__ == '__main__':
     unittest.main()

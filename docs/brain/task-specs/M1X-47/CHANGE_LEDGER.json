@@ -7621,6 +7621,150 @@
       ],
       "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
       "validation_cutoff": "New live-stream append regression and all focused/source controls PENDING; no native start or app cure claimed."
+    },
+    {
+      "authorization": "BRAIN-C47-ORDINARY-INTERNAL-RUNTIME-06",
+      "recorded_utc": "2026-11-09T10:24:16.047787+00:00",
+      "head": "f0866fdf7422186e05833303c86a180f906b180e",
+      "tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+      "preedit_path": "continuation06/preedit05-inputs121/PREEDIT.json",
+      "preedit_sha256": "600d846cb04a12c31aa1608587165a07bf6acbefce3602729eb2c0f762f52f19",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 279581,
+            "sha256": "aecee22985e4f4ecc58e6ecf8b71d1eebdc3e2b8b3eb714146126a93c616b8f5"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 205735,
+            "sha256": "eec7ed4e7c95a49acbf93d3d509ff4d14ba7ed5e5ed1dd3f9c0266d42558c7b7"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "df115b49e107339494f39065a29a72bfca91591684a3043330856d4445acc319"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 4008,
+            "sha256": "3a08d60278ab7f009947d17b94371c95d5adf43b7506a44ab96c8655d3211f6b"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 24646,
+            "sha256": "7a7b997172cdd7e8dd02fa5045387c61b60cc78134d4bf0fedb7c51ca53a85de"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 546002,
+            "sha256": "6f12e45d62216437dff3ed23995ca43493237adaed39c590a22efd0723fdf62b"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 627128,
+            "sha256": "e7d5b236cbdd22984d3a688d56a1f4497e4f1f061180ba76b528f629d35c76e9"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 133610,
+            "sha256": "e60e3026bc96f839211056ebf370639cbe18ee5329cb6c5a52a846b2205b1762"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "008.bin",
+          "preimage": {
+            "bytes": 7690,
+            "sha256": "17b9d3723129d38b00e3e162791a4ac51e55a38e5b92f6c81bb0e0ef406453e8"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "009.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "19f6034f534cf7476b8c3bf87041077d145ba75fccc86e20d90df3324299ea58"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "f0866fdf7422186e05833303c86a180f906b180e",
+          "preimage_tree": "e70561f4ab399fc1cd8ee640fa56971c02a75957",
+          "snapshot": "010.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "3e750b2c3f3fb086f32e520ec4bae84f10adaf4f0f470d2b29504211b6f9db1c"
+          },
+          "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+          "invariant": "All original source/product/signature/installed/ordinary/internal guards unchanged; exact older115 compilation retained; no parent runtime PASS;500MiB90min3daysoneMac. All38/18unaccepted NO_GO."
+        }
+      ],
+      "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
+      "validation_cutoff": "Current input equality adversarial controls/Pending/Frozen/native/CI PENDING; no current runtime PASS claimed."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
