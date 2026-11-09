@@ -5,7 +5,8 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { parseDocument } from 'yaml';
 
-const liveSource07 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const liveSource62 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const liveSource07 = liveSource62.startsWith('# C07 diagnostic62;') ? execFileSync('git',['show','39ce16cdcadca2cbde1ba64ae7dea0f9c99de280:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource62;
 const liveSource06 = liveSource07.startsWith('# C07 fresh60-62;') ? execFileSync('git', ['show', '2e1a7135ac0142c6e6741a97734aabd5201cb250:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource07;
 const currentSource = (liveSource06.startsWith('# C06 ordinary54-56;') || liveSource06.startsWith('# C06 recovery56-58;') || liveSource06.startsWith('# C06 observation58;') || liveSource06.startsWith('# C06 observation59;')) ? execFileSync('git', ['show', '8f68281fd13d32bf9163a1e23f4a21114e7dc66b:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource06;
 function source105() {
@@ -367,4 +368,14 @@ test('C07 exact128 fresh build60 ordinary61 observed and internal62 retain full 
   const check = text => assert.deepEqual(parse(text),expected);
   assert.ok(liveSource07.startsWith('# C07 fresh60-62; exact PR48/128/a1;')); check(liveSource07);
   for (const [a,b] of [['commits == 128','commits == 125'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],[' --ordinary-release05',''],[' --local-source05',''],[' --stall-observe07',''],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource07.includes(a)); assert.throws(()=>check(liveSource07.replaceAll(a,b)),a); }
+});
+
+test('C07 exact130 single diagnostic62 preserves old128 DAG and requires fresh current initial-consent origin', () => {
+  const parse = text => {const d=parseDocument(text,{strict:true,uniqueKeys:true,merge:false});assert.deepEqual(d.errors,[]);assert.deepEqual(d.warnings,[]);return d.toJS({maxAliasCount:0});};
+  const old=execFileSync('git',['show','39ce16cdcadca2cbde1ba64ae7dea0f9c99de280:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'});
+  const expected=parse(old);expected.jobs={'native-build':expected.jobs['native-build']};
+  const job=expected.jobs['native-build'];job.if=job.if.replace('commits == 128','commits == 130');
+  job.steps[2].run='python3 -I -B scripts/release/full-app-j01/storage_trace47.py --output "$RUNNER_TEMP/c47-evidence" --onboarding-denial62';
+  const check=text=>assert.deepEqual(parse(text),expected);assert.ok(liveSource62.startsWith('# C07 diagnostic62; exact PR48/130/a1;'));check(liveSource62);
+  for(const[a,b]of[['commits == 130','commits == 128'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['cancel-in-progress: false','cancel-in-progress: true'],['--onboarding-denial62','--onboarding-denial53'],['retention-days: 3','retention-days: 30'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]){assert.ok(liveSource62.includes(a));assert.throws(()=>check(liveSource62.replaceAll(a,b)),a);}
 });

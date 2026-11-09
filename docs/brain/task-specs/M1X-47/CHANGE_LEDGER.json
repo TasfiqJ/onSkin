@@ -8338,6 +8338,166 @@
       },
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07",
+      "recorded_utc": "2026-11-09T18:49:01.687261+00:00",
+      "head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+      "tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+      "preedit_path": "continuation07/preedit03-diagnostic62/PREEDIT.json",
+      "preedit_sha256": "e21b4043c3364c6e72cb84f9c03c8d678cfaab06c2f17d5e4e7ff127f7337f9c",
+      "preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 11897,
+            "sha256": "00c16761fc68bb7e2cb92e45f0fd0f1129374b6c507288672700aa74feb05161"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 132535,
+            "sha256": "628854bd62385cd8b2a95d14f1a9a36affb640249f2069a940db3aaf8642ea8f"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 101708,
+            "sha256": "b0a0ad7b9863e6a93a96900d50717d4ee00dabffdec47e35e58e5bc9fd119a50"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 30412,
+            "sha256": "20ad1434c97d21ff3f317aea8933b979270111e2dee422a16db28dfd875c2061"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "1e156a677efe40eb4e31202a6393b82e5107868933970fe2680f4c7dc45ecde2"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 619346,
+            "sha256": "c0c7e9daaf8eaa5f9f67332db55466490e297aaecb894a2bd03b99c9c6e1e9e3"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 145288,
+            "sha256": "0a3b0c1f64a61558c65be719a9a17baa16c09f8c65fda1379e6555ced4852001"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 638806,
+            "sha256": "2b3bf0b025b4d4a8f238e945d0225327bde9003179030c67fe4b2f939c3314ca"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "008.bin",
+          "preimage": {
+            "bytes": 19368,
+            "sha256": "4d7e655657be1077cc3c53d12f1bb3110eb763468e7771fec2c674ef81267a9c"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "009.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "e7230d1f5eac1781e8df73579238c40224e269ff18c488654165c4ead788750a"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "39ce16cdcadca2cbde1ba64ae7dea0f9c99de280",
+          "preimage_tree": "ca604c0ccf2f36aaa640e6cadcdb1a7e14d9885f",
+          "snapshot": "010.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "cc74ac245f559136122371533e1dc6611c63b11b24c55299f38e52ff94bba357"
+          },
+          "causal_need": "Native61 ordinary cases01/02 PASS;03 initial consent followed by PrivacyCheck denied. Existing original53 first-reject collector requires107 and must not be weakened. Add exact current130/128-parent/a1 diagnostic successor62, retain old53 fence/schema, one case03 and no ordinary/internal admission. Read-only consent-tap samples use diagnostic native identity and installed-byte proof; avoid original07 unclassified simctl query timeouts.",
+          "invariant": "No product/Swift/Ruby/storage/consent/owner/signing/dependency behavior repair before causal evidence; old53/07 witnesses remain exact, immutableplan/70scope unchanged, all38/18unaccepted, NO_GO.",
+          "validation": "Existing31 diagnostic controls plus exact62 context/PID guards, original154runtime/15signing/14workflow witnesses plus current15th workflow contract, full30 controls and current-source seals; third native job62 first-origin and bounded native samples; no blind further starts absent A/B."
+        }
+      ],
+      "scope": "Original70 existing paths only. Native60 current128 fresh build PASS; native61 all3 executed:2PASS1FAIL after real initial consent, PrivacyCheck denied; no UI stall recurred, observer07 target query TimeoutExpired prevented samples. Third started native62 only diagnostic: current130 fresh separate instrumented Release app, original53 first-reject schema and exactcase03, content-free native-identity installed-byte guarded consent-tap samples. Original53 count107 fence and all raw reuse56/admission guards retained. No ordinary/internal admission. No further starts without A completeordinary3 or B concrete causal app/XCTest main-thread evidence.",
+      "native_started_C07": 2,
+      "remaining": 6,
+      "A": false,
+      "B": false,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

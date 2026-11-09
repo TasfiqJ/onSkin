@@ -645,7 +645,7 @@ def run_native_origin05(r,n,*,onboarding_denial53=False):
     from pathlib import Path
     head,tools,source47=n.prepare(r,source_controls=onboarding_denial53)
     if onboarding_denial53:
-        proof=_native05_full_source_controls53(r,n)
+        proof=(_native05_full_source_controls62(r,n) if r.receipt.get('storage62_profile') else _native05_full_source_controls53(r,n))
         r.receipt['storage53_source_controls']=proof
         r.passed('storage53-own-full30-before-prebuild',proof)
     r.receipt.update(stage='build',lane='SEPARATE_RELEASE_STORAGE_ORIGIN_DIAGNOSTIC_05',
@@ -704,7 +704,9 @@ def run_native_origin05(r,n,*,onboarding_denial53=False):
                 r.run('generate-native-ui-runner',['ruby',r.root/'scripts/release/full-app-j01/native_ui47.rb',ios,ui],env=env,timeout=120)
                 baseline=n.normal_runner04(r)
                 method=_native05_selected_method(n,onboarding_denial53)
-                ui_result=n.normal_case_execution04(r,Path(baseline['project']),products,method,device,env)
+                from contextlib import nullcontext
+                with (_native05_observe62(r,n,device,bundle,head,installed,inventory) if r.receipt.get('storage62_profile') else nullcontext()):
+                    ui_result=n.normal_case_execution04(r,Path(baseline['project']),products,method,device,env)
                 # Even a positive single current case is diagnostic-only; no aggregate/gate executes.
         finally:
             # No shutdown/retry/reset/reinstall precedes immutable first/post-UI capture.
@@ -766,9 +768,12 @@ def main_origin05():
     parser=argparse.ArgumentParser(description='C47 one-sequence storage-origin diagnostic; no ordinary/internal admission')
     parser.add_argument('--output',type=Path)
     parser.add_argument('--onboarding-denial53',action='store_true',help='one-shot107/a1 current-source diagnostic case03; no ordinary/internal admission')
+    parser.add_argument('--onboarding-denial62',action='store_true',help='one-shot130/a1 native62 initial-consent first-reject diagnostic; no admission')
     parser.add_argument('--source-phase',choices=['SOURCE_PENDING','SOURCE_FROZEN'])
     args=parser.parse_args();root=Path(__file__).resolve().parents[3]
-    if args.source_phase and args.onboarding_denial53:parser.error('--onboarding-denial53 requires hosted diagnostic execution')
+    if args.onboarding_denial53 and args.onboarding_denial62:parser.error('select exactly one diagnostic profile')
+    targeted=args.onboarding_denial53 or args.onboarding_denial62
+    if args.source_phase and targeted:parser.error('targeted onboarding denial requires hosted diagnostic execution')
     if args.source_phase:
         import json
         print(json.dumps(source_scope05(args.source_phase,root),sort_keys=True));return 0
@@ -785,8 +790,9 @@ def main_origin05():
     context=None;result=None;code=1
     try:
         context=n.hosted_stage_context(r,'build')
-        if args.onboarding_denial53:_native05_target53_context(r,n,context)
-        result=run_native_origin05(r,n,onboarding_denial53=args.onboarding_denial53)
+        if args.onboarding_denial62:_native05_target62_context(r,n,context)
+        elif args.onboarding_denial53:_native05_target53_context(r,n,context)
+        result=run_native_origin05(r,n,onboarding_denial53=targeted)
         code=0 if result['qualified_origin_observed'] else 1
     except Exception as error:
         r.receipt.update(status='PARTIAL_BLOCKED',stage_complete=False,
@@ -794,7 +800,7 @@ def main_origin05():
     finally:
         if context is not None and r.receipt.get('source'):
             try:
-                if args.onboarding_denial53:_native05_final_source53(r,n,context,result)
+                if targeted:_native05_final_source53(r,n,context,result)
                 else:r.source_proof('source-after-storage05-finally',context['head'],allow_generation=True)
             except Exception as source_error:
                 code=1;r.receipt['final_source_failure_type']=type(source_error).__name__
@@ -1115,6 +1121,109 @@ def _native05_selected_method(n,onboarding_denial53):
     method=n.NORMAL_UI_CASES04[2 if onboarding_denial53 else 0]
     if onboarding_denial53:n.require(method==TARGETED53_PROFILE['selected_case'],'STORAGE53_EXACT_EXISTING_THIRD_CASE')
     return method
+
+
+TARGETED62_PRIOR_HEAD = '39ce16cdcadca2cbde1ba64ae7dea0f9c99de280'
+TARGETED62_PROFILE = {**TARGETED53_PROFILE, 'profile':'CURRENT130_INITIAL_CONSENT_DENIAL62',
+    'append_only_commits':130,'authorization':'BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07',
+    'trace_schema':'UNCHANGED_TARGETED53_CONTENT_FREE_FIRST_REJECT', 'native_attempt':62}
+
+
+def _native05_target62_context(r,n,context):
+    n.require(type(context.get('run_attempt')) is int and context['run_attempt']==1 and
+        r.env.get('GITHUB_EVENT_NAME')=='pull_request','STORAGE62_ONE_SHOT_EVENT_AND_ATTEMPT')
+    count=r.text('storage62-append-only-commit-count',['git','--no-replace-objects','rev-list','--count',
+        '02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60)
+    parent=r.text('storage62-preserved128-parent',['git','--no-replace-objects','rev-parse','HEAD~2'],timeout=60)
+    n.require(count=='130' and parent==TARGETED62_PRIOR_HEAD,'STORAGE62_EXACT130_AND_TWO_APPEND_ONLY_SUCCESSORS')
+    proof={'source_head':context['head'],'source_tree':context['tree'],'run_attempt':1,
+        'actual_append_only_commits':130,'two_commits_before_actual_head':parent,
+        'profile':dict(TARGETED62_PROFILE),'ordinary_admitted':False,'internal_admitted':False}
+    r.receipt['storage62_profile']=dict(TARGETED62_PROFILE)
+    r.passed('storage62-one-shot-context',proof)
+    return proof
+
+
+def _native05_full_source_controls62(r,n):
+    n.require(r.receipt.get('storage62_profile')==TARGETED62_PROFILE and
+        r.receipt.get('stages',{}).get('storage62-one-shot-context',{}).get('status')=='PASS',
+        'STORAGE62_CURRENT_CONTEXT_REQUIRED')
+    # Reuse every original required command, current-source/installed-input/full30/60 proof.
+    proof=_native05_full_source_controls53(r,n)
+    return {**proof,'profile':dict(TARGETED62_PROFILE),'historical_schema53_not_a107_execution':True}
+
+
+def _native05_observed_pid62(r,n,device,bundle,head,installed,inventory):
+    import subprocess,uuid
+    data=r._storage05_first_data_container
+    expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'
+    n.require(data.parent==expected and str(uuid.UUID(data.name)).lower()==data.name.lower(),
+        'STORAGE62_OWN_DIAGNOSTIC_DATA_CONTAINER')
+    identity_path=data/'Documents/C47StorageOrigin05Identity.json'
+    n.require(identity_path.stat().st_size<=4096,'STORAGE62_NATIVE_IDENTITY_SIZE')
+    identity=n.stage_json(n.read_native_file(identity_path))
+    n.require(set(identity)=={'schema','pid','sourceHead','bundle'} and type(identity['schema']) is int and
+        identity['schema']==1 and type(identity['pid']) is int and 0<identity['pid']<=2147483647 and
+        identity['sourceHead']==head and identity['bundle']==bundle=='com.layerwell.app.staging',
+        'STORAGE62_CURRENT_NATIVE_IDENTITY')
+    app=Path(installed);expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application'
+    n.require(app.parent.parent==expected and app.name=='LayerwellStaging.app' and
+        str(uuid.UUID(app.parent.name)).lower()==app.parent.name.lower(),'STORAGE62_OWN_INSTALLED_CONTAINER')
+    rows=[q for q in inventory['files']if q.get('path')=='LayerwellStaging'];n.require(len(rows)==1 and rows[0].get('type')=='file','STORAGE62_ONE_EXECUTABLE')
+    binary=app/'LayerwellStaging';n.require(n.stage_file_digest(binary)=={k:rows[0][k]for k in ('bytes','sha256')},
+        'STORAGE62_INSTALLED_EXECUTABLE_BYTES')
+    p=subprocess.run(['/bin/ps','-p',str(identity['pid']),'-o','comm='],capture_output=True,env=r.env,timeout=3)
+    n.require(p.returncode==0 and len(p.stdout)<=4096 and p.stdout.decode('utf8').strip()==str(binary),
+        'STORAGE62_PID_EXECUTABLE_PATH')
+    return identity['pid']
+
+
+@contextmanager
+def _native05_observe62(r,n,device,bundle,head,installed,inventory):
+    """At most three own-PID native samples around the actual initial consent tap."""
+    import subprocess,threading,time
+    stop=threading.Event();rows=[]
+    def persist():
+        n.write_json(r.output/'external-consent-native-threads62.json',{'schema':1,'source':r.receipt['source'],
+            'authorization':'BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07','sampling_only':True,
+            'diagnostic_product_only':True,'raw_sample_policy':'DISCARDED; WHITELISTED_MAIN_THREAD_SYMBOLS_ONLY',
+            'ordinary_admitted':False,'observations':rows})
+    def observe():
+        try:
+            n.require(Path('/usr/bin/sample').is_file(),'STORAGE62_SAMPLE_TOOL')
+            started=None;pending=[]
+            while not stop.wait(0.5) and time.monotonic()<r.deadline-45:
+                if started is None:
+                    logs=list((r.output/'logs').glob('*-native-normal-staging-ui.stdout'))
+                    n.require(len(logs)<=1,'STORAGE62_ONE_OWNED_UI_STREAM')
+                    if not logs or b'Tap "I agree. Continue" Button' not in n.read_live_ui06(logs[0]):continue
+                    started=time.monotonic();pending=[(started+d,d)for d in (1,10,25)]
+                    rows.append({'state':'GENUINE_INITIAL_CONSENT_TAP_OBSERVED','utc':n.utc()});persist()
+                if not pending:return
+                due,delay=pending[0]
+                if time.monotonic()<due:continue
+                pending.pop(0);row={'after_trigger_seconds':delay,'started_utc':n.utc(),'stage':'PID_BINDING'};rows.append(row)
+                try:
+                    pid=_native05_observed_pid62(r,n,device,bundle,head,installed,inventory)
+                    row['stage']='SAMPLE'
+                    q=subprocess.run(['/usr/bin/sample',str(pid),'3','1','-mayDie','-file','/dev/stdout'],
+                        capture_output=True,env=r.env,timeout=10)
+                    row['stage']='PID_RECHECK';same=_native05_observed_pid62(r,n,device,bundle,head,installed,inventory)==pid
+                    frames=n.native_frames07(q.stdout)
+                    row.update(pid=pid,pid_executable_rechecked=same,exit_code=q.returncode,
+                        stdout_bytes=len(q.stdout),stdout_sha256=digest(q.stdout),stderr_bytes=len(q.stderr),stderr_sha256=digest(q.stderr),
+                        frames=frames if same else[],state='CAPTURED_STABLE_PID'if q.returncode==0 and same else'UNAVAILABLE_OR_PID_CHANGED',
+                        raw_stdout_stderr_retained=False)
+                except Exception as error:
+                    row.update(state='UNAVAILABLE',error_type=type(error).__name__,
+                        code=str(error)if re.fullmatch('C47_STORAGE62_[A-Z_]+',str(error))else None)
+                row['finished_utc']=n.utc();persist()
+        except Exception as error:
+            rows.append({'state':'OBSERVER_UNAVAILABLE','error_type':type(error).__name__});persist()
+    thread=threading.Thread(target=observe,daemon=True);thread.start()
+    try:yield
+    finally:
+        stop.set();thread.join(timeout=45);rows.append({'state':'OBSERVER_JOINED'if not thread.is_alive()else'OBSERVER_JOIN_TIMEOUT','utc':n.utc()});persist()
 
 
 if __name__ == '__main__':

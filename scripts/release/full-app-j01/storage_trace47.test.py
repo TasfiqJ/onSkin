@@ -790,4 +790,57 @@ class TargetedOnboarding53CoordinatorTests(unittest.TestCase):
             self.assertFalse(result['ordinary_admitted']);self.assertFalse(result['internal_admitted'])
             self.assertTrue(result['targeted_onboarding53']);self.assertFalse(result['retry_attempted'])
 
+class CurrentConsentOrigin62Tests(unittest.TestCase):
+    def test_current62_context_preserves107_guard_and_rejects_other_source_event_attempt(self):
+        from types import SimpleNamespace
+        n=TargetedOnboarding53CoordinatorTests().runtime()
+        answers={'storage62-append-only-commit-count':'130','storage62-preserved128-parent':s.TARGETED62_PRIOR_HEAD}
+        stages={};r=SimpleNamespace(env={'GITHUB_EVENT_NAME':'pull_request'},receipt={'stages':stages},
+            text=lambda name,*args,**kw:answers[name],passed=lambda name,value:stages.update({name:{'status':'PASS','details':value}}))
+        context={'head':'a'*40,'tree':'b'*40,'run_attempt':1}
+        proof=s._native05_target62_context(r,n,context)
+        self.assertEqual(proof['actual_append_only_commits'],130);self.assertFalse(proof['ordinary_admitted']);self.assertFalse(proof['internal_admitted'])
+        for key,value in [('storage62-append-only-commit-count','128'),('storage62-preserved128-parent','c'*40)]:
+            old=answers[key];answers[key]=value
+            with self.assertRaises(ValueError):s._native05_target62_context(r,n,context)
+            answers[key]=old
+        for attempt in (2,True):
+            with self.assertRaises(ValueError):s._native05_target62_context(r,n,{**context,'run_attempt':attempt})
+        r.env['GITHUB_EVENT_NAME']='push'
+        with self.assertRaises(ValueError):s._native05_target62_context(r,n,context)
+        r.env['GITHUB_EVENT_NAME']='pull_request'
+        from unittest import mock
+        with mock.patch.object(s,'_native05_full_source_controls53',return_value={'strict_unchanged_proof':True})as original:
+            actual=s._native05_full_source_controls62(r,n);original.assert_called_once_with(r,n)
+            self.assertTrue(actual['strict_unchanged_proof']);self.assertEqual(actual['profile'],s.TARGETED62_PROFILE)
+            r.receipt['storage62_profile']={}
+            with self.assertRaises(ValueError):s._native05_full_source_controls62(r,n)
+            self.assertEqual(original.call_count,1)
+
+    def test_current62_pid_uses_owned_native_identity_exact_installed_bytes_and_targeted_ps(self):
+        from types import SimpleNamespace
+        from unittest import mock
+        import hashlib
+        n=TargetedOnboarding53CoordinatorTests().runtime()
+        with tempfile.TemporaryDirectory(prefix='c47-pid62-')as temporary:
+            home=Path(temporary).resolve();device='11111111-1111-1111-1111-111111111111';uuid='22222222-2222-2222-2222-222222222222'
+            base=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers'
+            data=base/'Data/Application'/uuid;docs=data/'Documents';docs.mkdir(parents=True)
+            app=base/'Bundle/Application'/uuid/'LayerwellStaging.app';app.mkdir(parents=True);binary=app/'LayerwellStaging';binary.write_bytes(b'owned-native-binary')
+            row={'path':'LayerwellStaging','type':'file','bytes':binary.stat().st_size,'sha256':hashlib.sha256(binary.read_bytes()).hexdigest()};inventory={'files':[row]};bundle='com.layerwell.app.staging';head='a'*40
+            identity={'schema':1,'pid':321,'sourceHead':head,'bundle':bundle};path=docs/'C47StorageOrigin05Identity.json';path.write_text(json.dumps(identity),encoding='utf8')
+            r=SimpleNamespace(env={},_storage05_first_data_container=data)
+            response=SimpleNamespace(returncode=0,stdout=(str(binary)+'\n').encode(),stderr=b'')
+            with mock.patch.object(s.Path,'home',return_value=home),mock.patch('subprocess.run',return_value=response)as run:
+                self.assertEqual(s._native05_observed_pid62(r,n,device,bundle,head,app,inventory),321)
+                run.assert_called_once_with(['/bin/ps','-p','321','-o','comm='],capture_output=True,env={},timeout=3)
+                for key,value in [('bundle','foreign'),('sourceHead','b'*40),('pid',True),('schema',2)]:
+                    path.write_text(json.dumps({**identity,key:value}),encoding='utf8');run.reset_mock()
+                    with self.assertRaises(ValueError):s._native05_observed_pid62(r,n,device,bundle,head,app,inventory)
+                    run.assert_not_called()
+                path.write_text(json.dumps(identity),encoding='utf8');binary.write_bytes(b'changed');run.reset_mock()
+                with self.assertRaises(ValueError):s._native05_observed_pid62(r,n,device,bundle,head,app,inventory)
+                run.assert_not_called();binary.write_bytes(b'owned-native-binary');response.stdout=b'/foreign/executable\n'
+                with self.assertRaises(ValueError):s._native05_observed_pid62(r,n,device,bundle,head,app,inventory)
+
 if __name__=='__main__':unittest.main()
