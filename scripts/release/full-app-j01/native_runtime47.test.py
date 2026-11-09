@@ -3216,5 +3216,46 @@ class FreshObserver07Tests(unittest.TestCase):
         raw=b'  20 Thread_1: com.apple.main-thread\n + 20 main (in LayerwellStaging) [0x123]\n + 20 secret_patient_value (in LayerwellStaging) [0x456]\n + 20 __ulock_wait2 (in libsystem_kernel.dylib) [0x789]\n 20 Thread_2: other\n + 20 main (in LayerwellStaging) [0x987]\n'
         rows=n.native_frames07(raw);self.assertEqual({q['symbol']for q in rows},{'main','__ulock_wait2'});self.assertNotIn('secret',json.dumps(rows));self.assertNotIn('0x',json.dumps(rows))
 
+
+class Generator07Tests(unittest.TestCase):
+    def test_actual_repaired_ruby_guards_and_red_wrong_source_controls(self):
+        root=Path(__file__).resolve().parents[3]
+        ruby=(root/'scripts/release/full-app-j01/native_ui47.rb').read_text(encoding='utf8')
+        swift=(root/'scripts/release/full-app-j01/native_ui47.swift').read_bytes()
+        prefix=swift.split(b'\nimport UIKit',1)[0]
+        self.assertEqual((len(prefix),hashlib.sha256(prefix).hexdigest()),(19552,'7687fb14aeb9091ce91b4a9d0d4065b81abbe7c9eaf4418bb9fe2b8e1e7ebacc'))
+        self.assertIn("normal_swift = current_normal07\nswift_selected = internal ? swift_full : normal_swift",ruby)
+        # Windows has no Ruby here: this lane proves exact source wiring only.
+        # Mac/Linux with Ruby execute the real generator guards, including original RED.
+        executable=n.shutil.which('ruby')
+        if executable is None:return
+        old=subprocess.check_output(['git','show','b217760b89017dff0099ee3c403a3e27b65cd04e:scripts/release/full-app-j01/native_ui47.rb'],cwd=root).decode()
+        def run(text,data,internal=False):
+            guard=text.split('historical_swift = ',1)[1].split("File.binwrite(swift_copy, swift_selected)",1)[0]
+            program="require 'digest'\ninternal="+('true' if internal else 'false')+"\nSTDIN.binmode; STDOUT.binmode; swift_full=STDIN.read\nhistorical_swift = "+guard+"\nSTDOUT.write(swift_selected)\n"
+            return subprocess.run([executable,'--disable-gems','-e',program],cwd=root,input=data,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30)
+        red=run(old,swift);self.assertNotEqual(red.returncode,0);self.assertIn(b'current versioned ordinary suite04 source changed',red.stderr)
+        for internal,expected in [(False,prefix),(True,swift)]:
+            result=run(ruby,swift,internal);self.assertEqual(result.returncode,0,result.stderr);self.assertEqual(result.stdout,expected);self.assertEqual(result.stderr,b'')
+        for wrong in [swift+b'\n',swift.replace(b'age >= 18',b'age >= 17',1) if b'age >= 18' in swift else swift.replace(b'XCTAssertFalse',b'XCTAssertTrue',1),swift.replace(b'No purchase. Pro features',b'No purchase. pro features',1)]:
+            self.assertNotEqual(wrong,swift);result=run(ruby,wrong);self.assertNotEqual(result.returncode,0);self.assertIn(b'composite-label Swift source changed',result.stderr)
+
+    def test_exact_build65_delta_and_meaningful_drift_refusals(self):
+        root=Path(__file__).resolve().parents[3];head='b217760b89017dff0099ee3c403a3e27b65cd04e'
+        old=lambda name:subprocess.check_output(['git','show',head+':'+name],cwd=root)
+        current=lambda name:(root/name).read_bytes()
+        paths=['scripts/release/full-app-j01/native_ui47.rb','scripts/release/full-app-j01/native_runtime47.py']
+        self.assertEqual(n.verify_reuse65_delta(root,paths,old,current),sorted(paths))
+        descriptor='docs/phase-9/ios-generated-input-succession47.v1.json'
+        for key in ['authority','kind']:
+            changed=json.loads(current(descriptor));changed[key]='wrong';altered=lambda name:json.dumps(changed).encode() if name==descriptor else current(name)
+            with self.subTest(descriptor=key),self.assertRaisesRegex(ValueError,'ALL_PRODUCT_NATIVE_DESCRIPTOR_AND_AUTHORITY'):n.verify_reuse65_delta(root,paths,old,altered)
+        for wrong in ['apps/mobile/src/lib/storage/privateKV.ts','package-lock.json','scripts/phase5/patch-expo-widgets-lifecycle.mjs','scripts/release/full-app-j01/native_ui47.swift']:
+            with self.subTest(wrong=wrong),self.assertRaisesRegex(ValueError,'FINITE_NON_PRODUCT_DELTA'):n.verify_reuse65_delta(root,paths+[wrong],old,current)
+        for path,needle,replacement,error in [('scripts/release/full-app-j01/native_ui47.rb',b'normal_swift = current_normal07',b'normal_swift = current_normal05','EXACT_REPAIRED_RUBY'),('scripts/release/full-app-j01/native_runtime47.py',b'def normal_xctest_gate(parent):',b'def normal_xctest_gate(parent):\n    return {}','PROTECTED_BUILD_AND_RUNTIME_FUNCTION'),('scripts/release/full-app-j01/native_runtime47.py',b"\n        if args.reuse65_runner07:\n            require(args.stage=='normal'",b"\n        if args.reuse65_runner07:\n            require(True",'EXACT_EXCLUSIVE_MAIN')]:
+            self.assertIn(needle,current(path))
+            changed=lambda name:current(name).replace(needle,replacement,1) if name==path else current(name)
+            with self.subTest(path=path,error=error),self.assertRaisesRegex(ValueError,error):n.verify_reuse65_delta(root,paths,old,changed)
+
 if __name__ == '__main__':
     unittest.main()

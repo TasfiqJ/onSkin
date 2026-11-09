@@ -50,6 +50,14 @@ abort 'frozen historical native25 prefix changed' unless $?.success? && historic
 historical04 = IO.popen(['git', '--no-replace-objects', 'show', 'ee4f91945ffd816accc17dce1374e7c5d3483818:scripts/release/full-app-j01/native_ui47.swift'], 'rb', &:read).split("\nimport UIKit", 2).first
 abort 'frozen pre-reachability ordinary suite04 prefix changed' unless $?.success? && historical04 && historical04.bytesize == 18684 && Digest::SHA256.hexdigest(historical04) == '7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20'
 normal_swift = swift_full.split("\nimport UIKit", 2).first
+# C07 native66: authenticate the exact repaired source before replaying old witnesses.
+current_normal07 = normal_swift
+abort 'current native62 composite-label Swift source changed' unless swift_full.bytesize == 56139 && Digest::SHA256.hexdigest(swift_full) == 'bffe625e84a8000338de6166d6df1582b6caea524ea7d69682d15a6c75859956'
+abort 'current native62 composite-label ordinary prefix changed' unless current_normal07.bytesize == 19552 && Digest::SHA256.hexdigest(current_normal07) == '7687fb14aeb9091ce91b4a9d0d4065b81abbe7c9eaf4418bb9fe2b8e1e7ebacc'
+exact_free07 = "tap(\"Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., ›\", app)".b
+old_free07 = "tap(\"Continue with the free plan\", app)".b
+abort 'ordinary native62 composite-label substitution must occur exactly once' unless normal_swift.split(exact_free07, -1).length == 2
+normal_swift = normal_swift.sub(exact_free07, old_free07)
 current_normal05 = normal_swift
 goals_commit05 = <<'C47_GOALS_COMMIT05'
         // C05 ordinary goals-commit successor05: await committed native selections.
@@ -67,6 +75,7 @@ normal_swift = normal_swift.sub(goals_commit05, '')
 abort 'current versioned ordinary suite04 source changed' unless normal_swift.bytesize == 18813 && Digest::SHA256.hexdigest(normal_swift) == '3f3d5c65b093f08af85b29c9baa3e578f5615f8bd42762e94b8e1b314bc4e0db'
 normal_swift = current_normal05
 abort 'current ordinary goals-commit successor05 source changed' unless normal_swift.bytesize == 19483 && Digest::SHA256.hexdigest(normal_swift) == '11f58b07368aacc1d09b5c6c26bf9f0764bcf06d05600cf5a1a9cf9bdd5516cf'
+normal_swift = current_normal07
 swift_selected = internal ? swift_full : normal_swift
 File.binwrite(swift_copy, swift_selected)
 project_path = File.join(project_root, 'C47NativeUI.xcodeproj')

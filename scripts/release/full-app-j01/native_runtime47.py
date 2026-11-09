@@ -4081,7 +4081,7 @@ def observe_ui06(r,device,enabled=False):
             'sampling_only':True,'ordinary_pass_inferred':False,'observer_joined':not thread.is_alive(),'observations':rows})
 
 
-def verify_reuse56_inputs(r,directory):
+def verify_reuse56_inputs(r,directory, *, origin=None, proof_name="build56-current-resolved-input-equivalence06.json"):
     """One exact producer: actual installed dependencies/config/generated inputs, before app install."""
     previous=stage_json(read_native_file(directory/'execution.json'))
     old_tools=stage_json(read_native_file(directory/'toolchain.json'));tools=stage_json(read_native_file(r.output/'toolchain.json'))
@@ -4116,13 +4116,13 @@ def verify_reuse56_inputs(r,directory):
     old=semantic(old_generated,reuse['producer_source'],sha(directory/'current-generated47-source.json'),reuse['producer_descriptor_sha256'])
     new=semantic(generated,r.receipt['source'],sha(r.output/'current-generated47-source.json'),sha(r.root/'docs/phase-9/ios-generated-input-succession47.v1.json'))
     require(old==new,'REUSE56_ALL_ACTUAL_NATIVE_AUTOLINKING_TREES_PROPERTIES_AND_GENERATED_INPUTS_EQUAL')
-    proof={'producer':dict(REUSE56_ORIGIN),'current_source':r.receipt['source'],'toolchain_fields':list(keys),
+    proof={'producer':dict(REUSE56_ORIGIN if origin is None else origin),'current_source':r.receipt['source'],'toolchain_fields':list(keys),
         'exact_command_streams':matched,'actual_generated_semantics_sha256':hashlib.sha256(json.dumps(old,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
         'actual_native_tree_content_digests_equal':True,'all_other_generated_fields_equal':True,
         'excluded_metadata':'ONLY_BOUND_SOURCE_REFERENCES_AND_CROSS_HOST_DEVICE_INODE_TIMESTAMPS; ENTRY_KEYS_SIZES_LINK_COUNTS_RETAINED',
         'product_JS_native_dependency_signing_inputs_equal':True,'reused_JS_output_retains_producer_inventory_hash':True,
         'current_source_app_compilation_claimed':False,'ordinary_admitted':False,'release':'NO_GO'}
-    write_json(r.output/'build56-current-resolved-input-equivalence06.json',proof)
+    write_json(r.output/proof_name,proof)
     r.receipt['actual_build56_input_equivalence06']=proof;r.persist()
 
 
@@ -4254,6 +4254,100 @@ def observe_ui07(r,device):
         stop.set();thread.join(timeout=45);rows.append({'state':'OBSERVER_JOINED'if not thread.is_alive()else'OBSERVER_JOIN_TIMEOUT','utc':utc()});persist()
 
 
+def verify_reuse65_delta(root,paths,old,current):
+    """One finite runner-generator successor; every tracked app/build input stays exact134."""
+    allowed=['scripts/release/full-app-j01/native_ui47.rb', 'scripts/release/full-app-j01/native_runtime47.py', 'scripts/release/full-app-j01/native_runtime47.test.py', '.github/workflows/campaign47-native-runtime.yml', 'scripts/release/full-app-j01/native_workflow47.test.mjs', 'docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json', 'docs/brain/task-specs/M1X-47/TASK.md', 'PROGRESS.md', 'ONSKIN_BRAIN_HANDOFF.txt', 'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md', 'docs/phase-9/ios-generated-input-succession47.v1.json']
+    require(type(paths) is list and len(paths)==len(set(paths)) and set(paths)<=set(allowed) and
+        {'scripts/release/full-app-j01/native_ui47.rb','scripts/release/full-app-j01/native_runtime47.py'}<=set(paths),'REUSE65_FINITE_NON_PRODUCT_DELTA')
+    py='scripts/release/full-app-j01/native_runtime47.py'
+    before=old(py).decode();after=current(py).decode()
+    functions=lambda text:{node.name:ast.get_source_segment(text,node) for node in ast.parse(text).body if isinstance(node,(ast.FunctionDef,ast.ClassDef))}
+    a,b=functions(before),functions(after)
+    require(set(b)-set(a)=={'verify_reuse65_delta','execute_repaired65'} and not set(a)-set(b),'REUSE65_EXACT_ADDITIONS')
+    for name in a:
+        if name in ('main','verify_reuse56_inputs'):continue
+        require(a[name]==b[name],'REUSE65_PROTECTED_BUILD_AND_RUNTIME_FUNCTION:'+name)
+    expected=a['verify_reuse56_inputs'].replace('def verify_reuse56_inputs(r,directory):','def verify_reuse56_inputs(r,directory, *, origin=None, proof_name="build56-current-resolved-input-equivalence06.json"):')
+    expected=expected.replace("dict(REUSE56_ORIGIN)","dict(REUSE56_ORIGIN if origin is None else origin)").replace("r.output/'build56-current-resolved-input-equivalence06.json'","r.output/proof_name")
+    require(b['verify_reuse56_inputs']==expected,'REUSE65_WHOLE_RAW_INPUT_COMPARISON_PRESERVED')
+    # All constants, imports, and executable top-level definitions except the two named additions stay exact.
+    top=lambda text:[ast.dump(node,include_attributes=False) for node in ast.parse(text).body if not isinstance(node,(ast.FunctionDef,ast.ClassDef))]
+    require(top(before)==top(after),'REUSE65_TOP_LEVEL_CONSTANTS_AND_IMPORTS')
+    require(old('scripts/release/full-app-j01/native_ui47.swift')==current('scripts/release/full-app-j01/native_ui47.swift'),'REUSE65_CURRENT_APP_SWIFT_EXACT')
+    descriptor='docs/phase-9/ios-generated-input-succession47.v1.json'
+    before_descriptor=stage_json(old(descriptor));after_descriptor=stage_json(current(descriptor))
+    for path in (py,'scripts/release/full-app-j01/native_runtime47.test.py'):
+        previous=[row for row in before_descriptor['sourcePins'] if row['path']==path]
+        actual=[row for row in after_descriptor['sourcePins'] if row['path']==path]
+        require(len(previous)==len(actual)==1 and actual[0]=={'path':path,'bytes':len(current(path)),'sha256':hashlib.sha256(current(path)).hexdigest()},'REUSE65_EXACT_CURRENT_HARNESS_SELF_PIN')
+        after_descriptor['sourcePins'][after_descriptor['sourcePins'].index(actual[0])]=previous[0]
+    require(before_descriptor==after_descriptor,'REUSE65_ALL_PRODUCT_NATIVE_DESCRIPTOR_AND_AUTHORITY_EXACT')
+    require(hashlib.sha256(current('scripts/release/full-app-j01/native_ui47.rb')).hexdigest()=='cf95125bbc0ca6321614f0d9514fa0d1ea12d133654dcdde050948b2fb616481',
+        'REUSE65_EXACT_REPAIRED_RUBY_SUCCESSOR')
+    expected_main=a['main'].replace("    parser.add_argument('--reuse56-observe06', action='store_true', help='Exact build56 reuse and external native thread observation; current ordinary required')", "    parser.add_argument('--reuse56-observe06', action='store_true', help='Exact build56 reuse and external native thread observation; current ordinary required')\n    parser.add_argument('--reuse65-runner07', action='store_true', help='Exact build65 app; repaired current generator/ordinary3; internal5 only after genuine PASS within same bounded job')")
+    expected_main=expected_main.replace('        if args.reuse56_observe06:\n', "        if args.reuse65_runner07:\n            require(args.stage=='normal' and not any((args.reuse56_observe06,args.stall_observe07,args.resume25,args.resume36,args.local_source05,args.ordinary_release05,args.consent_runtime27,args.consent_trace04,args.simulator_probe)), 'REUSE65_EXCLUSIVE_NORMAL_PROFILE')\n            execute_repaired65(runner,context,token)\n        elif args.reuse56_observe06:\n")
+    require(b['main']==expected_main,'REUSE65_EXACT_EXCLUSIVE_MAIN_DISPATCH')
+    return sorted(paths)
+
+
+def execute_repaired65(r,context,token):
+    require(bool(token),'REUSE65_READ_TOKEN_REQUIRED')
+    head,tools,source47=prepare(r,source_controls=False)
+    require((head,r.receipt['source']['tree'])==(context['head'],context['tree']),'REUSE65_CURRENT_CONTEXT')
+    g=lambda *args:subprocess.check_output(['git','--no-replace-objects',*args],cwd=r.root,env=r.env)
+    origin={'head': 'b217760b89017dff0099ee3c403a3e27b65cd04e', 'tree': '38fca352e1a219f69d94119b029aec1c1743adb6', 'run_id': 42705860853, 'run_attempt': 1, 'artifact_id': 13717757116, 'digest': '3608cab586392380a72ff3ef175e09d69a0afc0feb289d9094f91bec01a69b88', 'payload_bytes': 81563253, 'job_id': 129462340999, 'app_sha256': '00e632e7745bf261226eee47954c684c9a8b16755467c206020215e87f51e4c9'}
+    require(head!=origin['head'] and g('merge-base','--is-ancestor',origin['head'],head)==b'' and
+        g('rev-parse',origin['head']+'^{tree}').decode().strip()==origin['tree'],'REUSE65_ANCESTRY')
+    paths=g('diff','--name-only',origin['head'],head).decode().splitlines();old=lambda name:g('show',origin['head']+':'+name)
+    current=lambda name:read_native_file(r.root/name)
+    py='scripts/release/full-app-j01/native_runtime47.py';desc='docs/phase-9/ios-generated-input-succession47.v1.json';ui='scripts/release/full-app-j01/native_ui47.swift'
+    require(hashlib.sha256(old(py)).hexdigest()=='f4afcdff1d18f1414d494d92e0b0dfe0f20eacf08252d863c8faee3051ab7854','REUSE65_FROZEN_PRODUCER_READER')
+    verify_reuse65_delta(r.root,paths,old,current)
+    root=Path(context['runner_temp'])/'c47-build65-proof-only-source';require(not root.exists(),'REUSE65_FRESH_PROOF_CHECKOUT')
+    r.run('reuse65-origin-proof-checkout',['git','worktree','add','--detach',root,origin['head']],timeout=180)
+    spec=importlib.util.spec_from_file_location('c47_build65_frozen_reader',root/py)
+    frozen=importlib.util.module_from_spec(spec);sys.modules[spec.name]=frozen;spec.loader.exec_module(frozen)
+    producer_context={**context,**{key:origin[key]for key in ('head','tree','run_id','run_attempt')},'workspace':str(root)}
+    needs={'build':{key:origin[key]for key in ('artifact_id','digest','run_id','payload_bytes')}};needs['build']['producer_run_attempt']=origin['run_attempt']
+    imported=frozen.load_authenticated_stage_inputs('normal',needs,producer_context,token,
+        Path(context['runner_temp'])/'c47-build65-authenticated-proof',local_source05=True)['imported_provenance']
+    build=imported['build'];directory=Path(build['payload_directory']);source=stage_json(read_native_file(directory/'source-before.json'))
+    require(build['producer']['producer_job_id']==origin['job_id'] and source['head']==origin['head'] and source['tree']==origin['tree'] and
+        sha(directory/'source-before.json')=='84c613309d7ebf7c456a1dc188162ee8ccd90c5a3d435baa977606de749b932f','REUSE65_EXACT_CLOSED_PRODUCER')
+    # Replay the frozen producer reader against its own full checkout, never against altered current inputs.
+    verification=frozen.Runner(root,Path(context['runner_temp'])/'c47-build65-verification-only')
+    verification.receipt.update(source=source,job_context=stage_json(read_native_file(directory/'execution.json'))['job_context'],local_source05=dict(frozen.LOCAL_SOURCE05))
+    proof=frozen.verify_build_producer(verification,build,local_source05=True)
+    require(proof.receipt['stages']['compiled']['details']['sha256']==origin['app_sha256'],'REUSE65_EXACT_APP')
+    r.receipt.update(authenticated_app_build_reuse56={'producer_source':source,'producer_descriptor_sha256':hashlib.sha256(old(desc)).hexdigest(),
+        'runtime_candidate_source':r.receipt['source'],'producer':build['producer'],'exact_non_product_changed_paths':paths,
+        'all_other_tracked_product_inputs_identical':True,'protected_build_functions_and_environment_identical':True,
+        'producer_full30_replayed':proof.local_source05_proof,'producer_reader_sha256':hashlib.sha256(old(py)).hexdigest(),
+        'qualification':'EXACT_PRODUCER134_BUILD65_COMPILATION_RETAINED; CURRENT_RUBY_AND_XCTEST_RECOMPILED; NO_OLD_RUNTIME_PASS', 'compatibility_receipt_key':'authenticated_app_build_reuse56; actual source/producer above are65, never56'},
+        imported_provenance=imported,upstream_payload_bytes=build['payload_bytes'])
+    r.receipt['external_stall_observer07']={'authorization':'BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07','fresh_current_source':False,'app_instrumentation':False,'ordinary_admitted':False,'actual_product':'verified65/134; unchanged product inputs'}
+    r.persist()
+    # Current source controls are additional to the producer's own authenticated full30, not substituted.
+    r.run('current-runtime07-controls',['python3','-I','-B','scripts/release/full-app-j01/native_runtime47.test.py'],timeout=300)
+    r.run('current-full30-controls',['node','--test','scripts/release/full-app-j01/native_generated47.test.mjs'],timeout=1800)
+    app,bundle,app_proof=consume_produced_app(r,directory,head,tools['architecture'],Path(context['runner_temp'])/'c47-build65-verified-app')
+    r.passed('verified-produced-app',app_proof)
+    mobile=r.root/'apps/mobile'
+    r.run('normal-ui-resolved-expo-config',['npx','--no-install','expo','config','--json'],cwd=mobile,timeout=120)
+    r.run('normal-ui-prebuild',['npx','--no-install','expo','prebuild','--platform','ios','--clean','--no-install','--template','../../node_modules/expo/template.tgz'],cwd=mobile,timeout=300)
+    r.run('normal-ui-generated-source-diff',['git','--no-replace-objects','diff','--binary','HEAD'])
+    r.source_proof('source-after-normal-ui-prebuild',head,allow_generation=True)
+    ios=mobile/'ios';compatibility=r.output/'generated-compat47'
+    r.run('normal-ui-generated47-exact-properties',['python3','-I','-B','scripts/release/full-app-j01/pods_compat47.py','--ios-directory',ios,'--source-proof',source47,'--output',compatibility],timeout=120)
+    r.run('normal-ui-generated47-native',['node','scripts/release/full-app-j01/native_generated47.mjs','--phase','GENERATED','--source-proof',source47,'--receipt',compatibility/'receipt.json','--output',r.output/'current-generated47.json'],timeout=600)
+    r.source_proof('source-after-normal-ui-generated47',head,allow_generation=True)
+    verify_reuse56_inputs(r,directory,origin=origin,proof_name="build65-current-resolved-input-equivalence07.json")
+    products=Path(context['runner_temp'])/'c47-native-products';products.mkdir(exist_ok=False);r.receipt['products_directory']=str(products);r.persist()
+    run_normal(r,ios,products,app,bundle,head)
+    # A native thread sample never admits internal. The unchanged complete three-case gate does.
+    execute_internal(r)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
@@ -4261,6 +4355,7 @@ def main():
     parser.add_argument('--stall-observe07', action='store_true', help='Read-only verified-PID observation for current-source ordinary only')
     parser.add_argument('--resume25', action='store_true')
     parser.add_argument('--reuse56-observe06', action='store_true', help='Exact build56 reuse and external native thread observation; current ordinary required')
+    parser.add_argument('--reuse65-runner07', action='store_true', help='Exact build65 app; repaired current generator/ordinary3; internal5 only after genuine PASS within same bounded job')
     parser.add_argument('--local-source05',action='store_true',
         help='Explicit three-job profile; build performs own full30 controls before fresh ordinary Release')
     parser.add_argument('--ordinary-release05', action='store_true',
@@ -4293,7 +4388,10 @@ def main():
         if args.local_source05:
             runner.receipt['local_source05']=dict(LOCAL_SOURCE05)
             runner.persist()
-        if args.reuse56_observe06:
+        if args.reuse65_runner07:
+            require(args.stage=='normal' and not any((args.reuse56_observe06,args.stall_observe07,args.resume25,args.resume36,args.local_source05,args.ordinary_release05,args.consent_runtime27,args.consent_trace04,args.simulator_probe)), 'REUSE65_EXCLUSIVE_NORMAL_PROFILE')
+            execute_repaired65(runner,context,token)
+        elif args.reuse56_observe06:
             require(args.stage == 'normal' and not any((args.resume25,args.resume36,args.local_source05,args.ordinary_release05,args.consent_runtime27,args.consent_trace04,args.simulator_probe)), 'REUSE56_EXCLUSIVE_NORMAL_PROFILE')
             execute_observed56(runner,context,token)
         elif args.consent_runtime27:
