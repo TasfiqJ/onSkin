@@ -7477,6 +7477,150 @@
       "causal_need": "Native57 original XCTest case01 reached age form and real DD focus, then process main thread busy30s; original command exit124 after900s, not a storage denial. Native55 first tap also timed out; one fresh-host recovery failed. Use one narrowed external native thread observer around actual first field focus, no app/Swift changes. Strict finite reuse of verified build56 preserves producing115 identity and checks all tracked product/native/JS/dependency/signing inputs, old coordinator AST/environment and descriptor pins before import. Current normal runner recompiled; three-case and internal gates unchanged.",
       "invariant": "No app instrumentation, private storage access, DOB retention, injected input/navigation or change to Swift assertions/30s bounds. No old runtime result substitution. Old producer proof replay labeled separately; actual current hosted context retained. Native starts4/6 used,58next/59reserved; one Mac90min500MiB/3day/nocharges; same draftPR48. All38whole/18ownerunaccepted and NO_GO.",
       "validation_cutoff": "New diagnostic, not a proven repair; all new local/native checks PENDING."
+    },
+    {
+      "authorization": "BRAIN-C47-ORDINARY-INTERNAL-RUNTIME-06",
+      "recorded_utc": "2026-11-09T10:10:43.398550+00:00",
+      "head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+      "tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+      "preedit_path": "continuation06/preedit04-live119/PREEDIT.json",
+      "preedit_sha256": "56e6888b7d40bb785626ead5ba8c9962ca5267be712ba05b4cae3f8b1345b82e",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 278738,
+            "sha256": "377ada6ce99fb09ef06e0e552924c8b2e83ed9d59f2607b8cb80cd0bb816d0be"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 204801,
+            "sha256": "bb1bd4ca56b218f642aa6593dd02edd8ef4e09760e06975ac8ac5bccae25d4af"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "64e0b2d51cc1c7073985cfad8ed922f26ffa1ecda4fc4c1cde56a23de4704fca"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 4008,
+            "sha256": "7fa07e8709e9122852676d64117f52615e12f435e19a2ff85d79b7bebae37327"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 22653,
+            "sha256": "998984d877a1ba639058024d4b896373073aac3542c93bf01323d096b03b17de"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 531711,
+            "sha256": "ffaca8e6a7224564001bcc459ba39b6c7623d90f6492a55091d932b49a682f37"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 625807,
+            "sha256": "02466d08ea69852baadc5f808654925995b24c6d0b86eadfc28dd8f1c27eb383"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 132289,
+            "sha256": "143560fc65b5eaf3f32609f303453f1e565d8749678b86e1bb7f128f2dd89af9"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "008.bin",
+          "preimage": {
+            "bytes": 6369,
+            "sha256": "2ac2176d7171f2f8b5c72cf8d9dde77074517512cb84ccd14ab6d3cd7b7c433b"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "009.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "16ba93114b4dcbe35379d98aeceed56fafb0d43111a8c4d66ff0fad35b2fc3dc"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "801a77a93c027c7f3be7941b103b92b88eaa53b1",
+          "preimage_tree": "f0341b5a96b105fd6f6156189c47d16224dfa1aa",
+          "snapshot": "010.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "545f996a49468935f8c2b7f89a0932544c21bc2d3393816bf68eca125fd12d65"
+          },
+          "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+          "invariant": "Only live diagnostic log reads permit size growth; all original source/product/hash/installed/signing and complete ordinary/internal proof guards remain immutable. No storage contents, values or arbitrary messages retained. All38/18unaccepted; NO_GO."
+        }
+      ],
+      "causal_need": "Preallocation review found an immutable-file reader was inappropriate for the observer live XCTest stdout: ordinary append growth could disable observation before DD. Add a separate nofollow/single-link/bounded live-log reader that permits append growth and retains no content. Trigger on the first genuine account-button or DD tap, so original55 first-tap stalls are also discriminated. No native job consumed by unpushed117. App/Swift and every ordinary assertion stay unchanged.",
+      "validation_cutoff": "New live-stream append regression and all focused/source controls PENDING; no native start or app cure claimed."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

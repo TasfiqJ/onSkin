@@ -3095,5 +3095,21 @@ class Observation06Tests(unittest.TestCase):
 
 
 
+class LiveStream06Tests(unittest.TestCase):
+    def test_owned_stream_append_does_not_disable_observation_and_still_bounds_reads(self):
+        import os
+        with tempfile.TemporaryDirectory()as directory:
+            path=Path(directory)/'owned.stdout';path.write_bytes(b'BEGIN\n');original=os.read
+            def grow(descriptor,size):
+                with path.open('ab')as out:out.write(b'Tap "DD" TextField\n')
+                return original(descriptor,size)
+            with patch.object(n.os,'read',side_effect=grow):self.assertIn(b'Tap "DD" TextField',n.read_live_ui06(path))
+            path.write_bytes(b'x'*(10*n.MIB+1))
+            with self.assertRaisesRegex(ValueError,'LIVE_LOG_BOUND'):n.read_live_ui06(path)
+            path.write_bytes(b'x')
+            with patch.object(n.os,'open',side_effect=OSError('controlled-no-follow-refusal')):
+                with self.assertRaises(OSError):n.read_live_ui06(path)
+
+
 if __name__ == '__main__':
     unittest.main()

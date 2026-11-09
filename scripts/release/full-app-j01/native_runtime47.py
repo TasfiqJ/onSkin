@@ -3959,7 +3959,7 @@ def verify_reuse56_delta(paths, old_python, new_python, old_descriptor, new_desc
         'docs/phase-4/generated/source-worklist.json','docs/phase-4/generated/source-worklist.md'}
     require(paths and len(paths)==len(set(paths)) and set(paths)<=allowed,'REUSE56_FINITE_NON_PRODUCT_DELTA')
     changed={'consume_produced_app','run_normal','main','verify_installed_app','normal_xctest_gate'}
-    added={'verify_reuse56_delta','native_frames06','observe_ui06','execute_observed56'}
+    added={'verify_reuse56_delta','native_frames06','read_live_ui06','observe_ui06','execute_observed56'}
     def protected(raw):
         result=[]
         for item in ast.parse(raw).body:
@@ -4015,6 +4015,20 @@ def native_frames06(raw):
     return frames
 
 
+def read_live_ui06(path):
+    """Read an owned in-progress command stream; no closed-byte or source claim."""
+    before=path.lstat()
+    require(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and before.st_size<=10*MIB,'OBSERVE06_LIVE_LOG_BOUND')
+    descriptor=os.open(path,os.O_RDONLY|getattr(os,'O_NOFOLLOW',0))
+    try:
+        current=os.fstat(descriptor)
+        require((current.st_dev,current.st_ino)==(before.st_dev,before.st_ino),'OBSERVE06_LIVE_LOG_IDENTITY')
+        raw=os.read(descriptor,10*MIB+1)
+        require(len(raw)<=10*MIB,'OBSERVE06_LIVE_LOG_BOUND')
+        return raw
+    finally:os.close(descriptor)
+
+
 @contextmanager
 def observe_ui06(r,device,enabled=False):
     """External sampling only. Never alter XCTest timing, input, app state or admission."""
@@ -4028,13 +4042,14 @@ def observe_ui06(r,device,enabled=False):
             while not stop.wait(2):
                 logs=list((r.output/'logs').glob('*-native-normal-staging-ui.stdout'))
                 if not logs:continue
-                raw=read_native_file(logs[0])
-                if b'Tap "DD" TextField' not in raw:continue
+                raw=read_live_ui06(logs[0])
+                trigger=next((kind for marker,kind in ((b'Tap "I already have an account" Button','ACTUAL_XCTEST_ACCOUNT_BUTTON_TAP'),(b'Tap "DD" TextField','ACTUAL_XCTEST_DD_FIELD_TAP'))if marker in raw),None)
+                if trigger is None:continue
                 triggered=time.monotonic();break
             if triggered is None:return
             for delay in (5,35,65):
                 if stop.wait(max(0,triggered+delay-time.monotonic())):break
-                row={'trigger':'ACTUAL_XCTEST_DD_FIELD_TAP','after_trigger_seconds':delay,'started_utc':utc(),
+                row={'trigger':trigger,'after_trigger_seconds':delay,'started_utc':utc(),
                     'native_app_modified':False,'raw_stdout_policy':'DISCARDED; BOUNDED_NATIVE_SYMBOLS_ONLY'}
                 rows.append(row)
                 try:
@@ -4045,7 +4060,7 @@ def observe_ui06(r,device,enabled=False):
                           parts[2].startswith('UIKitApplication:com.layerwell.app.staging[')]
                     require(len(pids)==1 and pids[0]>0,'OBSERVE06_EXACT_SIMULATOR_APP_PID')
                     pid=pids[0]
-                    sample=subprocess.run(['/usr/bin/sample',str(pid),'3','1','-mayDie'],capture_output=True,env=r.env,timeout=10)
+                    sample=subprocess.run(['/usr/bin/sample',str(pid),'3','1','-mayDie','-file','/dev/stdout'],capture_output=True,env=r.env,timeout=10)
                     row.update(pid=pid,exit_code=sample.returncode,sample_stdout_sha256=hashlib.sha256(sample.stdout).hexdigest(),
                         sample_stdout_bytes=len(sample.stdout),frames=native_frames06(sample.stdout),
                         stderr_policy='DISCARDED; NO_ARBITRARY_MESSAGES',state='CAPTURED'if sample.returncode==0 else'FAILED')
