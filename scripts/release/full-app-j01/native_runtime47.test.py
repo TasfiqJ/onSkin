@@ -384,6 +384,17 @@ class Runtime47Tests(unittest.TestCase):
 
     def test_frozen_normal_swift_prefix_contains_only_the_original_normal_class(self):
         current = Path(__file__).with_name('native_ui47.swift').read_bytes()
+        # C07 native62 actual hierarchy proves title-only lookup cannot match
+        # the canonical composite accessibility label. Preserve all old witnesses.
+        original130 = subprocess.check_output(['git', 'show',
+            '48fe77db60640202653ca2174935c4b928ffef3f:scripts/release/full-app-j01/native_ui47.swift'],
+            cwd=Path(__file__).resolve().parents[3])
+        old_free = b'tap("Continue with the free plan", app)'
+        exact_free = 'tap("Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., ›", app)'.encode()
+        self.assertEqual(original130.count(old_free), 2)
+        self.assertEqual(current.count(exact_free), 2)
+        self.assertEqual(current, original130.replace(old_free, exact_free))
+        current = current.replace(exact_free, old_free)
         root = Path(__file__).resolve().parents[3]
         source = subprocess.check_output(['git', 'show',
             '445472ce057b90f08b5a51d5a49167c757d34b79:scripts/release/full-app-j01/native_ui47.swift'], cwd=root)

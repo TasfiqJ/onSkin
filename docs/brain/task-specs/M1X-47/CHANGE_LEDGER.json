@@ -8498,6 +8498,167 @@
       "B": false,
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07",
+      "recorded_utc": "2026-11-09T20:23:57.347636+00:00",
+      "head": "48fe77db60640202653ca2174935c4b928ffef3f",
+      "tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+      "preedit_path": "continuation07/preedit04-free-label/PREEDIT.json",
+      "preedit_sha256": "c64c444f798c509afab57bf3bfd9e20b2b9ebf9122892ea5bc538f2ca19534ad",
+      "preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 3892,
+            "sha256": "f82b2f2822e054b96398f9b0f0c41a443a92736ac6ae995e9a0060d947db7750"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 56001,
+            "sha256": "25b65ee98ee412222c232f3a74240e9821bb61c30ad00fc68c1abe62848cf0f0"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 215604,
+            "sha256": "57e7a07bdfe2e27a64bca2aa299ff1b7c626a6b7b1cef3cdfbfb6be62a990a7f"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 32211,
+            "sha256": "649b68693817ebc0fc47106e00ad19654a1b0d8f42a6c5feab142311ecdf5d23"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "695446d9064e4c834d45118dca33f3ec6f0e3b6bc8890d775a837dd04852ff72"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 636217,
+            "sha256": "abe803175a5b48a437031ddc95fa9391da8bb329f1f84692aa5add372b5fb510"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 147972,
+            "sha256": "53eea1781d1b91f66a830c9f0196d2ac0fe2f9f16c82d8726903b00f3edc83d1"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 641490,
+            "sha256": "0e3c7aac0ea80feb5c2b1d5e5643127256550c8c4a8559ee78be1dccc8fc3224"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "008.bin",
+          "preimage": {
+            "bytes": 22052,
+            "sha256": "ab2c3a61d48df11f4ddcbdec2efc78ecaeaae40a647b05ded25c7db3174f97e2"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "009.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "3c0a398869ed71e28417fca3e9dca73f2bfe46139ca3b77649b6e2d6044d4b51"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "48fe77db60640202653ca2174935c4b928ffef3f",
+          "preimage_tree": "94e39e1087a09803db73e56bbe353c3f2436115d",
+          "snapshot": "010.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "a30e993c43f5c4337bf90dba99c1464f43bd221ba76bb28570f2ad6b80f9e425"
+          },
+          "causal_need": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+          "invariant": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+          "validation": "Exact current/historical Swift two-call byte succession, preserved154 controls, focused signing/origin/workflow, strict full30/60 source, fresh build63 ordinary64/internal65 only on genuine ordinary3 PASS; full final-source CI."
+        }
+      ],
+      "scope": "Only exact XCTest target label at ordinary and internal real onboarding callers. All existing scroll/hittability/enabled/tap, timeouts, consent, owner, recovery and assertions preserved.",
+      "causal_checkpoint_B": "Concrete causal XCTest accessibility-query condition in actual native62 current app: exact title-only button lookup returns nonexistent while final native app hierarchy contains one canonical composite-label Button. XCTest fails waitForExistence before its existing bounded native scrolling. Exact composite successor fixes this active operation; no app deadlock or prior privacy cause inferred.",
+      "native_started_C07": 3,
+      "remaining": 5,
+      "A": false,
+      "B": true,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

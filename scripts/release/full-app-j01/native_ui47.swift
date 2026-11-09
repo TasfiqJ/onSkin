@@ -355,7 +355,7 @@ final class C47NativeUI: XCTestCase {
         XCTAssertTrue(text("Account sign-in is not available right now. You can continue without an account.", app)
             .waitForExistence(timeout: deadline))
         tap("Not now", app)
-        tap("Continue with the free plan", app)
+        tap("Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., ›", app)
         tapElement(app.buttons.matching(NSPredicate(format:
             "label == %@ OR label BEGINSWITH %@", "You", "You,")).firstMatch, "You tab", app)
         tapElement(requireWithdrawalRow(app), "Withdraw health-data consent row", app)
@@ -602,7 +602,7 @@ final class C47InternalOwnerUI: XCTestCase {
         capture("reminder-off-actual-native-outcome", app)
         tap("Continue", app)
         tap("Not now", app)
-        tap("Continue with the free plan", app)
+        tap("Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., ›", app)
         let shelfAdd = shelfAddButton(app)
         reveal(shelfAdd.exists ? shelfAdd
             : app.buttons.matching(NSPredicate(format: "label == %@ OR label BEGINSWITH %@", "Shelf", "Shelf,")).firstMatch,
