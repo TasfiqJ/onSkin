@@ -8659,6 +8659,128 @@
       "B": true,
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07",
+      "recorded_utc": "2026-11-09T21:37:56.831453+00:00",
+      "head": "af2f62be52c20635a924f34629f246331121b356",
+      "tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+      "preedit_path": "continuation07/preedit05-dns64/PREEDIT.json",
+      "preedit_sha256": "764cb722e2202296f9df2306a7bb1edef31c5493462cfe393abc61e7d512264a",
+      "preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 11902,
+            "sha256": "bf40f0aa83e64d2e0d3cb7ea9cce46944e51f15a19eb8643fd2613501a613b01"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 33896,
+            "sha256": "f7d414de1173f3f80239ebcbbfd62f9f7e13efea13c1238c9d9e2d2b831a94b3"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 651804,
+            "sha256": "640b81a6656d1bbcb47c9b5656d02653d9f523bd0ebd7991fd642df1ef7d1e0e"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 150631,
+            "sha256": "108238c66d88228a2e780708184cab48bb9b2fea57e6ab269b83ddb41c054c32"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 644149,
+            "sha256": "40461908839ac773efb3c2266c9f8c8d740874ddd7e14c18adefb0e52be99b86"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 24711,
+            "sha256": "75cf20047fdd6c789b0a1430e11d63685beeb5c3f62d9e6fcd852156dc2890a7"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "7eefd1f28ea634394ab7b732270a47269d0b59b879e79312eebdd9e0b9cdf06a"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "af2f62be52c20635a924f34629f246331121b356",
+          "preimage_tree": "449e22abdd7154d2839ac256435f1f0b5156a925",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "3721f133cbdaceefd1f4cc4ed78a095131065c040e10983adbf6a799f80d1e95"
+          },
+          "causal_need": "Native64 failed actions/setup-node before coordinator: DNS ENOTFOUND api.github.com and nodejs.org; no app install or XCTest. One documented finite fresh-host recovery, full new-current build65/ordinary66/conditional internal67, exactly three remaining starts.",
+          "invariant": "No production/test Swift/runtime/install/dependency/signing/privacy/owner change or error waiver. Original132 complete DAG kept as exact Git witness; same pinned Node22.22.2/actions, standard Mac, serial90min/500MiB/3day/noadditionalcharge. Original DNS failure retained.",
+          "validation": "17 strict workflow contracts with original16 callbacks; unchanged33origin/154runtime/15signing; forced root/type/lint and strict pending/frozen source; exact final-head CI and actual native gates; no internal absent complete ordinary3 PASS."
+        }
+      ],
+      "scope": "Existing70 paths only. Change only exact workflow count/header and strict workflow successor plus truthful notes/ledger/worklists; no app or runtime/test Swift/install/signing/source pin change.",
+      "causal_recovery": "Actual64 setup DNS failure before any coordinator/app/test. Local Windows DNS resolves both endpoints, not proof of Mac availability. One finite fresh-host current134 full build65/ordinary66/conditional internal67 within exactly remaining three starts.",
+      "native_started_C07": 5,
+      "remaining": 3,
+      "A": false,
+      "B": true,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
