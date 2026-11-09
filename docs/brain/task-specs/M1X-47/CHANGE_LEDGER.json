@@ -7216,6 +7216,122 @@
         "internal": "NOT_RUN"
       },
       "validation_cutoff": "Local and native validation pending; no pass or owner admission inferred."
+    },
+    {
+      "authorization": "BRAIN-C47-ORDINARY-INTERNAL-RUNTIME-06",
+      "recorded_utc": "2026-11-09T07:41:40.134630+00:00",
+      "head": "d2f91bd13fc5257b3101fe3642c40ea650165574",
+      "tree": "1bb810defecea315a8b998c19a763a74011f50c4",
+      "preedit_path": "continuation06/preedit02-recovery115/PREEDIT.json",
+      "preedit_sha256": "8c12bdf4709773846f7aebd321e9d36c8dc78a6312ddb660de9c90daa7ba0041",
+      "preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "d2f91bd13fc5257b3101fe3642c40ea650165574",
+          "preimage_tree": "1bb810defecea315a8b998c19a763a74011f50c4",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_git_blob": "deeb6f2f856336990a7775e57fd5be579940d86c",
+          "preimage_bytes": 11858,
+          "preimage_sha256": "b3c14e3fcb7a2971b2a308582a817245a071a07a02846f3848799e294a9653b7",
+          "snapshot": "000.bin",
+          "role": "FINITE_TRANSIENT_RECOVERY_ONLY",
+          "causal_need": "Native55 actually compiled current Swift and installed/verified/launched the genuine54app/PID30. Case01 failed native event synthesis on its first account button; actual final UI reached empty age gate. No PrivacyCheck recurrence; cases02/03 NOT_RUN and internal skipped. A single fresh-host recovery is authorized as documented transient recovery; original failure retained; no application or test assertion change. Existing strict same-run provenance and a1 fence prohibit reusing54 through a blind job rerun, so fresh115 build56/ordinary57/internal58 is finite and fits4 remaining starts.",
+          "invariant": "All age/refusal/cancel/consent/owner/encryption/recovery/deletion/signed-Simulator obligations, meaningful assertions,30s predicate and job limits unchanged. No product/Swift/Ruby/coordinator/pin/signing input change; same PR48, max6 total starts54-59, one Mac; internal only after all3 genuine ordinaryPASS.",
+          "validation": "138runtime/15signing/9versionedworkflow; currentsourcepending/frozenseal; actualfresh56build/57ordinary3/58internal5 only afterPASS; actual final-sourceCI. All native future results PENDING."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "d2f91bd13fc5257b3101fe3642c40ea650165574",
+          "preimage_tree": "1bb810defecea315a8b998c19a763a74011f50c4",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_git_blob": "288f377936863ae42c5f92627762cc75d9ebd9b2",
+          "preimage_bytes": 20154,
+          "preimage_sha256": "760970ab24ef74491499bd8a571e7158811d7876f64230d1217dd8a2f8f54609",
+          "snapshot": "001.bin",
+          "role": "FINITE_TRANSIENT_RECOVERY_ONLY",
+          "causal_need": "Native55 actually compiled current Swift and installed/verified/launched the genuine54app/PID30. Case01 failed native event synthesis on its first account button; actual final UI reached empty age gate. No PrivacyCheck recurrence; cases02/03 NOT_RUN and internal skipped. A single fresh-host recovery is authorized as documented transient recovery; original failure retained; no application or test assertion change. Existing strict same-run provenance and a1 fence prohibit reusing54 through a blind job rerun, so fresh115 build56/ordinary57/internal58 is finite and fits4 remaining starts.",
+          "invariant": "All age/refusal/cancel/consent/owner/encryption/recovery/deletion/signed-Simulator obligations, meaningful assertions,30s predicate and job limits unchanged. No product/Swift/Ruby/coordinator/pin/signing input change; same PR48, max6 total starts54-59, one Mac; internal only after all3 genuine ordinaryPASS.",
+          "validation": "138runtime/15signing/9versionedworkflow; currentsourcepending/frozenseal; actualfresh56build/57ordinary3/58internal5 only afterPASS; actual final-sourceCI. All native future results PENDING."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "d2f91bd13fc5257b3101fe3642c40ea650165574",
+          "preimage_tree": "1bb810defecea315a8b998c19a763a74011f50c4",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_git_blob": "f989a0af4d703a1a90f6abc6e233876d6c65ffda",
+          "preimage_bytes": 501388,
+          "preimage_sha256": "6d32578164be306cfc62d27f6d21ed3cabcb13855b36bdf89c7020a767df5cd3",
+          "snapshot": "002.bin",
+          "role": "FINITE_TRANSIENT_RECOVERY_ONLY",
+          "causal_need": "Native55 actually compiled current Swift and installed/verified/launched the genuine54app/PID30. Case01 failed native event synthesis on its first account button; actual final UI reached empty age gate. No PrivacyCheck recurrence; cases02/03 NOT_RUN and internal skipped. A single fresh-host recovery is authorized as documented transient recovery; original failure retained; no application or test assertion change. Existing strict same-run provenance and a1 fence prohibit reusing54 through a blind job rerun, so fresh115 build56/ordinary57/internal58 is finite and fits4 remaining starts.",
+          "invariant": "All age/refusal/cancel/consent/owner/encryption/recovery/deletion/signed-Simulator obligations, meaningful assertions,30s predicate and job limits unchanged. No product/Swift/Ruby/coordinator/pin/signing input change; same PR48, max6 total starts54-59, one Mac; internal only after all3 genuine ordinaryPASS.",
+          "validation": "138runtime/15signing/9versionedworkflow; currentsourcepending/frozenseal; actualfresh56build/57ordinary3/58internal5 only afterPASS; actual final-sourceCI. All native future results PENDING."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "d2f91bd13fc5257b3101fe3642c40ea650165574",
+          "preimage_tree": "1bb810defecea315a8b998c19a763a74011f50c4",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_git_blob": "9e871b9659885196454b9d4caa537accb2717d00",
+          "preimage_bytes": 127357,
+          "preimage_sha256": "497a68a024b7f45ce67324a9f21c2628e3853192cad9a0771da5d184a7006aaa",
+          "snapshot": "003.bin",
+          "role": "FINITE_TRANSIENT_RECOVERY_ONLY",
+          "causal_need": "Native55 actually compiled current Swift and installed/verified/launched the genuine54app/PID30. Case01 failed native event synthesis on its first account button; actual final UI reached empty age gate. No PrivacyCheck recurrence; cases02/03 NOT_RUN and internal skipped. A single fresh-host recovery is authorized as documented transient recovery; original failure retained; no application or test assertion change. Existing strict same-run provenance and a1 fence prohibit reusing54 through a blind job rerun, so fresh115 build56/ordinary57/internal58 is finite and fits4 remaining starts.",
+          "invariant": "All age/refusal/cancel/consent/owner/encryption/recovery/deletion/signed-Simulator obligations, meaningful assertions,30s predicate and job limits unchanged. No product/Swift/Ruby/coordinator/pin/signing input change; same PR48, max6 total starts54-59, one Mac; internal only after all3 genuine ordinaryPASS.",
+          "validation": "138runtime/15signing/9versionedworkflow; currentsourcepending/frozenseal; actualfresh56build/57ordinary3/58internal5 only afterPASS; actual final-sourceCI. All native future results PENDING."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "d2f91bd13fc5257b3101fe3642c40ea650165574",
+          "preimage_tree": "1bb810defecea315a8b998c19a763a74011f50c4",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_git_blob": "d05fc4c232bdd8739a32142ed801b283d6da1da8",
+          "preimage_bytes": 620875,
+          "preimage_sha256": "031ed6bdbc8f0ab24c8ba1839f3c88e617d9aa07e4d4aaaa800adde6025c6ee2",
+          "snapshot": "004.bin",
+          "role": "FINITE_TRANSIENT_RECOVERY_ONLY",
+          "causal_need": "Native55 actually compiled current Swift and installed/verified/launched the genuine54app/PID30. Case01 failed native event synthesis on its first account button; actual final UI reached empty age gate. No PrivacyCheck recurrence; cases02/03 NOT_RUN and internal skipped. A single fresh-host recovery is authorized as documented transient recovery; original failure retained; no application or test assertion change. Existing strict same-run provenance and a1 fence prohibit reusing54 through a blind job rerun, so fresh115 build56/ordinary57/internal58 is finite and fits4 remaining starts.",
+          "invariant": "All age/refusal/cancel/consent/owner/encryption/recovery/deletion/signed-Simulator obligations, meaningful assertions,30s predicate and job limits unchanged. No product/Swift/Ruby/coordinator/pin/signing input change; same PR48, max6 total starts54-59, one Mac; internal only after all3 genuine ordinaryPASS.",
+          "validation": "138runtime/15signing/9versionedworkflow; currentsourcepending/frozenseal; actualfresh56build/57ordinary3/58internal5 only afterPASS; actual final-sourceCI. All native future results PENDING."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "d2f91bd13fc5257b3101fe3642c40ea650165574",
+          "preimage_tree": "1bb810defecea315a8b998c19a763a74011f50c4",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_git_blob": "7ef3b62da0739a79654a5881a57bf0459caa5681",
+          "preimage_bytes": 1437,
+          "preimage_sha256": "7fdd1e196dcfc2952acea1d0c33f219b84360253b7656edf42778fd8d98a2991",
+          "snapshot": "005.bin",
+          "role": "FINITE_TRANSIENT_RECOVERY_ONLY",
+          "causal_need": "Native55 actually compiled current Swift and installed/verified/launched the genuine54app/PID30. Case01 failed native event synthesis on its first account button; actual final UI reached empty age gate. No PrivacyCheck recurrence; cases02/03 NOT_RUN and internal skipped. A single fresh-host recovery is authorized as documented transient recovery; original failure retained; no application or test assertion change. Existing strict same-run provenance and a1 fence prohibit reusing54 through a blind job rerun, so fresh115 build56/ordinary57/internal58 is finite and fits4 remaining starts.",
+          "invariant": "All age/refusal/cancel/consent/owner/encryption/recovery/deletion/signed-Simulator obligations, meaningful assertions,30s predicate and job limits unchanged. No product/Swift/Ruby/coordinator/pin/signing input change; same PR48, max6 total starts54-59, one Mac; internal only after all3 genuine ordinaryPASS.",
+          "validation": "138runtime/15signing/9versionedworkflow; currentsourcepending/frozenseal; actualfresh56build/57ordinary3/58internal5 only afterPASS; actual final-sourceCI. All native future results PENDING."
+        }
+      ],
+      "causal_need": "Native55 actually compiled current Swift and installed/verified/launched the genuine54app/PID30. Case01 failed native event synthesis on its first account button; actual final UI reached empty age gate. No PrivacyCheck recurrence; cases02/03 NOT_RUN and internal skipped. A single fresh-host recovery is authorized as documented transient recovery; original failure retained; no application or test assertion change. Existing strict same-run provenance and a1 fence prohibit reusing54 through a blind job rerun, so fresh115 build56/ordinary57/internal58 is finite and fits4 remaining starts.",
+      "invariant": "All age/refusal/cancel/consent/owner/encryption/recovery/deletion/signed-Simulator obligations, meaningful assertions,30s predicate and job limits unchanged. No product/Swift/Ruby/coordinator/pin/signing input change; same PR48, max6 total starts54-59, one Mac; internal only after all3 genuine ordinaryPASS.",
+      "native_execution": {
+        "maximum_total_started": 6,
+        "first": 54,
+        "last": 59,
+        "already_started": 2,
+        "remaining": 4,
+        "planned": [
+          56,
+          57,
+          58
+        ],
+        "purpose": "SINGLE_DOCUMENTED_FRESH_HOST_RECOVERY_NOT_A_PROVEN_APP_REPAIR"
+      },
+      "validation_cutoff": "Pending actual focused/current-source/native results; no pass or owner admission inferred."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

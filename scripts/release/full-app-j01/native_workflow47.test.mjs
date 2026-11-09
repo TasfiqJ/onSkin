@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { parseDocument } from 'yaml';
 
 const liveSource06 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
-const currentSource = liveSource06.startsWith('# C06 ordinary54-56;') ? execFileSync('git', ['show', '8f68281fd13d32bf9163a1e23f4a21114e7dc66b:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource06;
+const currentSource = (liveSource06.startsWith('# C06 ordinary54-56;') || liveSource06.startsWith('# C06 recovery56-58;')) ? execFileSync('git', ['show', '8f68281fd13d32bf9163a1e23f4a21114e7dc66b:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource06;
 function source105() {
   const value = execFileSync('git', ['show', '50cdfb2e40412746a5e38776fafc475946a4db6a:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
   assert.equal(createHash('sha256').update(value).digest('hex'), 'dcfa9701cefcd5cc693d1e56113acf40e06dea94936d02a25699b2b7232d66d4');
@@ -281,11 +281,15 @@ test('C05 final53 is one-shot107/a1 diagnostic only; original three ordinary job
 });
 
 // Historical eight callbacks above remain unchanged and exercise their original workflows.
-test('C06 exact113 ordinary producer and complete ordinary gate precede internal; no privileged or parallel widening', () => {
+test('C06 exact113 witness and finite115 fresh-host recovery preserve whole ordinary/internal pipeline', () => {
   const parse = text => { const d = parseDocument(text, { strict: true, uniqueKeys: true, merge: false }); assert.deepEqual(d.errors, []); assert.deepEqual(d.warnings, []); return d.toJS({ maxAliasCount: 0 }); };
-  const expected = parse(source105());
-  for (const job of Object.values(expected.jobs)) job.if = scope + ' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 113 && github.run_attempt == 1';
-  const check = text => assert.deepEqual(parse(text), expected);
-  check(liveSource06);
-  for (const [a,b] of [['commits == 113','commits == 111'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],[' --ordinary-release05',''],[' --local-source05',''],['--stage normal','--stage internal'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource06.includes(a)); assert.throws(() => check(liveSource06.replaceAll(a,b)),a); }
+  const original113 = execFileSync('git', ['show', 'd2f91bd13fc5257b3101fe3642c40ea650165574:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
+  for (const [actual, count, header] of [[original113, 113, '# C06 ordinary54-56; exact PR48/113/a1; six total new Mac starts54-59 maximum.\n'], [liveSource06, 115, '# C06 recovery56-58; exact PR48/115/a1; single fresh-host recovery after native55 event-injection timeout.\n']]) {
+    assert.ok(actual.startsWith(header));
+    const expected = parse(source105());
+    for (const job of Object.values(expected.jobs)) job.if = scope + ' && github.event.pull_request.number == 48 && github.event.pull_request.commits == ' + count + ' && github.run_attempt == 1';
+    const check = text => assert.deepEqual(parse(text), expected);
+    check(actual);
+    for (const [a,b] of [['commits == ' + count,'commits == 111'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],[' --ordinary-release05',''],[' --local-source05',''],['--stage normal','--stage internal'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(actual.includes(a)); assert.throws(() => check(actual.replaceAll(a,b)),a); }
+  }
 });
