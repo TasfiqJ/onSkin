@@ -15,6 +15,10 @@ import unittest
 import subprocess
 from unittest.mock import patch
 
+# Fixtures use the canonical temporary directory; production no-link guards stay exact.
+# macOS otherwise exposes its /var alias to tests that correctly reject linked ancestors.
+tempfile.tempdir = str(Path(tempfile.gettempdir()).resolve(strict=True))
+
 spec = importlib.util.spec_from_file_location('native_runtime47', Path(__file__).with_name('native_runtime47.py'))
 n = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = n

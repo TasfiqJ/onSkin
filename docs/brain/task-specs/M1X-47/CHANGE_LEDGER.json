@@ -7765,6 +7765,138 @@
       ],
       "causal_need": "Before allocation, strengthen the finite build56 reuse with actual current resolved product inputs, beyond tracked-source/AST/environment equality: compiler/SDK/Node/npm/Ruby/Pods, whole resolved Expo config, full installed dependency graph, actual autolinking/native-tree digests and generated-properties/Podfile proof. Two independent actual54/56 builds showed equal config/dependency hashes and semantic generated fields; only inode/time metadata and bound source identities differ. Recheck actual candidate before any app install. No new framework, app or Swift change; no native start consumed by unpushed117/119.",
       "validation_cutoff": "Current input equality adversarial controls/Pending/Frozen/native/CI PENDING; no current runtime PASS claimed."
+    },
+    {
+      "authorization": "BRAIN-C47-ORDINARY-INTERNAL-RUNTIME-06",
+      "recorded_utc": "2026-11-09T10:53:42.424771+00:00",
+      "head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+      "tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+      "preedit_path": "continuation06/preedit06-temp123/PREEDIT.json",
+      "preedit_sha256": "ff7ffcb414336c5505f141a6cfbf83528380f768eaac73494737982944f0678c",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 210504,
+            "sha256": "e599f59ddae5cf28da7f4238259bf6ed06cf3f80520b64f234dc7daf1a56139a"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "6d0d4cc1054b72291e7447a184327f548a3baa9ac25ac946c76cb6812f1c809a"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 4008,
+            "sha256": "b9a300bca8b4f23f67e1dfd7d60fc7787cc0b14bf2b237b93ce87ad3221cde5c"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 26645,
+            "sha256": "f3224f8a0cf2104093b6ff1478db4345109cd37f59da886e3e158d4e982b8871"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 561311,
+            "sha256": "69e74b0e97a07a3efa0b223cb95f275cd85ec2fb4d89fb17adccdb84b29c740f"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 629121,
+            "sha256": "a1b2ac3539e1a3d83f089ef756fc96bdd30d751dbde6ec4f40dab28cdbdadcb3"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 135603,
+            "sha256": "dc8d4eb2555a35e2411719b4743ad99b8603f1faabbab1682879dcf66b447389"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 9683,
+            "sha256": "8e67165f49351ca5ca91e8224a00193ee67364d16e7cff3f0b529eb001f0f5a1"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "008.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "266d4421d1cd59ef657d5b14f6f10c1315c0e6b254579946b631709d231ee1cb"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "6a63e87f8966723a4776f4b3b5cda016de84ee71",
+          "preimage_tree": "29831041f6f7e3f9c7e9b11584eb387850e56adf",
+          "snapshot": "009.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "480ffd793f4400056b884427b624ddd172e232f9386081a2f4be11297ec385e2"
+          },
+          "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+          "invariant": "Canonical regular fixture root only. All production no-link/source/hash/signature/installed/ordinary/internal gates unchanged; full Swift/Ruby/app bytes unchanged. Five of6Mac starts used;59 is final, one standard Mac90min500MiB3days/nocharges. All38/18unaccepted NO_GO."
+        }
+      ],
+      "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
+      "validation_cutoff": "Canonical fixture repair;149runtime/15signing/13workflow/Pending/Frozen/native59/finalCI PENDING; no original native UI cure claimed."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
