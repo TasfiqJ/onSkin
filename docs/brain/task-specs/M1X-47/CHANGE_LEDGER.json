@@ -8956,6 +8956,139 @@
       "release": "NO_GO",
       "preedit_descriptor_addendum": "continuation07/preedit06-generator66/PREEDIT_DESCRIPTOR_ADDENDUM.json",
       "descriptor_qualification": "Only runtime/test self-pins change; all other descriptor fields byte-semantically equal, checked adversarially; producer and current each retain own descriptor/source binding."
+    },
+    {
+      "authorization": "BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07",
+      "head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+      "preedit_path": "continuation07/preedit07-fixture135/PREEDIT.json",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 221001,
+            "sha256": "65285d742125eef521e8583eaa37ef70a661206398691983a34a31bb8dc91077"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "5121520438ebc6807c629ca44d163a8fa79c70729dd4917be4dedf257941b80d"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 4119,
+            "sha256": "abb59c79deb5c4d1e23a8b6f587824eed0ceb51b4eea88be81867b485bb4b878"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 37496,
+            "sha256": "11740093b68e1264996183c20147aa4dffff87aa17724f09c1130a97fc7bfd36"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 678399,
+            "sha256": "bbb45c4f0917a7ce0a8cb5eefa126d1db64e8e7bc7032b149c3bf976b1072c66"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 156726,
+            "sha256": "d7e2d380d2fcde6348b15703a24b7e71507b693d8613f0ef6c34c86917d2d185"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "PROGRESS.md",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 650244,
+            "sha256": "8cfeeb1cef2bc826ac5bdf266525b9eb2bf8ee98af9541b5b2f2ef9e7ac6e63d"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 30806,
+            "sha256": "dbeaa5e426d7808f4d9a8786f8dadb3e958f414ef42fa3f909f42a131107f996"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "snapshot": "008.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "38ded2b85cf70f6684b51d3421ca30795564188919b4b74e117077dd694571d7"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "snapshot": "009.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "fd551479ac80630fe39096403d495620e0c9a41737bd0ce570ec6c60d9ea76d0"
+          },
+          "preimage_head": "150b1ff644b64d50c9ba075fabab023423ed77b8",
+          "causal_need": "Material135 main-dispatch adversarial test refused earlier at mandatory exact self-pin guard; rebind only that synthetic mutated fixture self-pin to exercise later dispatch guard. No production guard change. Advance finite target to137 after append-only correction.",
+          "invariant": "All real self-pin/dispatch/product/consent/owner guards remain exact; failed135 measured result retained; no native start",
+          "validation": "Current156 controls, full30, source phases, forced root/type/lint and exact final-head/native67"
+        }
+      ],
+      "material135_runtime156": "155PASS/1FAIL: adversarial dispatch mutation was rejected by mandatory self-pin before expected later dispatch guard; original stdout/stderr/receipt retained",
+      "correction": "Only mutate the controlled fixture self-pin consistently, then require the unchanged exact main dispatch guard to reject; real guards unchanged. One exact137/a1 job67 only.",
+      "native_started_C07": 7,
+      "remaining": 1,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

@@ -5,8 +5,8 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { parseDocument } from 'yaml';
 
-const liveSource136 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
-const liveSource134 = liveSource136.startsWith('# C07 generator67;') ? execFileSync('git',['show','b217760b89017dff0099ee3c403a3e27b65cd04e:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource136;
+const liveSource137 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const liveSource134 = liveSource137.startsWith('# C07 generator67;') ? execFileSync('git',['show','b217760b89017dff0099ee3c403a3e27b65cd04e:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource137;
 const liveSource132 = liveSource134.startsWith('# C07 recovery65-67;') ? execFileSync('git',['show','af2f62be52c20635a924f34629f246331121b356:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource134;
 const liveSource62 = liveSource132.startsWith('# C07 free-label63-65;') ? execFileSync('git',['show','48fe77db60640202653ca2174935c4b928ffef3f:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource132;
 const liveSource07 = liveSource62.startsWith('# C07 diagnostic62;') ? execFileSync('git',['show','39ce16cdcadca2cbde1ba64ae7dea0f9c99de280:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource62;
@@ -400,13 +400,13 @@ test('C07 exact134 finite fresh-host DNS recovery65-67 preserves132 DAG and all 
   for(const[a,b]of[['commits == 134','commits == 132'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],['node-version: 22.22.2','node-version: 22.21.0'],[' --ordinary-release05',''],[' --local-source05',''],[' --stall-observe07',''],['retention-days: 3','retention-days: 30'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]){assert.ok(liveSource134.includes(a));assert.throws(()=>check(liveSource134.replaceAll(a,b)),a);}
 });
 
-test('C07 exact136 single remaining native67 uses authenticated65 and ordinary before internal without changing bounds', () => {
+test('C07 exact137 single remaining native67 uses authenticated65 and ordinary before internal without changing bounds', () => {
   const parse=text=>{const d=parseDocument(text,{strict:true,uniqueKeys:true,merge:false});assert.deepEqual(d.errors,[]);assert.deepEqual(d.warnings,[]);return d.toJS({maxAliasCount:0});};
   const old=parse(execFileSync('git',['show','b217760b89017dff0099ee3c403a3e27b65cd04e:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}));
   const job=old.jobs['native-normal'];old.jobs={'native-normal':job};delete job.needs;
-  job.name='C47 repaired ordinary and gated internal67';job.if=job.if.replace('commits == 134','commits == 136');
+  job.name='C47 repaired ordinary and gated internal67';job.if=job.if.replace('commits == 134','commits == 137');
   const step=job.steps.find(x=>x.name==='Execute normal stage');for(const key of ['C47_BUILD_ARTIFACT_ID','C47_BUILD_ARTIFACT_DIGEST','C47_BUILD_RUN_ID','C47_BUILD_RUN_ATTEMPT','C47_BUILD_PAYLOAD_BYTES'])delete step.env[key];
   step.run=step.run.replace('--local-source05 --stall-observe07','--reuse65-runner07');
-  const check=text=>assert.deepEqual(parse(text),old);assert.ok(liveSource136.startsWith('# C07 generator67; exact PR48/136/a1;'));check(liveSource136);
-  for(const[a,b]of[['commits == 136','commits == 134'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['--reuse65-runner07','--reuse56-observe06'],['retention-days: 3','retention-days: 30'],['500 * 1024 * 1024','999 * 1024 * 1024']]){assert.ok(liveSource136.includes(a));assert.throws(()=>check(liveSource136.replaceAll(a,b)),a);}
+  const check=text=>assert.deepEqual(parse(text),old);assert.ok(liveSource137.startsWith('# C07 generator67; exact PR48/137/a1;'));check(liveSource137);
+  for(const[a,b]of[['commits == 137','commits == 134'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['--reuse65-runner07','--reuse56-observe06'],['retention-days: 3','retention-days: 30'],['500 * 1024 * 1024','999 * 1024 * 1024']]){assert.ok(liveSource137.includes(a));assert.throws(()=>check(liveSource137.replaceAll(a,b)),a);}
 });

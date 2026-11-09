@@ -3254,7 +3254,14 @@ class Generator07Tests(unittest.TestCase):
             with self.subTest(wrong=wrong),self.assertRaisesRegex(ValueError,'FINITE_NON_PRODUCT_DELTA'):n.verify_reuse65_delta(root,paths+[wrong],old,current)
         for path,needle,replacement,error in [('scripts/release/full-app-j01/native_ui47.rb',b'normal_swift = current_normal07',b'normal_swift = current_normal05','EXACT_REPAIRED_RUBY'),('scripts/release/full-app-j01/native_runtime47.py',b'def normal_xctest_gate(parent):',b'def normal_xctest_gate(parent):\n    return {}','PROTECTED_BUILD_AND_RUNTIME_FUNCTION'),('scripts/release/full-app-j01/native_runtime47.py',b"\n        if args.reuse65_runner07:\n            require(args.stage=='normal'",b"\n        if args.reuse65_runner07:\n            require(True",'EXACT_EXCLUSIVE_MAIN')]:
             self.assertIn(needle,current(path))
-            changed=lambda name:current(name).replace(needle,replacement,1) if name==path else current(name)
+            def changed(name):
+                if name==path:return current(name).replace(needle,replacement,1)
+                if name==descriptor and path.endswith('native_runtime47.py'):
+                    value=json.loads(current(name));data=current(path).replace(needle,replacement,1)
+                    pin=next(row for row in value['sourcePins'] if row['path']==path)
+                    pin.update(bytes=len(data),sha256=hashlib.sha256(data).hexdigest())
+                    return json.dumps(value).encode()
+                return current(name)
             with self.subTest(path=path,error=error),self.assertRaisesRegex(ValueError,error):n.verify_reuse65_delta(root,paths,old,changed)
 
 if __name__ == '__main__':
