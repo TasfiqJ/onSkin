@@ -849,7 +849,7 @@ test('current47 release wiring retains all sixteen hook mutation error predicate
   }
 });
 
-test('current47 release bridge runs all twenty-one untouched original tests with zero skips', () => {
+test('current47 release bridge runs all twenty-one untouched original tests with zero skips', t => {
   const identity = spawnSync('git', ['--no-replace-objects', 'rev-parse', 'HEAD'],
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 10000 });
   assert.equal(identity.status, 0, identity.stderr);
@@ -860,6 +860,7 @@ test('current47 release bridge runs all twenty-one untouched original tests with
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 30000,
       maxBuffer: 2 * 1024 * 1024,
       env: childEnvironment });
+  if (result.status !== 0) t.diagnostic(JSON.stringify({event:'C47_SOURCE_CHILD_FAILURE07', qualification:'SOURCE_TEST_CHILD_ONLY_NOT_APP_DATA', sourceHead:identity.stdout.trim(), node:process.version, status:result.status, signal:result.signal, errorCode:result.error?.code ?? null, configuredBoundMs:30000, stdoutBytes:Buffer.byteLength(result.stdout||''), stderrBytes:Buffer.byteLength(result.stderr||''), stdoutSHA256:hash(Buffer.from(result.stdout||'')), stderrSHA256:hash(Buffer.from(result.stderr||'')), stdout:result.stdout||'', stderr:result.stderr||''}));
   assert.equal(result.status, 0, result.stderr || result.stdout);
   for (const line of ['# tests 21', '# pass 21', '# fail 0', '# skipped 0'])
     assert.ok(result.stdout.split(/\r?\n/u).includes(line), line + '\n' + result.stdout);

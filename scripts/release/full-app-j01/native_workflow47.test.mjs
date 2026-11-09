@@ -5,7 +5,8 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { parseDocument } from 'yaml';
 
-const liveSource06 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const liveSource07 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const liveSource06 = liveSource07.startsWith('# C07 fresh60-62;') ? execFileSync('git', ['show', '2e1a7135ac0142c6e6741a97734aabd5201cb250:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource07;
 const currentSource = (liveSource06.startsWith('# C06 ordinary54-56;') || liveSource06.startsWith('# C06 recovery56-58;') || liveSource06.startsWith('# C06 observation58;') || liveSource06.startsWith('# C06 observation59;')) ? execFileSync('git', ['show', '8f68281fd13d32bf9163a1e23f4a21114e7dc66b:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }) : liveSource06;
 function source105() {
   const value = execFileSync('git', ['show', '50cdfb2e40412746a5e38776fafc475946a4db6a:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
@@ -356,4 +357,14 @@ test('C06 exact123 canonical-fixture observation59 has one bounded job and exact
   assert.ok(liveSource06.startsWith('# C06 observation59; exact PR48/123/a1;'));
   check(liveSource06);
   for (const [a,b] of [['commits == 123','commits == 115'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['cancel-in-progress: false','cancel-in-progress: true'],['--reuse56-observe06','--resume36'],['--stage normal','--stage internal'],['retention-days: 3','retention-days: 30'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource06.includes(a)); assert.throws(() => check(liveSource06.replaceAll(a,b)),a); }
+});
+
+test('C07 exact127 fresh build60 ordinary61 observed and internal62 retain full authenticated DAG', () => {
+  const parse = text => { const d = parseDocument(text, { strict:true, uniqueKeys:true, merge:false }); assert.deepEqual(d.errors, []); assert.deepEqual(d.warnings, []); return d.toJS({maxAliasCount:0}); };
+  const expected = parse(execFileSync('git',['show','9269c1d2e7dc87bcb8c6578503e84f71e53fc638:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}));
+  for (const job of Object.values(expected.jobs)) job.if = job.if.replace('commits == 115','commits == 127');
+  expected.jobs['native-normal'].steps[2].run += ' --stall-observe07';
+  const check = text => assert.deepEqual(parse(text),expected);
+  assert.ok(liveSource07.startsWith('# C07 fresh60-62; exact PR48/127/a1;')); check(liveSource07);
+  for (const [a,b] of [['commits == 127','commits == 125'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],[' --ordinary-release05',''],[' --local-source05',''],[' --stall-observe07',''],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource07.includes(a)); assert.throws(()=>check(liveSource07.replaceAll(a,b)),a); }
 });

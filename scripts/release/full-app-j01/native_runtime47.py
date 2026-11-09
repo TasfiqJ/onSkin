@@ -1890,6 +1890,8 @@ def run_normal(r, ios, products, app, bundle, head):
             child.receipt['authenticated_app_build_reuse36']=r.receipt['authenticated_app_build_reuse36']
         if r.receipt.get('authenticated_app_build_reuse56'):
             child.receipt['authenticated_app_build_reuse56']=r.receipt['authenticated_app_build_reuse56']
+        if r.receipt.get('external_stall_observer07'):
+            child.receipt['external_stall_observer07']=dict(r.receipt['external_stall_observer07'])
         child.receipt.update(source=r.receipt['source'], ordinary_suite_version=4, method=method,
             upstream_payload_bytes=r.receipt.get('upstream_payload_bytes', 0), job_context=r.receipt.get('job_context'))
         for stage in ('compiled', 'verified-produced-app'):
@@ -1928,7 +1930,7 @@ def run_normal(r, ios, products, app, bundle, head):
                         child.receipt['launch36_diagnostic_error_type']=type(diagnostic_error).__name__
                 raise
             child.passed('launched', {'pid': pid, 'survival_seconds': 30, 'bundle_id': bundle})
-            with observe_ui06(child,device,enabled=bool(r.receipt.get("authenticated_app_build_reuse56"))):
+            with (observe_ui07(child,device) if child.receipt.get("external_stall_observer07") else observe_ui06(child,device,enabled=bool(r.receipt.get("authenticated_app_build_reuse56")))):
                 execution = normal_case_execution04(child,project,case_products,method,device,ui_env)
             detail = {'suite_version': 4, 'method': method, 'udid': device, 'data_container': data,
                 'lane': 'normal-staging', 'source': r.receipt['source'], 'runner': runner_proof,
@@ -4181,10 +4183,81 @@ def execute_observed56(r,context,token):
     execute_internal(r)
 
 
+def observed_pid07(r,device):
+    """Read-only exact Simulator/installed executable/PID binding before sampling."""
+    installed=r.receipt['stages']['installed']['details']
+    require(installed.get('udid')==device and installed.get('bundle_id')=='com.layerwell.app.staging' and
+        installed.get('executable')=='LayerwellStaging' and re.fullmatch('[0-9a-f]{64}',installed.get('expected_executable_sha256','')) and installed.get('installed_executable_sha256')==installed.get('expected_executable_sha256'),
+        'OBSERVE07_INSTALLED_TARGET_BINDING')
+    def output(argv):
+        q=subprocess.run(argv,capture_output=True,env=r.env,timeout=3)
+        require(q.returncode==0 and len(q.stdout)<=MIB,'OBSERVE07_TARGET_QUERY')
+        return q.stdout.decode('utf8').strip()
+    table=output(['xcrun','simctl','spawn',device,'launchctl','list'])
+    pids=[int(p[0])for line in table.splitlines()for p in [line.split()]if len(p)==3 and p[0].isdigit()and p[2].startswith('UIKitApplication:com.layerwell.app.staging[')]
+    require(len(pids)==1 and pids[0]>0,'OBSERVE07_UNIQUE_OWNED_PID')
+    app=Path(output(['xcrun','simctl','get_app_container',device,'com.layerwell.app.staging','app']))
+    expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application'
+    require(app.parent.parent==expected and app.name=='LayerwellStaging.app'and
+        str(uuid.UUID(app.parent.name)).lower()==app.parent.name.lower(),'OBSERVE07_OWNED_APP_CONTAINER')
+    executable=app/installed['executable'];require(sha(executable)==installed['installed_executable_sha256'],'OBSERVE07_INSTALLED_EXECUTABLE_BYTES')
+    actual=output(['/bin/ps','-p',str(pids[0]),'-o','comm='])
+    require(actual==str(executable),'OBSERVE07_PID_EXECUTABLE_PATH')
+    return pids[0]
+
+
+def native_frames07(raw):
+    frames=native_frames06(raw);active=False
+    for line in raw.decode('utf8','replace').splitlines():
+        if re.search(r'Thread_\d+',line):active=bool(re.search(r'(?:com\.apple\.main-thread|DispatchQueue_1: com\.apple\.main-thread)',line))
+        if not active:continue
+        m=re.match(r'\s*([+!:| ]*)\s*(\d+)\s+(.+?)\s+\(in LayerwellStaging\)',line)
+        if m and m[3]in ('main','UIApplicationMain','-[AppDelegate application:didFinishLaunchingWithOptions:]'):
+            frames.append({'samples':int(m[2]),'depth':len(m[1]),'symbol':m[3],'image':'LayerwellStaging'})
+    require(len(frames)<=1024,'OBSERVE07_FRAME_BOUND');return frames
+
+
+@contextmanager
+def observe_ui07(r,device):
+    """Few bounded read-only samples during both real taps; no changes to input or admission."""
+    stop=threading.Event();rows=[];pending=[];seen=set()
+    def persist():
+        write_json(r.output/'external-native-threads07.json',{'schema':1,'authorization':'BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07','source':r.receipt['source'],
+            'sampling_only':True,'raw_sample_policy':'DISCARDED; WHITELISTED_NATIVE_SYMBOLS_ONLY','ordinary_pass_inferred':False,'observations':rows})
+    def observer():
+        try:
+            require(Path('/usr/bin/sample').is_file(),'OBSERVE07_NATIVE_SAMPLE_TOOL')
+            while not stop.wait(0.5)and time.monotonic()<r.deadline-60:
+                logs=list((r.output/'logs').glob('*-native-normal-staging-ui.stdout'))
+                if logs:
+                    require(len(logs)==1,'OBSERVE07_ONE_OWNED_XCTEST_STREAM');raw=read_live_ui06(logs[0])
+                    for marker,kind in ((b'Tap "I already have an account" Button','ACTUAL_XCTEST_ACCOUNT_BUTTON_TAP'),(b'Tap "DD" TextField','ACTUAL_XCTEST_DD_FIELD_TAP')):
+                        if marker in raw and kind not in seen:
+                            seen.add(kind);now=time.monotonic();pending.extend((now+delay,kind,delay)for delay in (1,20,45));rows.append({'state':'GENUINE_TAP_MARKER_OBSERVED','trigger':kind,'utc':utc()});persist()
+                due=sorted(q for q in pending if q[0]<=time.monotonic())
+                if not due:continue
+                scheduled,kind,delay=due[0];pending.remove(due[0]);row={'trigger':kind,'after_trigger_seconds':delay,'started_utc':utc(),'native_app_modified':False};rows.append(row)
+                try:
+                    pid=observed_pid07(r,device)
+                    q=subprocess.run(['/usr/bin/sample',str(pid),'3','1','-mayDie','-file','/dev/stdout'],capture_output=True,env=r.env,timeout=10)
+                    frames=native_frames07(q.stdout);same=observed_pid07(r,device)==pid
+                    row.update(pid=pid,pid_executable_rechecked=same,exit_code=q.returncode,stdout_bytes=len(q.stdout),stdout_sha256=hashlib.sha256(q.stdout).hexdigest(),stderr_bytes=len(q.stderr),stderr_sha256=hashlib.sha256(q.stderr).hexdigest(),
+                        frames=frames if same else[],state='CAPTURED_STABLE_PID'if q.returncode==0 and same else'UNAVAILABLE_OR_PID_CHANGED',raw_stdout_stderr_retained=False)
+                except Exception as error:row.update(state='UNAVAILABLE',error_type=type(error).__name__,code=str(error)if re.fullmatch('C47_OBSERVE07_[A-Z_]+',str(error))else None)
+                row['finished_utc']=utc();persist()
+                if len([q for q in rows if 'after_trigger_seconds'in q])>=6:return
+        except Exception as error:rows.append({'state':'OBSERVER_UNAVAILABLE','error_type':type(error).__name__,'code':str(error)if re.fullmatch('C47_OBSERVE07_[A-Z_]+',str(error))else None});persist()
+    thread=threading.Thread(target=observer,daemon=True);thread.start()
+    try:yield
+    finally:
+        stop.set();thread.join(timeout=45);rows.append({'state':'OBSERVER_JOINED'if not thread.is_alive()else'OBSERVER_JOIN_TIMEOUT','utc':utc()});persist()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('source', 'build', 'normal', 'internal'))
+    parser.add_argument('--stall-observe07', action='store_true', help='Read-only verified-PID observation for current-source ordinary only')
     parser.add_argument('--resume25', action='store_true')
     parser.add_argument('--reuse56-observe06', action='store_true', help='Exact build56 reuse and external native thread observation; current ordinary required')
     parser.add_argument('--local-source05',action='store_true',
@@ -4213,6 +4286,9 @@ def main():
         execution_mode(args.stage, probe=args.simulator_probe, resume25=args.resume25,
                        consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27, resume36=args.resume36,
                        ordinary_release05=args.ordinary_release05,local_source05=args.local_source05)
+        if args.stall_observe07:
+            require(args.stage=='normal' and args.local_source05 and not any((args.reuse56_observe06,args.resume25,args.resume36,args.ordinary_release05,args.consent_runtime27,args.consent_trace04,args.simulator_probe)), 'OBSERVE07_FRESH_ORDINARY_PROFILE_ONLY')
+            runner.receipt['external_stall_observer07']={'authorization':'BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07','fresh_current_source':True,'app_instrumentation':False,'ordinary_admitted':False}
         if args.local_source05:
             runner.receipt['local_source05']=dict(LOCAL_SOURCE05)
             runner.persist()

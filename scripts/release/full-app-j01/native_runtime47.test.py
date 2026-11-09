@@ -3058,7 +3058,7 @@ class Observation06Tests(unittest.TestCase):
         root=Path(__file__).resolve().parents[3];origin='9269c1d2e7dc87bcb8c6578503e84f71e53fc638'
         paths=['scripts/release/full-app-j01/native_runtime47.py','docs/phase-9/ios-generated-input-succession47.v1.json','scripts/release/full-app-j01/native_ui47.swift']
         args=[]
-        for p in paths:args.extend((subprocess.check_output(['git','show',origin+':'+p],cwd=root),(root/p).read_bytes()))
+        for p in paths:args.extend((subprocess.check_output(['git','show',origin+':'+p],cwd=root),subprocess.check_output(['git','show','2e1a7135ac0142c6e6741a97734aabd5201cb250:'+p],cwd=root)))
         return root,paths[:2],args
 
     def test_actual_finite_harness_delta_preserves_every_product_and_old_reader(self):
@@ -3158,6 +3158,33 @@ class ResolvedInput06Tests(unittest.TestCase):
                 with self.subTest(kind=kind),self.assertRaisesRegex(ValueError,'GENERATED_OWN_SOURCE_BINDING|ALL_ACTUAL_NATIVE'):n.verify_reuse56_inputs(r,old)
 
 
+
+
+class FreshObserver07Tests(unittest.TestCase):
+    def test_old_reuse56_guard_refuses_the_new_profile(self):
+        root,paths,args=Observation06Tests().pair();args[1]=(root/'scripts/release/full-app-j01/native_runtime47.py').read_bytes()
+        with self.assertRaisesRegex(ValueError,'PROTECTED_BUILD'):n.verify_reuse56_delta(paths,*args)
+
+    def test_wrong_installed_target_cannot_query_processes(self):
+        for key,value in [('udid','other'),('bundle_id','foreign'),('executable','foreign'),('installed_executable_sha256','b'*64),('expected_executable_sha256',None)]:
+            d={'udid':'device','bundle_id':'com.layerwell.app.staging','executable':'LayerwellStaging','installed_executable_sha256':'a'*64,'expected_executable_sha256':'a'*64};d[key]=value;r=SimpleNamespace(receipt={'stages':{'installed':{'details':d}}},env={})
+            with self.subTest(key=key),patch.object(n.subprocess,'run')as run:
+                with self.assertRaises((ValueError,TypeError)):n.observed_pid07(r,'device')
+                run.assert_not_called()
+
+    def test_exact_installed_executable_and_pid_positive_and_wrong_path_negative(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            home=Path(tmp);device='12345678-1234-1234-1234-123456789abc';app=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application/abcdef01-1234-1234-1234-123456789abc/LayerwellStaging.app';app.mkdir(parents=True);exe=app/'LayerwellStaging';exe.write_bytes(b'controlled executable');digest=hashlib.sha256(exe.read_bytes()).hexdigest()
+            d={'udid':device,'bundle_id':'com.layerwell.app.staging','executable':'LayerwellStaging','installed_executable_sha256':digest,'expected_executable_sha256':digest};r=SimpleNamespace(receipt={'stages':{'installed':{'details':d}}},env={})
+            def result(raw):return SimpleNamespace(returncode=0,stdout=raw,stderr=b'')
+            good=[result(b'123 0 UIKitApplication:com.layerwell.app.staging[fixture]'),result(str(app).encode()),result(str(exe).encode())]
+            with patch.object(n.Path,'home',return_value=home),patch.object(n.subprocess,'run',side_effect=good):self.assertEqual(n.observed_pid07(r,device),123)
+            bad=[*good[:2],result(b'/foreign/process')]
+            with patch.object(n.Path,'home',return_value=home),patch.object(n.subprocess,'run',side_effect=bad),self.assertRaisesRegex(ValueError,'PID_EXECUTABLE_PATH'):n.observed_pid07(r,device)
+
+    def test_filter_retains_main_and_discards_private_app_symbols(self):
+        raw=b'  20 Thread_1: com.apple.main-thread\n + 20 main (in LayerwellStaging) [0x123]\n + 20 secret_patient_value (in LayerwellStaging) [0x456]\n + 20 __ulock_wait2 (in libsystem_kernel.dylib) [0x789]\n 20 Thread_2: other\n + 20 main (in LayerwellStaging) [0x987]\n'
+        rows=n.native_frames07(raw);self.assertEqual({q['symbol']for q in rows},{'main','__ulock_wait2'});self.assertNotIn('secret',json.dumps(rows));self.assertNotIn('0x',json.dumps(rows))
 
 if __name__ == '__main__':
     unittest.main()
