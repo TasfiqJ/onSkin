@@ -359,12 +359,12 @@ test('C06 exact123 canonical-fixture observation59 has one bounded job and exact
   for (const [a,b] of [['commits == 123','commits == 115'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['cancel-in-progress: false','cancel-in-progress: true'],['--reuse56-observe06','--resume36'],['--stage normal','--stage internal'],['retention-days: 3','retention-days: 30'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource06.includes(a)); assert.throws(() => check(liveSource06.replaceAll(a,b)),a); }
 });
 
-test('C07 exact127 fresh build60 ordinary61 observed and internal62 retain full authenticated DAG', () => {
+test('C07 exact128 fresh build60 ordinary61 observed and internal62 retain full authenticated DAG', () => {
   const parse = text => { const d = parseDocument(text, { strict:true, uniqueKeys:true, merge:false }); assert.deepEqual(d.errors, []); assert.deepEqual(d.warnings, []); return d.toJS({maxAliasCount:0}); };
   const expected = parse(execFileSync('git',['show','9269c1d2e7dc87bcb8c6578503e84f71e53fc638:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}));
-  for (const job of Object.values(expected.jobs)) job.if = job.if.replace('commits == 115','commits == 127');
+  for (const job of Object.values(expected.jobs)) job.if = job.if.replace('commits == 115','commits == 128');
   expected.jobs['native-normal'].steps[2].run += ' --stall-observe07';
   const check = text => assert.deepEqual(parse(text),expected);
-  assert.ok(liveSource07.startsWith('# C07 fresh60-62; exact PR48/127/a1;')); check(liveSource07);
-  for (const [a,b] of [['commits == 127','commits == 125'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],[' --ordinary-release05',''],[' --local-source05',''],[' --stall-observe07',''],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource07.includes(a)); assert.throws(()=>check(liveSource07.replaceAll(a,b)),a); }
+  assert.ok(liveSource07.startsWith('# C07 fresh60-62; exact PR48/128/a1;')); check(liveSource07);
+  for (const [a,b] of [['commits == 128','commits == 125'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['needs: [native-build, native-normal]','needs: [native-build]'],['needs: [native-build]','needs: []'],[' --ordinary-release05',''],[' --local-source05',''],[' --stall-observe07',''],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]) { assert.ok(liveSource07.includes(a)); assert.throws(()=>check(liveSource07.replaceAll(a,b)),a); }
 });

@@ -1172,7 +1172,8 @@ class Runner:
                     target = destination.open('wb', buffering=0)
                 with target:
                     try:
-                        for chunk in iter(lambda: pipe.read(65536), b''):
+                        # read1 publishes available bytes while the child is alive; read waits for64KiB or EOF.
+                        for chunk in iter(lambda: pipe.read1(65536), b''):
                             with capture_lock:
                                 if capture_frozen:
                                     break

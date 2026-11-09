@@ -8172,6 +8172,172 @@
       "scope": "Same70paths; fresh exact-current source build60; ordinary61 bounded external verified-PID samples around both account/DD taps; internal62 only after complete ordinaryPASS. Original build56 refusal retained, no semantic waiver. Eight max60-67, at most3 without ordinaryPASS or concrete causal evidence.",
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-NATIVE-STALL-DEPENDENCY-RUNTIME-07",
+      "recorded_utc": "2026-11-09T16:39:02.082670+00:00",
+      "head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+      "tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+      "preedit_path": "continuation07/preedit02-pipe128/PREEDIT.json",
+      "preedit_sha256": "ab7613974e8e64921d4f9c434aab15b0ddd8e15b6177569715da4430b6115f35",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 290591,
+            "sha256": "b4b5a2089abb2cbce9d9c4d7e742ee9c9cc4682fe475dd18c86261a6651eee78"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 213820,
+            "sha256": "ff799f84eebe618ead2e9fd2e3cc8579740c7b89ef9145d6a5d148f6d82f4a50"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 11897,
+            "sha256": "5f49451ef3fa603269a41b56bcd920e8bdd098ceda4a17bbf87242eba80dcd7b"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 30412,
+            "sha256": "b3d06463ec871833d855184e1ed16a152f667ae1a9ddcbb64fe42b3c5536b10d"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 23257,
+            "sha256": "6ae0ec2571c730792991a67f8e280762019b79694ccca1502e21966f2b7bb454"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 603616,
+            "sha256": "72b53e3ed60d65f83d490a40195c3361392a5cdf7b8523d5c3477d576def248c"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "006.bin",
+          "preimage": {
+            "bytes": 144425,
+            "sha256": "04726370282582265ccf9960abeae90c8a038a1f50a977c9a9873d11c502e2a8"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "007.bin",
+          "preimage": {
+            "bytes": 637943,
+            "sha256": "e70df7a5f7cb02c68a63249ac382da6d3799b33159574ca098a8019a33b6c1b6"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "008.bin",
+          "preimage": {
+            "bytes": 18505,
+            "sha256": "137c861a405768222a2a8663495218a177ca6c6cbf8c7274e382544cbf0b3beb"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "009.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "c243390e5f0bb127e353e72d96a342d890b8d4994cdb5e70e85c2e7a82926b47"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+          "preimage_tree": "a460a80325a5bab08d38a410fc6deb26669d8ceb",
+          "snapshot": "010.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "bc700d486a4af91878dd21d0449f051e6df5523939b1d9a0f511ac1bc63fe7bc"
+          },
+          "causal_need": "Real pipe RED at126: child emitted/flushed a short marker and stayed alive, but Runner.copy pipe.read(65536) withheld marker until EOF. Observer cannot capture during hang without timely bytes. Change only buffered read to read1; preserve all original raw bytes, freeze locks, EOF and deadlines. Initial127seal never created/pushed; source material127 then seal128 must have exact current128 workflow fence.",
+          "invariant": "No app/native behavior, private storage, consent, owner, input or stage admission change; historical guards retained; this is instrumentation cause, not native app/XCTest causal evidence or checkpoint_B.",
+          "validation": "Real source pipe RED/fixed with still-alive child and exact final EOF;154runtime/15signing/14workflow, originalWindowschild bounded diagnostics and separate21 repeat, root/type/lint and pending/frozen; genuine Mac60-67 limits."
+        }
+      ],
+      "red_witness": {
+        "source_head": "22baf972569ec7ea33219eeaed3e458983eb1cde",
+        "runtime_sha256": "b4b5a2089abb2cbce9d9c4d7e742ee9c9cc4682fe475dd18c86261a6651eee78",
+        "marker_emitted_and_child_waiting": true,
+        "marker_visible_before_child_release": false,
+        "child_alive_at_observation": true,
+        "final_raw_bytes_exact": true,
+        "final_capture_complete": true,
+        "qualification": "CONTROLLED_SOURCE_PIPE_FIXTURE_ONLY; NOT_APP_STALL_CAUSE_OR_NATIVE_CHECKPOINT_B",
+        "release": "NO_GO"
+      },
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

@@ -3172,6 +3172,25 @@ class FreshObserver07Tests(unittest.TestCase):
                 with self.assertRaises((ValueError,TypeError)):n.observed_pid07(r,'device')
                 run.assert_not_called()
 
+    def test_real_pipe_marker_is_visible_before_child_exits_and_final_bytes_are_exact(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            root=Path(tmp).resolve();ready=root/'ready';release=root/'release';r=n.Runner(Path(n.__file__).resolve().parents[3],root/'evidence',seconds=30);errors=[]
+            def command():
+                try:r.run('pipe07-fixture',[sys.executable,'-u','-c',"import pathlib,sys,time; print('C47_PIPE07_MARKER',flush=True); pathlib.Path(sys.argv[1]).write_text('ready');\nwhile not pathlib.Path(sys.argv[2]).exists():time.sleep(.01)\nprint('C47_PIPE07_EOF',flush=True)",str(ready),str(release)],timeout=15)
+                except Exception as error:errors.append(type(error).__name__)
+            thread=n.threading.Thread(target=command);thread.start();deadline=time.monotonic()+5
+            try:
+                while not ready.exists()and time.monotonic()<deadline:time.sleep(.01)
+                self.assertTrue(ready.exists());self.assertTrue(thread.is_alive());deadline=time.monotonic()+2;visible=False
+                while time.monotonic()<deadline:
+                    logs=list((r.output/'logs').glob('*pipe07-fixture.stdout'))
+                    if logs and b'C47_PIPE07_MARKER'in logs[0].read_bytes():visible=True;break
+                    time.sleep(.01)
+                self.assertTrue(visible);self.assertTrue(thread.is_alive())
+            finally:release.write_text('release');thread.join(10)
+            self.assertFalse(thread.is_alive());self.assertEqual(errors,[]);row=r.receipt['commands'][0]
+            self.assertEqual((r.output/row['stdout']).read_bytes(),('C47_PIPE07_MARKER'+n.os.linesep+'C47_PIPE07_EOF'+n.os.linesep).encode());self.assertTrue(row['capture_complete']);self.assertEqual(row['exit_code'],0)
+
     def test_exact_installed_executable_and_pid_positive_and_wrong_path_negative(self):
         with tempfile.TemporaryDirectory()as tmp:
             home=Path(tmp);device='12345678-1234-1234-1234-123456789abc';app=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application/abcdef01-1234-1234-1234-123456789abc/LayerwellStaging.app';app.mkdir(parents=True);exe=app/'LayerwellStaging';exe.write_bytes(b'controlled executable');digest=hashlib.sha256(exe.read_bytes()).hexdigest()
