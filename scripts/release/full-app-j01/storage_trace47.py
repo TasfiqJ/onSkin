@@ -1226,5 +1226,146 @@ def _native05_observe62(r,n,device,bundle,head,installed,inventory):
         stop.set();thread.join(timeout=45);rows.append({'state':'OBSERVER_JOINED'if not thread.is_alive()else'OBSERVER_JOIN_TIMEOUT','utc':n.utc()});persist()
 
 
+
+PRIVACY08_GATE_SHA = '0fc3cfe1cb14606ae3396892d942c568fd858f9e36f147233ba03d24463d3117'
+# C08 additive exact-source diagnostic. Legacy source/security/installer validators remain unchanged.
+PRIVACY08_AUTH='BRAIN-C47-PRIVACY-ORIGIN-RUNTIME-08'
+PRIVACY08_START='691b4c5e695acbe0d4557dcdcb7ae21cf01c4e09'
+PRIVACY08_GATE='apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx'
+
+@contextmanager
+def diagnostic_inputs08(root,ios,evidence,head,run,*,targeted_onboarding53=False):
+    need(targeted_onboarding53,'PRIVACY08_TARGETED_ONLY')
+    root=Path(root);gate=root/PRIVACY08_GATE;need(gate.is_file()and not gate.is_symlink()and gate.stat().st_nlink==1,'PRIVACY08_REGULAR_GATE');gate_before=gate.read_bytes()
+    need(digest(gate_before)==PRIVACY08_GATE_SHA,'PRIVACY08_GATE_ORIGINAL')
+    with _privacy08_original_inputs(root,ios,evidence,head,run,targeted_onboarding53=True) as entry:
+        evidence=Path(evidence);entry_before=entry.read_bytes();legacy={p:(root/p).read_bytes()for p in ONBOARDING53_SOURCE_PREIMAGES}
+        saved=evidence/'original'/PRIVACY08_GATE;saved.parent.mkdir(parents=True,exist_ok=True);saved.write_bytes(gate_before)
+        expected={**ONBOARDING53_SOURCE_PREIMAGES,PRIVACY08_GATE:PRIVACY08_GATE_SHA}
+        request=evidence/'PRIVACY08_REQUEST.json';manifest=evidence/'PRIVACY08_TRANSFORM.json';out=evidence/'privacy08-generated'
+        document(request,{'profile':'PRIVACY08_EXACT137','source_head':head,'original':str(evidence/'original'),'output':str(out),'manifest':str(manifest),'expected':expected})
+        run('privacy08-exact-transform',['node',root/'scripts/release/full-app-j01/storage_origin47.mjs','--privacy08',request],timeout=60)
+        result=json.loads(manifest.read_bytes());need(result['source_head']==head and {r['path']for r in result['files']}==set(expected),'PRIVACY08_EXACT_NINE_SOURCES')
+        applied={};entry_after=None
+        try:
+            for row in result['files']:
+                rel=row['path'];raw=(out/rel).read_bytes();need(digest(raw)==row['after']['sha256'],'PRIVACY08_AFTERIMAGE');path=root/rel
+                need(path.read_bytes()==(gate_before if rel==PRIVACY08_GATE else legacy[rel]),'PRIVACY08_NO_CONCURRENT_SOURCE')
+                applied[rel]=raw;path.write_bytes(raw)
+            anchor=b"require('expo-router/entry');";need(entry_before.count(anchor)==1,'PRIVACY08_ROUTER_ENTRY_ONCE')
+            entry_after=entry_before.replace(anchor,(out/'privacy08-entry.js').read_bytes()+b'\n'+anchor);entry.write_bytes(entry_after)
+            document(evidence/'PRIVACY08_APPLIED.json',{'authorization':PRIVACY08_AUTH,'source_head':head,'manifest_sha256':digest(manifest.read_bytes()),'entry_before':digest(entry_before),'entry_after':digest(entry_after),'nine_sources':len(applied),'ordinary_admitted':False,'release':'NO_GO'})
+            yield entry
+        finally:
+            for rel,raw in applied.items():
+                need((root/rel).read_bytes()==raw,'PRIVACY08_FOREIGN_AFTERIMAGE')
+                (root/rel).write_bytes(gate_before if rel==PRIVACY08_GATE else legacy[rel])
+            if entry_after is not None:
+                need(entry.read_bytes()==entry_after,'PRIVACY08_FOREIGN_ENTRY');entry.write_bytes(entry_before)
+            need(gate.read_bytes()==gate_before,'PRIVACY08_GATE_RESTORED')
+
+def validate_privacy08(raw,head,pid):
+    need(len(raw)<=512*1024,'PRIVACY08_BOUND');v=json.loads(raw)
+    need(set(v)=={'schema','marker','sourceHead','pid','bundle','eventLimit','sequence','dropped','flushFailures','events','denialWindow','ordinaryAdmitted','release'},'PRIVACY08_CLOSED_SHAPE')
+    need(v['schema']==1 and v['marker']=='C47_PRIVACY_ORIGIN_DIAGNOSTIC_08'and v['sourceHead']==head and type(v['pid'])is int and v['pid']==pid and v['bundle']=='com.layerwell.app.staging'and v['eventLimit']==512 and v['ordinaryAdmitted']is False and v['release']=='NO_GO','PRIVACY08_IDENTITY')
+    sites={'OBSERVER_READY','GRANT_BEGIN','REVALIDATE_ENTRY','CAPTURE_REJECT','DRAFT_REPLACE','CHECK_BEGIN','CONSENT_RESULT','CHECK_SUPERSEDED','CONSENT_FALSE','CHECK_READY_PUBLISHED','CHECK_REJECT','LEASE_SUBSCRIPTION','LEASE_EXPIRY','PROVIDER_RETIRE','PROVIDER_UNMOUNT','PROVIDER_VIEW_REJECT','PROVIDER_VIEW_LEASE_REJECT','ROUTE_BLUR','ROUTE_ENTER','ROUTE_CAPTURE_REJECT','ROUTE_PROVIDER_REJECT','ROUTE_WINDOW_REJECT','ROUTE_VIEW_LEASE_REJECT','ROUTE_PRIVACY_STATUS','ACTIVATION_RETURN','ACTIVATION_CURRENT','ACTIVATION_REJECT','ACTIVATION_MOUNT'}
+    booleans={'mounted','fresh','hasDraft','tokenCurrent','draftCurrent','consentCurrent','ready','active','hasLease','routeTokenCurrent','focused','privacyDenied','privacyReady','ownerCurrent','epochCurrent','activeState','activationPending','childrenMayMount','routeSelected'}
+    codes={'UNCLASSIFIED','HEALTH_DATA_WRITE_ADMISSION_CLOSED','HEALTH_DATA_WRITE_OWNER_MISMATCH','CURRENT_HEALTH_CONSENT_REQUIRED','HEALTH_CONSENT_INVALID','HEALTH_CONSENT_UNSUPPORTED_VERSION','HEALTH_CONSENT_MUTATION_SUPERSEDED','ACCOUNT_GENERATION_CHANGED','PRIVATE_KV_CONTENT_KEY_MISSING','PRIVATE_KV_CONTENT_KEY_INVALID','PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE','PRIVATE_KV_DECRYPTION_FAILED','PRIVATE_KV_ENVELOPE_INVALID','PRIVATE_KV_ENVELOPE_UNSUPPORTED','PRIVATE_KV_RECOVERY_REQUIRED','PRIVATE_KV_WRITE_CONFLICT','LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED','LOCAL_DATA_HISTORY_RECOVERY_REQUIRED','LOCAL_DATA_OWNER_MISMATCH','LOCAL_DATA_CLEANUP_REQUIRED','ERR_KEY_CHAIN','ERR_INVALID_KEY','ERR_MISSING_PLIST_KEY','ERR_SEC_ACCESS_CONTROL'}
+    stages={'CAPTURE','PREFLIGHT','PREFLIGHT_LEASE','OPERATION_CURRENT','CONSENT_READ','FINAL_LEASE'}
+    integer=lambda n,maximum:type(n)is int and 0<=n<=maximum
+    for key in ['sequence','dropped','flushFailures']:need(integer(v[key],1000000),'PRIVACY08_COUNTER')
+    for rows,bound in [(v['events'],512),(v['denialWindow'] or [],128)]:
+        need(type(rows)is list and len(rows)<=bound,'PRIVACY08_WINDOW');previous=0
+        for row in rows:
+            need(type(row)is dict and set(row)<={'sequence','site','grant','provider','route','check','stage','error'}|booleans and row['site']in sites and integer(row['sequence'],v['sequence']) and row['sequence']>previous and integer(row['grant'],1000000),'PRIVACY08_EVENT');previous=row['sequence']
+            for key in booleans&set(row):need(type(row[key])is bool,'PRIVACY08_BOOLEAN')
+            for key in {'provider','route','check'}&set(row):need(integer(row[key],1000000) and row[key]>0,'PRIVACY08_CORRELATION')
+            if 'stage'in row:need(row['stage']in stages,'PRIVACY08_STAGE')
+            if 'error'in row:
+                need(type(row['error'])is list and len(row['error'])<=3,'PRIVACY08_ERROR_CHAIN')
+                for node in row['error']:
+                    need(set(node)=={'code','numeric'}and node['code']in codes and type(node['numeric'])is dict and set(node['numeric'])<={'code','nativeCode','nativeErrorCode','osStatus','errno'},'PRIVACY08_CODE')
+                    need(all(type(n)is int and -2147483648<=n<=2147483647 for n in node['numeric'].values()),'PRIVACY08_NATIVE_NUMBER')
+    return v
+
+def privacy_origin08(value):
+    # Source predicates remain evidence requiring review, never ordinary admission.
+    events={r['sequence']:r for r in value['events']+(value['denialWindow']or [])};events=sorted(events.values(),key=lambda r:r['sequence'])
+    denied=[r for r in events if r['site']=='ROUTE_PRIVACY_STATUS'and r.get('privacyDenied')is True and r['grant']>0]
+    if not denied:return None
+    ui=denied[-1];grant=ui['grant'];before=[r for r in events if r['sequence']<ui['sequence']and r['grant']==grant]
+    current=[r for r in before if r['site']=='CHECK_REJECT'and r.get('mounted')is True and r.get('tokenCurrent')is True and any(n['code']!='UNCLASSIFIED'or n['numeric']for n in r.get('error',[]))]
+    for origin in reversed(current):
+        if not any(r['site']=='CHECK_READY_PUBLISHED'and r.get('provider')==origin.get('provider')and r['sequence']>origin['sequence']for r in before):
+            return {'kind':'ACTUAL_CURRENT_REVALIDATION_REJECTION','origin':origin,'ui':ui,'ordinary_admitted':False,'release':'NO_GO'}
+    for origin in reversed(before):
+        if origin['site']=='PROVIDER_VIEW_REJECT'and origin.get('mounted')is True and origin.get('hasDraft')is True and origin.get('ready')is True and (origin.get('tokenCurrent')is False or origin.get('draftCurrent')is False):
+            return {'kind':'ACTUAL_READY_PROVIDER_VIEW_RETIRED_PREDICATE','origin':origin,'ui':ui,'ordinary_admitted':False,'release':'NO_GO'}
+    return None
+
+def _privacy08_capture(r,n,device,bundle,head,evidence,label,expected_pid=None,*,targeted_onboarding53=False):
+    legacy=_privacy08_original_capture(r,n,device,bundle,head,evidence,label,expected_pid,targeted_onboarding53=True)
+    target=Path(evidence)/label
+    installed,inventory=r._privacy08_installed
+    actual=n.stage_json(n.read_native_file(target/'native-identity.json'))
+    binary=Path(installed)/'LayerwellStaging';row=next(q for q in inventory['files']if q['path']=='LayerwellStaging');n.require(n.stage_file_digest(binary)=={k:row[k]for k in ('bytes','sha256')},'PRIVACY08_CURRENT_INSTALLED_MACHO')
+    data=Path(r._storage05_first_data_container);path=data/('Documents/C47PrivacyOrigin08-'+str(actual['pid'])+'.json');raw=n.read_native_file(path);value=validate_privacy08(raw,head,actual['pid']);origin=privacy_origin08(value)
+    (target/path.name).write_bytes(raw);document(target/'PRIVACY08_OBSERVATION.json',{'identity':actual,'trace':{'bytes':len(raw),'sha256':digest(raw)},'origin':origin,'ordinary_admitted':False,'release':'NO_GO'})
+    legacy['privacy08']={'pid':actual['pid'],'file':path.name,'origin':origin,'trace_sha256':digest(raw)}
+    if origin is not None:legacy['qualifying_origins'].append({'privacy08':origin,'pid':actual['pid']})
+    return legacy
+
+def _privacy08_case(child,project,products,method,device,environment):
+    n=_privacy08_native;need(method==n.NORMAL_UI_CASES04[2],'PRIVACY08_CASE03_ONLY')
+    path=Path(project).parent/'native_ui47.swift';before=path.read_bytes();need(before==n.read_native_file(child.root/'scripts/release/full-app-j01/native_ui47.swift').split(b'\nimport UIKit',1)[0],'PRIVACY08_EXACT_GENERATED_RUNNER')
+    start=before.index(b'    func testV04ExplicitWithdrawalReviewCancelAndFreshReconsent() throws {');first=before.index(b'        requireFreshGoals(app)\n',start)+len(b'        requireFreshGoals(app)\n');end=before.index(b'\n    }\n}\n',first)
+    after=before[:first]+b'        // C08 diagnostic prefix only; no full ordinary-case admission.\n'+before[end:];path.write_bytes(after)
+    (child.output/'PRIVACY08_DIAGNOSTIC_RUNNER.swift').write_bytes(after)
+    document(child.output/'PRIVACY08_DIAGNOSTIC_RUNNER.json',{'source_head':child.receipt['source']['head'],'selected_method':method,'baseline_before':{'bytes':len(before),'sha256':digest(before)},'actual_compiled_prefix':{'bytes':len(after),'sha256':digest(after)},'original_case03_initial_sequence_exact':True,'ends_after':'first actual requireFreshGoals','not_full_case03':True,'ordinary_admitted':False,'release':'NO_GO'})
+    try:return _privacy08_original_case(child,project,products,method,device,environment)
+    finally:need(path.read_bytes()==after,'PRIVACY08_RUNNER_FOREIGN');path.write_bytes(before)
+
+def main_privacy08():
+    import argparse,importlib.util,os,sys
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--privacy-origin08',action='store_true',required=True);args=p.parse_args();root=Path(__file__).resolve().parents[3]
+    need(not os.environ.pop('C47_ARTIFACT_READ_TOKEN',''),'PRIVACY08_NO_OLD_PRODUCT_IMPORT')
+    spec=importlib.util.spec_from_file_location('c47_privacy08_native',root/'scripts/release/full-app-j01/native_runtime47.py');n=importlib.util.module_from_spec(spec);sys.modules[spec.name]=n;spec.loader.exec_module(n)
+    output=args.output.absolute();need(not output.resolve().is_relative_to(root)and not output.exists(),'PRIVACY08_NEW_OUTSIDE_OUTPUT');output.mkdir(parents=True);r=n.Runner(root,output,seconds=84*60);r.receipt.update(stage='build',lane='SEPARATE_RELEASE_PRIVACY_ORIGIN08_DIAGNOSTIC',ordinary_admitted=False,diagnostic_only=True);r.persist();context=None;result=None;code=1
+    global _privacy08_original_inputs,_privacy08_original_capture,_privacy08_original_case,_privacy08_native
+    global diagnostic_inputs,collect_native_origin05,_native05_installed
+    _privacy08_native=n;_privacy08_original_inputs=diagnostic_inputs;_privacy08_original_capture=collect_native_origin05;_privacy08_original_case=n.normal_case_execution04;original_installed=_native05_installed
+    def installed(*a):
+        value=original_installed(*a);a[0]._privacy08_installed=(a[2],a[5]);return value
+    original_prepare=n.prepare
+    def prepare(*a,**kw):
+        result=original_prepare(*a,**kw)
+        a[0].run('privacy08-source-observer-tests',['python3','-I','-B','scripts/release/full-app-j01/storage_trace47.test.py'],timeout=120)
+        return result
+    n.prepare=prepare
+    diagnostic_inputs=diagnostic_inputs08;collect_native_origin05=_privacy08_capture;n.normal_case_execution04=_privacy08_case;_native05_installed=installed
+    try:
+        context=n.hosted_stage_context(r,'build');need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY08_ONE_SHOT')
+        count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~2'],timeout=60);need(count=='139'and parent==PRIVACY08_START,'PRIVACY08_EXACT139_WITH137_PREFIX')
+        result=run_native_origin05(r,n,onboarding_denial53=True)
+        actual=[v['privacy08']['origin']for v in result['observations']if v.get('privacy08',{}).get('origin')is not None]
+        r.receipt['privacy_origin08']={'authorization':PRIVACY08_AUTH,'native_attempt':68,'source_head':context['head'],'source_tree':context['tree'],'origins':actual,'first_actual_origin_captured':bool(actual),'diagnostic_case03_prefix_only':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
+        code=0 if actual else 1;r.receipt.update(status='PRIVACY08_ORIGIN_CAPTURED_REVIEW_REQUIRED'if actual else'PRIVACY08_ORIGIN_NOT_CAPTURED',stage_complete=bool(actual));r.persist()
+    except Exception as error:r.receipt.update(status='PARTIAL_BLOCKED',stage_complete=False,failure={'type':type(error).__name__,'detail':str(error)},finished_utc=n.utc());r.persist()
+    finally:
+        diagnostic_inputs=_privacy08_original_inputs;collect_native_origin05=_privacy08_original_capture;n.normal_case_execution04=_privacy08_original_case;_native05_installed=original_installed;n.prepare=original_prepare
+        if context is not None and r.receipt.get('source'):
+            try:_native05_final_source53(r,n,context,result)
+            except Exception as e:code=1;r.receipt['final_source_failure_type']=type(e).__name__
+        try:n.collect(r)
+        except Exception as e:code=1;r.receipt['collection_failure']={'type':type(e).__name__}
+        if not r.receipt.get('artifact_policy',{}).get('upload_within_limit'):code=1
+        r.receipt.update(stage_complete=bool(code==0 and r.receipt.get('stage_complete')),finished_utc=n.utc());r.persist()
+    manifest=None
+    if context is not None:
+        try:manifest=n.write_stage_provenance(output,'build',context)
+        except Exception:code=1
+    print(json.dumps({'status':r.receipt['status'],'stage':'build','stage_complete':code==0,'ordinary_admitted':False,'internal_admitted':False,'manifest':manifest,'release':'NO_GO'}));return code
+
 if __name__ == '__main__':
-    raise SystemExit(main_origin05())
+    import sys
+    raise SystemExit(main_privacy08() if '--privacy-origin08' in sys.argv else main_origin05())

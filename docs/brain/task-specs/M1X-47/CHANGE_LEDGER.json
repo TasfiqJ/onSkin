@@ -9089,6 +9089,142 @@
       "remaining": 1,
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PRIVACY-ORIGIN-RUNTIME-08",
+      "head": "691b4c5e695acbe0d4557dcdcb7ae21cf01c4e09",
+      "tree": "9b66d6d2f38d2532a13b8da1696d585b0bfa1d7a",
+      "recordedUTC": "2026-11-10T03:19:07.807353+00:00",
+      "preedit_path": "continuation08/preedit01/PREEDIT.json",
+      "preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "bytes": 4119,
+          "sha256": "79fdb8b6e90b926c02239e30c3f07f194f3305915ef6eeb9cc74fa7c2b0b98c4",
+          "git_blob": "a2fba1040d0b7576c5ee95ace651c5ccb8a44d26",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_origin47.mjs",
+          "bytes": 36197,
+          "sha256": "215465b84e2d56d9e2c520fb08e79e152a8a11bca3685341e3405345b8dc1413",
+          "git_blob": "e605184745053c7647a3887a4303ba2ca0e41a5e",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 140207,
+          "sha256": "61df89b2742eb0992601e7f36e81270ea672914af35029e7000a202dd2971402",
+          "git_blob": "7e1d4709217d4656d5fb5594aed5d9d1b6310901",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "bytes": 106333,
+          "sha256": "83cc5d5c98e3e5b09f99b4dd5673a10de1f9f8b5bc3e30f5003037478f3345df",
+          "git_blob": "53256dd120e84eba2b9903847fd73873d27c1e79",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "bytes": 37496,
+          "sha256": "34dbd64b541e55a9563f75e86809f441622788acaf5c995a78590c52e0c4bf9b",
+          "git_blob": "8772bd0739610fca0c306e05d7b79c0c26f5f880",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23257,
+          "sha256": "f749ded6eae66dad06e3a8ec2f5b84b41bfd58768276aa644c3b9fbd0df055f1",
+          "git_blob": "5a56d9364c4b8233ae2e99b78f42e8602826958b",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 688210,
+          "sha256": "20011647d0afdb353a77e14d2f37e89ef060c41337006f31a31984f6e519eecb",
+          "git_blob": "b8757c640441723bc1e933fa8dd09875fa588627",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 157187,
+          "sha256": "a5f9761571fead4c2668b973b355e7ca0c2ab18c583f1604a5d79f0c01fc126b",
+          "git_blob": "9c66f207a80c97178fd086b12938ff6327a92f29",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 650705,
+          "sha256": "4e010f4dc1e8e9e93007890bde0a6f4f99d919194a135ac33e27e801d39d99a6",
+          "git_blob": "6aa1d06075c16c62744cb8a829038d8fe66e64be",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 31267,
+          "sha256": "7374fa2d18d471486bc65581c16cb2343e922093e679228b04f2186149c30c87",
+          "git_blob": "64f7b24e84a11e4347a86c3685c8eb34e2d1a053",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "bytes": 142269,
+          "sha256": "0bf69a892ab3f9785c3393339e9490d861d5552b462f2afedd18c3ed534a4178",
+          "git_blob": "ed25b36be60f2a7f626d5622cbeede5f8e97252a",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "bytes": 84921,
+          "sha256": "ecb963ba8c313d3521ee81134d04164a2399caccf132d953fdfa24590a397c88",
+          "git_blob": "b9a850776728dee873f5df0d244b9662a868675c",
+          "change": true,
+          "purpose": "Finite diagnostic-only source transformation, synchronous redacted correlation, targeted native job68; originals restored before source proof. No product behavior repair before origin.",
+          "invariants": "Original exceptions/results/authority/awaits/cleanup unchanged; ordinary3 before internal5; no secret-bearing output",
+          "validation": "Current33 plus added diagnostic observer/transform adversarial and behavioral parity tests; exact source30/60, signing/wiring, actual68origin required"
+        }
+      ],
+      "scope": "Finite existing70 files only; appended diagnostic transformer/driver/tests and one exact139 native68 workflow; production inputs unchanged in repository; nine compile-time diagnostic afterimages restored exactly",
+      "native_started_C08": 0,
+      "remaining": 5,
+      "diagnosis_tranche_max": 2,
+      "ordinary_admitted": false,
+      "internal_admitted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

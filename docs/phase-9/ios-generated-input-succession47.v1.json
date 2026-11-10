@@ -256,18 +256,18 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_origin47.mjs",
-      "bytes": 36197,
-      "sha256": "215465b84e2d56d9e2c520fb08e79e152a8a11bca3685341e3405345b8dc1413"
+      "bytes": 52744,
+      "sha256": "679e9c9ca35ff9b5422f9ab158ae7aab540d92e45f5c109fa31c415c1dce4321"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 140207,
-      "sha256": "61df89b2742eb0992601e7f36e81270ea672914af35029e7000a202dd2971402"
+      "bytes": 155943,
+      "sha256": "fc2b1cecb7aabaee9c4a207674b2af3364a609b269f2512f72e3dc7e60c30411"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 106333,
-      "sha256": "83cc5d5c98e3e5b09f99b4dd5673a10de1f9f8b5bc3e30f5003037478f3345df"
+      "bytes": 122179,
+      "sha256": "c1b09739945e72330832e768f24c14e96a98d009d21644a95877f7e3a62cd5e9"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

@@ -1,4 +1,4 @@
-# C07 generator67; exact PR48/137/a1; last serial start: corrected current runner with exact authenticated65 app; internal only after genuine ordinary3 PASS within original deadline.
+# C08 privacy68; exact PR48/139/a1; fresh separate diagnostic build and case03 initial consent-to-goals only; no ordinary/internal admission.
 name: Campaign47 Simulator native runtime
 
 on:
@@ -28,12 +28,11 @@ env:
   SENTRY_DISABLE_AUTO_UPLOAD: 'true'
 
 jobs:
-  native-normal:
-    name: C47 repaired ordinary and gated internal67
+  native-build:
+    name: C47 privacy origin68
     permissions:
       contents: read
-      actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 137 && github.run_attempt == 1
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 139 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -54,12 +53,11 @@ jobs:
         with:
           node-version: 22.22.2
           package-manager-cache: false
-      - name: Execute normal stage
+      - name: Execute privacy diagnostic stage
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
-          C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
-        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage normal --output "$RUNNER_TEMP/c47-evidence" --reuse65-runner07
+        run: python3 -I -B scripts/release/full-app-j01/storage_trace47.py --privacy-origin08 --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
@@ -88,7 +86,7 @@ jobs:
         if: always() && steps.evidence-budget.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: campaign47-native-normal-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: campaign47-native-build-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/c47-evidence
           if-no-files-found: error
           retention-days: 3

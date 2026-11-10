@@ -504,7 +504,90 @@ export async function selfTest() {
   }
   return {controls,all_passed:true,actual_fixed_files:10,no_native_execution:true};
 }
+// C08 finite diagnostic only. No production imports, storage/authority calls or changed results.
+export const PRIVACY08_HELPER = `
+function c47Privacy08(factory: () => Record<string, unknown>, command = "event"): number {
+  try {
+    const hook = (globalThis as typeof globalThis & {__C47_PRIVACY_ORIGIN08__?: (command: string, event: Record<string, unknown>) => unknown}).__C47_PRIVACY_ORIGIN08__;
+    if (typeof hook !== "function") return 0;
+    const value = hook(command, factory());
+    return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 && value <= 1000000 ? value : 0;
+  } catch { return 0; }
+}
+`;
+
+export function privacySource08(relative, original) {
+  let text = original; const edits=[];
+  const replace=(a,b)=>{assert.equal(text.split(a).length-1,1,'C08 exact original site: '+a.slice(0,90));text=text.replace(a,b);edits.push({before:a,after:b});};
+  if (relative.endsWith('/OnboardingContext.tsx')) {
+    const event=(site,meta='')=>`c47Privacy08(() => ({site:"${site}",provider:c08Provider,${meta}}));`;
+    const state='mounted,tokenCurrent:token === checkToken,draftCurrent:draft === accepted,';
+    replace('function createOnboardingSession(queryClient: ReturnType<typeof useQueryClient>) {', 'function createOnboardingSession(queryClient: ReturnType<typeof useQueryClient>) {\nconst c08Provider = c47Privacy08(() => ({}), "id");');
+    replace('  function retire() {', '  function retire() {\n'+event('PROVIDER_RETIRE','mounted,hasDraft:draft !== null,'));
+    replace('  function revalidate(fresh = false): Promise<HealthDataWriteLease | null> {','  function revalidate(fresh = false): Promise<HealthDataWriteLease | null> {\nconst c08Check = c47Privacy08(() => ({}), "id"); const c08Grant = c47Privacy08(() => ({}), "grant"); let c08Stage = "CAPTURE";\n'+event('REVALIDATE_ENTRY','check:c08Check,grant:c08Grant,mounted,fresh,'));
+    replace('    } catch {\n      retire();', '    } catch (c08Error) {\n'+event('CAPTURE_REJECT','check:c08Check,grant:c08Grant,mounted,error:c08Error,')+'\n      retire();');
+    replace('    if (draft?.lease.generation !== lease.generation) {\n      retire();','    if (draft?.lease.generation !== lease.generation) {\n'+event('DRAFT_REPLACE','check:c08Check,grant:c08Grant,mounted,hasDraft:draft !== null,')+'\n      retire();');
+    replace('    const token = ++checkToken;\n    status', '    const token = ++checkToken;\n'+event('CHECK_BEGIN','check:c08Check,grant:c08Grant,'+state)+'\n    status');
+    replace('        await runHealthDataWriteOperation(lease.ownerUserId, (operation) => {','        c08Stage = "PREFLIGHT";\n        await runHealthDataWriteOperation(lease.ownerUserId, (operation) => {\n c08Stage = "PREFLIGHT_LEASE";');
+    replace('          operation.assertCurrent();','          c08Stage = "OPERATION_CURRENT";\n          operation.assertCurrent();');
+    replace('        const consent = await hasCurrentHealthDataCollectionConsentForLease(lease);','        c08Stage = "CONSENT_READ";\n        const consent = await hasCurrentHealthDataCollectionConsentForLease(lease);\n'+event('CONSENT_RESULT','check:c08Check,grant:c08Grant,'+state+'consentCurrent:consent,'));
+    replace('        if (!mounted || token !== checkToken || draft !== accepted) return null;','        if (!mounted || token !== checkToken || draft !== accepted) {\n'+event('CHECK_SUPERSEDED','check:c08Check,grant:c08Grant,'+state)+' return null; }');
+    replace("        assertHealthDataWriteLease(lease);\n        if (!consent) throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');",'        c08Stage = "FINAL_LEASE";\n        assertHealthDataWriteLease(lease);\n        if (!consent) {\n'+event('CONSENT_FALSE','check:c08Check,grant:c08Grant,'+state)+" throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED'); }");
+    replace('        ++checkToken;\n        return lease;', '        ++checkToken;\n'+event('CHECK_READY_PUBLISHED','check:c08Check,grant:c08Grant,mounted,draftCurrent:draft === accepted,')+'\n        return lease;');
+    replace('      } catch {\n        if (mounted && token === checkToken) retire();', '      } catch (c08Error) {\n'+event('CHECK_REJECT','check:c08Check,grant:c08Grant,stage:c08Stage,'+state+'error:c08Error,')+'\n        if (mounted && token === checkToken) retire();');
+    replace('    const off = subscribeActiveHealthProcessingLeaseChanges(() => {','    const off = subscribeActiveHealthProcessingLeaseChanges(() => {\n'+event('LEASE_SUBSCRIPTION','mounted,'));
+    replace('          () => {\n            retire();','          () => {\n'+event('LEASE_EXPIRY','mounted,')+'\n            retire();');
+    replace('    return () => {\n      mounted = false;', '    return () => {\n'+event('PROVIDER_UNMOUNT','mounted,')+'\n      mounted = false;');
+    replace("      if (!mounted || !accepted || draft !== accepted || token !== checkToken || status !== 'ready')\n        return false;", "      if (!mounted || !accepted || draft !== accepted || token !== checkToken || status !== 'ready') {\n"+event('PROVIDER_VIEW_REJECT','mounted,hasDraft:accepted !== null,tokenCurrent:token === checkToken,draftCurrent:draft === accepted,ready:status === "ready",')+'return false; }');
+    replace('        assertHealthDataWriteLease(accepted.lease);\n        return true;\n      } catch {\n        return false;', '        assertHealthDataWriteLease(accepted.lease);\n        return true;\n      } catch (c08Error) {\n'+event('PROVIDER_VIEW_LEASE_REJECT','mounted,tokenCurrent:token === checkToken,error:c08Error,')+'\n        return false;');
+    replace('function createRouteAdmission() {','function createRouteAdmission() {\nconst c08Route = c47Privacy08(() => ({}), "id");');
+    const route=(site,meta='')=>`c47Privacy08(() => ({site:"${site}",route:c08Route,${meta}}));`;
+    replace('    function blur() {\n      ++token;', '    function blur() {\n'+route('ROUTE_BLUR','active,ready,hasLease:lease !== null,')+'\n      ++token;');
+    replace('    function enter() {\n      blur();', '    function enter() {\n'+route('ROUTE_ENTER','active,')+'\n      blur();');
+    replace('      } catch {\n        lease = null;','      } catch (c08Error) {\n'+route('ROUTE_CAPTURE_REJECT','active,error:c08Error,')+'\n        lease = null;');
+    replace('      if (!ctx.isCurrent()) return false;', '      const c08ProviderCurrent = ctx.isCurrent();\n      if (!c08ProviderCurrent) {\n'+route('ROUTE_PROVIDER_REJECT','routeTokenCurrent:acceptedToken === token,ready,hasLease:lease !== null,')+' return false; }');
+    replace('      if (acceptedToken !== token || !ready || !navigation.isFocused() || !lease) return false;', '      let c08Focused: boolean | undefined;\n      if (acceptedToken !== token || !ready || !(c08Focused = navigation.isFocused()) || !lease) {\n'+route('ROUTE_WINDOW_REJECT','routeTokenCurrent:acceptedToken === token,ready,focused:c08Focused,hasLease:lease !== null,')+' return false; }');
+    replace('        assertHealthDataWriteLease(lease);\n        return true;\n      } catch {\n        return false;', '        assertHealthDataWriteLease(lease);\n        return true;\n      } catch (c08Error) {\n'+route('ROUTE_VIEW_LEASE_REJECT','routeTokenCurrent:acceptedToken === token,ready,error:c08Error,')+'\n        return false;');
+    replace("        return isCurrent() ? 'ready' : ctx.privacyStatus === 'denied' ? 'denied' : 'checking';",'        return ((c08Status: PrivacyStatus) => {\n'+route('ROUTE_PRIVACY_STATUS','routeTokenCurrent:acceptedToken === token,ready,hasLease:lease !== null,privacyDenied:c08Status === "denied",privacyReady:c08Status === "ready",')+'\n return c08Status; })(isCurrent() ? \'ready\' : ctx.privacyStatus === \'denied\' ? \'denied\' : \'checking\');');
+  } else if (relative.endsWith('/lifecycle.ts')) {
+    replace("  assertHealthDataConsentCopyReleaseAllowed('grant', env.appEnvironment);",'  c47Privacy08(() => ({site:"GRANT_BEGIN"}), "beginGrant");\n  assertHealthDataConsentCopyReleaseAllowed(\'grant\', env.appEnvironment);');
+  } else if (relative.endsWith('/HealthDataLifecycleGate.tsx')) {
+    replace('        const liveRecord = gateSnapshotRef.current.record;', '        c47Privacy08(() => ({site:"ACTIVATION_RETURN",activeState:next.state === "active",activationPending:next.activationRoutePending === true}));\n        const liveRecord = gateSnapshotRef.current.record;');
+    replace('        commitLifecycleRecord(next);\n        const latest = gateSnapshotRef.current;', '        c47Privacy08(() => ({site:"ACTIVATION_CURRENT",ownerCurrent:liveRecord?.ownerUserId === pendingOwnerUserId,epochCurrent:liveRecord?.processingEpoch === pendingEpoch}));\n        commitLifecycleRecord(next);\n        const latest = gateSnapshotRef.current;');
+    replace('      } catch {\n        const live = gateSnapshotRef.current;', '      } catch (c08Error) {\n        c47Privacy08(() => ({site:"ACTIVATION_REJECT",error:c08Error}));\n        const live = gateSnapshotRef.current;');
+    replace('  if (!healthDataChildrenMayMount(gateSnapshot)) {','  const c08ChildrenMayMount = healthDataChildrenMayMount(gateSnapshot);\n  c47Privacy08(() => ({site:"ACTIVATION_MOUNT",childrenMayMount:c08ChildrenMayMount,routeSelected:activationRouteSelected,activeState:record.state === "active",activationPending:record.activationRoutePending === true}));\n  if (!c08ChildrenMayMount) {');
+  }
+  return {source:edits.length?PRIVACY08_HELPER+'\n'+text:original,edits};
+}
+
+export const ENTRY08 = String.raw`
+// C47_PRIVACY_ORIGIN_DIAGNOSTIC_08: bounded memory only at synchronous guard sites.
+try { (() => {
+ const FS = require('expo-file-system/legacy');
+ const SITES = new Set(['GRANT_BEGIN','REVALIDATE_ENTRY','CAPTURE_REJECT','DRAFT_REPLACE','CHECK_BEGIN','CONSENT_RESULT','CHECK_SUPERSEDED','CONSENT_FALSE','CHECK_READY_PUBLISHED','CHECK_REJECT','LEASE_SUBSCRIPTION','LEASE_EXPIRY','PROVIDER_RETIRE','PROVIDER_UNMOUNT','PROVIDER_VIEW_REJECT','PROVIDER_VIEW_LEASE_REJECT','ROUTE_BLUR','ROUTE_ENTER','ROUTE_CAPTURE_REJECT','ROUTE_PROVIDER_REJECT','ROUTE_WINDOW_REJECT','ROUTE_VIEW_LEASE_REJECT','ROUTE_PRIVACY_STATUS']);
+ const CODES = new Set(['HEALTH_DATA_WRITE_ADMISSION_CLOSED','HEALTH_DATA_WRITE_OWNER_MISMATCH','CURRENT_HEALTH_CONSENT_REQUIRED','HEALTH_CONSENT_INVALID','HEALTH_CONSENT_UNSUPPORTED_VERSION','HEALTH_CONSENT_MUTATION_SUPERSEDED','ACCOUNT_GENERATION_CHANGED','PRIVATE_KV_CONTENT_KEY_MISSING','PRIVATE_KV_CONTENT_KEY_INVALID','PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE','PRIVATE_KV_DECRYPTION_FAILED','PRIVATE_KV_ENVELOPE_INVALID','PRIVATE_KV_ENVELOPE_UNSUPPORTED','PRIVATE_KV_RECOVERY_REQUIRED','PRIVATE_KV_WRITE_CONFLICT','LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED','LOCAL_DATA_HISTORY_RECOVERY_REQUIRED','LOCAL_DATA_OWNER_MISMATCH','LOCAL_DATA_CLEANUP_REQUIRED','ERR_KEY_CHAIN','ERR_INVALID_KEY','ERR_MISSING_PLIST_KEY','ERR_SEC_ACCESS_CONTROL']);
+ for(const site of ['OBSERVER_READY','ACTIVATION_RETURN','ACTIVATION_CURRENT','ACTIVATION_REJECT','ACTIVATION_MOUNT'])SITES.add(site);
+ const STAGES = new Set(['CAPTURE','PREFLIGHT','PREFLIGHT_LEASE','OPERATION_CURRENT','CONSENT_READ','FINAL_LEASE']);
+ const BOOLS = ['mounted','fresh','hasDraft','tokenCurrent','draftCurrent','consentCurrent','ready','active','hasLease','routeTokenCurrent','focused','privacyDenied','privacyReady'];
+ BOOLS.push('ownerCurrent','epochCurrent','activeState','activationPending','childrenMayMount','routeSelected');
+ let sequence=0,id=0,grant=0,dropped=0,scheduled=false,writing=false,dirty=false,flushFailures=0,identity=null;const events=[];let denialWindow=null;
+ function own(v,k){try {const d=Object.getOwnPropertyDescriptor(v,k);return d&&Object.prototype.hasOwnProperty.call(d,'value')?d.value:undefined;}catch{return undefined;}}
+ function error(e){const chain=[],seen=new Set();for(let n=0;n<3&&e!==undefined&&!seen.has(e);n++){seen.add(e);const code=own(e,'code'),message=own(e,'message');const exact=CODES.has(code)?code:CODES.has(message)?message:CODES.has(e)?e:'UNCLASSIFIED';const numeric={};for(const k of ['code','nativeCode','nativeErrorCode','osStatus','errno']){const v=own(e,k);if(Number.isInteger(v)&&v>=-2147483648&&v<=2147483647)numeric[k]=v;}chain.push({code:exact,numeric});e=own(e,'cause');}return chain;}
+ async function flush(){scheduled=false;if(writing||!dirty)return;writing=true;dirty=false;try{if(!identity){identity=JSON.parse(await FS.readAsStringAsync(FS.documentDirectory+'C47StorageOrigin05Identity.json'));}if(identity.sourceHead!=='__C47_SOURCE_HEAD05__'||identity.bundle!=='com.layerwell.app.staging'||!Number.isInteger(identity.pid)||identity.pid<=0)throw Error();const snapshot={schema:1,marker:'C47_PRIVACY_ORIGIN_DIAGNOSTIC_08',sourceHead:identity.sourceHead,pid:identity.pid,bundle:identity.bundle,eventLimit:512,sequence,dropped,flushFailures,events:events.slice(),denialWindow,ordinaryAdmitted:false,release:'NO_GO'};await FS.writeAsStringAsync(FS.documentDirectory+'C47PrivacyOrigin08-'+identity.pid+'.json',JSON.stringify(snapshot));}catch{flushFailures=Math.min(flushFailures+1,1000000);}finally{writing=false;if(dirty)schedule();}}
+ function schedule(){dirty=true;if(!scheduled&&!writing){scheduled=true;Promise.resolve().then(flush).catch(()=>{});}}
+ globalThis.__C47_PRIVACY_ORIGIN08__=(command,input)=>{try{if(command==='id')return id<1000000?++id:0;if(command==='grant')return grant;if(command==='beginGrant'){if(grant>=1000000)return 0;grant++;}else if(command!=='event')return 0;const site=own(input,'site');if(!SITES.has(site)||sequence>=1000000)return 0;const row={sequence:++sequence,site,grant};for(const k of ['provider','route','check']){const v=own(input,k);if(Number.isSafeInteger(v)&&v>0&&v<=1000000)row[k]=v;}const g=own(input,'grant');if(Number.isSafeInteger(g)&&g>=0&&g<=1000000)row.grant=g;for(const k of BOOLS){const v=own(input,k);if(typeof v==='boolean')row[k]=v;}const st=own(input,'stage');if(STAGES.has(st))row.stage=st;const e=own(input,'error');if(e!==undefined)row.error=error(e);events.push(row);if(events.length>512){events.shift();dropped++;}if(site==='ROUTE_PRIVACY_STATUS'&&row.privacyDenied===true&&grant>0&&denialWindow===null)denialWindow=events.slice(-128);schedule();return row.sequence;}catch{return 0;}};
+ globalThis.__C47_PRIVACY_ORIGIN08__('event',{site:'OBSERVER_READY'});
+ })(); } catch { /* Diagnostic observer failure cannot escape to admission. */ }
+`;
+
+export function mainPrivacy08(requestPath) {
+ const req=JSON.parse(fs.readFileSync(requestPath,'utf8'));assert.equal(req.profile,'PRIVACY08_EXACT137');assert.match(req.source_head,/^[a-f0-9]{40}$/);const root=path.resolve(req.original),out=path.resolve(req.output);assert.deepEqual(Object.keys(req.expected).sort(),[...Object.keys(PLAN53),'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx'].sort());assert.ok(root!==out&&!out.startsWith(root+path.sep));assert.ok(!fs.existsSync(out));fs.mkdirSync(out,{recursive:true});const files=[];
+ for(const [relative,expected]of Object.entries(req.expected)){const before=fs.readFileSync(path.join(root,relative));assert.equal(sha(before),expected);const extra=privacySource08(relative,before.toString('utf8'));const legacy=Object.hasOwn(PLAN53,relative)?transformFile(relative,extra.source,true,PLAN53):{source:extra.source,proof:null};const kind=relative.endsWith('tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS;const sourceTree=ts.createSourceFile(relative,before.toString('utf8'),ts.ScriptTarget.Latest,true,kind),afterTree=ts.createSourceFile(relative,legacy.source,ts.ScriptTarget.Latest,true,kind);assert.equal(afterTree.parseDiagnostics.length,0,'C08 parse '+relative);const countAwait=tree=>{let count=0;const walk=n=>{if(ts.isAwaitExpression(n))count++;ts.forEachChild(n,walk);};walk(tree);return count;};assert.equal(countAwait(afterTree),countAwait(sourceTree),'C08 original awaits preserved');const raw=Buffer.from(legacy.source);const target=path.join(out,relative);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,raw,{flag:'wx'});files.push({path:relative,before:{bytes:before.length,sha256:sha(before)},after:{bytes:raw.length,sha256:sha(raw)},privacy08_edits:extra.edits,legacy_proof:legacy.proof});}
+ const entry=ENTRY08.replaceAll('__C47_SOURCE_HEAD05__',req.source_head);fs.writeFileSync(path.join(out,'privacy08-entry.js'),entry,{flag:'wx'});fs.writeFileSync(req.manifest,JSON.stringify({profile:req.profile,source_head:req.source_head,files,entry:{bytes:Buffer.byteLength(entry),sha256:sha(entry)},ordinary_admitted:false,release:'NO_GO'},null,2)+'\n',{flag:'wx'});
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   if(process.argv[2]==='--self-test')process.stdout.write(JSON.stringify(await selfTest())+'\n');
+  else if(process.argv[2]==='--privacy08')mainPrivacy08(process.argv[3]);
   else main(process.argv[2]);
 }

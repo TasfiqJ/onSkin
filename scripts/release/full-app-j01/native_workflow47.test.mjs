@@ -5,7 +5,8 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { parseDocument } from 'yaml';
 
-const liveSource137 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const liveSource139 = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const liveSource137 = liveSource139.startsWith('# C08 privacy68;') ? execFileSync('git',['show','691b4c5e695acbe0d4557dcdcb7ae21cf01c4e09:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource139;
 const liveSource134 = liveSource137.startsWith('# C07 generator67;') ? execFileSync('git',['show','b217760b89017dff0099ee3c403a3e27b65cd04e:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource137;
 const liveSource132 = liveSource134.startsWith('# C07 recovery65-67;') ? execFileSync('git',['show','af2f62be52c20635a924f34629f246331121b356:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource134;
 const liveSource62 = liveSource132.startsWith('# C07 free-label63-65;') ? execFileSync('git',['show','48fe77db60640202653ca2174935c4b928ffef3f:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}) : liveSource132;
@@ -409,4 +410,10 @@ test('C07 exact137 single remaining native67 uses authenticated65 and ordinary b
   step.run=step.run.replace('--local-source05 --stall-observe07','--reuse65-runner07');
   const check=text=>assert.deepEqual(parse(text),old);assert.ok(liveSource137.startsWith('# C07 generator67; exact PR48/137/a1;'));check(liveSource137);
   for(const[a,b]of[['commits == 137','commits == 134'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['--reuse65-runner07','--reuse56-observe06'],['retention-days: 3','retention-days: 30'],['500 * 1024 * 1024','999 * 1024 * 1024']]){assert.ok(liveSource137.includes(a));assert.throws(()=>check(liveSource137.replaceAll(a,b)),a);}
+});
+
+test('C08 exact139 one diagnostic68 build plus initial consent boundary preserves bounds and forbids ordinary admission',()=>{
+ const parse=text=>{const d=parseDocument(text,{strict:true,uniqueKeys:true,merge:false});assert.deepEqual(d.errors,[]);assert.deepEqual(d.warnings,[]);return d.toJS({maxAliasCount:0});};
+ const old=parse(execFileSync('git',['show','691b4c5e695acbe0d4557dcdcb7ae21cf01c4e09:.github/workflows/campaign47-native-runtime.yml'],{encoding:'utf8'}));const job=old.jobs['native-normal'];old.jobs={'native-build':job};job.name='C47 privacy origin68';delete job.permissions.actions;job.if=job.if.replace('commits == 137','commits == 139');const execute=job.steps.find(x=>x.name==='Execute normal stage');execute.name='Execute privacy diagnostic stage';delete execute.env.C47_ARTIFACT_READ_TOKEN;execute.run=execute.run.replace('native_runtime47.py --stage normal','storage_trace47.py --privacy-origin08').replace(' --reuse65-runner07','');job.steps.at(-1).with.name=job.steps.at(-1).with.name.replace('native-normal-','native-build-');const check=text=>assert.deepEqual(parse(text),old);assert.ok(liveSource139.startsWith('# C08 privacy68; exact PR48/139/a1;'));check(liveSource139);
+ for(const[a,b]of [['commits == 139','commits == 137'],['github.run_attempt == 1','github.run_attempt == 2'],[' && github.event.pull_request.number == 48',''],['macos-26-intel','macos-26-large'],['timeout-minutes: 90','timeout-minutes: 180'],['contents: read','contents: write'],['cancel-in-progress: false','cancel-in-progress: true'],['--privacy-origin08','--onboarding-denial62'],['retention-days: 3','retention-days: 30'],['compression-level: 0','compression-level: 9'],['500 * 1024 * 1024','999 * 1024 * 1024']]){assert.ok(liveSource139.includes(a));assert.throws(()=>check(liveSource139.replaceAll(a,b)),a);}
 });
