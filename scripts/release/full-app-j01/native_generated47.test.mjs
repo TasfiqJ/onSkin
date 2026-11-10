@@ -39,7 +39,7 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.deepEqual(SOURCE_PATHS47.filter(path => STORAGE_ORIGIN05.sourcePaths.includes(path)), STORAGE_ORIGIN05.sourcePaths);
   assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
   // New current source is independently pinned; the historical202 witness remains exact.
-  assert.equal(SOURCE_PATHS47.length, 51);
+  assert.equal(SOURCE_PATHS47.length, 53);
   const photo07 = ['scripts/photo07/photo07-source-contract.mjs', 'scripts/photo07/photo07-source-contract.test.mjs'];
   assert.deepEqual(SOURCE_PATHS47.filter(path => path.startsWith('scripts/photo07/')), photo07);
   for (const path of photo07) {
@@ -389,6 +389,20 @@ const WITNESS_BYTES = readFileSync(join(ROOT, IOS_PRIVACY_LOCK_SUCCESSION46_PATH
 const WITNESS = JSON.parse(WITNESS_BYTES);
 const LOCK_BYTES = readFileSync(join(ROOT, 'package-lock.json'));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+function sourceChild09(stage, deadlineMs, run) {
+  const start = performance.now(), result = run();
+  const output = key => { const bytes = Buffer.from(result[key] ?? ''); return { bytes: bytes.length, sha256: hash(bytes) }; };
+  const sites = [];
+  for (const line of String(result.stderr ?? '').split(/\r?\n/u)) {
+    try { const row = JSON.parse(line); if (row.event === 'C47_SOURCE_STAGE09' &&
+      ['IDENTITY_BEGIN', 'IDENTITY_COMPLETE', 'COMMITTED_INPUTS_BEGIN', 'COMMITTED_INPUTS_COMPLETE'].includes(row.site) && sites.length < 128) sites.push(row.site); } catch {}
+  }
+  writeSync(2, JSON.stringify({ event: 'C47_SOURCE_CHILD09', stage, deadlineMs, elapsedMs: performance.now() - start,
+    status: result.status, signal: result.signal, errorCode: result.error?.code ?? null, stdout: output('stdout'), stderr: output('stderr'),
+    sourceProofOpened: sites.includes('COMMITTED_INPUTS_BEGIN'), sites }) + '\n');
+  return result;
+}
+
 const writeJson = (path, value) => writeFileSync(path, canonicalAuditJson(value));
 
 function fixture(t) {
@@ -584,8 +598,10 @@ test('current47 continuation02 refuses actual unrelated HEAD and ancestor juncti
 test('current47 continuation02 actual CLI checks current receipt, preserves historical bytes and refuses default writes', () => {
   const paths = ['docs/phase-9/generated/ios-privacy-source-audit.json', 'docs/phase-9/generated/ios-privacy-source-audit.md'];
   const originals = paths.map(path => ({ bytes: readFileSync(join(ROOT, path)), stat: statSync(join(ROOT, path), { bigint: true }) }));
-  const cli = args => spawnSync(process.execPath, ['scripts/release/full-app-j01/native_generated47.mjs', '--native-audit47', ...args],
-    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 });
+  const cli = args => sourceChild09('AUDIT_CLI', 120000, () => spawnSync(process.execPath,
+    ['scripts/release/full-app-j01/native_generated47.mjs', '--native-audit47', ...args],
+    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024,
+      env: { ...process.env, C47_SOURCE_TRACE09: '1' } }));
   const positive = cli(['--strict', '--check']); assert.equal(positive.status, 0, positive.stderr);
   const patches = spawnSync(process.execPath, ['scripts/postinstall.mjs', '--check'], { cwd: ROOT, encoding: 'utf8', windowsHide: true });
   assert.equal(patches.status, 0, patches.stderr);
@@ -649,8 +665,10 @@ test('current47 continuation02 actual non-strict tampered and missing descriptor
   });
   const historical = ['docs/phase-9/generated/ios-privacy-source-audit.json', 'docs/phase-9/generated/ios-privacy-source-audit.md']
     .map(path => ({ path: join(ROOT, path), bytes: readFileSync(join(ROOT, path)), stat: statSync(join(ROOT, path), { bigint: true }) }));
-  const cli = args => spawnSync(process.execPath, ['scripts/release/full-app-j01/native_generated47.mjs', '--native-audit47', ...args],
-    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 });
+  const cli = args => sourceChild09('AUDIT_CLI', 120000, () => spawnSync(process.execPath,
+    ['scripts/release/full-app-j01/native_generated47.mjs', '--native-audit47', ...args],
+    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024,
+      env: { ...process.env, C47_SOURCE_TRACE09: '1' } }));
   const positive = () => { const result = cli(['--strict', '--check']); assert.equal(result.status, 0, result.stderr); };
   const status = () => {
     const result = spawnSync('git', ['status', '--porcelain'], { cwd: ROOT, encoding: 'utf8', windowsHide: true });
@@ -853,14 +871,14 @@ test('current47 release bridge runs all twenty-one untouched original tests with
   const identity = spawnSync('git', ['--no-replace-objects', 'rev-parse', 'HEAD'],
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 10000 });
   assert.equal(identity.status, 0, identity.stderr);
-  const childEnvironment = { ...process.env, C47_EXPECTED_HEAD: identity.stdout.trim() };
+  const childEnvironment = { ...process.env, C47_EXPECTED_HEAD: identity.stdout.trim(), C47_SOURCE_TRACE09: '1' };
   delete childEnvironment.NODE_TEST_CONTEXT;
-  const result = spawnSync(process.execPath, [resolve(ROOT,
+  const result = sourceChild09('RELEASE_ORIGINAL21', 30000, () => spawnSync(process.execPath, [resolve(ROOT,
     'scripts/release/full-app-j01/native_generated47.mjs'), '--release-install-wiring47-test'],
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 30000,
       maxBuffer: 2 * 1024 * 1024,
-      env: childEnvironment });
-  if (result.status !== 0) t.diagnostic(JSON.stringify({event:'C47_SOURCE_CHILD_FAILURE07', qualification:'SOURCE_TEST_CHILD_ONLY_NOT_APP_DATA', sourceHead:identity.stdout.trim(), node:process.version, status:result.status, signal:result.signal, errorCode:result.error?.code ?? null, configuredBoundMs:30000, stdoutBytes:Buffer.byteLength(result.stdout||''), stderrBytes:Buffer.byteLength(result.stderr||''), stdoutSHA256:hash(Buffer.from(result.stdout||'')), stderrSHA256:hash(Buffer.from(result.stderr||'')), stdout:result.stdout||'', stderr:result.stderr||''}));
+      env: childEnvironment }));
+  if (result.status !== 0) t.diagnostic(JSON.stringify({event:'C47_SOURCE_CHILD_FAILURE07', qualification:'SOURCE_TEST_CHILD_ONLY_NOT_APP_DATA', sourceHead:identity.stdout.trim(), node:process.version, status:result.status, signal:result.signal, errorCode:result.error?.code ?? null, configuredBoundMs:30000, stdoutBytes:Buffer.byteLength(result.stdout||''), stderrBytes:Buffer.byteLength(result.stderr||''), stdoutSHA256:hash(Buffer.from(result.stdout||'')), stderrSHA256:hash(Buffer.from(result.stderr||''))}));
   assert.equal(result.status, 0, result.stderr || result.stdout);
   for (const line of ['# tests 21', '# pass 21', '# fail 0', '# skipped 0'])
     assert.ok(result.stdout.split(/\r?\n/u).includes(line), line + '\n' + result.stdout);

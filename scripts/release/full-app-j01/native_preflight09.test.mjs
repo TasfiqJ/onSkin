@@ -1,0 +1,47 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {mkdtempSync,mkdirSync,writeFileSync,rmSync,readFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join,resolve} from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {parseNativeCommitBatch09,nativeSourceIdentity46,checkedNativeRoot46} from '../../phase9/ios-privacy-lock-succession46.mjs';
+const ROOT=resolve(import.meta.dirname,'../../..');
+const git=(root,...args)=>{const r=spawnSync('git',['--no-replace-objects',...args],{cwd:root,windowsHide:true,timeout:30000,maxBuffer:32*1024*1024});assert.equal(r.status,0,r.stderr?.toString());return r.stdout;};
+const sha=b=>createHash('sha1').update(`commit ${b.length}\0`).update(b).digest('hex');
+const bytes=Buffer.from('tree '+'b'.repeat(40)+'\nparent '+'c'.repeat(40)+'\n\nsynthetic commit fixture\n');
+const id=sha(bytes),frame=Buffer.concat([Buffer.from(`${id} commit ${bytes.length}\n`),bytes,Buffer.from('\n')]);
+test('C09 batch decodes every authenticated original commit without trusting inventory ancestry',()=>{
+ const [actual]=parseNativeCommitBatch09(frame,[id]).values();assert.deepEqual(actual,{sha:id,tree:'b'.repeat(40),parents:['c'.repeat(40)]});
+ for(const raw of [frame.subarray(0,-1),Buffer.concat([frame,Buffer.from('x')]),Buffer.from(frame.toString().replace(' commit ',' blob ')),Buffer.concat([frame.subarray(0,-2),Buffer.from('x\n')])])
+  assert.throws(()=>parseNativeCommitBatch09(raw,[id]),/COMMIT_OBJECT/);
+ assert.throws(()=>parseNativeCommitBatch09(frame,['a'.repeat(40)]),/COMMIT_OBJECT/);
+ assert.throws(()=>parseNativeCommitBatch09(Buffer.concat([frame,frame]),[id,id]),/COMMIT_OBJECT/);
+ assert.throws(()=>parseNativeCommitBatch09(Buffer.alloc(0),[]),/COMMIT_OBJECT/);
+ const bad=Buffer.from('not a commit header\n\nfixture\n'),badId=sha(bad);
+ assert.throws(()=>parseNativeCommitBatch09(Buffer.concat([Buffer.from(`${badId} commit ${bad.length}\n`),bad,Buffer.from('\n')]),[badId]),/COMMIT_HEADER/);
+});
+test('C09 actual raw object proof preserves identities, refuses graft omission and ignores replacement objects',t=>{
+ const expected=nativeSourceIdentity46(checkedNativeRoot46(ROOT));
+ const owned=mkdtempSync(join(tmpdir(),'c47-preflight09-'));t.after(()=>rmSync(owned,{recursive:true,force:true}));
+ const root=join(owned,'repo');mkdirSync(root);git(root,'init','--quiet');git(root,'remote','add','origin','https://github.com/TasfiqJ/onSkin.git');
+ const objects=git(ROOT,'rev-parse','--git-path','objects').toString().trim();
+ writeFileSync(join(root,'.git/objects/info/alternates'),resolve(ROOT,objects).replaceAll('\\','/')+'\n');
+ writeFileSync(join(root,'.git/HEAD'),expected.sourceHead+'\n');
+ assert.deepEqual(nativeSourceIdentity46(checkedNativeRoot46(root)),expected);
+ mkdirSync(join(root,'.git/info'),{recursive:true});
+ writeFileSync(join(root,'.git/info/grafts'),expected.sourceHead+' '+expected.predecessor+'\n');
+ assert.throws(()=>nativeSourceIdentity46(checkedNativeRoot46(root)),/APPEND_ONLY_LINEAGE/);
+ rmSync(join(root,'.git/info/grafts'));
+ mkdirSync(join(root,'.git/refs/replace'),{recursive:true});
+ writeFileSync(join(root,'.git/refs/replace',expected.sourceHead),expected.predecessor+'\n');
+ assert.deepEqual(nativeSourceIdentity46(checkedNativeRoot46(root)),expected);
+ const merged=Buffer.from('tree '+expected.sourceTree+'\nparent '+expected.acceptedBase+'\nparent '+expected.sourceHead+'\nauthor Fixture <fixture@invalid> 1 +0000\ncommitter Fixture <fixture@invalid> 1 +0000\n\nowned service merge fixture\n');
+ const merge=spawnSync('git',['hash-object','-t','commit','-w','--stdin'],{cwd:root,input:merged,windowsHide:true,timeout:30000});assert.equal(merge.status,0);
+ const mergeId=merge.stdout.toString().trim();writeFileSync(join(root,'.git/HEAD'),mergeId+'\n');
+ assert.deepEqual(nativeSourceIdentity46(checkedNativeRoot46(root)),{...expected,checkoutHead:mergeId});
+ const wrong=Buffer.from(merged.toString().replace(expected.acceptedBase,expected.predecessor));
+ const wrongId=spawnSync('git',['hash-object','-t','commit','-w','--stdin'],{cwd:root,input:wrong,windowsHide:true,timeout:30000});assert.equal(wrongId.status,0);
+ writeFileSync(join(root,'.git/HEAD'),wrongId.stdout.toString().trim()+'\n');
+ assert.throws(()=>nativeSourceIdentity46(checkedNativeRoot46(root)),/SERVICE_MERGE/);
+});

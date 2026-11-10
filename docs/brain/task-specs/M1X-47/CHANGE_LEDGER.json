@@ -639,6 +639,24 @@
       "causal_need": "Actual full unit return shows retired onboarding UI because legacy fixture lacks the new prepared port; alias only the same old mock getter/function, preserve every old test callback/getter body and privacy assertions.",
       "invariant": "No production application, consent expectation, age, cancellation, explicit save, owner/health authority or timeout change. Historical202/172 witness bytes remain; exact changed source is independently current-pinned.",
       "validation": "Focused unchanged-test successor and all new strict negatives, full uncached root unit suite after fixture changes; type/lint/current-source checks on final committed candidate."
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-lock-succession46.mjs",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 21352,
+      "preimage_sha256": "ec55a930c6c77ebf0dfc64d2dd8a1f5418ff047fccbf791edd45f5d5b28e21e7",
+      "causal_need": "Actual original source bridge timeout in repeated authenticated Git process fanout; bounded batching and adversarial original-object controls only.",
+      "invariant": "Every object hash, parent/merge/owner fence and input check retained; no timeout, app, security or admission relaxation.",
+      "validation": "Original full30/60+nested21, new exact batch/graft/merge negatives, complete source scope/observer/runtime controls."
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_preflight09.test.mjs",
+      "preimage_state": "ABSENT",
+      "preimage_bytes": 0,
+      "preimage_sha256": null,
+      "causal_need": "Actual original source bridge timeout in repeated authenticated Git process fanout; bounded batching and adversarial original-object controls only.",
+      "invariant": "Every object hash, parent/merge/owner fence and input check retained; no timeout, app, security or admission relaxation.",
+      "validation": "Original full30/60+nested21, new exact batch/graft/merge negatives, complete source scope/observer/runtime controls."
     }
   ],
   "amendments": [
@@ -9508,6 +9526,100 @@
       "diagnostic_starts_remaining": 0,
       "source_code_changed": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09",
+      "preimage_head": "2b35b7399ffa8727f3166a0c35fb93e20f33611b",
+      "raw_mandate": {
+        "bytes": 23694,
+        "sha256": "fe8c4210f571e3ed5d9b62692a38810593c141f3737c451e9c85414bbcf9005b"
+      },
+      "paths": [
+        {
+          "path": "scripts/phase9/ios-privacy-lock-succession46.mjs",
+          "bytes": 21352,
+          "sha256": "ec55a930c6c77ebf0dfc64d2dd8a1f5418ff047fccbf791edd45f5d5b28e21e7",
+          "purpose": "Bound repeated source-identity process overhead or stabilize owned fixture without weakening admission",
+          "invariants": "Authenticate actual raw Git commit objects and linear parent chain; retain source/installed input, metadata, test deadlines and all privacy guards",
+          "tests": "Original full30/60 and nested21; focused original-object/forged/merge/graft negatives; observer37 and file-mutation/refusal controls"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "bytes": 69764,
+          "sha256": "52e2036d2a6bbb4b1bd2f2464096ece0512d3c0e1e040dcad8805ae0d12b3e3a",
+          "purpose": "Bound repeated source-identity process overhead or stabilize owned fixture without weakening admission",
+          "invariants": "Authenticate actual raw Git commit objects and linear parent chain; retain source/installed input, metadata, test deadlines and all privacy guards",
+          "tests": "Original full30/60 and nested21; focused original-object/forged/merge/graft negatives; observer37 and file-mutation/refusal controls"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "bytes": 63110,
+          "sha256": "b5e9691e72c7edb77d7fb5250590717f0a83983a5d6293cb5438eb3b6c7ff280",
+          "purpose": "Bound repeated source-identity process overhead or stabilize owned fixture without weakening admission",
+          "invariants": "Authenticate actual raw Git commit objects and linear parent chain; retain source/installed input, metadata, test deadlines and all privacy guards",
+          "tests": "Original full30/60 and nested21; focused original-object/forged/merge/graft negatives; observer37 and file-mutation/refusal controls"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23257,
+          "sha256": "9ec24d999a0be65b37bbca3627d909fa20102aaa66f751df5f4733a227e28436",
+          "purpose": "Bound repeated source-identity process overhead or stabilize owned fixture without weakening admission",
+          "invariants": "Authenticate actual raw Git commit objects and linear parent chain; retain source/installed input, metadata, test deadlines and all privacy guards",
+          "tests": "Original full30/60 and nested21; focused original-object/forged/merge/graft negatives; observer37 and file-mutation/refusal controls"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "bytes": 122389,
+          "sha256": "b65ad732b92f1dbc59d6beb13e3c0ca211c4d0863c59e5ff2e32ddfea7ac0377",
+          "purpose": "Bound repeated source-identity process overhead or stabilize owned fixture without weakening admission",
+          "invariants": "Authenticate actual raw Git commit objects and linear parent chain; retain source/installed input, metadata, test deadlines and all privacy guards",
+          "tests": "Original full30/60 and nested21; focused original-object/forged/merge/graft negatives; observer37 and file-mutation/refusal controls"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 158678,
+          "sha256": "9cc363e197648c3d7372d6e0a0bf8d8e341486aa7c8e7be3573ae029932d4ec7",
+          "purpose": "Narrow current scope successor and truthful preflight provenance",
+          "invariants": "All historical source/ancestry witnesses and staged native STOP preserved; no app behavior change",
+          "tests": "Current source scope with exact145 prefix and all original full30/37/security controls"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 720804,
+          "sha256": "98d7cc8550b122924fd00bdc2e20fce6ed47a5c50d1bff70e04085c271efebe3",
+          "purpose": "Narrow current scope successor and truthful preflight provenance",
+          "invariants": "All historical source/ancestry witnesses and staged native STOP preserved; no app behavior change",
+          "tests": "Current source scope with exact145 prefix and all original full30/37/security controls"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 161544,
+          "sha256": "6a40d3028fab26926cd9db77771f06901b92aeb5865563ec5cef97d213d7c276",
+          "purpose": "Narrow current scope successor and truthful preflight provenance",
+          "invariants": "All historical source/ancestry witnesses and staged native STOP preserved; no app behavior change",
+          "tests": "Current source scope with exact145 prefix and all original full30/37/security controls"
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 655062,
+          "sha256": "b80325b170a00cf50ae20a14e97c2e63db04d06b1ee43cebb7f1ac7ec96d92c5",
+          "purpose": "Narrow current scope successor and truthful preflight provenance",
+          "invariants": "All historical source/ancestry witnesses and staged native STOP preserved; no app behavior change",
+          "tests": "Current source scope with exact145 prefix and all original full30/37/security controls"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 35624,
+          "sha256": "990f26ad40c7cd0aee291120c455fa7dd3f8d29f914bfb200c229f3bc00c8fa0",
+          "purpose": "Narrow current scope successor and truthful preflight provenance",
+          "invariants": "All historical source/ancestry witnesses and staged native STOP preserved; no app behavior change",
+          "tests": "Current source scope with exact145 prefix and all original full30/37/security controls"
+        }
+      ],
+      "causal_boundary": "Campaign47 Continuation09 / BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09 / STAGED RESUME AUTHORIZED / NO_GO.\nAuthenticated raw mandate23694B SHAfe8c4210f571e3ed5d9b62692a38810593c141f3737c451e9c85414bbcf9005b; exact145 HEAD2b35b7399ffa8727f3166a0c35fb93e20f33611b/tree87d82877d1810141edbc9d25ed4ed51929e1f736 and live unchanged base/main/PR48 verified. All145 ancestors, C08 returns and original failed68/69/Windows evidence retained.\nMandatory zero-Mac preflight: actual local original case29 child reproduced ETIMEDOUT/SIGTERM at30018ms/30000 bound,0stdout/0stderr. Bounded external trace retained475 finished children including234rev-parse and234cat-file:28182ms in those Git operations before timeout. Replace repeated per-commit process spawning with fresh bounded cat-file batch, independently rehash each original commit and retain exact raw-parent walk/merge/owner/256 bounds. No ancestry cache, changed-input cache, deadline increase, skip or weakened source check. Added malformed/truncated/wrong-object/graft/replacement/service-merge tests; descriptor additionally pins original reader successor and narrow preflight tests. Historical202 witness bytes unchanged.\nWindows Python3.12.10 actual owned fixture observation382reads:2strict C47_STAGE_FILE_RACE refusals with st_ctime_ns as the only differing field; local3.9 separately400stable reads. This supports current reproducible fixture mechanism, not retrospective knowledge of the unrecorded hosted143/145 field. CPython issue157671 documents path creation-time versus fd change-time behavior. Finalize only test-created synthetic fixture creation/change timestamps before verification; retain every production metadata comparison. Positive exact-reader and deliberate during-open mutation refusal pass in selected original tests; full suites/current committed identity still required.\nFive standard serial Mac starts70-74 available; ZERO C09 started. Native workflow stays parked at already-used143. Do not enable70 until complete original full30/60+nested21, observer37, strict source/runtime/signing/workflow and relevant uncached checks properly validate within original bounds. No original privacy rejection captured yet; no production app repair selected. At most70/71 diagnostic starts before causal origin, else STOP leaving72-74unused. Only genuine complete uninstrumented ordinary3 PASS admits internal5/export integrity/removal. All38/18 unaccepted; Security/SDK/candidate29/G97 unwaived. Same draftPR48, maintainer edits/auto-merge OFF; no merge/deploy/release/Campaign48.",
+      "native_started09": 0,
+      "remaining": 5,
+      "status": "ZERO_MAC_PREFLIGHT_IN_PROGRESS_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

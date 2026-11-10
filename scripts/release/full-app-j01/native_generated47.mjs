@@ -37,6 +37,8 @@ export const STORAGE_ORIGIN05 = {
   "internalAdmission": false
 };
 export const SOURCE_PATHS47 = [
+  'scripts/phase9/ios-privacy-lock-succession46.mjs',
+  'scripts/release/full-app-j01/native_preflight09.test.mjs',
   'scripts/photo07/photo07-source-contract.mjs',
   'scripts/photo07/photo07-source-contract.test.mjs',
   'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
