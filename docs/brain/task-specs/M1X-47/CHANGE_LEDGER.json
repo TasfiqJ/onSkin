@@ -9225,6 +9225,80 @@
       "ordinary_admitted": false,
       "internal_admitted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PRIVACY-ORIGIN-RUNTIME-08",
+      "head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+      "preedit_path": "continuation08/preedit02-fixture138/PREEDIT.json",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 221448,
+          "sha256": "814fd5b3aa71632e84f8760548d911c07dd82cd7c03a90c85b4c6f17da9fa914",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 155943,
+          "sha256": "fc2b1cecb7aabaee9c4a207674b2af3364a609b269f2512f72e3dc7e60c30411",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 39542,
+          "sha256": "66c82416bdab68d842033fd6f2c3296c469d0d25933e692012827c7f39a9cf82",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 3975,
+          "sha256": "11b58429a3405cd28847d702f21fa53ad9cf480bec50850716473f86b10ca648",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 23257,
+          "sha256": "f9278cc308b261c5b4d5288afc72be2639b9fb043288a5664191ed8a40aeda00",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 698818,
+          "sha256": "89efbccb518a17083e65b34482e30dbe22e3050d59e7dad7081216d64431ab13",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 158732,
+          "sha256": "9e47c29576e98dffd2fc03759707b463b7d4b098d5afc1529e21f0164fd3ed24",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 652250,
+          "sha256": "7f24f2b0da88da011907182a46829a0abf6e6e0cba7b891dfc8732fc82e168ea",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "f712447874d437c4fb6ccabe005a03698d2f4b54",
+          "bytes": 32812,
+          "sha256": "80823385c5af804ec03084e948c6a14b64fe6524ef68811c2e0c780f3f29db2a",
+          "purpose": "Retain exact historical137 build65 positive data, retain every negative, add current diagnostic descriptor refusal; advance one-shot source counter for append-only repair; no native/product guard change"
+        }
+      ],
+      "causal_boundary": "Measured138 runtime156 has155PASS/1ERROR: old65 positive fixture uses new diagnostic descriptor and correctly refuses. No source phase/root/native executed for138. All original negative assertions and production guard retained. Historical positive now exactly137; additional current diagnostic refusal required.",
+      "native_started08": 0,
+      "remaining": 5,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

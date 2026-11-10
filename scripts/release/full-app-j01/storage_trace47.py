@@ -1315,6 +1315,38 @@ def _privacy08_capture(r,n,device,bundle,head,evidence,label,expected_pid=None,*
     if origin is not None:legacy['qualifying_origins'].append({'privacy08':origin,'pid':actual['pid']})
     return legacy
 
+
+@contextmanager
+def privacy08_live_capture(r,n):
+    """Copy the owned content-free origin during XCTest's original readiness wait.
+
+    This external observer never injects input, reads private app records, or
+    changes native admission. Final UI/result qualification remains separate.
+    """
+    import threading
+    target=r.output/'PRIVACY08_LIVE';target.mkdir(exist_ok=False)
+    stop=threading.Event();observations=[]
+    def observe():
+        while not stop.is_set():
+            try:
+                data=getattr(r,'_storage05_first_data_container',None)
+                if data is not None:
+                    identity=n.stage_json(n.read_native_file(data/'Documents/C47StorageOrigin05Identity.json'))
+                    need(set(identity)=={'schema','pid','sourceHead','bundle'}and identity['schema']==1 and identity['sourceHead']==r.receipt['source']['head']and identity['bundle']=='com.layerwell.app.staging'and type(identity['pid'])is int and 0<identity['pid']<=2147483647,'PRIVACY08_LIVE_IDENTITY')
+                    path=data/('Documents/C47PrivacyOrigin08-'+str(identity['pid'])+'.json');raw=n.read_native_file(path);value=validate_privacy08(raw,identity['sourceHead'],identity['pid']);origin=privacy_origin08(value)
+                    if origin is not None:
+                        (target/'first-observed-origin-candidate.json').write_bytes(raw)
+                        document(target/'native-identity.json',identity)
+                        observations.append({'state':'ACTUAL_ORIGIN_CANDIDATE_COPIED_WHILE_XCTEST_ACTIVE','utc':n.utc(),'pid':identity['pid'],'trace_bytes':len(raw),'trace_sha256':digest(raw),'origin':origin,'qualification':'FIRST_OBSERVED_SOURCE_PREDICATE; FINAL_CASE_SCREEN_AND_GENUINE_CURRENT_AUTHORITY_STILL_REQUIRE_REVIEW','ordinary_admitted':False});return
+            except Exception as error:
+                if len(observations)<8:observations.append({'state':'OBSERVER_UNAVAILABLE','error_type':type(error).__name__,'ordinary_admitted':False})
+            stop.wait(1)
+    thread=threading.Thread(target=observe,daemon=True);thread.start()
+    try:yield
+    finally:
+        stop.set();thread.join(timeout=5)
+        document(target/'OBSERVER.json',{'authorization':PRIVACY08_AUTH,'source_head':r.receipt['source']['head'],'observations':observations,'thread_joined':not thread.is_alive(),'ordinary_admitted':False,'release':'NO_GO'})
+
 def _privacy08_case(child,project,products,method,device,environment):
     n=_privacy08_native;need(method==n.NORMAL_UI_CASES04[2],'PRIVACY08_CASE03_ONLY')
     path=Path(project).parent/'native_ui47.swift';before=path.read_bytes();need(before==n.read_native_file(child.root/'scripts/release/full-app-j01/native_ui47.swift').split(b'\nimport UIKit',1)[0],'PRIVACY08_EXACT_GENERATED_RUNNER')
@@ -1322,7 +1354,8 @@ def _privacy08_case(child,project,products,method,device,environment):
     after=before[:first]+b'        // C08 diagnostic prefix only; no full ordinary-case admission.\n'+before[end:];path.write_bytes(after)
     (child.output/'PRIVACY08_DIAGNOSTIC_RUNNER.swift').write_bytes(after)
     document(child.output/'PRIVACY08_DIAGNOSTIC_RUNNER.json',{'source_head':child.receipt['source']['head'],'selected_method':method,'baseline_before':{'bytes':len(before),'sha256':digest(before)},'actual_compiled_prefix':{'bytes':len(after),'sha256':digest(after)},'original_case03_initial_sequence_exact':True,'ends_after':'first actual requireFreshGoals','not_full_case03':True,'ordinary_admitted':False,'release':'NO_GO'})
-    try:return _privacy08_original_case(child,project,products,method,device,environment)
+    try:
+        with privacy08_live_capture(child,n):return _privacy08_original_case(child,project,products,method,device,environment)
     finally:need(path.read_bytes()==after,'PRIVACY08_RUNNER_FOREIGN');path.write_bytes(before)
 
 def main_privacy08():
@@ -1340,12 +1373,14 @@ def main_privacy08():
     def prepare(*a,**kw):
         result=original_prepare(*a,**kw)
         a[0].run('privacy08-source-observer-tests',['python3','-I','-B','scripts/release/full-app-j01/storage_trace47.test.py'],timeout=120)
+        a[0].run('privacy08-current-runtime-controls',['python3','-I','-B','scripts/release/full-app-j01/native_runtime47.test.py'],timeout=300)
+        a[0].run('privacy08-simulator-signing-controls',['python3','-I','-B','scripts/release/full-app-j01/simulator_signing47.test.py'],timeout=120)
         return result
     n.prepare=prepare
     diagnostic_inputs=diagnostic_inputs08;collect_native_origin05=_privacy08_capture;n.normal_case_execution04=_privacy08_case;_native05_installed=installed
     try:
         context=n.hosted_stage_context(r,'build');need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY08_ONE_SHOT')
-        count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~2'],timeout=60);need(count=='139'and parent==PRIVACY08_START,'PRIVACY08_EXACT139_WITH137_PREFIX')
+        count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~3'],timeout=60);need(count=='140'and parent==PRIVACY08_START,'PRIVACY08_EXACT140_WITH137_PREFIX')
         result=run_native_origin05(r,n,onboarding_denial53=True)
         actual=[v['privacy08']['origin']for v in result['observations']if v.get('privacy08',{}).get('origin')is not None]
         r.receipt['privacy_origin08']={'authorization':PRIVACY08_AUTH,'native_attempt':68,'source_head':context['head'],'source_tree':context['tree'],'origins':actual,'first_actual_origin_captured':bool(actual),'diagnostic_case03_prefix_only':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}

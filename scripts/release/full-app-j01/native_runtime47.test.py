@@ -390,7 +390,7 @@ class Runtime47Tests(unittest.TestCase):
             '48fe77db60640202653ca2174935c4b928ffef3f:scripts/release/full-app-j01/native_ui47.swift'],
             cwd=Path(__file__).resolve().parents[3])
         old_free = b'tap("Continue with the free plan", app)'
-        exact_free = 'tap("Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., ›", app)'.encode()
+        exact_free = 'tap("Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., â€º", app)'.encode()
         self.assertEqual(original130.count(old_free), 2)
         self.assertEqual(current.count(exact_free), 2)
         self.assertEqual(current, original130.replace(old_free, exact_free))
@@ -3240,10 +3240,11 @@ class Generator07Tests(unittest.TestCase):
         for wrong in [swift+b'\n',swift.replace(b'age >= 18',b'age >= 17',1) if b'age >= 18' in swift else swift.replace(b'XCTAssertFalse',b'XCTAssertTrue',1),swift.replace(b'No purchase. Pro features',b'No purchase. pro features',1)]:
             self.assertNotEqual(wrong,swift);result=run(ruby,wrong);self.assertNotEqual(result.returncode,0);self.assertIn(b'composite-label Swift source changed',result.stderr)
 
-    def test_exact_build65_delta_and_meaningful_drift_refusals(self):
+    def test_exact_historical137_build65_delta_and_meaningful_drift_refusals(self):
         root=Path(__file__).resolve().parents[3];head='b217760b89017dff0099ee3c403a3e27b65cd04e'
         old=lambda name:subprocess.check_output(['git','show',head+':'+name],cwd=root)
-        current=lambda name:(root/name).read_bytes()
+        # Historical137 positive/negatives retain their exact source domain.
+        current=lambda name:subprocess.check_output(['git','show','691b4c5e695acbe0d4557dcdcb7ae21cf01c4e09:'+name],cwd=root)
         paths=['scripts/release/full-app-j01/native_ui47.rb','scripts/release/full-app-j01/native_runtime47.py']
         self.assertEqual(n.verify_reuse65_delta(root,paths,old,current),sorted(paths))
         descriptor='docs/phase-9/ios-generated-input-succession47.v1.json'
@@ -3263,6 +3264,14 @@ class Generator07Tests(unittest.TestCase):
                     return json.dumps(value).encode()
                 return current(name)
             with self.subTest(path=path,error=error),self.assertRaisesRegex(ValueError,error):n.verify_reuse65_delta(root,paths,old,changed)
+
+
+    def test_current_C08_diagnostic_descriptor_cannot_reuse_ordinary_build65(self):
+        root=Path(__file__).resolve().parents[3]
+        old=lambda name:subprocess.check_output(['git','show','b217760b89017dff0099ee3c403a3e27b65cd04e:'+name],cwd=root)
+        current=lambda name:(root/name).read_bytes()
+        with self.assertRaisesRegex(ValueError,'REUSE65_ALL_PRODUCT_NATIVE_DESCRIPTOR_AND_AUTHORITY_EXACT'):
+            n.verify_reuse65_delta(root,['scripts/release/full-app-j01/native_ui47.rb','scripts/release/full-app-j01/native_runtime47.py'],old,current)
 
 if __name__ == '__main__':
     unittest.main()
