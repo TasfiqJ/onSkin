@@ -9299,6 +9299,80 @@
       "native_started08": 0,
       "remaining": 5,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PRIVACY-ORIGIN-RUNTIME-08",
+      "head": "6355f526633142166a30fa2ab9606924354feb3b",
+      "preedit_path": "continuation08/preedit03-utf8-139/PREEDIT.json",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "bytes": 222187,
+          "sha256": "4bc22def21c3d11c1822e56a2deb2319b398840299cae5de259b07cad199381e",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 158678,
+          "sha256": "58e5ee788b2664ff904ea17d7bc33ffb6ab8d6926db4fc318d9e40102ce4dcb7",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "bytes": 39542,
+          "sha256": "60a602a50d870ee19b7e34b6448458689d27ad76b3c2f043cfd4701cd03b6556",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "bytes": 3975,
+          "sha256": "d6e0dd91a40ce716ae18418097ad083a5c4062f20d9c7fdacd1e4399ab26cded",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23257,
+          "sha256": "ec5b24a20042c85690c06a52a106100727bf176334cb63ff819307138e5971c1",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 703933,
+          "sha256": "33adb130afd2119fe2d46eb9aa0ed369d27a2aed9c98817520a54d158b9a10a2",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 159178,
+          "sha256": "fcddcb9e31ced084f082485c2f9297efca613dee2fa1b1c5857ddd4457e4f39d",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 652696,
+          "sha256": "545a4fe29f04ae684e62c154dd8c3bcb99dd5d5ea2c6a4ac1e42c7b191b5b7e2",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 33258,
+          "sha256": "36883df1e07f8cd15c1821d25074954cf253d79e16b030ef470762982dab1ff1",
+          "preimage_head": "6355f526633142166a30fa2ab9606924354feb3b",
+          "purpose": "Restore exact original UTF8 composite-label witness corrupted by Windows default decoding in local preparation; retain all assertions; advance finite native source count only. No product behavior or reuse guard changes."
+        }
+      ],
+      "causal_boundary": "Measured139 runtime157 has156PASS/1FAIL: Windows preparation default cp1252 decoding corrupted only the UTF8 composite-label test witness. Product Swift unchanged; actual prefix assertion correctly RED. Restore original UTF8 witness and verify all other historical method ASTs exact; no assertion weakened. SOURCE_PENDING/root/native not run for139.",
+      "native_started08": 0,
+      "remaining": 5,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

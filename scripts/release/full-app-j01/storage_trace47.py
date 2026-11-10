@@ -1380,7 +1380,7 @@ def main_privacy08():
     diagnostic_inputs=diagnostic_inputs08;collect_native_origin05=_privacy08_capture;n.normal_case_execution04=_privacy08_case;_native05_installed=installed
     try:
         context=n.hosted_stage_context(r,'build');need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY08_ONE_SHOT')
-        count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~3'],timeout=60);need(count=='140'and parent==PRIVACY08_START,'PRIVACY08_EXACT140_WITH137_PREFIX')
+        count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~4'],timeout=60);need(count=='141'and parent==PRIVACY08_START,'PRIVACY08_EXACT141_WITH137_PREFIX')
         result=run_native_origin05(r,n,onboarding_denial53=True)
         actual=[v['privacy08']['origin']for v in result['observations']if v.get('privacy08',{}).get('origin')is not None]
         r.receipt['privacy_origin08']={'authorization':PRIVACY08_AUTH,'native_attempt':68,'source_head':context['head'],'source_tree':context['tree'],'origins':actual,'first_actual_origin_captured':bool(actual),'diagnostic_case03_prefix_only':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}

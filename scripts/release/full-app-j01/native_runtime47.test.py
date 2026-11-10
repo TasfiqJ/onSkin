@@ -390,7 +390,7 @@ class Runtime47Tests(unittest.TestCase):
             '48fe77db60640202653ca2174935c4b928ffef3f:scripts/release/full-app-j01/native_ui47.swift'],
             cwd=Path(__file__).resolve().parents[3])
         old_free = b'tap("Continue with the free plan", app)'
-        exact_free = 'tap("Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., â€º", app)'.encode()
+        exact_free = 'tap("Continue with the free plan, No purchase. Pro features stay locked until you choose a plan., ›", app)'.encode()
         self.assertEqual(original130.count(old_free), 2)
         self.assertEqual(current.count(exact_free), 2)
         self.assertEqual(current, original130.replace(old_free, exact_free))

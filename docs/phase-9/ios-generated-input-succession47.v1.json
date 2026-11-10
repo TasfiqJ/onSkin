@@ -231,8 +231,8 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 222187,
-      "sha256": "4bc22def21c3d11c1822e56a2deb2319b398840299cae5de259b07cad199381e"
+      "bytes": 222183,
+      "sha256": "0e8616985d0e963c45d7ccfb95ccaa0f1385921979fe3926e50ad463e6d5e00f"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
@@ -262,7 +262,7 @@
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
       "bytes": 158678,
-      "sha256": "58e5ee788b2664ff904ea17d7bc33ffb6ab8d6926db4fc318d9e40102ce4dcb7"
+      "sha256": "ab6ce10a19a223863c24d7d22dbe226268bfe327d5b5619776334ea6ffd14afd"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
