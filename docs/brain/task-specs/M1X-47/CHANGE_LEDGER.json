@@ -9793,6 +9793,80 @@
       "native_started09": 0,
       "remaining": 5,
       "status": "EXACT_PREIMAGE_METADATA_REPAIR_BEFORE_NATIVE_NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09",
+      "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+      "paths": [
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 160550,
+          "sha256": "1f659b33fc1bab96210b8b3e5c11556d6cee19338d56ae834a2c458b666bb1b9",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "bytes": 128830,
+          "sha256": "caa12ed52a3d5ef194e5652b2a93c7a033046dd78d1a08809f4f5a590308544a",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "bytes": 4002,
+          "sha256": "dccbd0b5854b3739a8cae7b4805d4d46c00ea293ebbfdd8425c4b9504a36a67a",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23632,
+          "sha256": "796b7ceb5bbaebecc8423e023025691da2dea7e82ad023bc96088fe786eebae9",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 748921,
+          "sha256": "c4ccc5d906d6b298e38fc11b4bb0e0f89d3263c0a5ff33179f2bf09fa89fbb48",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 167629,
+          "sha256": "c4eed53ab99ac27c9a32879c8a714dff568bbf8fd6359aa132e3597b95107aa0",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 661147,
+          "sha256": "258fc1d803ce2a96b9375985fca499600ed0eb7ca1d112297b64b5f952fa1b2b",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 41709,
+          "sha256": "f94863599882af6647495e7b5a6cda660bdcdb3c9b2c2267d91b4a783c5692ae",
+          "preimage_head": "9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6",
+          "invariant": "No app/source/storage/consent/signing edits; preserve original run_native_origin05 and strict producer import; actual new compile/current product. One fresh owned Simulator, same600sec bootstatus, initialized after all Mac source tests before compilation; recheck same owned device before install. Build/runtime budget never enlarged. First original privacy origin required by end71 or stop72-74unused.",
+          "real_test": "New source tests for exact151/149 one-shot71 context, early boot ownership/recheck order, unchanged command result/errors and bounded content-free progress observer failure, measured build/time reserve refusal; existing observer38/full30/60/runtime157/sign15/nested21/current input controls preserved."
+        }
+      ],
+      "causal_boundary": "C09 material150 prepares only final diagnostic remainder71 at next worklist-only151/a1, preserving149 as HEAD~2 and all earlier ancestors. Native70 actually started run42829248702/job129874632437, compiled a real new signed Release diagnostic app and passed actual Mac full30/60, observer38/runtime157/sign15. Actual600sec bootstatus failed during initial data migration then Waiting on System App, before installation/appPID/XCTest/privacy trace; principal execution cancelled at90min, always-upload retained82,274,463-byte raw SHA041cacb6d9e3ee988ae79673c6e27f1ad6ec9fb580807beb91954e17814280fa. Missing final producer stage seal and pre-sign generated archive are preserved; strict complete-stage reader refused, not waived. Separate build-domain checks verified all55 commands before boot PASS/complete, exact original/source53 pins, all9 composite transform afterimages, original signature/Mach-O/JS/TAR/inventory; app44,075,035 bytes SHAfd234db21e05a9b5115fded12d38b2dd1b8123882a9e6b43fbc64e457d61c2ae. App remains diagnostic-only, uninstalled/unlaunched; first privacy origin unknown. Raw and actual app separately owner-private with fresh-download SHA/CRC/member verification. Current149 standard CI: iOS source PASS, other4 workflows FAILED; actual7 PASS/8 FAIL/1 SKIP jobs,15 logs,10 verified artifacts; root7122/type/lint/database/Windows source38/full30 positive, SDK/Security/candidate29/G97/scanner failures unwaived.\nNative71 is NOT STARTED. Choose a new current-source build, preserving the existing strict import refusal; no partial producer import exception. A bounded source-only coordinator first validates complete source30 and observer/runtime/signing controls, boots exactly one fresh campaign-owned Simulator with unchanged600sec limit before generation/compilation, rechecks the same source/device before install, then uses every original install/launch/actual case03-prefix/capture helper. It preserves original run_native_origin05 and all historical boundary functions. Static bounded operational progress logs no app values, arguments, exception text, or arbitrary identifiers; observer failure cannot alter results. Build starts only with at least3488sec remaining (measured70 compile2767.030sec plus720sec runtime/evidence reserve), and its timeout may only shrink. Existing84min coordinator/90min job, single standard Mac,500MiB/3day evidence and no-charge restrictions remain. This is a discriminating startup-order diagnostic, not a proven Simulator/root privacy cure. Five focused coordinator source tests PASS; full current43/30/60/21/source, uncached root/type/lint and fresh capacity checks remain required before start. ONE C09 start used, FOUR slots71-74 remain; absent first genuine privacy origin or actual full uninstrumented ordinary3 by end71, STOP72-74unused. No app privacy repair, current ordinary/internal execution or acceptance/release claim.",
+      "native_started09": 1,
+      "remaining": 4,
+      "status": "PREPARING_FRESH_BUILD_PREBOOT_REMAINDER71_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

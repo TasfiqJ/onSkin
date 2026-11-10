@@ -1376,9 +1376,68 @@ def privacy_stage09(r,context):
     need(count=='149' and parent==PRIVACY09_START,'PRIVACY09_EXACT149_WITH145_PREFIX')
     return {'authorization':PRIVACY09_AUTH,'native_attempt':70,'preserved_start':PRIVACY09_START,'source_head':context['head'],'source_tree':context['tree'],'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
 
-def main_privacy08(continuation09=False):
+def privacy_stage71_09(r,context):
+    need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY09_REMAINDER71_ONE_SHOT')
+    count=r.text('privacy09-remainder71-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60)
+    parent=r.text('privacy09-remainder71-preserved149',['git','rev-parse','HEAD~2'],timeout=60)
+    need(count=='151' and parent=='9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6','PRIVACY09_REMAINDER71_EXACT151_WITH149_PREFIX')
+    return {'authorization':PRIVACY09_AUTH,'native_attempt':71,'preserved_start':PRIVACY09_START,'preserved_native70_head':parent,'source_head':context['head'],'source_tree':context['tree'],'fresh_build_required':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
+
+
+@contextmanager
+def privacy71_coordinator09(r,n,enabled):
+    """One C09 remainder: boot after full source controls, before the fresh build.
+
+    The original runner, source gates, signing, install and XCTest remain intact.
+    Progress contains static coordinator stages only, never app/exception data.
+    """
+    if not enabled:
+        yield None
+        return
+    original_run=r.run;original_simulator=n.prepare_simulator;ready=None;sequence=0
+    stages={'normal-install':'INSTALL','generated47-controls':'SOURCE30','privacy08-source-observer-tests':'OBSERVER_CONTROLS','privacy08-current-runtime-controls':'RUNTIME_CONTROLS','privacy08-simulator-signing-controls':'SIGNING_CONTROLS','prebuild':'GENERATE','pods':'PODS','storage-origin05-build':'COMPILE','simulator-bootstatus':'SIMULATOR_BOOT','privacy09-preboot-recheck71':'SIMULATOR_RECHECK','native-normal-staging-ui':'TARGETED_XCTEST'}
+    def progress(name,state):
+        nonlocal sequence
+        try:
+            if sequence>=256:return
+            sequence+=1
+            print(json.dumps({'event':'C47_NATIVE71_COORDINATOR','sequence':sequence,'stage':stages.get(name,'OTHER'),'state':state}),flush=True)
+        except Exception:pass
+    def run(name,argv,*args,**kwargs):
+        progress(name,'BEGIN')
+        try:
+            if name=='storage-origin05-build':
+                need(ready is not None,'PRIVACY09_BUILD71_REQUIRES_PREBOOT')
+                # Actual native70 compile2767.030s +720s retained runtime/evidence reserve.
+                remaining=r.deadline-__import__('time').monotonic()
+                need(remaining>=3488,'PRIVACY09_BUILD71_MEASURED_RUNTIME_RESERVE')
+                kwargs['timeout']=min(kwargs.get('timeout',120),remaining-720)
+            return original_run(name,argv,*args,**kwargs)
+        finally:progress(name,'END')
+    def boot():
+        nonlocal ready
+        need(ready is None,'PRIVACY09_PREBOOT71_ONCE')
+        proof=_native05_full_source_controls53(r,n)
+        for name in ['privacy08-source-observer-tests','privacy08-current-runtime-controls','privacy08-simulator-signing-controls']:
+            rows=[v for v in r.receipt['commands']if v['name']==name]
+            need(len(rows)==1 and rows[0].get('state')=='PASS'and rows[0].get('exit_code')==0 and rows[0].get('capture_complete')is True,'PRIVACY09_PREBOOT71_SOURCE_CONTROLS')
+        r.passed('privacy09-source-controls-before-boot71',proof)
+        device=original_simulator(r,'normal')
+        need(r.receipt.get('simulator',{}).get('udid')==device,'PRIVACY09_PREBOOT71_OWNED_DEVICE')
+        ready=(device,r.receipt['source']['head'])
+        r.passed('privacy09-simulator-ready-before-generation71',{'udid':device,'source_head':ready[1],'original_bootstatus_timeout_seconds':600,'ordinary_admitted':False,'release':'NO_GO'})
+    def prepared(actual,lane):
+        need(actual is r and lane=='normal'and ready is not None and r.receipt.get('simulator',{}).get('udid')==ready[0]and r.receipt['source']['head']==ready[1],'PRIVACY09_PREBOOT71_EXACT_CURRENT_DEVICE')
+        r.run('privacy09-preboot-recheck71',['xcrun','simctl','bootstatus',ready[0],'-b'],timeout=600)
+        return ready[0]
+    r.run=run;n.prepare_simulator=prepared
+    try:yield boot
+    finally:r.run=original_run;n.prepare_simulator=original_simulator
+
+
+def main_privacy08(continuation09=False,remainder71=False):
     import argparse,importlib.util,os,sys
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--privacy-origin09' if continuation09 else '--privacy-origin08',action='store_true',required=True);args=p.parse_args();root=Path(__file__).resolve().parents[3]
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--privacy-origin09-remainder71' if remainder71 else '--privacy-origin09' if continuation09 else '--privacy-origin08',action='store_true',required=True);args=p.parse_args();root=Path(__file__).resolve().parents[3]
     need(not os.environ.pop('C47_ARTIFACT_READ_TOKEN',''),'PRIVACY08_NO_OLD_PRODUCT_IMPORT')
     spec=importlib.util.spec_from_file_location('c47_privacy08_native',root/'scripts/release/full-app-j01/native_runtime47.py');n=importlib.util.module_from_spec(spec);sys.modules[spec.name]=n;spec.loader.exec_module(n)
     output=args.output.absolute();need(not output.resolve().is_relative_to(root)and not output.exists(),'PRIVACY08_NEW_OUTSIDE_OUTPUT');output.mkdir(parents=True);r=n.Runner(root,output,seconds=84*60);r.receipt.update(stage='build',lane='SEPARATE_RELEASE_PRIVACY_ORIGIN08_DIAGNOSTIC',ordinary_admitted=False,diagnostic_only=True);r.persist();context=None;result=None;code=1
@@ -1387,24 +1446,26 @@ def main_privacy08(continuation09=False):
     _privacy08_native=n;_privacy08_original_inputs=diagnostic_inputs;_privacy08_original_capture=collect_native_origin05;_privacy08_original_case=n.normal_case_execution04;original_installed=_native05_installed
     def installed(*a):
         value=original_installed(*a);a[0]._privacy08_installed=(a[2],a[5]);return value
-    original_prepare=n.prepare
+    original_prepare=n.prepare;boot71=None
     def prepare(*a,**kw):
         result=original_prepare(*a,**kw)
         a[0].run('privacy08-source-observer-tests',['python3','-I','-B','scripts/release/full-app-j01/storage_trace47.test.py'],timeout=120)
         a[0].run('privacy08-current-runtime-controls',['python3','-I','-B','scripts/release/full-app-j01/native_runtime47.test.py'],timeout=300)
         a[0].run('privacy08-simulator-signing-controls',['python3','-I','-B','scripts/release/full-app-j01/simulator_signing47.test.py'],timeout=120)
+        if remainder71:boot71()
         return result
     n.prepare=prepare
     diagnostic_inputs=diagnostic_inputs08;collect_native_origin05=_privacy08_capture;n.normal_case_execution04=_privacy08_case;_native05_installed=installed
     try:
         context=n.hosted_stage_context(r,'build');need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY08_ONE_SHOT')
         if continuation09:
-            r.receipt['continuation09']=privacy_stage09(r,context);r.persist()
+            r.receipt['continuation09']=privacy_stage71_09(r,context)if remainder71 else privacy_stage09(r,context);r.persist()
         else:
             count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~6'],timeout=60);need(count=='143'and parent==PRIVACY08_START,'PRIVACY08_EXACT143_WITH137_PREFIX')
-        result=run_native_origin05(r,n,onboarding_denial53=True)
+        with privacy71_coordinator09(r,n,remainder71)as boot71:
+            result=run_native_origin05(r,n,onboarding_denial53=True)
         actual=[v['privacy08']['origin']for v in result['observations']if v.get('privacy08',{}).get('origin')is not None]
-        r.receipt['privacy_origin09' if continuation09 else 'privacy_origin08']={'authorization':PRIVACY09_AUTH if continuation09 else PRIVACY08_AUTH,'native_attempt':70 if continuation09 else 69,'source_head':context['head'],'source_tree':context['tree'],'origins':actual,'first_actual_origin_captured':bool(actual),'diagnostic_case03_prefix_only':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
+        r.receipt['privacy_origin09' if continuation09 else 'privacy_origin08']={'authorization':PRIVACY09_AUTH if continuation09 else PRIVACY08_AUTH,'native_attempt':71 if remainder71 else 70 if continuation09 else 69,'source_head':context['head'],'source_tree':context['tree'],'origins':actual,'first_actual_origin_captured':bool(actual),'diagnostic_case03_prefix_only':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
         code=0 if actual else 1;r.receipt.update(status='PRIVACY08_ORIGIN_CAPTURED_REVIEW_REQUIRED'if actual else'PRIVACY08_ORIGIN_NOT_CAPTURED',stage_complete=bool(actual));r.persist()
     except Exception as error:r.receipt.update(status='PARTIAL_BLOCKED',stage_complete=False,failure={'type':type(error).__name__,'detail':str(error)},finished_utc=n.utc());r.persist()
     finally:
@@ -1424,4 +1485,4 @@ def main_privacy08(continuation09=False):
 
 if __name__ == '__main__':
     import sys
-    raise SystemExit(main_privacy08(True) if '--privacy-origin09' in sys.argv else main_privacy08() if '--privacy-origin08' in sys.argv else main_origin05())
+    raise SystemExit(main_privacy08(True,True) if '--privacy-origin09-remainder71' in sys.argv else main_privacy08(True) if '--privacy-origin09' in sys.argv else main_privacy08() if '--privacy-origin08' in sys.argv else main_origin05())

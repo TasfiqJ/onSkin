@@ -988,4 +988,89 @@ class Preflight09SourceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'PRIVACY09'):s.privacy_stage09(refused,context)
         with self.assertRaisesRegex(ValueError,'PRIVACY09_ONE_SHOT'):s.privacy_stage09(fixture(),{**context,'run_attempt':2})
 
+class Remainder71Coordinator09Tests(unittest.TestCase):
+    """Synthetic coordinator ports only; no native or ordinary admission."""
+    def fixture(self):
+        from types import SimpleNamespace
+        import time
+        calls=[];timeline=[];result=object()
+        def run(name,argv,*args,**kwargs):
+            calls.append((name,argv,kwargs))
+            if name=='negative':raise self.original_error
+            return result
+        r=SimpleNamespace(run=run,deadline=time.monotonic()+9000,receipt={'source':{'head':'a'*40},'commands':[{'name':n,'state':'PASS','exit_code':0,'capture_complete':True}for n in ['privacy08-source-observer-tests','privacy08-current-runtime-controls','privacy08-simulator-signing-controls']]},passed=lambda name,value:timeline.append(name))
+        def simulator(actual,lane):
+            self.assertIs(actual,r);self.assertEqual(lane,'normal');timeline.append('ACTUAL_BOOT_PORT');actual.run('simulator-bootstatus',['original-boot'],timeout=600);actual.receipt['simulator']={'udid':'12345678-1234-1234-1234-123456789abc'};return actual.receipt['simulator']['udid']
+        return r,SimpleNamespace(prepare_simulator=simulator),calls,timeline,result
+
+    def test_exact_one_shot151_remainder_preserves149_and_refuses_wrong_context(self):
+        from types import SimpleNamespace
+        calls=[]
+        def fixture(count='151',parent='9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6',event='pull_request'):
+            def text(name,argv,timeout):calls.append((name,argv,timeout));return count if name=='privacy09-remainder71-commit-count'else parent
+            return SimpleNamespace(env={'GITHUB_EVENT_NAME':event},text=text)
+        context={'run_attempt':1,'head':'a'*40,'tree':'b'*40};v=s.privacy_stage71_09(fixture(),context)
+        self.assertEqual(v['native_attempt'],71);self.assertTrue(v['fresh_build_required']);self.assertFalse(v['ordinary_admitted']);self.assertFalse(v['internal_admitted'])
+        self.assertEqual(calls,[('privacy09-remainder71-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],60),('privacy09-remainder71-preserved149',['git','rev-parse','HEAD~2'],60)])
+        for r in [fixture(count='149'),fixture(count='150'),fixture(count='152'),fixture(parent='c'*40),fixture(event='push')]:
+            with self.assertRaisesRegex(ValueError,'PRIVACY09_REMAINDER71'):s.privacy_stage71_09(r,context)
+        with self.assertRaisesRegex(ValueError,'ONE_SHOT'):s.privacy_stage71_09(fixture(),{**context,'run_attempt':2})
+
+    def test_source_controls_precede_one_fresh_boot_and_recheck_keeps_exact_device_and_source(self):
+        from unittest.mock import patch
+        import contextlib,io
+        r,n,calls,timeline,result=self.fixture();original_run=r.run;original_simulator=n.prepare_simulator;deadline=r.deadline
+        with patch.object(s,'_native05_full_source_controls53',side_effect=lambda *a:timeline.append('STRICT_SOURCE_PROOF')or{'verified':True}),contextlib.redirect_stdout(io.StringIO()):
+            with s.privacy71_coordinator09(r,n,True)as boot:
+                with self.assertRaisesRegex(ValueError,'EXACT_CURRENT_DEVICE'):n.prepare_simulator(r,'normal')
+                boot();self.assertEqual(timeline[:3],['STRICT_SOURCE_PROOF','privacy09-source-controls-before-boot71','ACTUAL_BOOT_PORT'])
+                with self.assertRaisesRegex(ValueError,'ONCE'):boot()
+                device=n.prepare_simulator(r,'normal');self.assertEqual(device,r.receipt['simulator']['udid']);self.assertEqual(calls[-1],('privacy09-preboot-recheck71',['xcrun','simctl','bootstatus',device,'-b'],{'timeout':600}))
+                for actual,lane in [(object(),'normal'),(r,'internal')]:
+                    with self.assertRaisesRegex(ValueError,'EXACT_CURRENT_DEVICE'):n.prepare_simulator(actual,lane)
+                r.receipt['source']['head']='b'*40
+                with self.assertRaisesRegex(ValueError,'EXACT_CURRENT_DEVICE'):n.prepare_simulator(r,'normal')
+                r.receipt['source']['head']='a'*40;r.receipt['simulator']['udid']='foreign'
+                with self.assertRaisesRegex(ValueError,'EXACT_CURRENT_DEVICE'):n.prepare_simulator(r,'normal')
+        self.assertIs(r.run,original_run);self.assertIs(n.prepare_simulator,original_simulator);self.assertEqual(r.deadline,deadline)
+        with s.privacy71_coordinator09(r,n,False)as boot:self.assertIsNone(boot);self.assertIs(r.run,original_run)
+
+    def test_failed_or_partial_source_control_never_boots_a_simulator(self):
+        from unittest.mock import patch
+        import contextlib,io
+        for mutate in [lambda rows:rows.clear(),lambda rows:rows[0].update(state='FAIL'),lambda rows:rows[0].update(exit_code=1),lambda rows:rows[0].update(capture_complete=False),lambda rows:rows.append(dict(rows[0]))]:
+            r,n,calls,timeline,result=self.fixture();mutate(r.receipt['commands'])
+            with patch.object(s,'_native05_full_source_controls53',return_value={'verified':True}),contextlib.redirect_stdout(io.StringIO()):
+                with s.privacy71_coordinator09(r,n,True)as boot:
+                    with self.assertRaisesRegex(ValueError,'PREBOOT71_SOURCE_CONTROLS'):boot()
+            self.assertNotIn('ACTUAL_BOOT_PORT',timeline);self.assertEqual(calls,[])
+
+    def test_build_requires_preboot_and_measured_runtime_reserve_and_never_enlarges_timeout(self):
+        from unittest.mock import patch
+        import contextlib,io,time
+        r,n,calls,timeline,result=self.fixture();r.deadline=13487
+        with patch.object(s,'_native05_full_source_controls53',return_value={'verified':True}),patch.object(time,'monotonic',return_value=10000),contextlib.redirect_stdout(io.StringIO()):
+            with s.privacy71_coordinator09(r,n,True)as boot:
+                with self.assertRaisesRegex(ValueError,'REQUIRES_PREBOOT'):r.run('storage-origin05-build',['actual-build'],timeout=3000)
+                boot();count=len(calls)
+                with self.assertRaisesRegex(ValueError,'MEASURED_RUNTIME_RESERVE'):r.run('storage-origin05-build',['actual-build'],timeout=3000)
+                self.assertEqual(len(calls),count);r.deadline=13488
+                self.assertIs(r.run('storage-origin05-build',['actual-build'],timeout=3000),result);self.assertEqual(calls[-1][2]['timeout'],2768)
+                self.assertIs(r.run('storage-origin05-build',['actual-build'],timeout=1000),result);self.assertEqual(calls[-1][2]['timeout'],1000)
+        self.assertEqual(r.deadline,13488)
+
+    def test_static_progress_is_bounded_redacted_and_cannot_change_original_results_or_errors(self):
+        from unittest.mock import patch
+        import contextlib,io
+        r,n,calls,timeline,result=self.fixture();self.original_error=RuntimeError('SECRET_MESSAGE');out=io.StringIO()
+        with contextlib.redirect_stdout(out):
+            with s.privacy71_coordinator09(r,n,True):
+                for i in range(300):self.assertIs(r.run('SECRET_NAME',['SECRET_ARGUMENT']),result)
+        rows=[json.loads(l)for l in out.getvalue().splitlines()];self.assertEqual(len(rows),256);self.assertEqual([v['sequence']for v in rows],list(range(1,257)));self.assertEqual(len(calls),300);self.assertNotIn('SECRET',out.getvalue());self.assertTrue(all(set(v)=={'event','sequence','stage','state'}and v['stage']=='OTHER'for v in rows))
+        with patch('builtins.print',side_effect=OSError('OBSERVER_FAILURE')):
+            with s.privacy71_coordinator09(r,n,True):
+                self.assertIs(r.run('positive',['SECRET_ARGUMENT']),result)
+                with self.assertRaises(RuntimeError)as caught:r.run('negative',['SECRET_ARGUMENT'])
+                self.assertIs(caught.exception,self.original_error)
+
 if __name__=='__main__':unittest.main()

@@ -1,4 +1,4 @@
-# C09 privacy70; exact PR48/149/a1; source preflight required; fresh separate diagnostic build and case03 initial consent-to-goals only; no ordinary/internal admission.
+# C09 remainder71; exact PR48/151/a1; source controls then fresh Simulator boot before new diagnostic compile; original case03 prefix only; no ordinary/internal admission.
 name: Campaign47 Simulator native runtime
 
 on:
@@ -29,10 +29,10 @@ env:
 
 jobs:
   native-build:
-    name: C47 privacy origin70
+    name: C47 privacy origin71
     permissions:
       contents: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 149 && github.run_attempt == 1
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 151 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -57,7 +57,7 @@ jobs:
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
-        run: python3 -I -B scripts/release/full-app-j01/storage_trace47.py --privacy-origin09 --output "$RUNNER_TEMP/c47-evidence"
+        run: python3 -I -B scripts/release/full-app-j01/storage_trace47.py --privacy-origin09-remainder71 --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
