@@ -21,7 +21,7 @@ const identityKeys = ['dev', 'ino', 'size', 'mtimeNs', 'ctimeNs', 'nlink'];
 let sourceTraceSequence09 = 0;
 function sourceStage09(site) {
   if (process.env.C47_SOURCE_TRACE09 !== '1' || sourceTraceSequence09 >= 128) return;
-  try { writeSync(2, JSON.stringify({ event: 'C47_SOURCE_STAGE09', site, pid: process.pid, sequence: ++sourceTraceSequence09 }) + '\n'); }
+  try { writeSync(3, JSON.stringify({ event: 'C47_SOURCE_STAGE09', site, pid: process.pid, sequence: ++sourceTraceSequence09 }) + '\n'); }
   catch { /* Observation cannot alter the original assertion. */ }
 }
 
@@ -257,7 +257,6 @@ export function nativeSourceIdentity46(root) {
     cursor = commit(root, cursor.parents[0]);
   }
   sourceStage09('IDENTITY_COMPLETE');
-  sourceStage09('IDENTITY_COMPLETE');
   return { checkoutHead: checkout.sha, sourceHead: source.sha, sourceTree: source.tree,
     acceptedBase: BASE, acceptedBaseTree: BASE_TREE, predecessor: PREDECESSOR, predecessorTree: PREDECESSOR_TREE };
 }
@@ -270,6 +269,7 @@ export function assertCurrentNativeHead46(rootValue, expectedHead = process.env.
   if (expectedHead !== undefined &&
       (!/^[a-f0-9]{40}$/u.test(expectedHead) || expectedHead !== identity.sourceHead)) reject('EXPECTED_HEAD');
   const descriptor = readNativeFile46(root, IOS_PRIVACY_LOCK_SUCCESSION46_PATH, 4 * 1024 * 1024);
+  sourceStage09('COMMITTED_INPUTS_OPENED');
   if (descriptor.sha256 !== LOCK_SUCCESSION46_SHA256) reject('WITNESS_DRIFT');
   const witness = JSON.parse(descriptor.bytes);
   const paths = [...new Set([IOS_PRIVACY_LOCK_SUCCESSION46_PATH,
@@ -302,7 +302,6 @@ export function assertCurrentNativeHead46(rootValue, expectedHead = process.env.
     offset += size + 1;
   }
   if (offset !== batch.stdout.length || !same(identity, nativeSourceIdentity46(root))) reject('COMMITTED_INPUT_RACE');
-  sourceStage09('COMMITTED_INPUTS_COMPLETE');
   sourceStage09('COMMITTED_INPUTS_COMPLETE');
   return { ...identity, expectedHead: expectedHead ?? identity.sourceHead,
     committedCriticalInputs: paths.length, descriptorSHA256: descriptor.sha256 };

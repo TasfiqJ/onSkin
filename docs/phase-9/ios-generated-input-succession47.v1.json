@@ -206,8 +206,8 @@
     },
     {
       "path": "scripts/phase9/ios-privacy-lock-succession46.mjs",
-      "bytes": 24295,
-      "sha256": "dac3844b3ca6983f717fc025e7ce3723b4ea1dd411ac0888ebc43d80886a3815"
+      "bytes": 24255,
+      "sha256": "3dc33fe15968b0670dedb692b22b18ce8a90ab627315055c10ca89ddf51dba0c"
     },
     {
       "path": "scripts/photo07/photo07-source-contract.mjs",
@@ -226,13 +226,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 64277,
-      "sha256": "291d31453293a086ac3127fe1136c64b3a1d2395ca8616750924012fcb2af535"
+      "bytes": 65186,
+      "sha256": "f45ce618409a9457a9f8706fd98e4259dffc5456a2516109dd460b2200bf087f"
     },
     {
       "path": "scripts/release/full-app-j01/native_preflight09.test.mjs",
-      "bytes": 4373,
-      "sha256": "b3169607ad2757e4a74779596d002e3febc327d6bec236b1ffb47d210aa5efe5"
+      "bytes": 4387,
+      "sha256": "b9f94ead8c1288aede3cfd94f8429f69b5eebd6b3816f21ed1ab5e2ff6f0e2a8"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
@@ -271,13 +271,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 159387,
-      "sha256": "9134ff1e44b498d8d7269c0148a14b765dfacdc269cc94d252cf7037e4c52b25"
+      "bytes": 160550,
+      "sha256": "b10c7c7b466fae1cd89cc74c7079da41a3bb4de9a5c0d9b03defb89f9ee2e10c"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 125718,
-      "sha256": "3c56bc68f5e5077dda741461d5b8697f90036032caa60dc920c57579011a6e47"
+      "bytes": 128809,
+      "sha256": "312d3956ae10047fd4f7f881c643cde4e4a77830c50eb87232441ef77fdbb833"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

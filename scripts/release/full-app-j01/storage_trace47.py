@@ -1366,9 +1366,19 @@ def _privacy08_case(child,project,products,method,device,environment):
         with privacy08_live_capture(child,n):return _privacy08_original_case(child,project,products,method,device,environment)
     finally:need(path.read_bytes()==after,'PRIVACY08_RUNNER_FOREIGN');path.write_bytes(before)
 
-def main_privacy08():
+PRIVACY09_AUTH='BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09'
+PRIVACY09_START='2b35b7399ffa8727f3166a0c35fb93e20f33611b'
+
+def privacy_stage09(r,context):
+    need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY09_ONE_SHOT')
+    count=r.text('privacy09-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60)
+    parent=r.text('privacy09-preserved145-parent',['git','rev-parse','HEAD~3'],timeout=60)
+    need(count=='148' and parent==PRIVACY09_START,'PRIVACY09_EXACT148_WITH145_PREFIX')
+    return {'authorization':PRIVACY09_AUTH,'native_attempt':70,'preserved_start':PRIVACY09_START,'source_head':context['head'],'source_tree':context['tree'],'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
+
+def main_privacy08(continuation09=False):
     import argparse,importlib.util,os,sys
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--privacy-origin08',action='store_true',required=True);args=p.parse_args();root=Path(__file__).resolve().parents[3]
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--privacy-origin09' if continuation09 else '--privacy-origin08',action='store_true',required=True);args=p.parse_args();root=Path(__file__).resolve().parents[3]
     need(not os.environ.pop('C47_ARTIFACT_READ_TOKEN',''),'PRIVACY08_NO_OLD_PRODUCT_IMPORT')
     spec=importlib.util.spec_from_file_location('c47_privacy08_native',root/'scripts/release/full-app-j01/native_runtime47.py');n=importlib.util.module_from_spec(spec);sys.modules[spec.name]=n;spec.loader.exec_module(n)
     output=args.output.absolute();need(not output.resolve().is_relative_to(root)and not output.exists(),'PRIVACY08_NEW_OUTSIDE_OUTPUT');output.mkdir(parents=True);r=n.Runner(root,output,seconds=84*60);r.receipt.update(stage='build',lane='SEPARATE_RELEASE_PRIVACY_ORIGIN08_DIAGNOSTIC',ordinary_admitted=False,diagnostic_only=True);r.persist();context=None;result=None;code=1
@@ -1388,10 +1398,13 @@ def main_privacy08():
     diagnostic_inputs=diagnostic_inputs08;collect_native_origin05=_privacy08_capture;n.normal_case_execution04=_privacy08_case;_native05_installed=installed
     try:
         context=n.hosted_stage_context(r,'build');need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY08_ONE_SHOT')
-        count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~6'],timeout=60);need(count=='143'and parent==PRIVACY08_START,'PRIVACY08_EXACT143_WITH137_PREFIX')
+        if continuation09:
+            r.receipt['continuation09']=privacy_stage09(r,context);r.persist()
+        else:
+            count=r.text('privacy08-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60);parent=r.text('privacy08-preserved137-parent',['git','rev-parse','HEAD~6'],timeout=60);need(count=='143'and parent==PRIVACY08_START,'PRIVACY08_EXACT143_WITH137_PREFIX')
         result=run_native_origin05(r,n,onboarding_denial53=True)
         actual=[v['privacy08']['origin']for v in result['observations']if v.get('privacy08',{}).get('origin')is not None]
-        r.receipt['privacy_origin08']={'authorization':PRIVACY08_AUTH,'native_attempt':69,'source_head':context['head'],'source_tree':context['tree'],'origins':actual,'first_actual_origin_captured':bool(actual),'diagnostic_case03_prefix_only':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
+        r.receipt['privacy_origin09' if continuation09 else 'privacy_origin08']={'authorization':PRIVACY09_AUTH if continuation09 else PRIVACY08_AUTH,'native_attempt':70 if continuation09 else 69,'source_head':context['head'],'source_tree':context['tree'],'origins':actual,'first_actual_origin_captured':bool(actual),'diagnostic_case03_prefix_only':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
         code=0 if actual else 1;r.receipt.update(status='PRIVACY08_ORIGIN_CAPTURED_REVIEW_REQUIRED'if actual else'PRIVACY08_ORIGIN_NOT_CAPTURED',stage_complete=bool(actual));r.persist()
     except Exception as error:r.receipt.update(status='PARTIAL_BLOCKED',stage_complete=False,failure={'type':type(error).__name__,'detail':str(error)},finished_utc=n.utc());r.persist()
     finally:
@@ -1411,4 +1424,4 @@ def main_privacy08():
 
 if __name__ == '__main__':
     import sys
-    raise SystemExit(main_privacy08() if '--privacy-origin08' in sys.argv else main_origin05())
+    raise SystemExit(main_privacy08(True) if '--privacy-origin09' in sys.argv else main_privacy08() if '--privacy-origin08' in sys.argv else main_origin05())

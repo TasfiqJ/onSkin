@@ -40,6 +40,11 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
   // New current source is independently pinned; the historical202 witness remains exact.
   assert.equal(SOURCE_PATHS47.length, 53);
+  const preflight09 = ['scripts/phase9/ios-privacy-lock-succession46.mjs',
+    'scripts/release/full-app-j01/native_preflight09.test.mjs'];
+  assert.deepEqual(SOURCE_PATHS47.filter(path => preflight09.includes(path)), preflight09);
+  assert.equal(SOURCE_PATHS47.filter(path => !preflight09.includes(path)).length, 51);
+
   const photo07 = ['scripts/photo07/photo07-source-contract.mjs', 'scripts/photo07/photo07-source-contract.test.mjs'];
   assert.deepEqual(SOURCE_PATHS47.filter(path => path.startsWith('scripts/photo07/')), photo07);
   for (const path of photo07) {
@@ -389,17 +394,18 @@ const WITNESS_BYTES = readFileSync(join(ROOT, IOS_PRIVACY_LOCK_SUCCESSION46_PATH
 const WITNESS = JSON.parse(WITNESS_BYTES);
 const LOCK_BYTES = readFileSync(join(ROOT, 'package-lock.json'));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+let sourceChildSequence09 = 0;
 function sourceChild09(stage, deadlineMs, run) {
   const start = performance.now(), result = run();
   const output = key => { const bytes = Buffer.from(result[key] ?? ''); return { bytes: bytes.length, sha256: hash(bytes) }; };
-  const sites = [];
-  for (const line of String(result.stderr ?? '').split(/\r?\n/u)) {
+  const sites = [], trace = Buffer.from(result.output?.[3] ?? '');
+  for (const line of trace.toString().split(/\r?\n/u)) {
     try { const row = JSON.parse(line); if (row.event === 'C47_SOURCE_STAGE09' &&
-      ['IDENTITY_BEGIN', 'IDENTITY_COMPLETE', 'COMMITTED_INPUTS_BEGIN', 'COMMITTED_INPUTS_COMPLETE'].includes(row.site) && sites.length < 128) sites.push(row.site); } catch {}
+      ['IDENTITY_BEGIN', 'IDENTITY_COMPLETE', 'COMMITTED_INPUTS_BEGIN', 'COMMITTED_INPUTS_OPENED', 'COMMITTED_INPUTS_COMPLETE'].includes(row.site) && row.pid === result.pid && Number.isSafeInteger(row.sequence) && row.sequence > 0 && row.sequence <= 128 && sites.length < 128) sites.push({ site: row.site, sequence: row.sequence, pid: row.pid }); } catch {}
   }
-  writeSync(2, JSON.stringify({ event: 'C47_SOURCE_CHILD09', stage, deadlineMs, elapsedMs: performance.now() - start,
-    status: result.status, signal: result.signal, errorCode: result.error?.code ?? null, stdout: output('stdout'), stderr: output('stderr'),
-    sourceProofOpened: sites.includes('COMMITTED_INPUTS_BEGIN'), sites }) + '\n');
+  writeSync(2, JSON.stringify({ event: 'C47_SOURCE_CHILD09', call: ++sourceChildSequence09, childPID: result.pid ?? null, stage, deadlineMs, elapsedMs: performance.now() - start,
+    status: result.status, signal: result.signal, errorCode: result.error?.code ?? null, stdout: output('stdout'), stderr: output('stderr'), traceBytes: trace.length, traceSHA256: hash(trace),
+    sourceProofOpened: sites.some(row => row.site === 'COMMITTED_INPUTS_OPENED'), committedSourceProofEntered: sites.some(row => row.site === 'COMMITTED_INPUTS_BEGIN'), sites }) + '\n');
   return result;
 }
 
@@ -601,7 +607,7 @@ test('current47 continuation02 actual CLI checks current receipt, preserves hist
   const cli = args => sourceChild09('AUDIT_CLI', 120000, () => spawnSync(process.execPath,
     ['scripts/release/full-app-j01/native_generated47.mjs', '--native-audit47', ...args],
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024,
-      env: { ...process.env, C47_SOURCE_TRACE09: '1' } }));
+      env: { ...process.env, C47_SOURCE_TRACE09: '1' }, stdio: ['pipe', 'pipe', 'pipe', 'pipe'] }));
   const positive = cli(['--strict', '--check']); assert.equal(positive.status, 0, positive.stderr);
   const patches = spawnSync(process.execPath, ['scripts/postinstall.mjs', '--check'], { cwd: ROOT, encoding: 'utf8', windowsHide: true });
   assert.equal(patches.status, 0, patches.stderr);
@@ -668,7 +674,7 @@ test('current47 continuation02 actual non-strict tampered and missing descriptor
   const cli = args => sourceChild09('AUDIT_CLI', 120000, () => spawnSync(process.execPath,
     ['scripts/release/full-app-j01/native_generated47.mjs', '--native-audit47', ...args],
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024,
-      env: { ...process.env, C47_SOURCE_TRACE09: '1' } }));
+      env: { ...process.env, C47_SOURCE_TRACE09: '1' }, stdio: ['pipe', 'pipe', 'pipe', 'pipe'] }));
   const positive = () => { const result = cli(['--strict', '--check']); assert.equal(result.status, 0, result.stderr); };
   const status = () => {
     const result = spawnSync('git', ['status', '--porcelain'], { cwd: ROOT, encoding: 'utf8', windowsHide: true });
@@ -877,7 +883,7 @@ test('current47 release bridge runs all twenty-one untouched original tests with
     'scripts/release/full-app-j01/native_generated47.mjs'), '--release-install-wiring47-test'],
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 30000,
       maxBuffer: 2 * 1024 * 1024,
-      env: childEnvironment }));
+      env: childEnvironment, stdio: ['pipe', 'pipe', 'pipe', 'pipe'] }));
   if (result.status !== 0) t.diagnostic(JSON.stringify({event:'C47_SOURCE_CHILD_FAILURE07', qualification:'SOURCE_TEST_CHILD_ONLY_NOT_APP_DATA', sourceHead:identity.stdout.trim(), node:process.version, status:result.status, signal:result.signal, errorCode:result.error?.code ?? null, configuredBoundMs:30000, stdoutBytes:Buffer.byteLength(result.stdout||''), stderrBytes:Buffer.byteLength(result.stderr||''), stdoutSHA256:hash(Buffer.from(result.stdout||'')), stderrSHA256:hash(Buffer.from(result.stderr||''))}));
   assert.equal(result.status, 0, result.stderr || result.stdout);
   for (const line of ['# tests 21', '# pass 21', '# fail 0', '# skipped 0'])

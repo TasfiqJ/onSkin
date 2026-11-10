@@ -485,13 +485,23 @@ class SourceScope59Tests(unittest.TestCase):
             'apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts',
             'apps/mobile/src/features/onboarding/onboardingRoute18.test.ts',
             'apps/mobile/src/lib/auth/localAccountIsolation.ts'}
-        self.assertEqual(additions, expected)
+        preflight09={'scripts/phase9/ios-privacy-lock-succession46.mjs',
+            'scripts/release/full-app-j01/native_preflight09.test.mjs'}
+        self.assertEqual(additions-preflight09, expected)
+        self.assertEqual(additions, expected|preflight09)
         self.assertFalse(original.PATHS & additions)
+        self.assertEqual(len(frozenset(original.PATHS)|expected),70)
         current = frozenset(original.PATHS) | additions
-        self.assertEqual(len(current), 70)
-        self.assertIn("result['finite_declared_paths']!=70", source)
-        self.assertIn("'finite_paths':70", source)
-        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE70', source)
+        self.assertEqual(len(current), 72)
+        historical=subprocess.run(['git','--no-replace-objects','show',s.PRIVACY09_START+':scripts/release/full-app-j01/storage_trace47.py'],cwd=ROOT,capture_output=True,timeout=30)
+        self.assertEqual(historical.returncode,0)
+        self.assertIn(b"result['finite_declared_paths']!=70",historical.stdout)
+        self.assertIn(b"'finite_paths':70",historical.stdout)
+        self.assertIn(b'C47_STORAGE05_EXACT87_PREFIX_FINITE70',historical.stdout)
+        self.assertIn("result['finite_declared_paths']!=72", source)
+        self.assertIn("'finite_paths':72", source)
+        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE72', source)
+        self.assertIn('C47_PREFLIGHT09_EXACT145_PREFIX', source)
         self.assertIn('C47_STORAGE05_PRESERVED_705A_CHECKPOINT', source)
         self.assertIn('C47_STORAGE05_EXACT101_ORDINARY49_PREFIX', source)
         self.assertIn('C47_STORAGE05_PRESERVED_DD21_CHECKPOINT', source)
@@ -953,5 +963,29 @@ class Privacy08NativeBoundaryTests(unittest.TestCase):
             try:
                 child=SimpleNamespace(output=out,root=ROOT,receipt={'source':{'head':'a'*40}});result=s._privacy08_case(child,runner/'C47NativeUI.xcodeproj',out/'products',method,'synthetic-device',{});self.assertEqual(result['outcome'],'DIAGNOSTIC_PREFIX_ONLY');self.assertEqual(path.read_bytes(),swift);self.assertFalse(json.loads((out/'PRIVACY08_DIAGNOSTIC_RUNNER.json').read_bytes())['ordinary_admitted'])
             finally:s._privacy08_native=oldn;s._privacy08_original_case=oldcase
+
+class Preflight09SourceTests(unittest.TestCase):
+    def test_actual_source_batch_controls_and_exact_one_shot_native70_admission(self):
+        import hashlib
+        from types import SimpleNamespace
+        result=subprocess.run(['node','--test','scripts/release/full-app-j01/native_preflight09.test.mjs'],cwd=ROOT,capture_output=True,timeout=30)
+        self.assertEqual(result.returncode,0,result.stdout.decode(errors='replace')+result.stderr.decode(errors='replace'))
+        for line in [b'# tests 2',b'# pass 2',b'# fail 0',b'# skipped 0',b'# cancelled 0']:
+            self.assertIn(line,result.stdout.splitlines())
+        print(json.dumps({'event':'C47_PREFLIGHT09_ACTUAL_TAP','tests':2,'pass':2,'fail':0,'skipped':0,'status':result.returncode,'stdout_bytes':len(result.stdout),'stdout_sha256':hashlib.sha256(result.stdout).hexdigest(),'stderr_bytes':len(result.stderr),'stderr_sha256':hashlib.sha256(result.stderr).hexdigest()}))
+        # Synthetic coordinator port only; this never starts or qualifies a native job.
+        calls=[]
+        def fixture(count='148',parent=s.PRIVACY09_START,event='pull_request'):
+            def text(name,argv,timeout):
+                calls.append((name,argv,timeout));return count if name=='privacy09-exact-commit-count' else parent
+            return SimpleNamespace(env={'GITHUB_EVENT_NAME':event},text=text)
+        context={'run_attempt':1,'head':'a'*40,'tree':'b'*40}
+        valid=s.privacy_stage09(fixture(),context)
+        self.assertEqual(valid['native_attempt'],70);self.assertEqual(valid['authorization'],'BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09')
+        self.assertFalse(valid['ordinary_admitted']);self.assertFalse(valid['internal_admitted'])
+        self.assertEqual(calls,[('privacy09-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],60),('privacy09-preserved145-parent',['git','rev-parse','HEAD~3'],60)])
+        for refused in [fixture(count='143'),fixture(count='147'),fixture(count='149'),fixture(parent='c'*40),fixture(event='push')]:
+            with self.assertRaisesRegex(ValueError,'PRIVACY09'):s.privacy_stage09(refused,context)
+        with self.assertRaisesRegex(ValueError,'PRIVACY09_ONE_SHOT'):s.privacy_stage09(fixture(),{**context,'run_attempt':2})
 
 if __name__=='__main__':unittest.main()

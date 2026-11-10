@@ -9620,6 +9620,105 @@
       "native_started09": 0,
       "remaining": 5,
       "status": "ZERO_MAC_PREFLIGHT_IN_PROGRESS_NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09",
+      "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+      "paths": [
+        {
+          "path": "scripts/phase9/ios-privacy-lock-succession46.mjs",
+          "bytes": 24295,
+          "sha256": "dac3844b3ca6983f717fc025e7ce3723b4ea1dd411ac0888ebc43d80886a3815",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_preflight09.test.mjs",
+          "bytes": 4373,
+          "sha256": "b3169607ad2757e4a74779596d002e3febc327d6bec236b1ffb47d210aa5efe5",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "bytes": 64277,
+          "sha256": "291d31453293a086ac3127fe1136c64b3a1d2395ca8616750924012fcb2af535",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 159387,
+          "sha256": "9134ff1e44b498d8d7269c0148a14b765dfacdc269cc94d252cf7037e4c52b25",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "bytes": 125718,
+          "sha256": "3c56bc68f5e5077dda741461d5b8697f90036032caa60dc920c57579011a6e47",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "bytes": 3975,
+          "sha256": "bef3c9786382dad374caa0b66171205377d0c455ab8a5aa781ad5ca8aaf5cfb1",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23632,
+          "sha256": "26019c12514f3d70aefa0ebb6419d7d59239d807fb75e7b22d1f587e2259e938",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 731019,
+          "sha256": "9b70f0ce65b209f3d6a9edea0f08fb74d7d1075ef280e645a2639e02852e1052",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 164096,
+          "sha256": "2a278c07ca8ea717608947ef8db7e7f3e2b42cf3986bf2017e5ef765f7ddfc22",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 657614,
+          "sha256": "9745a4943de79c31b3d8e4d892722f24a6407af41a182fb481da547ba52eb7a6",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 38176,
+          "sha256": "3f38fe1cf81095c5c433119e2e8937fecc34ee310061ebcb640e5ec9fdf668fb",
+          "preimage_head": "0433f7e91464edd95d53330343f49020c3f0f874",
+          "invariant": "Original source/age/privacy/owner/storage/signing assertions and timeouts unchanged; exact one-shot C09 native70 after validated source; duplicate diagnostic-only completion events corrected and trace moved to separate fd3, never filtering original outputs",
+          "real_test": "Full current30/60+nested21, original37 plus C09 source-control successor, strict runtime/signing/workflow/invariant and uncached root/type/lint; no native claim"
+        }
+      ],
+      "causal_boundary": "C09 material147 prepares exact sealed148/a1 diagnostic70 ONLY, preserving exact145 at HEAD~3. It does not authorize a Mac until current source controls and fresh capacity checks close. Original146 full30 29PASS/1FAIL is retained: diagnostic stderr polluted the unchanged exact historical-write refusal assertion in22; original19/29 completed without timeout. Move diagnostic-only bytes to separate fd3, preserve exact stdout/stderr assertions and all original failures; duplicate content-free completion events are corrected without changing assertions, and source-child observations now bind PID/sequence plus actual witness-open stage. Add one C09 source wrapper to original37 (38total, original37 retained) executing two actual raw-object/graft/merge tests and synthetic exact-context negatives. Native70 uses existing bounded C08 instrumentation and original case03 prefix; no ordinary/internal admission. Five slots70-74 remain unused at preparation. All earlier failures, guards, deadlines, source witnesses and no-release boundaries remain.",
+      "native_started09": 0,
+      "remaining": 5,
+      "status": "PREPARING_SOURCE_VALIDATED_NATIVE70_NO_GO",
+      "precommit_measurement": "C09 precommit147 measurements (dirty successor of146; not native qualification): complete observer38 PASSED on Windows Python3.9 and isolated3.12.10 after exact historical70\u2192current72 scope mapping; all original37 cases remain. Original scope70/source44 hash assertions remain on exact145, with only two named new paths and exact145 ancestry required currently. New Git fixture roots canonicalized before construction. Original runtime157 and signing15 PASSED on existing Windows Python3.9. Supplemental isolated Windows3.12 runtime157 was115PASS/15FAIL/27ERROR and signing15=11PASS/4ERROR, principally strict path/fd metadata disagreement in older synthetic fixtures; raw failures retained, not hidden/waived or represented as native/macOS results. This added portability probe is distinct from mandatory hosted Windows observer/source controls and the existing runtime/signing platform profile; current Linux/macOS results remain required in their real domain. Properties and original workflow19 PASSED. Native controls remain unchanged and must genuinely pass in the actual Mac before prebuild. Separate-fd3 probe preserves exact original write-refusal stderr53bytes and empty stdout while retaining163 trace bytes; no output filtering or assertion relaxation. Complete committed current full30/source/uncached verification remains pending. ZERO C09 Mac starts; no source/UI root-cause claim."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {mkdtempSync,mkdirSync,writeFileSync,rmSync,readFileSync} from 'node:fs';
+import {realpathSync,mkdtempSync,mkdirSync,writeFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -23,7 +23,7 @@ test('C09 batch decodes every authenticated original commit without trusting inv
 });
 test('C09 actual raw object proof preserves identities, refuses graft omission and ignores replacement objects',t=>{
  const expected=nativeSourceIdentity46(checkedNativeRoot46(ROOT));
- const owned=mkdtempSync(join(tmpdir(),'c47-preflight09-'));t.after(()=>rmSync(owned,{recursive:true,force:true}));
+ const owned=mkdtempSync(join(realpathSync(tmpdir()),'c47-preflight09-'));t.after(()=>rmSync(owned,{recursive:true,force:true}));
  const root=join(owned,'repo');mkdirSync(root);git(root,'init','--quiet');git(root,'remote','add','origin','https://github.com/TasfiqJ/onSkin.git');
  const objects=git(ROOT,'rev-parse','--git-path','objects').toString().trim();
  writeFileSync(join(root,'.git/objects/info/alternates'),resolve(ROOT,objects).replaceAll('\\','/')+'\n');
