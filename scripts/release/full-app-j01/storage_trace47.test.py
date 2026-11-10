@@ -975,7 +975,7 @@ class Preflight09SourceTests(unittest.TestCase):
         print(json.dumps({'event':'C47_PREFLIGHT09_ACTUAL_TAP','tests':2,'pass':2,'fail':0,'skipped':0,'status':result.returncode,'stdout_bytes':len(result.stdout),'stdout_sha256':hashlib.sha256(result.stdout).hexdigest(),'stderr_bytes':len(result.stderr),'stderr_sha256':hashlib.sha256(result.stderr).hexdigest()}))
         # Synthetic coordinator port only; this never starts or qualifies a native job.
         calls=[]
-        def fixture(count='148',parent=s.PRIVACY09_START,event='pull_request'):
+        def fixture(count='149',parent=s.PRIVACY09_START,event='pull_request'):
             def text(name,argv,timeout):
                 calls.append((name,argv,timeout));return count if name=='privacy09-exact-commit-count' else parent
             return SimpleNamespace(env={'GITHUB_EVENT_NAME':event},text=text)
@@ -983,8 +983,8 @@ class Preflight09SourceTests(unittest.TestCase):
         valid=s.privacy_stage09(fixture(),context)
         self.assertEqual(valid['native_attempt'],70);self.assertEqual(valid['authorization'],'BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09')
         self.assertFalse(valid['ordinary_admitted']);self.assertFalse(valid['internal_admitted'])
-        self.assertEqual(calls,[('privacy09-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],60),('privacy09-preserved145-parent',['git','rev-parse','HEAD~3'],60)])
-        for refused in [fixture(count='143'),fixture(count='147'),fixture(count='149'),fixture(parent='c'*40),fixture(event='push')]:
+        self.assertEqual(calls,[('privacy09-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],60),('privacy09-preserved145-parent',['git','rev-parse','HEAD~4'],60)])
+        for refused in [fixture(count='143'),fixture(count='147'),fixture(count='148'),fixture(count='150'),fixture(parent='c'*40),fixture(event='push')]:
             with self.assertRaisesRegex(ValueError,'PRIVACY09'):s.privacy_stage09(refused,context)
         with self.assertRaisesRegex(ValueError,'PRIVACY09_ONE_SHOT'):s.privacy_stage09(fixture(),{**context,'run_attempt':2})
 

@@ -652,7 +652,7 @@
     {
       "path": "scripts/release/full-app-j01/native_preflight09.test.mjs",
       "preimage_state": "ABSENT",
-      "preimage_bytes": 0,
+      "preimage_bytes": null,
       "preimage_sha256": null,
       "causal_need": "Actual original source bridge timeout in repeated authenticated Git process fanout; bounded batching and adversarial original-object controls only.",
       "invariant": "Every object hash, parent/merge/owner fence and input check retained; no timeout, app, security or admission relaxation.",
@@ -9719,6 +9719,80 @@
       "remaining": 5,
       "status": "PREPARING_SOURCE_VALIDATED_NATIVE70_NO_GO",
       "precommit_measurement": "C09 precommit147 measurements (dirty successor of146; not native qualification): complete observer38 PASSED on Windows Python3.9 and isolated3.12.10 after exact historical70\u2192current72 scope mapping; all original37 cases remain. Original scope70/source44 hash assertions remain on exact145, with only two named new paths and exact145 ancestry required currently. New Git fixture roots canonicalized before construction. Original runtime157 and signing15 PASSED on existing Windows Python3.9. Supplemental isolated Windows3.12 runtime157 was115PASS/15FAIL/27ERROR and signing15=11PASS/4ERROR, principally strict path/fd metadata disagreement in older synthetic fixtures; raw failures retained, not hidden/waived or represented as native/macOS results. This added portability probe is distinct from mandatory hosted Windows observer/source controls and the existing runtime/signing platform profile; current Linux/macOS results remain required in their real domain. Properties and original workflow19 PASSED. Native controls remain unchanged and must genuinely pass in the actual Mac before prebuild. Separate-fd3 probe preserves exact original write-refusal stderr53bytes and empty stdout while retaining163 trace bytes; no output filtering or assertion relaxation. Complete committed current full30/source/uncached verification remains pending. ZERO C09 Mac starts; no source/UI root-cause claim."
+    },
+    {
+      "authorization": "BRAIN-C47-PREBUILD-PRIVACY-ORIGIN-RUNTIME-09",
+      "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+      "paths": [
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 160550,
+          "sha256": "b10c7c7b466fae1cd89cc74c7079da41a3bb4de9a5c0d9b03defb89f9ee2e10c",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "bytes": 128809,
+          "sha256": "312d3956ae10047fd4f7f881c643cde4e4a77830c50eb87232441ef77fdbb833",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "bytes": 4002,
+          "sha256": "bc6af20a689ce1bffb587c460be4bc79027ec71e41b5967c4fc4ee77466228c4",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23632,
+          "sha256": "b9d0f23a6f135e08d1b01714a953eca5505a8954e80a26596672af4f69b0e520",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 741964,
+          "sha256": "a4995f9363249753a36ce3e64445912c344188962bd6c1545d10aec2c0b7240f",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 166545,
+          "sha256": "9c1a071f5ea121360c255a06338f9eadfc3bceed42d71e6ce7f89c0ca8165db4",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 660063,
+          "sha256": "64716e65deb0d21f5fde1c7f0d359ce787061661339860f950e06845f3084a32",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 40625,
+          "sha256": "7d20f67ebd6ac2974f16fe10812fde617bc1b2191b5a41536296226bd0b2c2ec",
+          "preimage_head": "5c694d2e00daeeaed29827b6514a93cf601eaabe",
+          "invariant": "Original PREIMAGE validator remains exact; absent means null, not an empty file. Preserve all prior source failures; retarget only the same single native70 to next worklist-only149 seal with145 at HEAD~4; no native slots added or spent.",
+          "real_test": "Real check_ledger RED/fixed with all accepted-base preimages; full current controls/source custody and forced uncached checks before Mac"
+        }
+      ],
+      "causal_boundary": "C09 material148 corrects only the new file preimage metadata (ABSENT bytes0\u2192null) after genuine147 C47_PREIMAGE refusal; original check_ledger guard unchanged and failure retained. Current147 full30 PASSED30/60events with genuine original21, observer38/Python3.12 PASSED, runtime157+signing15/Python3.9 PASSED, properties/workflow19/current native SOURCE, generated-property and Expo source controls, hooks and graph PASSED; no actual Pods/prebuild/build/app in C09. Forced uncached root7122/type/lint PASSED. Source custody alone REFUSED the malformed new-file absence record. Preserve distinct supplemental Windows3.12 runtime/signing fixture failures unwaived; never claim all platform profiles green. Retarget same single native70 to exact next sealed149/a1, exact145 at HEAD~4; original08/143 profile remains historical. No Mac until new current custody/source controls and fresh cost/storage checks close. ZERO C09 starts, five70-74 slots remain; at most70/71 before first actual privacy origin, else72-74unused. No app fix/ordinary/internal/native result or release claim.",
+      "native_started09": 0,
+      "remaining": 5,
+      "status": "EXACT_PREIMAGE_METADATA_REPAIR_BEFORE_NATIVE_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

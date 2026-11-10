@@ -489,7 +489,7 @@ def source_scope05(phase, root):
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
         'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':72,
         'historical_validator_file_modified':False,'diagnostic_only':False,
-        'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC70_NO_NATIVE_ADMISSION'}}
+        'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC72_NO_NATIVE_ADMISSION'}}
 
 
 def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=None,*,targeted_onboarding53=False):
@@ -1372,8 +1372,8 @@ PRIVACY09_START='2b35b7399ffa8727f3166a0c35fb93e20f33611b'
 def privacy_stage09(r,context):
     need(context['run_attempt']==1 and r.env.get('GITHUB_EVENT_NAME')=='pull_request','PRIVACY09_ONE_SHOT')
     count=r.text('privacy09-exact-commit-count',['git','rev-list','--count','02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60)
-    parent=r.text('privacy09-preserved145-parent',['git','rev-parse','HEAD~3'],timeout=60)
-    need(count=='148' and parent==PRIVACY09_START,'PRIVACY09_EXACT148_WITH145_PREFIX')
+    parent=r.text('privacy09-preserved145-parent',['git','rev-parse','HEAD~4'],timeout=60)
+    need(count=='149' and parent==PRIVACY09_START,'PRIVACY09_EXACT149_WITH145_PREFIX')
     return {'authorization':PRIVACY09_AUTH,'native_attempt':70,'preserved_start':PRIVACY09_START,'source_head':context['head'],'source_tree':context['tree'],'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
 
 def main_privacy08(continuation09=False):
