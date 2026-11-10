@@ -9447,6 +9447,67 @@
       "native_started08": 1,
       "remaining": 4,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PRIVACY-ORIGIN-RUNTIME-08",
+      "head": "1692a200209fcf235cbd0086cacf770f8945a0d0",
+      "preedit_path": "continuation08/preedit05-final143/PREEDIT.json",
+      "preimages": [
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 715134,
+          "sha256": "4c345f980d8e80d58b402fc326f06313113ce6ccdeb43455677e7abb20e1ecd0",
+          "preimage_head": "1692a200209fcf235cbd0086cacf770f8945a0d0",
+          "invariant": "Evidence-only final closure after two diagnostic starts. No app, diagnostic, test, installer, signing or source guard code changes; native workflow remains parked at already-used exact143/a1. No additional Mac start. Original failures and staged STOP preserved.",
+          "real_test": "Actual native68/69 raw source failures; local142 code measures unchanged; final SOURCE_PENDING144 and worklist-only FROZEN145/CI required."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 160240,
+          "sha256": "cf713c63756473e339b5f028d0c5cc9b15c99377eddb2348a0419574c7ac2da9",
+          "preimage_head": "1692a200209fcf235cbd0086cacf770f8945a0d0",
+          "invariant": "Evidence-only final closure after two diagnostic starts. No app, diagnostic, test, installer, signing or source guard code changes; native workflow remains parked at already-used exact143/a1. No additional Mac start. Original failures and staged STOP preserved.",
+          "real_test": "Actual native68/69 raw source failures; local142 code measures unchanged; final SOURCE_PENDING144 and worklist-only FROZEN145/CI required."
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 653758,
+          "sha256": "d61d03a4910ba92e16d35ef375eeaac671f045db2fce92e01d875d346e3ac106",
+          "preimage_head": "1692a200209fcf235cbd0086cacf770f8945a0d0",
+          "invariant": "Evidence-only final closure after two diagnostic starts. No app, diagnostic, test, installer, signing or source guard code changes; native workflow remains parked at already-used exact143/a1. No additional Mac start. Original failures and staged STOP preserved.",
+          "real_test": "Actual native68/69 raw source failures; local142 code measures unchanged; final SOURCE_PENDING144 and worklist-only FROZEN145/CI required."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 34320,
+          "sha256": "1739fbf9334b2bda385a583ada0f5fbc86125a0a919409173346de4ffddc7674",
+          "preimage_head": "1692a200209fcf235cbd0086cacf770f8945a0d0",
+          "invariant": "Evidence-only final closure after two diagnostic starts. No app, diagnostic, test, installer, signing or source guard code changes; native workflow remains parked at already-used exact143/a1. No additional Mac start. Original failures and staged STOP preserved.",
+          "real_test": "Actual native68/69 raw source failures; local142 code measures unchanged; final SOURCE_PENDING144 and worklist-only FROZEN145/CI required."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "bytes": 142269,
+          "sha256": "ef3277d0edd4833980f4220ad9283b4c54b3d750dcfb81c9034c3b2f876bdd45",
+          "preimage_head": "1692a200209fcf235cbd0086cacf770f8945a0d0",
+          "invariant": "Evidence-only final closure after two diagnostic starts. No app, diagnostic, test, installer, signing or source guard code changes; native workflow remains parked at already-used exact143/a1. No additional Mac start. Original failures and staged STOP preserved.",
+          "real_test": "Actual native68/69 raw source failures; local142 code measures unchanged; final SOURCE_PENDING144 and worklist-only FROZEN145/CI required."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "bytes": 84921,
+          "sha256": "4a069aa3dea1396089f6f0af65f1b44654c0404cca8395833688e830b00069dc",
+          "preimage_head": "1692a200209fcf235cbd0086cacf770f8945a0d0",
+          "invariant": "Evidence-only final closure after two diagnostic starts. No app, diagnostic, test, installer, signing or source guard code changes; native workflow remains parked at already-used exact143/a1. No additional Mac start. Original failures and staged STOP preserved.",
+          "real_test": "Actual native68/69 raw source failures; local142 code measures unchanged; final SOURCE_PENDING144 and worklist-only FROZEN145/CI required."
+        }
+      ],
+      "causal_boundary": "Final PARTIAL_BLOCKED/NO_GO. Native68 source141 observer37 failed30PASS/1FAIL/6ERROR before compile. Canonical test-root repair has local actual-source junction RED/fixed proof only. Native69 source143 run42756477900/job129631925344 stopped still earlier at original full30 source gate:27PASS/3FAIL, cases19/22 positive child statusnull at120000ms bounds (deeper child codes not retained), case29 direct ETIMEDOUT/SIGTERM30000ms with0stdout/0stderr. All60 ordered case events retained. No app generation/compilation/launch/XCTest or original privacy rejection in either new job. Stop native execution after2 diagnostic starts, preserve70\u201372unused. Original native67 UI denial remains UNKNOWN; no app repair or ordinary/internal admission. Windows143 observer37 separately36PASS/1ERROR C47_STAGE_FILE_RACE; differing stamp field UNKNOWN, strict guard unchanged. Final documentation/source seal and current CI are evidence closure only, not further native diagnosis.",
+      "native_started08": 2,
+      "remaining": 3,
+      "diagnostic_starts_remaining": 0,
+      "source_code_changed": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
