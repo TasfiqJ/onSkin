@@ -18,7 +18,7 @@ CLASSIFIER_TEST = 'const test = require(\'node:test\');\nconst assert = require(
 class StorageOrigin05Tests(unittest.TestCase):
     def test_classifier_actual_native_cause_redaction_getter_bounds_and_failure_containment(self):
         with tempfile.TemporaryDirectory(prefix='c47-origin05-observer-') as temporary:
-            p = Path(temporary)
+            p = Path(temporary).resolve()
             (p/'storage_origin05.entry.js').write_text(s.ENTRY_TEMPLATE,encoding='utf8')
             (p/'storage_origin05.test.cjs').write_text(CLASSIFIER_TEST,encoding='utf8')
             result = subprocess.run(['node','--test',str(p/'storage_origin05.test.cjs')],
@@ -34,7 +34,7 @@ class StorageOrigin05Tests(unittest.TestCase):
 
     def test_diagnostic_input_context_restores_every_original_after_build_failure(self):
         with tempfile.TemporaryDirectory(prefix='c47-origin05-restore-') as temporary:
-            root=Path(temporary)/'source';root.mkdir();originals={}
+            root=Path(temporary).resolve()/'source';root.mkdir();originals={}
             for relative in s.SOURCE_PREIMAGES:
                 original=historical_diagnostic_source05(relative);originals[relative]=original
                 target=root/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(original)
@@ -46,7 +46,7 @@ class StorageOrigin05Tests(unittest.TestCase):
             def run(label,argv,**kwargs):
                 result=subprocess.run(list(map(str,argv)),cwd=ROOT,capture_output=True,timeout=60)
                 self.assertEqual(result.returncode,0,result.stdout.decode(errors='replace')+result.stderr.decode(errors='replace'))
-            evidence=Path(temporary)/'evidence'
+            evidence=Path(temporary).resolve()/'evidence'
             with self.assertRaisesRegex(RuntimeError,'original-build-failure'):
                 with s.diagnostic_inputs(root,ios,evidence,'a'*40,run) as entry:
                     self.assertTrue(entry.is_file())
@@ -63,7 +63,7 @@ class StorageOrigin05Tests(unittest.TestCase):
             self.assertEqual(restored['restored_sources'],10)
 
     def _context_fixture(self, temporary):
-        root=Path(temporary)/'source';root.mkdir();originals={}
+        root=Path(temporary).resolve()/'source';root.mkdir();originals={}
         for relative in s.SOURCE_PREIMAGES:
             original=historical_diagnostic_source05(relative);originals[relative]=original
             target=root/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(original)
@@ -82,7 +82,7 @@ class StorageOrigin05Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='c47-origin05-partial-entry-') as temporary:
             root,ios,delegate,delegate_original,originals,run=self._context_fixture(temporary)
             entry=root/'apps/mobile/.expo/C47StorageOrigin05.js'
-            evidence=Path(temporary)/'evidence'
+            evidence=Path(temporary).resolve()/'evidence'
             original_error=OSError('controlled partial diagnostic entry write')
             original_open=Path.open
             class PartialWrite:
@@ -119,7 +119,7 @@ class StorageOrigin05Tests(unittest.TestCase):
             def changing_run(label,argv,**kwargs):
                 run(label,argv,**kwargs)
                 (root/changed).write_bytes(unexpected)
-            evidence=Path(temporary)/'evidence'
+            evidence=Path(temporary).resolve()/'evidence'
             with self.assertRaisesRegex(ValueError,'SOURCE_CHANGED_BEFORE_TRANSFORM'):
                 with s.diagnostic_inputs(root,ios,evidence,'a'*40,changing_run):
                     self.fail('an unowned input change must stop before diagnostic writes')
@@ -133,7 +133,7 @@ class StorageOrigin05Tests(unittest.TestCase):
     def test_replaced_entry_is_preserved_and_cannot_claim_exact_restoration(self):
         with tempfile.TemporaryDirectory(prefix='c47-origin05-entry-replaced-') as temporary:
             root,ios,delegate,delegate_original,originals,run=self._context_fixture(temporary)
-            evidence=Path(temporary)/'evidence';replacement=Path(temporary)/'foreign.js'
+            evidence=Path(temporary).resolve()/'evidence';replacement=Path(temporary).resolve()/'foreign.js'
             replacement.write_bytes(b'controlled foreign diagnostic entry replacement')
             with self.assertRaisesRegex(ValueError,'EXACT_DIAGNOSTIC_RESTORATION_FAILED'):
                 with s.diagnostic_inputs(root,ios,evidence,'a'*40,run) as entry:
@@ -316,7 +316,7 @@ class FailureWindowVersion2Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with tempfile.TemporaryDirectory(prefix='c47-origin05-current-v2-') as temporary:
-            p = Path(temporary)
+            p = Path(temporary).resolve()
             (p/'storage_origin05.entry.js').write_text(s.ENTRY_TEMPLATE, encoding='utf8')
             (p/'fixtures.cjs').write_text(V2_FIXTURE_PROGRAM05, encoding='utf8')
             environment = dict(os.environ, C47_FIXTURE_OUTPUT05=str(p/'fixtures'))
@@ -531,7 +531,7 @@ class TargetedOnboarding53Tests(unittest.TestCase):
         from unittest import mock
         import uuid
         with tempfile.TemporaryDirectory(prefix='c47-target53-collector-') as temporary:
-            home=Path(temporary).resolve(strict=True);device=str(uuid.uuid4());data=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'/str(uuid.uuid4())
+            home=Path(temporary).resolve().resolve(strict=True);device=str(uuid.uuid4());data=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'/str(uuid.uuid4())
             docs=data/'Documents';docs.mkdir(parents=True)
             (docs/'C47StorageOrigin05Identity.json').write_text(json.dumps({'schema':1,'pid':321,'sourceHead':'a'*40,'bundle':'com.layerwell.app.staging'}))
             def require(ok,name):
@@ -566,7 +566,7 @@ class TargetedOnboarding53Tests(unittest.TestCase):
         with self.assertRaises(ValueError):s.validate_onboarding_trace53(encode(changed),'a'*40,'com.layerwell.app.staging',321)
     def test_exact_current_eight_transform_recovers_source_without_new_await_or_unregistered_stages(self):
         with tempfile.TemporaryDirectory(prefix='c47-target53-transform-') as temporary:
-            p=Path(temporary);request=p/'request.json';manifest=p/'manifest.json'
+            p=Path(temporary).resolve();request=p/'request.json';manifest=p/'manifest.json'
             request.write_text(json.dumps({'root':str(ROOT),'output':str(p/'generated'),'manifest':str(manifest),
                 'expected':s.ONBOARDING53_SOURCE_PREIMAGES,'profile':'ONBOARDING53_CURRENT105','source_head':'a'*40}),encoding='utf8')
             result=subprocess.run(['node',str(PATH.with_name('storage_origin47.mjs')),str(request)],cwd=ROOT,capture_output=True,timeout=60)
@@ -578,7 +578,7 @@ class TargetedOnboarding53Tests(unittest.TestCase):
                 self.assertTrue(row['original_bytes_retained_exactly']);self.assertEqual(row['awaits_before'],row['awaits_after'])
     def test_current_targeted_context_restores_exact_eight_inputs_and_refuses_wrong_preimage(self):
         with tempfile.TemporaryDirectory(prefix='c47-target53-context-') as temporary:
-            p=Path(temporary);root=p/'source';root.mkdir();originals={}
+            p=Path(temporary).resolve();root=p/'source';root.mkdir();originals={}
             for relative,sha in s.ONBOARDING53_SOURCE_PREIMAGES.items():
                 raw=(ROOT/relative).read_bytes();self.assertEqual(s.digest(raw),sha);originals[relative]=raw
                 target=root/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
@@ -646,7 +646,7 @@ class TargetedOnboarding53CoordinatorTests(unittest.TestCase):
 
     def test_target53_own_source_requires_full30_and_all60_events_before_compile(self):
         with tempfile.TemporaryDirectory() as temporary:
-            directory=Path(temporary);n,r=self.source_fixture(directory)
+            directory=Path(temporary).resolve();n,r=self.source_fixture(directory)
             proof=s._native05_full_source_controls53(r,n)
             self.assertEqual(proof['case_events'],60)
             self.assertEqual(proof['source_after_file'],'source-after-install.json')
@@ -670,7 +670,7 @@ class TargetedOnboarding53CoordinatorTests(unittest.TestCase):
 
     def test_target53_source_refuses_incomplete_failed_or_changed_source(self):
         with tempfile.TemporaryDirectory() as temporary:
-            directory=Path(temporary);n,r=self.source_fixture(directory)
+            directory=Path(temporary).resolve();n,r=self.source_fixture(directory)
             row=r.receipt['commands'][0]
             for key,value in [('capture_complete',False),('state','FAIL'),('exit_code',1),('timed_out',True)]:
                 original=row[key];row[key]=value
@@ -700,7 +700,7 @@ class TargetedOnboarding53CoordinatorTests(unittest.TestCase):
         # Only the targeted normal-return path may reuse the already completed scan.
         with tempfile.TemporaryDirectory() as temporary:
             n=self.runtime();n.read_native_file=lambda path:Path(path).read_bytes()
-            directory=Path(temporary);calls=[];current={'head':'a'*40,'tree':'b'*40}
+            directory=Path(temporary).resolve();calls=[];current={'head':'a'*40,'tree':'b'*40}
             r=SimpleNamespace(output=directory,receipt={},
                 source_proof=lambda *a,**kw:calls.append((a,kw)) or current)
             self.assertEqual(s._native05_final_source53(r,n,current,None),current)
@@ -754,7 +754,7 @@ class TargetedOnboarding53CoordinatorTests(unittest.TestCase):
         from unittest import mock
         n=self.runtime();selected=[];captures=[];context_flags=[]
         with tempfile.TemporaryDirectory() as temporary:
-            p=Path(temporary);root=p/'source';out=p/'out';out.mkdir();ios=root/'apps/mobile/ios';ios.mkdir(parents=True)
+            p=Path(temporary).resolve();root=p/'source';out=p/'out';out.mkdir();ios=root/'apps/mobile/ios';ios.mkdir(parents=True)
             (ios/'LayerwellStaging.xcworkspace').mkdir();(ios/'Podfile.lock').write_text('  - NativeLabelOcr (1.0.0)\n')
             r=SimpleNamespace(root=root,output=out,env={},receipt={'source':{'head':'a'*40,'tree':'b'*40}},
                 persist=lambda:None,source_proof=lambda name,*a,**kw:(n.write_json(out/(name+'.json'),r.receipt['source']),r.receipt['source'])[1],
@@ -823,7 +823,7 @@ class CurrentConsentOrigin62Tests(unittest.TestCase):
         import hashlib
         n=TargetedOnboarding53CoordinatorTests().runtime()
         with tempfile.TemporaryDirectory(prefix='c47-pid62-')as temporary:
-            home=Path(temporary).resolve();device='11111111-1111-1111-1111-111111111111';uuid='22222222-2222-2222-2222-222222222222'
+            home=Path(temporary).resolve().resolve();device='11111111-1111-1111-1111-111111111111';uuid='22222222-2222-2222-2222-222222222222'
             base=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers'
             data=base/'Data/Application'/uuid;docs=data/'Documents';docs.mkdir(parents=True)
             app=base/'Bundle/Application'/uuid/'LayerwellStaging.app';app.mkdir(parents=True);binary=app/'LayerwellStaging';binary.write_bytes(b'owned-native-binary')
@@ -849,7 +849,7 @@ PRIVACY08_TEST = 'import test from \'node:test\';\nimport assert from \'node:ass
 class Privacy08Tests(unittest.TestCase):
     def test_actual_source_parity_current_and_superseded_predicates_redaction_and_bounded_observation(self):
         with tempfile.TemporaryDirectory(prefix="c47-privacy08-tests-") as tmp:
-            path=Path(tmp)/"privacy08.test.mjs";path.write_text(PRIVACY08_TEST,encoding="utf8")
+            path=Path(tmp).resolve()/"privacy08.test.mjs";path.write_text(PRIVACY08_TEST,encoding="utf8")
             import os
             env=os.environ.copy();env["C47_PRIVACY08_ROOT"]=str(ROOT)
             result=subprocess.run(["node","--test",str(path)],cwd=ROOT,env=env,capture_output=True,timeout=60)
@@ -870,7 +870,7 @@ class Privacy08NativeBoundaryTests(unittest.TestCase):
     def test_exact_nine_source_context_restores_originals_and_entry_on_original_failure(self):
         import shutil,os
         with tempfile.TemporaryDirectory(prefix='c47-privacy08-context-')as tmp:
-            root=Path(tmp)/'source';ios=root/'apps/mobile/ios';evidence=Path(tmp)/'evidence';ios.joinpath('LayerwellStaging').mkdir(parents=True);delegate=ios/'LayerwellStaging/AppDelegate.swift';delegate.write_bytes(b'    let delegate = ReactNativeDelegate()\n')
+            root=Path(tmp).resolve()/'source';ios=root/'apps/mobile/ios';evidence=Path(tmp).resolve()/'evidence';ios.joinpath('LayerwellStaging').mkdir(parents=True);delegate=ios/'LayerwellStaging/AppDelegate.swift';delegate.write_bytes(b'    let delegate = ReactNativeDelegate()\n')
             names=list(s.ONBOARDING53_SOURCE_PREIMAGES)+[s.PRIVACY08_GATE]
             for name in names+['scripts/release/full-app-j01/storage_origin47.mjs']:
                 q=root/name;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes((ROOT/name).read_bytes())
@@ -888,7 +888,7 @@ class Privacy08NativeBoundaryTests(unittest.TestCase):
     def test_diagnostic_runner_uses_exact_case03_initial_prefix_and_restores_without_ordinary_admission(self):
         from types import SimpleNamespace
         with tempfile.TemporaryDirectory(prefix='c47-privacy08-runner-')as tmp:
-            out=Path(tmp);runner=out/'ui/runner';runner.mkdir(parents=True);swift=(ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes().split(b'\nimport UIKit',1)[0];path=runner/'native_ui47.swift';path.write_bytes(swift);method='testV04ExplicitWithdrawalReviewCancelAndFreshReconsent'
+            out=Path(tmp).resolve();runner=out/'ui/runner';runner.mkdir(parents=True);swift=(ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes().split(b'\nimport UIKit',1)[0];path=runner/'native_ui47.swift';path.write_bytes(swift);method='testV04ExplicitWithdrawalReviewCancelAndFreshReconsent'
             n=SimpleNamespace(NORMAL_UI_CASES04=('one','two',method),read_native_file=lambda p:p.read_bytes());oldn=getattr(s,'_privacy08_native',None);oldcase=getattr(s,'_privacy08_original_case',None);s._privacy08_native=n
             def execute(*a):
                 actual=path.read_bytes();self.assertIn(b'        requireFreshGoals(app)\n',actual);self.assertNotIn(b'Both actual selected goals',actual);self.assertIn(b'no full ordinary-case admission',actual);return {'outcome':'DIAGNOSTIC_PREFIX_ONLY'}

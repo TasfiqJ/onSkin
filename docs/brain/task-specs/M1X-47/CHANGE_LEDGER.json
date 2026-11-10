@@ -9373,6 +9373,80 @@
       "native_started08": 0,
       "remaining": 5,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-PRIVACY-ORIGIN-RUNTIME-08",
+      "head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+      "preedit_path": "continuation08/preedit04-native68/PREEDIT.json",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "bytes": 122179,
+          "sha256": "c1b09739945e72330832e768f24c14e96a98d009d21644a95877f7e3a62cd5e9",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 158678,
+          "sha256": "ab6ce10a19a223863c24d7d22dbe226268bfe327d5b5619776334ea6ffd14afd",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "bytes": 3975,
+          "sha256": "78332b9b71a72b31735b0d624ac56f79626850361c81696662773d6a33c35c59",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "bytes": 39542,
+          "sha256": "1e00748cd40892a458d90f62eda1580f4e028a6247982dc388c1ab253023bda9",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23257,
+          "sha256": "40e56aa8e6bfbfb24e2d8ddee4f512ba287d7bb17597f8bb37ef4072d252584a",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 709237,
+          "sha256": "ed76eed5068bf9059e9c7355bc32ad4a58dbafd20d2a48380ca57e3b999aa0b7",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 159636,
+          "sha256": "fff62842ad1dd9261e98ee79bd8fb00d8b63c9e5a066230d264fcc8ea37b1d68",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 653154,
+          "sha256": "ce15affea9af29fd3a5409792fb876c6ca72bc74f8cef09d46bcaefc7be3bbb9",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 33716,
+          "sha256": "02611cfbc9924e8f1664bca274aa4a46b33e11d7ec373ff327aceeb2dceec6c4",
+          "preimage_head": "cffbeae27c28cf78119dd96acd0a8d8e7020cb76",
+          "purpose": "Native68 actual 37controls30PASS/1FAIL/6ERROR precompile: canonicalize test-owned temp roots across macOS /var symlink; keep strict source/path/restoration/security assertions and original failed logs. Retarget one-shot diagnostic69 on143; no product fix or admission."
+        }
+      ],
+      "causal_boundary": "Native68 actual observer37:30PASS/1FAIL/6ERROR before compilation. Uncanonical /var->/private/var test roots make copied MJS CLI skip entry; strict source receipt guard rejects symlink ancestor. Resolve only test-owned roots, retaining all assertions and path/security/restore guards. Actual Windows junction RED reproduces missing transforms, with separate Windows long-path error retained. No privacy origin or app cause established. Second/final diagnostic69 on143; no origin means stop with3unused.",
+      "native_started08": 1,
+      "remaining": 4,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
