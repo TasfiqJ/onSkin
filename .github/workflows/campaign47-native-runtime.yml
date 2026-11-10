@@ -1,4 +1,4 @@
-# C09 remainder71; exact PR48/151/a1; source controls then fresh Simulator boot before new diagnostic compile; original case03 prefix only; no ordinary/internal admission.
+# C10 pinned app70 replay72 ONLY; exact PR48/155/a1; producer149 separate from current runner; no app build or ordinary/internal admission.
 name: Campaign47 Simulator native runtime
 
 on:
@@ -29,10 +29,11 @@ env:
 
 jobs:
   native-build:
-    name: C47 privacy origin71
+    name: C47 pinned app70 replay72
     permissions:
       contents: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 151 && github.run_attempt == 1
+      actions: read
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 155 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -53,11 +54,12 @@ jobs:
         with:
           node-version: 22.22.2
           package-manager-cache: false
-      - name: Execute privacy diagnostic stage
+      - name: Replay exact pinned app70 diagnostic prefix
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
-        run: python3 -I -B scripts/release/full-app-j01/storage_trace47.py --privacy-origin09-remainder71 --output "$RUNNER_TEMP/c47-evidence"
+          C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
+        run: python3 -I -B scripts/release/full-app-j01/pinned_app70_replay10.py --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
@@ -86,7 +88,7 @@ jobs:
         if: always() && steps.evidence-budget.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: campaign47-native-build-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: campaign47-pinned-app70-replay72-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/c47-evidence
           if-no-files-found: error
           retention-days: 3

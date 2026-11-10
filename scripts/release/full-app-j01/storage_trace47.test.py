@@ -487,20 +487,24 @@ class SourceScope59Tests(unittest.TestCase):
             'apps/mobile/src/lib/auth/localAccountIsolation.ts'}
         preflight09={'scripts/phase9/ios-privacy-lock-succession46.mjs',
             'scripts/release/full-app-j01/native_preflight09.test.mjs'}
-        self.assertEqual(additions-preflight09, expected)
-        self.assertEqual(additions, expected|preflight09)
+        replay10={'scripts/release/full-app-j01/pinned_app70_replay10.py'}
+        self.assertEqual(additions-preflight09-replay10, expected)
+        self.assertEqual(additions, expected|preflight09|replay10)
         self.assertFalse(original.PATHS & additions)
         self.assertEqual(len(frozenset(original.PATHS)|expected),70)
         current = frozenset(original.PATHS) | additions
-        self.assertEqual(len(current), 72)
+        self.assertEqual(len(current), 73)
         historical=subprocess.run(['git','--no-replace-objects','show',s.PRIVACY09_START+':scripts/release/full-app-j01/storage_trace47.py'],cwd=ROOT,capture_output=True,timeout=30)
         self.assertEqual(historical.returncode,0)
         self.assertIn(b"result['finite_declared_paths']!=70",historical.stdout)
         self.assertIn(b"'finite_paths':70",historical.stdout)
         self.assertIn(b'C47_STORAGE05_EXACT87_PREFIX_FINITE70',historical.stdout)
-        self.assertIn("result['finite_declared_paths']!=72", source)
-        self.assertIn("'finite_paths':72", source)
-        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE72', source)
+        self.assertIn("result['finite_declared_paths']!=73", source)
+        self.assertIn("'finite_paths':73", source)
+        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE73', source)
+        self.assertIn('C47_REPLAY10_EXACT153_PREFIX', source)
+        prior=subprocess.check_output(['git','--no-replace-objects','show','f4fb6fb488d119d536fe189bf872512b27bfc719:scripts/release/full-app-j01/storage_trace47.py'],cwd=ROOT)
+        self.assertIn(b"'finite_paths':72",prior)
         self.assertIn('C47_PREFLIGHT09_EXACT145_PREFIX', source)
         self.assertIn('C47_STORAGE05_PRESERVED_705A_CHECKPOINT', source)
         self.assertIn('C47_STORAGE05_EXACT101_ORDINARY49_PREFIX', source)
@@ -1072,5 +1076,122 @@ class Remainder71Coordinator09Tests(unittest.TestCase):
                 self.assertIs(r.run('positive',['SECRET_ARGUMENT']),result)
                 with self.assertRaises(RuntimeError)as caught:r.run('negative',['SECRET_ARGUMENT'])
                 self.assertIs(caught.exception,self.original_error)
+
+class PinnedApp70Replay10Tests(unittest.TestCase):
+    def replay(self):
+        spec=importlib.util.spec_from_file_location('c47_replay10_test',PATH.with_name('pinned_app70_replay10.py'))
+        value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
+
+    def fixture(self):
+        from types import SimpleNamespace
+        q=self.replay();head='a'*40;tree='b'*40;device='11111111-1111-1111-1111-111111111111'
+        r=SimpleNamespace(receipt={'source':{'head':head,'tree':tree},'simulator':{'udid':device},'replay_execution10':{
+            'repository':'TasfiqJ/onSkin','runner_head':head,'runner_tree':tree,'run_id':123,'job_id':456,'run_attempt':1,
+            'native_attempt':72,'job_name':q.JOB,'runner_id':789,'configured_labels':['macos-26-intel']}})
+        envelope=q.binding(r,device,321)
+        native={'schema':1,'pid':321,'sourceHead':q.PRODUCER['head'],'bundle':q.BUNDLE}
+        trace={'schema':1,'marker':'C47_PRIVACY_ORIGIN_DIAGNOSTIC_08','sourceHead':q.PRODUCER['head'],'pid':321,'bundle':q.BUNDLE,
+            'eventLimit':512,'sequence':3,'dropped':0,'flushFailures':0,'events':[{'sequence':1,'site':'GRANT_BEGIN','grant':1},
+            {'sequence':2,'site':'CHECK_REJECT','grant':1,'provider':2,'check':3,'mounted':True,'tokenCurrent':True,
+                'error':[{'code':'HEALTH_DATA_WRITE_ADMISSION_CLOSED','numeric':{}}]},
+            {'sequence':3,'site':'ROUTE_PRIVACY_STATUS','grant':1,'route':4,'privacyDenied':True}],
+            'denialWindow':None,'ordinaryAdmitted':False,'release':'NO_GO'}
+        return q,r,envelope,native,trace
+
+    def test_three_distinct_source_execution_identities_bind_original_trace(self):
+        q,r,b,native,trace=self.fixture()
+        self.assertEqual(q.trace_binding(s,json.dumps(trace).encode(),native,b),trace)
+        self.assertEqual(b['producer']['head'],'9c69cd2149de6d9ca24b5fe11afcd4bde96e3fe6')
+        self.assertNotEqual(b['producer']['head'],b['runner_source']['head'])
+        self.assertEqual(b['execution']['native_attempt'],72);self.assertEqual(b['execution']['app_pid'],321)
+        self.assertEqual(r.receipt['source']['head'],'a'*40);self.assertFalse(b['ordinary_admitted']);self.assertFalse(b['internal_admitted'])
+
+    def test_wrong_producer_app_transform_runner_job_pid_and_admission_refused(self):
+        import copy
+        q,r,b,native,trace=self.fixture()
+        changes=[lambda x:x['producer'].update(head='c'*40),lambda x:x['app'].update(sha256='c'*64),
+            lambda x:x.update(diagnostic_transform_sha256='c'*64),lambda x:x['runner_source'].update(head='c'*40),
+            lambda x:x['execution'].update(job_name='other'),lambda x:x['execution'].update(job_id=True),
+            lambda x:x['execution'].update(run_attempt=2),lambda x:x['execution'].update(run_attempt=True),
+            lambda x:x['execution'].update(app_pid=True),lambda x:x['execution'].update(device='foreign'),
+            lambda x:x.update(ordinary_admitted=True),lambda x:x.update(internal_admitted=True)]
+        for change in changes:
+            other=copy.deepcopy(b);change(other)
+            with self.assertRaises((ValueError,TypeError)):q.trace_binding(s,json.dumps(trace).encode(),native,other)
+        for key,value in [('sourceHead','a'*40),('pid',322),('schema',True),('bundle','foreign')]:
+            with self.assertRaises(ValueError):q.trace_binding(s,json.dumps(trace).encode(),{**native,key:value},b)
+
+    def test_incomplete_dropped_failed_flush_and_unredacted_trace_refused(self):
+        import copy
+        q,r,b,native,trace=self.fixture()
+        changes=[lambda x:x.update(dropped=1),lambda x:x.update(flushFailures=1),lambda x:x.update(sequence=4),
+            lambda x:x.update(ownerId='PRIVATE'),lambda x:x['events'][1]['error'][0].update(message='PRIVATE'),
+            lambda x:x.update(sourceHead='a'*40),lambda x:x.update(pid=322)]
+        for change in changes:
+            other=copy.deepcopy(trace);change(other)
+            with self.assertRaises(ValueError):q.trace_binding(s,json.dumps(other).encode(),native,b)
+
+    def test_original_predicate_code_retained_superseded_and_unknown_not_origins(self):
+        import copy
+        q,r,b,native,trace=self.fixture()
+        valid=q.trace_binding(s,json.dumps(trace).encode(),native,b);origin=s.privacy_origin08(valid)
+        self.assertEqual(origin['origin']['site'],'CHECK_REJECT')
+        self.assertEqual(origin['origin']['error'][0]['code'],'HEALTH_DATA_WRITE_ADMISSION_CLOSED')
+        for key,value in [('tokenCurrent',False),('grant',0)]:
+            other=copy.deepcopy(trace);other['events'][1][key]=value
+            self.assertIsNone(s.privacy_origin08(q.trace_binding(s,json.dumps(other).encode(),native,b)))
+        other=copy.deepcopy(trace);other['events'][1]['error'][0]['code']='UNCLASSIFIED'
+        self.assertIsNone(s.privacy_origin08(q.trace_binding(s,json.dumps(other).encode(),native,b)))
+
+    def test_frozen_real_case03_prefix_stops_only_after_first_goals(self):
+        import hashlib
+        q=self.replay();full=(ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes()
+        self.assertEqual(hashlib.sha256(full).hexdigest(),'bffe625e84a8000338de6166d6df1582b6caea524ea7d69682d15a6c75859956')
+        before=full.split(b'\nimport UIKit',1)[0];after=q.prefix(before)
+        start=before.index(b'    func testV04ExplicitWithdrawalReviewCancelAndFreshReconsent() throws {')
+        end=before.index(b'        requireFreshGoals(app)\n',start)+len(b'        requireFreshGoals(app)\n')
+        self.assertEqual(after[:end],before[:end]);self.assertNotIn(b'Both actual selected goals',after[end:])
+        self.assertIn(b'diagnostic prefix; never ordinary qualification',after)
+        with self.assertRaises(ValueError):q.prefix(before+b'changed')
+        self.assertEqual((ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes(),full)
+
+    def test_only_exact_cancelled_producer_and_published_artifact_pin_allowed(self):
+        import copy
+        q=self.replay();p=q.PRODUCER
+        run={'id':p['run_id'],'head_sha':p['head'],'run_attempt':1,'status':'completed','conclusion':'cancelled'}
+        job={'id':p['job_id'],'run_id':p['run_id'],'head_sha':p['head'],'conclusion':'cancelled'}
+        artifact={'id':p['artifact_id'],'name':p['artifact_name'],'workflow_run':{'id':p['run_id'],'head_sha':p['head']},
+            'size_in_bytes':q.RAW['bytes'],'digest':'sha256:'+q.RAW['sha256'],'expired':False}
+        q.producer_metadata(run,job,artifact)
+        for index,key,value in [(0,'head_sha','a'*40),(0,'run_attempt',2),(0,'run_attempt',True),(0,'conclusion','success'),
+                (1,'id',1),(2,'id',1),(2,'digest','sha256:'+'a'*64),(2,'expired',True)]:
+            values=copy.deepcopy([run,job,artifact]);values[index][key]=value
+            with self.assertRaises(ValueError):q.producer_metadata(*values)
+
+    def test_original_complete_stage_reader_still_rejects_missing_seal(self):
+        import zipfile,hashlib
+        q=self.replay();n=TargetedOnboarding53CoordinatorTests().runtime()
+        with tempfile.TemporaryDirectory(prefix='c47-replay10-negative-')as tmp:
+            root=Path(tmp).resolve();raw=root/'unsealed.zip'
+            with zipfile.ZipFile(raw,'w',compression=zipfile.ZIP_STORED)as z:z.writestr('execution.json',b'{}')
+            stabilize_owned_fixture09(raw,root);wire={'bytes':raw.stat().st_size,'sha256':hashlib.sha256(raw.read_bytes()).hexdigest()}
+            expected={'digest':wire['sha256'],'payload_bytes':2};proof={'wire_bytes':wire['bytes'],'wire_sha256':wire['sha256'],'service_digest':'sha256:'+wire['sha256']}
+            with self.assertRaisesRegex(ValueError,'STAGE_EXACT_PAYLOAD_INVENTORY'):n.verify_stage_zip(raw,expected,proof,root/'import')
+            self.assertFalse((root/'import').exists())
+            with self.assertRaisesRegex(ValueError,'RAW_PIN'):q.raw70(n,raw,ROOT)
+
+    def test_one_shot_workflow_and_coordinator_never_compile_or_replace_app(self):
+        import inspect
+        q=self.replay();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_bytes().decode()
+        for item in ['commits == 155','github.run_attempt == 1','number == 48','runs-on: macos-26-intel',
+            'timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','actions: read',
+            'pinned_app70_replay10.py --output','500 * 1024 * 1024']:self.assertIn(item,workflow)
+        self.assertNotIn('--privacy-origin09-remainder71',workflow)
+        source=inspect.getsource(q.execute)
+        for item in ['n.prepare(r)','d._native05_full_source_controls53(r,n)','n.normal_runner04(r)',
+            'n.normal_case_execution04','product==inventory[\'product\']','simulator-signing/project.before.pbxproj',
+            "r.receipt.get('simulator',{}).get('udid')"]:self.assertIn(item,source)
+        for item in ['n.build(',"'npx'",'codesign -s','r.receipt[\'source\']=','normal_suite_aggregate04']:
+            self.assertNotIn(item,source)
 
 if __name__=='__main__':unittest.main()

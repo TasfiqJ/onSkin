@@ -39,11 +39,22 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.deepEqual(SOURCE_PATHS47.filter(path => STORAGE_ORIGIN05.sourcePaths.includes(path)), STORAGE_ORIGIN05.sourcePaths);
   assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
   // New current source is independently pinned; the historical202 witness remains exact.
-  assert.equal(SOURCE_PATHS47.length, 53);
+  const replay10 = 'scripts/release/full-app-j01/pinned_app70_replay10.py';
+  const beforeReplay10 = SOURCE_PATHS47.filter(path => path !== replay10);
+  assert.equal(beforeReplay10.length, 53);
+  assert.equal(SOURCE_PATHS47.length, 54);
+  assert.equal(SOURCE_PATHS47.filter(path => path === replay10).length, 1);
+  const exact153 = spawnSync('git', ['--no-replace-objects', 'show',
+    'f4fb6fb488d119d536fe189bf872512b27bfc719:' + DESCRIPTOR47],
+    { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+  assert.equal(exact153.status, 0);
+  const original53 = strictJson47(exact153.stdout).sourcePins.map(pin => pin.path);
+  assert.equal(original53.length, 53);
+  assert.deepEqual([...beforeReplay10].sort(), original53.sort());
   const preflight09 = ['scripts/phase9/ios-privacy-lock-succession46.mjs',
     'scripts/release/full-app-j01/native_preflight09.test.mjs'];
   assert.deepEqual(SOURCE_PATHS47.filter(path => preflight09.includes(path)), preflight09);
-  assert.equal(SOURCE_PATHS47.filter(path => !preflight09.includes(path)).length, 51);
+  assert.equal(beforeReplay10.filter(path => !preflight09.includes(path)).length, 51);
 
   const photo07 = ['scripts/photo07/photo07-source-contract.mjs', 'scripts/photo07/photo07-source-contract.test.mjs'];
   assert.deepEqual(SOURCE_PATHS47.filter(path => path.startsWith('scripts/photo07/')), photo07);

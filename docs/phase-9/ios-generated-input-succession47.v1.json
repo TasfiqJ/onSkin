@@ -221,13 +221,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 69880,
-      "sha256": "7b583ccadcc56b41fdc8c358e5fae30c777b3cd1774015b66de1c036a1ed2e64"
+      "bytes": 69939,
+      "sha256": "f21d9d924bd5383b56559af55ed732ce7e4d55801c9cf235d462e73ff263f60f"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 65186,
-      "sha256": "f45ce618409a9457a9f8706fd98e4259dffc5456a2516109dd460b2200bf087f"
+      "bytes": 65895,
+      "sha256": "0496c510ba4ba0c55c5c858589ab3a9511ae5b93ec60b40f8f8f5789c2e5e3e6"
     },
     {
       "path": "scripts/release/full-app-j01/native_preflight09.test.mjs",
@@ -243,6 +243,11 @@
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
       "bytes": 222183,
       "sha256": "0e8616985d0e963c45d7ccfb95ccaa0f1385921979fe3926e50ad463e6d5e00f"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+      "bytes": 26449,
+      "sha256": "32ef5815dd6bd0767080b7e9ac79e3651363610eea46ac63d843050da089c887"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
@@ -271,13 +276,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 164999,
-      "sha256": "4c8df7aaa79cebf482dc9b071de215725c9e65dc95d85fc0604ed734534a8197"
+      "bytes": 165608,
+      "sha256": "16eb12cb2d42fbbe476f0785ebf43da785f83f09dfceb705f70109838bd3d53d"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 136510,
-      "sha256": "a0b19a75683b330494c659a4fe5aeb7852e40a3f64d23d10448d963d4350ef69"
+      "bytes": 145876,
+      "sha256": "c7df35f0179c1da8c281e829d78a8b11dfa561881e42c0db9c4001abab7cd67e"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

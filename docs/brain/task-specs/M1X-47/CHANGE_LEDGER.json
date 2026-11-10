@@ -657,6 +657,15 @@
       "causal_need": "Actual original source bridge timeout in repeated authenticated Git process fanout; bounded batching and adversarial original-object controls only.",
       "invariant": "Every object hash, parent/merge/owner fence and input check retained; no timeout, app, security or admission relaxation.",
       "validation": "Original full30/60+nested21, new exact batch/graft/merge negatives, complete source scope/observer/runtime controls."
+    },
+    {
+      "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Explicit C10 separate historical pinned diagnostic replay; no incomplete ordinary producer import",
+      "invariant": "Exact app70/source149/current runner/new PID identities and original closed-stage/ordinary refusals unchanged",
+      "validation": "Eight replay negatives plus unchanged full source/native/privacy controls and actual sole72 evidence"
     }
   ],
   "amendments": [
@@ -9913,6 +9922,116 @@
       "causal_boundary": "C09 final native boundary: PARTIAL_BLOCKED / NO_GO. Both diagnostic starts70/71 are consumed;72-74 MUST REMAIN UNUSED under the staged stop. No original privacy rejection was captured, no genuine current ordinary3 passed, and internal5/export/removal remain NOT_RUN.\nNative70 source149 run42829248702/job129874632437 compiled/linked and verified a real signed Release diagnostic app; actual Mac full30/60,observer38/runtime157/sign15 passed. App TAR44,075,035B SHA256 fd234db21e05a9b5115fded12d38b2dd1b8123882a9e6b43fbc64e457d61c2ae. Its original600sec Simulator bootstatus timed out during initial migration/Waiting on System App before install/PID/launch/XCTest. Job cancelled at unchanged90min. Missing final producer seal preserved; strict full-stage reader refused. Separately verified build domain is not an ordinary/runtime producer. Raw82,274,463B SHA256041cacb6d9e3ee988ae79673c6e27f1ad6ec9fb580807beb91954e17814280fa. Raw/app separately owner-private with actual fresh-download verification.\nNative71 source151 efe30cec60cc3eb8eea6c66f5f9e30d68d6ed22d treebc00b7816d63d6ec53a9d408013dcb8c79372d20, run42855194632/job129966213959, terminal FAILURE. Actual Mac full30/60,observer43/runtime157/sign15 passed. Fresh owned Simulator bootstatus genuinely PASSED within unchanged600sec. Next npx --no-install expo config --json in apps/mobile timed out at original120sec, exit124, complete capture with ZERO stdout/stderr (16:50:29.934938Z-16:52:31.330847Z). No Expo originating exception/code is available; root cause UNDETERMINED. Failure precedes prebuild/compilation/app/install/PID/launch/XCTest/privacy trace. Closed producer failure evidence106members/43commands/86complete streams verified; raw13,059,814B SHA25687059790b58f8b330d184ac2dbd59b0b6763d317eef7a9019486e245a479eafd. No app produced71.\nC09 resolved demonstrated source controls without increasing original deadlines/removing assertions: raw Git batching replaces process fanout with per-invocation exact object validation; bounded diagnostics keep original stderr exact; test-owned Windows timestamps repaired while production strict reader unchanged; malformed ABSENT preimage0 corrected to null. Original failures and distinct supplemental Python3.12 runtime/signing failures remain unwaived. Material150 all13 forced current checks passed including root7122,uncached type/lint/full30/60/21/observer43/runtime157/sign15; worklist-only151 seal passed exact SOURCE_FROZEN72. Current151 CI remains separate from final docs seal: root/type/lint/source positives do not waive SDK/Security/candidate29/G97/scanner failures.\nThe exact post-consent case03 failure remains historical native67: real I agree Continue then native_ui47.swift208 first Goals30sec wait failed at PRIVACY CHECK / Your privacy choice could not be confirmed / Return to privacy. First predicate/exception UNKNOWN. No evidence attributes this to Keychain,ciphertext,network,account-generation or threading. Last genuine ordinary suite2PASS1FAIL; no current ordinary/internal admission. Historic npm overridden mismatch56/59 stays unwaived; accepted exact65-to67 raw graph equality is separate. Historical unsigned-34018 and unattributed corrupted-JSON diagnostic remain distinct.\nSmallest future diagnostic, subject to independent Brain authorization: determine why71's bounded Expo config child stalls using content-free process/main-thread/child-stage observations before app generation; preserve the original120sec failure, avoid a speculative app change. Then a properly bounded new diagnostic build must capture the ORIGINAL lease/consent/provider/route rejection at the real post-consent transition. No screen-only attribution or instrumented ordinary PASS. Only evidenced cause RED/fixed reproducer permits a clean ordinary build and genuine ordinary3 before internal5. Remaining72-74 are preserved capacity, not permission to continue after this stop; no guarantee three starts finish the objective.\nSame draftPR48 and branch stage/m1-native-runtime47; auto-merge and maintainer modifications OFF. Current workflow exact151/a1 guard remains unchanged and must SKIP/leave Mac UNALLOCATED at final docs-only seal. Final source tests/CI and compact authenticated return recorded outside source after final seal. All38 requirements/18 owner gates unaccepted; original SDK,Security,candidate29,G97/scanners unwaived. No merge,deployment,release,signing/account change,owner admission or Campaign48. Independent Brain review required.\n",
       "status": "PARTIAL_BLOCKED_NO_GO_REQUIRED_NATIVE_STOP",
       "remaining": 3
+    },
+    {
+      "authorization": "BRAIN-C47-PINNED-APP70-PRIVACY-REPLAY10",
+      "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+      "paths": [
+        {
+          "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+          "bytes": null,
+          "sha256": null,
+          "state": "ABSENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "bytes": 164999,
+          "sha256": "4c8df7aaa79cebf482dc9b071de215725c9e65dc95d85fc0604ed734534a8197",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "bytes": 136510,
+          "sha256": "a0b19a75683b330494c659a4fe5aeb7852e40a3f64d23d10448d963d4350ef69",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "bytes": 69880,
+          "sha256": "7b583ccadcc56b41fdc8c358e5fae30c777b3cd1774015b66de1c036a1ed2e64",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "bytes": 4017,
+          "sha256": "5844f96ae9aac5ddf4fda331c495d802dbcb5572869099dcbc8012e81213cb98",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "bytes": 23632,
+          "sha256": "f8d8e3e0a8ec1eeed264e424958f85fee4cc7bab57016e3474ff0c539a188a17",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 769461,
+          "sha256": "d30ec2e87be44e6f1e8b5da63c331f7e7ee24b754469b8d57068545d0e3f3e7d",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 175050,
+          "sha256": "e462cc8bea88376e1bc64b6cde12d11475da47ae865e7487cb41ff9957801eb5",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 668568,
+          "sha256": "de81d0cc3c4fd6b4c885de293300c3074b418bf30d55e6002f1919ec5f903303",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 49130,
+          "sha256": "c2dc6e5fbb7b4b4d08210a88aafe0ad44764040a02f35e3f641f28c194933c0a",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Separate pinned149 diagnostic replay only. Original ordinary/current-source/closed-stage readers and all30/60/21 controls unchanged; no app mutation/re-sign/consent seeding/forced routing. Exact producer/runner/execution/PID binding. Original raw70 missing seal remains refused.",
+          "real_test": "Focused producer/artifact/transform/runner/PID/ordinary-admission negatives; actual raw70 domain replay; full original source30/60/21, observer controls/runtime157/sign15/current scope/source, forced uncached root/type/lint before sole native72."
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "bytes": 65186,
+          "sha256": "f45ce618409a9457a9f8706fd98e4259dffc5456a2516109dd460b2200bf087f",
+          "state": "PRESENT",
+          "preimage_head": "f4fb6fb488d119d536fe189bf872512b27bfc719",
+          "invariant": "Keep original30 tests/all60events/21outcomes; preserve exact original153 descriptor53 scope and admit only one C10 replay coordinator",
+          "real_test": "Original first test validates exact53 parent set plus one new path/current54; full original30/60/21 unchanged"
+        }
+      ],
+      "causal_boundary": "C10 BRAIN-C47-PINNED-APP70-PRIVACY-REPLAY10: zero-Mac preparation for the single exact155/a1 attempt72. New separate hard-pinned diagnostic-only replay verifies original raw70/app/source149, preserves its missing final producer seal and unchanged complete-stage refusal, and keeps historical149/current runner/new execution-device-PID identities distinct. Reuse the original isolated UI-test generator and real case03 prefix only through first requireFreshGoals, never rebuild/re-sign/mutate app70, never admit instrumented app as ordinary/internal. All original source30/60/nested21, observer/runtime157/sign15, strict Git/inode/refusal controls and timeouts remain; append eight targeted replay negatives. Scope extends only by this one exact coordinator path (73 finite paths; 54 current-source pins), preserving153 exact ancestors. Narrow job actions:read is for same-repository pinned artifact verification only; ephemeral token removed before child environment. No consent seeding/forced routing. Attempt72 remains NOT_STARTED pending controls/headroom/quota/live checks;73/74 locked unless a genuine source/PID-bound original rejection is captured72. Any infrastructure/no-origin/incomplete/misbound or not-reproduced outcome stops72; no75. Historical ordinary67 2PASS/1FAIL; current ordinary3/internal5 NOT_RUN. All38 requirements/18 gates unaccepted and existing SDK/Security/candidate29/G97/platform failures unwaived; NO_GO.",
+      "native_started10": 0,
+      "remaining72": 1,
+      "conditional73_74": "LOCKED",
+      "status": "PREPARING_PINNED_REPLAY_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
