@@ -1372,6 +1372,30 @@ class SameProcessReplay11Tests(unittest.TestCase):
                     self.assertFalse(q.origin_eligible11(state,True))
 
 class HostFirstReplay12Tests(unittest.TestCase):
+    def test_observer_timeout_retains_static_operation_without_arguments_or_admission_change(self):
+        from unittest.mock import patch
+        q,_,_,_,_,_=SameProcessReplay11Tests().fixture()
+        device='11111111-1111-1111-1111-111111111111'
+        cases=[(['/bin/ps','-p','321','-o','pid=,lstart=,comm='],'WARM_PROCESS_PS'),
+            (('/bin/ps','-p','321','-o','pid=,lstart=,comm='),'WARM_PROCESS_PS'),
+            (['/bin/ps','-p','321','-o','comm='],'BOUNDARY_EXECUTABLE_PS'),
+            (['xcrun','simctl','get_app_container',device,q.RUNNER_BUNDLE11,'data'],'RUNNER_DATA_CONTAINER'),
+            (['PRIVATE_SECRET','PRIVATE_HEALTH_RECORD'],'UNKNOWN_OPERATION'),('PRIVATE_SECRET','UNKNOWN_OPERATION'),
+            (['PRIVATE'*1000],'UNKNOWN_OPERATION')]
+        for cmd,expected in cases:
+            with self.subTest(operation=expected):
+                error=subprocess.TimeoutExpired(cmd,3,output=b'PRIVATE_OUTPUT',stderr=b'PRIVATE_ERROR')
+                state={'invalid':None,'checkpoints':[]};q.invalidate11(state,error)
+                self.assertEqual(state['invalid']['code'],'C47_REPLAY11_OBSERVER_UNAVAILABLE')
+                self.assertEqual(state['invalid']['timeout_operation'],expected);self.assertEqual(state['invalid']['timeout_seconds'],3)
+                self.assertFalse(q.origin_eligible11(state,True))
+                text=json.dumps(state);self.assertNotIn('PRIVATE',text);self.assertNotIn(device,text);self.assertNotIn('321',text)
+                first=state['invalid'].copy();q.invalidate11(state,ValueError('C47_REPLAY11_LATER_ERROR'));self.assertEqual(state['invalid'],first)
+        state={'invalid':None}
+        with patch.object(q,'timeout_operation12',side_effect=ValueError('PRIVATE')):q.invalidate11(state,subprocess.TimeoutExpired(cases[0][0],3))
+        self.assertEqual(state['invalid']['timeout_operation'],'UNKNOWN_OPERATION');self.assertEqual(state['invalid']['code'],'C47_REPLAY11_OBSERVER_UNAVAILABLE')
+        state={'invalid':None};q.invalidate11(state,ValueError('PRIVATE_MESSAGE'));self.assertNotIn('PRIVATE',json.dumps(state));self.assertNotIn('timeout_operation',state['invalid'])
+
     def test_current_one_shot_and_early_inventory_order_preserve_all_later_controls(self):
         import inspect
         q,r,b,native,trace,ps=SameProcessReplay11Tests().fixture()

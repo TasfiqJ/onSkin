@@ -279,9 +279,27 @@ def request11(value,envelope,checkpoints):
         value['state']in({2,3,4}if seq==1 else{4}),'REQUEST_BINDING_OR_ORDER')
     return {'schema':1,'binding':envelope['binding_id'],'sequence':seq,'phase':value['phase'],'pid':pid,'valid':True,'code':'CURRENT_SAME_PROCESS'}
 
+def timeout_operation12(error):
+    """Static source-operation only; never retain private command arguments."""
+    cmd=error.cmd
+    if type(cmd)not in(list,tuple)or len(cmd)>6 or not all(type(q)is str and len(q)<=512 for q in cmd):return 'UNKNOWN_OPERATION'
+    if len(cmd)==5 and list(cmd[:2])==['/bin/ps','-p']and cmd[2].isdigit()and cmd[3]=='-o':
+        if cmd[4]=='pid=,lstart=,comm=':return 'WARM_PROCESS_PS'
+        if cmd[4]=='comm=':return 'BOUNDARY_EXECUTABLE_PS'
+    if len(cmd)==6 and list(cmd[:3])==['xcrun','simctl','get_app_container']and list(cmd[4:])==[RUNNER_BUNDLE11,'data']:
+        try:
+            if str(uuid.UUID(cmd[3])).lower()==cmd[3].lower():return 'RUNNER_DATA_CONTAINER'
+        except ValueError:pass
+    return 'UNKNOWN_OPERATION'
+
 def invalidate11(state,error):
     code=str(error);safe=code if re.fullmatch('C47_REPLAY11_[A-Z0-9_]+',code)else'C47_REPLAY11_OBSERVER_UNAVAILABLE'
-    if state['invalid']is None:state['invalid']={'code':safe,'error_type':type(error).__name__}
+    if state['invalid']is None:
+        state['invalid']={'code':safe,'error_type':type(error).__name__}
+        if isinstance(error,subprocess.TimeoutExpired):
+            try:operation=timeout_operation12(error)
+            except Exception:operation='UNKNOWN_OPERATION'
+            state['invalid'].update(timeout_operation=operation,timeout_seconds=3 if error.timeout==3 else None)
 
 def explicit_tap11(raw):
     text=raw.decode('utf8')
