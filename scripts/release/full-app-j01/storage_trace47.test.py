@@ -1676,7 +1676,7 @@ assert not list(ipc.glob('*ack*.json'));print('OBSERVER_TERMINAL_NO_ACK')
         ordered=[b'attachWarm11(app)',b'tap("Begin", app)',b'enterAdultDate(app)',b'requireInitialConsent(app)',b'requireDisclosure(app)',b'sameProcess11("PRE_CONSENT"',b'tap("I agree. Continue", app)',b'sameProcess11("POST_CONSENT"',b'sameProcess11("GOALS_CHECK"',b'requireFreshGoals(app)']
         self.assertEqual([case.index(v)for v in ordered],sorted(case.index(v)for v in ordered));self.assertNotIn(b'Thread.sleep',after);self.assertNotIn(b'app.launch(',case)
         workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
-        for text in ['commits == 167','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--prepared-observer13',q.JOB13]:self.assertIn(text,workflow)
+        for text in ['commits == 168','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--prepared-observer13',q.JOB13]:self.assertIn(text,workflow)
         self.assertNotIn('workflow_dispatch',workflow);self.assertEqual(workflow.count('  native-build:'),1)
         source=inspect.getsource(q.prepare_runner13)+inspect.getsource(q.lifecycle13)
         for text in ['900_000_000_000','test-without-building','build-for-testing','remaining13(prepared[\'deadline_ns\'],900)',"'-maximum-test-execution-time-allowance','600'",'n.bundle_inventory','xctestrun_bytes','read13']:
@@ -1719,6 +1719,7 @@ assert not list(ipc.glob('*ack*.json'));print('OBSERVER_TERMINAL_NO_ACK')
                 if kind in ['legacy','v2']:
                     proof=q.prepare_runner13(r,n,root/'isolated.xcodeproj',products,'11111111-1111-1111-1111-111111111111',{})
                     self.assertEqual(proof['deadline_ns'],deadline);self.assertEqual(len(proof['binaries']),2);self.assertTrue((output/'compiled-ui-runner13.tar.gz').is_file())
+                    self.assertEqual((output/'C47Prepared13.xctestrun').read_bytes(),proof['xctestrun_bytes'])
                 else:
                     with self.assertRaises((ValueError,FileNotFoundError)):q.prepare_runner13(r,n,root/'isolated.xcodeproj',products,'11111111-1111-1111-1111-111111111111',{})
                 self.assertEqual(len(calls),2);self.assertIn('build-for-testing',calls[1]['argv']);self.assertNotIn('test',calls[1]['argv']);self.assertTrue(all(x['timeout']<6 for x in calls))
@@ -1766,5 +1767,21 @@ assert not list(ipc.glob('*ack*.json'));print('OBSERVER_TERMINAL_NO_ACK')
             self.assertFalse(q.origin_eligible11(state,True));state['explicit_consent_native_tap']=True;self.assertTrue(q.origin_eligible11(state,True))
             native={'schema':1,'pid':321,'sourceHead':'wrong','bundle':q.BUNDLE}
             with self.assertRaisesRegex(ValueError,'TRACE_APP_SOURCE_PID'):q.trace_binding11(s,b'{}',native,b)
+
+    def test_preconsent_trace_is_retained_but_never_promoted_to_an_origin(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock
+        import time
+        with tempfile.TemporaryDirectory(prefix='c47-trace-retention13-')as temp:
+            root=Path(temp).resolve();q,r,b,native,trace,_=SameProcessReplay11Tests().fixture();r.output=root;r._storage05_first_data_container=root
+            control=root/'control';control.mkdir();state=q.state13(b,control,time.monotonic_ns());state['checkpoints']=[]
+            class Stop:
+                calls=0
+                def wait(self,delay):self.calls+=1;return self.calls>1
+            n=SimpleNamespace(stage_json=json.loads,read_native_file=lambda p:json.dumps(native if'Identity'in p.name else trace).encode(),write_json=lambda p,v:p.write_text(json.dumps(v)))
+            d=SimpleNamespace(validate_privacy08=s.validate_privacy08,privacy_origin08=Mock(side_effect=AssertionError('not before the actual post-consent checkpoints')))
+            q.trace13(r,n,d,b,state,Stop(),time.monotonic_ns()+5_000_000_000)
+            target=root/'replay-capture11';self.assertEqual(json.loads((target/'latest-identity.json').read_bytes()),native);self.assertEqual(json.loads((target/'latest-trace.json').read_bytes()),trace)
+            self.assertFalse((target/'ORIGIN_CANDIDATE.json').exists());self.assertIsNone(state['invalid']);d.privacy_origin08.assert_not_called();self.assertFalse(q.origin_eligible11(state,True))
 
 if __name__=='__main__':unittest.main()

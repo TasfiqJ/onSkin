@@ -210,7 +210,7 @@ JOB12='C47 host-first app70 replay'+str(SLOT12)
 AUTH13='BRAIN-C47-OBSERVER-LIFECYCLE-CAUSAL-REPLAY13'
 DOMAIN13='PINNED_APP70_PREPARED_OBSERVER_DIAGNOSTIC13'
 START13='6f6f9733a0551b26809057bae1d510c96349c371'
-SEAL_COUNT13=167
+SEAL_COUNT13=168
 JOB13='C47 prepared observer app70 replay75'
 PHASES11=('PRE_ACTIVATE','POST_ACTIVATE','WELCOME_CHECK','WELCOME_READY','PRE_CONSENT','POST_CONSENT','GOALS_CHECK','GOALS_READY')
 RUNNER_BUNDLE11='internal.c47.native-ui.xctrunner'
@@ -512,7 +512,7 @@ def context13(r,n,token):
     head=env.get('C47_EXPECTED_HEAD','');need11(re.fullmatch('[a-f0-9]{40}',head),'EXPECTED_RUNNER_HEAD')
     g=lambda *a:subprocess.check_output(['git','--no-replace-objects',*a],cwd=r.root,env=env,timeout=30).decode().strip()
     need11(g('rev-parse','HEAD')==head and g('rev-list','--count',n.BASE+'..HEAD')==str(SEAL_COUNT13)and
-        g('rev-parse','HEAD~2')==START13 and not g('status','--porcelain'),'EXACT_C13_165_PREFIX')
+        g('rev-parse','HEAD~'+str(SEAL_COUNT13-165))==START13 and not g('status','--porcelain'),'EXACT_C13_165_PREFIX')
     run_id=int(env['GITHUB_RUN_ID']);jobs,_=n._stage_api('/actions/runs/'+str(run_id)+'/jobs?per_page=100',token)
     selected=[q for q in jobs['jobs']if q['name']==JOB13];need11(len(selected)==1,'EXECUTION_JOB_UNIQUE');job=selected[0]
     need11(job['head_sha']==head and job['run_id']==run_id and type(job['run_attempt'])is int and job['run_attempt']==1 and job['status']=='in_progress'and
@@ -1005,6 +1005,7 @@ def prepare_runner13(r,n,project,products,device,env):
     n.write_json(r.output/'COMPILED_UI_RUNNER13.json',{'source':r.receipt['source'],'xctestrun':{'path':str(run),**identity(raw)},'target':target,
         'runner_path':str(host),'runner_bundle':info['CFBundleIdentifier'],'inventory':inventory,'compiled_swift':prefix_record['compiled_prefix'],'prepared_ns':time.monotonic_ns(),
         'UI_started_ns':started,'UI_deadline_ns':deadline,'remaining_ns':deadline-time.monotonic_ns(),'historical_app_rebuilt':False,'ordinary_admitted':False})
+    with(r.output/'C47Prepared13.xctestrun').open('xb')as retained:retained.write(raw)
     need11(n.evidence_total(r)+sum(q.get('bytes',0)for q in inventory)<n.MAX_EVIDENCE-20*1024**2,'PROTOCOL13_COMPILED_RETENTION_BOUND')
     with tarfile.open(r.output/'compiled-ui-runner13.tar.gz','w:gz',format=tarfile.PAX_FORMAT)as archive:archive.add(host,arcname=host.name)
     need11(n.bundle_inventory(host)==inventory and read13(run,1024*1024)[0]==raw,'PROTOCOL13_PREPARED_INPUTS_UNCHANGED')
@@ -1083,14 +1084,14 @@ def trace13(r,n,d,envelope,state,stop,deadline):
     target=r.output/'replay-capture11';candidate_started=False
     try:target.mkdir(exist_ok=True);directory13(target);pid=validate_binding11(envelope)
     except BaseException as error:invalidate13(state,error,'TRACE',deadline);return
-    while not stop.wait(.02)and time.monotonic_ns()<deadline and state['invalid']is None:
-        if len(state['checkpoints'])<7:continue
+    while not stop.wait(.2)and time.monotonic_ns()<deadline and state['invalid']is None:
         try:
             raw_id=n.read_native_file(r._storage05_first_data_container/'Documents/C47StorageOrigin05Identity.json');native=n.stage_json(raw_id)
             raw=n.read_native_file(r._storage05_first_data_container/('Documents/C47PrivacyOrigin08-'+str(pid)+'.json'))
             header=n.stage_json(raw);need11(header.get('sourceHead')==PRODUCER['head']and type(header.get('pid'))is int and header['pid']==pid and header.get('bundle')==BUNDLE,'TRACE_SOURCE_PID_MISMATCH')
             value=trace_binding11(d,raw,native,envelope)
             n.write_json(target/'latest-binding.json',envelope);(target/'latest-identity.json').write_bytes(raw_id);(target/'latest-trace.json').write_bytes(raw)
+            if len(state['checkpoints'])<7:continue
             origin=d.privacy_origin08(value)
             if origin is None:continue
             candidate_started=True;end=min(deadline,time.monotonic_ns()+5_000_000_000);observed={**state}

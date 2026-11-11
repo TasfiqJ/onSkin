@@ -1,4 +1,4 @@
-# C13 prepared-observer app70 diagnostic75 ONLY; exact PR48/167/a1; producer149 stays distinct; no app rebuild or ordinary/internal admission.
+# C13 prepared-observer app70 diagnostic75 ONLY; exact PR48/168/a1; producer149 stays distinct; no app rebuild or ordinary/internal admission.
 name: Campaign47 Simulator native runtime
 
 on:
@@ -33,7 +33,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 167 && github.run_attempt == 1
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 168 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
