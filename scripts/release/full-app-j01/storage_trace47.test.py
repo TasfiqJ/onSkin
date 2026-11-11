@@ -1675,7 +1675,10 @@ assert not list(ipc.glob('*ack*.json'));print('OBSERVER_TERMINAL_NO_ACK')
         case=after[after.index(b'    func testV04ExplicitWithdrawalReviewCancelAndFreshReconsent()'):]
         ordered=[b'attachWarm11(app)',b'tap("Begin", app)',b'enterAdultDate(app)',b'requireInitialConsent(app)',b'requireDisclosure(app)',b'sameProcess11("PRE_CONSENT"',b'tap("I agree. Continue", app)',b'sameProcess11("POST_CONSENT"',b'sameProcess11("GOALS_CHECK"',b'requireFreshGoals(app)']
         self.assertEqual([case.index(v)for v in ordered],sorted(case.index(v)for v in ordered));self.assertNotIn(b'Thread.sleep',after);self.assertNotIn(b'app.launch(',case)
-        workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        # Exact C13 historical witness; current C14 one-shot guard is independently strict.
+        raw=subprocess.check_output(['git','show','ca3229765a9a1b2519c481e78e9b2be78a29e58f:.github/workflows/campaign47-native-runtime.yml'],cwd=ROOT)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'a66d6e8c56e32b25bc0b277ba220d7f864bf1601c8a774ac7b6cf8e68e770c82')
+        workflow=raw.decode()
         for text in ['commits == 168','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--prepared-observer13',q.JOB13]:self.assertIn(text,workflow)
         self.assertNotIn('workflow_dispatch',workflow);self.assertEqual(workflow.count('  native-build:'),1)
         source=inspect.getsource(q.prepare_runner13)+inspect.getsource(q.lifecycle13)
@@ -1783,5 +1786,108 @@ assert not list(ipc.glob('*ack*.json'));print('OBSERVER_TERMINAL_NO_ACK')
             q.trace13(r,n,d,b,state,Stop(),time.monotonic_ns()+5_000_000_000)
             target=root/'replay-capture11';self.assertEqual(json.loads((target/'latest-identity.json').read_bytes()),native);self.assertEqual(json.loads((target/'latest-trace.json').read_bytes()),trace)
             self.assertFalse((target/'ORIGIN_CANDIDATE.json').exists());self.assertIsNone(state['invalid']);d.privacy_origin08.assert_not_called();self.assertFalse(q.origin_eligible11(state,True))
+
+
+class TargetedPlatform14Tests(unittest.TestCase):
+    def fixture(self,*,fault=None):
+        import time
+        from types import SimpleNamespace
+        from unittest.mock import Mock
+        q=PinnedApp70Replay10Tests().replay();device='11111111-1111-1111-1111-111111111111'
+        root='/Library/Developer/CoreSimulator/Volumes/iOS_Test/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot'
+        runtime={'runtimeRoot':root,'identifier':'synthetic-runtime'};expected=root+'/Applications/Preferences.app'
+        settings={'CFBundleIdentifier':'com.apple.Preferences','CFBundleExecutable':'Preferences','CFBundleName':'Settings','CFBundleDisplayName':'Settings','ApplicationType':'System','Path':expected,'Bundle':'file://'+expected}
+        r=SimpleNamespace(receipt={'targeted_platform14':True,'simulator':{'udid':device,'runtime':runtime}},output=Path('synthetic-output'),env={},persist=Mock(),passed=Mock());calls=[]
+        def text(name,argv,**kwargs):
+            calls.append((name,argv,kwargs));self.assertNotIn('launchctl',argv);self.assertNotIn('spawn',argv)
+            if name=='platform14-settings-launch':
+                if fault=='launch':raise ValueError('synthetic failed launch')
+                return 'not a PID'if fault=='pid'else'com.apple.Preferences: 321'
+            self.assertLessEqual(kwargs['timeout'],3);self.assertEqual(kwargs['env']['LC_ALL'],'C')
+            if name=='platform14-host-ps-supported-fields':return 'pid stat lstart comm'if fault!='support'else'pid comm'
+            self.assertEqual(argv,['/bin/ps','-ww','-p','321','-o','pid=,stat=,lstart=,comm='])
+            start=time.strftime('%a %b %d %H:%M:%S %Y',time.localtime())
+            executable=expected+'/Preferences'
+            if fault=='wrong-executable':executable='/usr/bin/Preferences'
+            if fault=='wrong-runtime':executable=executable.replace('iOS_Test','iOS_Other')
+            if fault=='absent':return ''
+            if fault=='malformed':return '321 S ? '+executable
+            if fault=='replaced'and'recheck'in name:start=time.strftime('%a %b %d %H:%M:%S %Y',time.localtime(time.time()-2))
+            row='321 '+('Z'if fault=='zombie'else'S')+' '+start+' '+executable
+            return row+'\n'+row if fault=='duplicate'else row
+        r.text=text
+        def run(name,argv,**kwargs):
+            calls.append((name,argv,kwargs));self.assertEqual(kwargs['timeout'],60)
+            if fault=='terminate':raise ValueError('synthetic failed termination')
+        r.run=run
+        n=SimpleNamespace(executed_producer_command=Mock(return_value=(None,[json.dumps({'com.apple.Preferences':settings}).encode(),b''])),stage_json=json.loads,
+            platform_bootstrap36=Mock(side_effect=AssertionError('legacy enumeration would stall')))
+        return q,r,n,device,calls,settings
+
+    def test_exact_launch_pid_runtime_start_and_required_termination_without_legacy_enumeration(self):
+        q,r,n,device,calls,_=self.fixture();q.platform_bootstrap14(r,n,device)
+        self.assertEqual(r.receipt['platform14']['status'],'PASS');self.assertEqual(r.receipt['platform14']['process']['pid'],321)
+        self.assertFalse(r.receipt['platform14']['legacy_enumeration_invoked']);n.platform_bootstrap36.assert_not_called()
+        self.assertEqual([x[0]for x in calls],['platform14-settings-launch','platform14-host-ps-supported-fields','platform14-settings-exact-process','platform14-settings-recheck-process','platform14-settings-terminate'])
+        r.passed.assert_called_once();self.assertEqual(r.passed.call_args.args[0],'platform14-bootstrap')
+        self.assertEqual(calls[0][1][3],device);self.assertEqual(calls[-1][1][3],device)
+        with self.assertRaisesRegex(ValueError,'ONCE_DIAGNOSTIC_ONLY'):q.platform_bootstrap14(r,n,device)
+
+    def test_absent_wrong_replaced_zombie_duplicate_malformed_unsupported_failed_launch_terminate_are_terminal(self):
+        for fault in ['launch','pid','support','wrong-executable','wrong-runtime','absent','malformed','replaced','duplicate','zombie','terminate']:
+            with self.subTest(fault=fault):
+                q,r,n,device,calls,_=self.fixture(fault=fault)
+                with self.assertRaises(ValueError):q.platform_bootstrap14(r,n,device)
+                self.assertEqual(r.receipt['platform14']['status'],'FAIL');self.assertTrue(r.receipt['platform14']['terminal']);r.passed.assert_not_called()
+                with self.assertRaisesRegex(ValueError,'ONCE_DIAGNOSTIC_ONLY'):q.platform_bootstrap14(r,n,device)
+                n.platform_bootstrap36.assert_not_called()
+
+    def test_registry_device_and_runtime_are_exact_not_basename_or_screenshot(self):
+        for field,value in [('CFBundleIdentifier','wrong'),('CFBundleExecutable','Wrong'),('CFBundleName','Other'),('CFBundleDisplayName','Other'),('ApplicationType','User'),('Path','/Applications/Preferences.app'),('Bundle','https://host/Preferences.app')]:
+            with self.subTest(field=field):
+                q,r,n,device,calls,settings=self.fixture();settings[field]=value;n.executed_producer_command.return_value=(None,[json.dumps({'com.apple.Preferences':settings}).encode(),b''])
+                with self.assertRaises(ValueError):q.platform_bootstrap14(r,n,device)
+                self.assertEqual(calls,[]);r.passed.assert_not_called()
+        q,r,n,device,calls,_=self.fixture()
+        with self.assertRaises(ValueError):q.platform_bootstrap14(r,n,'22222222-2222-2222-2222-222222222222')
+        self.assertEqual(calls,[])
+
+    def test_one_absolute_observation_envelope_including_collection_no_poll_or_fallback(self):
+        import inspect
+        from unittest.mock import patch
+        for clock,expected_calls in [([100,161],1),([100,101,161],2),([100,101,102,161],2)]:
+            q,r,n,device,calls,_=self.fixture()
+            with patch.object(q.time,'monotonic',side_effect=clock):
+                with self.assertRaisesRegex(ValueError,'OBSERVATION_(EXPIRED|LATE)'):q.platform_bootstrap14(r,n,device)
+            self.assertEqual(len(calls),expected_calls);r.passed.assert_not_called();self.assertEqual(r.receipt['platform14']['status'],'FAIL')
+        source=inspect.getsource(q.platform_bootstrap14)
+        self.assertNotIn('sleep(',source);self.assertNotIn('while ',source);self.assertNotIn('platform_bootstrap36(',source)
+        self.assertEqual(source.count('time.monotonic()+60'),1)
+
+    def test_row_parser_refuses_old_future_unknown_multiline_truncated_replaced_process(self):
+        import time
+        q,_,_,_,_,_=self.fixture();now=time.time();start=time.strftime('%a %b %d %H:%M:%S %Y',time.localtime(now));exe='/exact/runtime/Preferences'
+        row='321 S '+start+' '+exe;proof=q.settings_process14(row,321,exe,now-.1,now)
+        self.assertEqual(q.settings_process14(row,321,exe,now-.1,now,proof),proof)
+        for raw in [row.replace('321','322',1),row+'\n'+row,row[:-1],row.replace(' S ',' ? '),row.replace(' S ',' Z '),'321 S bad '+exe,'x'*4097,row+' arbitrary suffix']:
+            with self.subTest(raw=raw[:25]),self.assertRaises(ValueError):q.settings_process14(raw,321,exe,now-.1,now)
+        with self.assertRaises(ValueError):q.settings_process14(row,321,exe,now+2,now+3)
+        with self.assertRaises(ValueError):q.settings_process14(row,321,exe,now-5,now-3)
+        with self.assertRaises(ValueError):q.settings_process14(row,321,exe,now-.1,now,{**proof,'process_start_sha256':'0'*64})
+
+    def test_current_one_shot_uses_c13_lifecycle_and_historical_ordinary_helpers_unchanged(self):
+        import inspect
+        q,_,_,_,_,_=self.fixture();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        for text in ['commits == 172','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--targeted-platform14',q.JOB14]:self.assertIn(text,workflow)
+        self.assertEqual(workflow.count('  native-build:'),1);self.assertNotIn('workflow_dispatch',workflow)
+        self.assertEqual(q.SEAL_COUNT14,172);self.assertEqual(q.START14,'ca3229765a9a1b2519c481e78e9b2be78a29e58f')
+        self.assertIn("str(SEAL_COUNT14-170)",inspect.getsource(q.context14));self.assertIn('EXACT_C14_170_PREFIX',inspect.getsource(q.context14))
+        ctx={'native_attempt':76,'job_name':q.JOB14,'authorization':q.AUTH14};self.assertEqual(q.execution_domain12(ctx),q.DOMAIN14)
+        for patch in [{'native_attempt':77},{'native_attempt':True},{'authorization':q.AUTH13},{'job_name':q.JOB13}]:
+            with self.assertRaises(ValueError):q.execution_domain12({**ctx,**patch})
+        for path in ['scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_ui47.swift','scripts/release/full-app-j01/native_ui47.rb']:
+            self.assertEqual((ROOT/path).read_bytes(),subprocess.check_output(['git','show',q.START14+':'+path],cwd=ROOT))
+        source=inspect.getsource(q.execute);self.assertIn('if r.receipt.get(\'targeted_platform14\')is True:platform_bootstrap14(r,n,device)',source)
+        self.assertIn('else:n.platform_bootstrap36(r,device)',source);self.assertIn('lifecycle13(',source)
 
 if __name__=='__main__':unittest.main()

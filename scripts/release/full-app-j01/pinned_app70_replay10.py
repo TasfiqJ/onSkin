@@ -212,6 +212,11 @@ DOMAIN13='PINNED_APP70_PREPARED_OBSERVER_DIAGNOSTIC13'
 START13='6f6f9733a0551b26809057bae1d510c96349c371'
 SEAL_COUNT13=168
 JOB13='C47 prepared observer app70 replay75'
+AUTH14='BRAIN-C47-TARGETED-PLATFORM-PRIVACY14'
+DOMAIN14='PINNED_APP70_TARGETED_PLATFORM_DIAGNOSTIC14'
+START14='ca3229765a9a1b2519c481e78e9b2be78a29e58f'
+SEAL_COUNT14=172
+JOB14='C47 targeted platform app70 replay76'
 PHASES11=('PRE_ACTIVATE','POST_ACTIVATE','WELCOME_CHECK','WELCOME_READY','PRE_CONSENT','POST_CONSENT','GOALS_CHECK','GOALS_READY')
 RUNNER_BUNDLE11='internal.c47.native-ui.xctrunner'
 
@@ -220,6 +225,7 @@ def need11(value,code):
 
 def execution_domain12(ctx):
     need11(type(ctx['native_attempt'])is int,'NATIVE_ATTEMPT_TYPE')
+    if ctx['native_attempt']==76 and ctx['job_name']==JOB14 and ctx.get('authorization')==AUTH14:return DOMAIN14
     if ctx['native_attempt']==75 and ctx['job_name']==JOB13 and ctx.get('authorization')==AUTH13:return DOMAIN13
     if ctx['native_attempt']==73 and ctx['job_name']==JOB11:return DOMAIN11
     need11(type(ctx['native_attempt'])is int and ctx['native_attempt']in (74,75) and
@@ -390,7 +396,7 @@ ATTACH_SWIFT11=r'''
         // After activation, also bind the actual XCUI application hierarchy to it.
         if phase != "PRE_ACTIVATE" {
             let description = app.debugDescription
-            let expression = try! NSRegularExpression(pattern: "(?m)^(?:Attributes: | →)?Application, 0x[0-9a-fA-F]+, pid: ([0-9]+),")
+            let expression = try! NSRegularExpression(pattern: "(?m)^(?:Attributes: | â†’)?Application, 0x[0-9a-fA-F]+, pid: ([0-9]+),")
             let range = NSRange(description.startIndex..<description.endIndex, in: description)
             let pids = Set(expression.matches(in: description, range: range).compactMap { match -> Int? in
                 guard let value = Range(match.range(at: 1), in: description) else { return nil }
@@ -521,6 +527,78 @@ def context13(r,n,token):
         'run_attempt':1,'native_attempt':75,'job_name':JOB13,'runner_id':job['runner_id'],'configured_labels':job['labels'],'authorization':AUTH13}
     r.receipt.update(replay_execution11=ctx,host_first12=True,prepared_observer13=True);r.persist();return ctx
 
+def context14(r,n,token):
+    env=r.env;need11(sys.platform=='darwin'and env.get('GITHUB_REPOSITORY')=='TasfiqJ/onSkin'and env.get('GITHUB_EVENT_NAME')=='pull_request'and
+        env.get('GITHUB_JOB')=='native-build'and env.get('GITHUB_RUN_ATTEMPT')=='1','ONE_HOSTED14')
+    head=env.get('C47_EXPECTED_HEAD','');need11(re.fullmatch('[a-f0-9]{40}',head),'EXPECTED_RUNNER_HEAD')
+    g=lambda *a:subprocess.check_output(['git','--no-replace-objects',*a],cwd=r.root,env=env,timeout=30).decode().strip()
+    need11(g('rev-parse','HEAD')==head and g('rev-list','--count',n.BASE+'..HEAD')==str(SEAL_COUNT14)and
+        g('rev-parse','HEAD~'+str(SEAL_COUNT14-170))==START14 and not g('status','--porcelain'),'EXACT_C14_170_PREFIX')
+    run_id=int(env['GITHUB_RUN_ID']);jobs,_=n._stage_api('/actions/runs/'+str(run_id)+'/jobs?per_page=100',token)
+    selected=[q for q in jobs['jobs']if q['name']==JOB14];need11(len(selected)==1,'EXECUTION_JOB_UNIQUE');job=selected[0]
+    need11(job['head_sha']==head and job['run_id']==run_id and type(job['run_attempt'])is int and job['run_attempt']==1 and job['status']=='in_progress'and
+        type(job['runner_id'])is int and job['runner_id']>0 and job['labels']==['macos-26-intel'],'ACTUAL_STANDARD_JOB')
+    ctx={'repository':'TasfiqJ/onSkin','runner_head':head,'runner_tree':g('rev-parse','HEAD^{tree}'),'run_id':run_id,'job_id':job['id'],
+        'run_attempt':1,'native_attempt':76,'job_name':JOB14,'runner_id':job['runner_id'],'configured_labels':job['labels'],'authorization':AUTH14}
+    r.receipt.update(replay_execution11=ctx,host_first12=True,prepared_observer13=True,targeted_platform14=True);r.persist();return ctx
+
+
+def settings_process14(raw,pid,executable,launch_start,observed_at,previous=None):
+    """Parse only one full-width C-locale host row; no process search or PID adoption."""
+    need11(type(raw)is str and 0<len(raw.encode('utf8'))<=4096 and type(pid)is int and 0<pid<=2147483647,'PLATFORM14_ROW_SIZE_PID')
+    match=re.fullmatch(r'\s*([1-9][0-9]*)[ \t]+([A-Za-z+<>=NsWXsLlEV]+)[ \t]+([A-Z][a-z]{2} [A-Z][a-z]{2} [ \d]\d \d{2}:\d{2}:\d{2} \d{4})[ \t]+([^\r\n]+)\n?',raw)
+    need11(match is not None,'PLATFORM14_ROW_FORMAT')
+    got,status,start,path=match.groups()
+    need11(int(got)==pid and re.fullmatch(r'[RSDITU][+<>NslLWEV]*',status)and path==executable,'PLATFORM14_LIVE_EXACT_EXECUTABLE')
+    # lstart has one-second precision; require the actual launch's contemporary interval.
+    try:stamp=time.mktime(time.strptime(start,'%a %b %d %H:%M:%S %Y'))
+    except (ValueError,OverflowError):raise ValueError('C47_REPLAY11_PLATFORM14_START_FORMAT')
+    canonical=time.strftime('%a %b %d %H:%M:%S %Y',time.localtime(stamp))
+    parts=start.split();need11(canonical.split()==parts[:2]+[parts[2].zfill(2)]+parts[3:],'PLATFORM14_START_CANONICAL')
+    need11(launch_start-1<stamp<=observed_at and observed_at>=launch_start,'PLATFORM14_CONTEMPORARY_START')
+    value={'pid':pid,'executable':path,'process_start_sha256':hashlib.sha256(start.encode()).hexdigest()}
+    need11(previous is None or value==previous,'PLATFORM14_PROCESS_REPLACED');return value
+
+
+def platform_bootstrap14(r,n,device):
+    """Selected diagnostic measurement; never fallback from or PASS the legacy read."""
+    need11(r.receipt.get('targeted_platform14')is True and 'platform14'not in r.receipt,'PLATFORM14_ONCE_DIAGNOSTIC_ONLY')
+    state={'method':'DIRECT_HOST_EXACT_LAUNCH_PID14','status':'IN_PROGRESS','qualification':'PLATFORM_READINESS_ONLY_NOT_TARGET_APP_OR_XCTEST_PASS'}
+    r.receipt['platform14']=state;r.persist()
+    try:
+        need11(r.receipt['simulator']['udid']==device and str(uuid.UUID(device)).lower()==device.lower(),'PLATFORM14_OWN_DEVICE')
+        _,streams=n.executed_producer_command(r.receipt,r.output,'simulator-registry-json',read_output=True)
+        registry=n.stage_json(streams[0]);settings=registry.get('com.apple.Preferences',{})
+        from urllib.parse import unquote,urlsplit
+        runtime=dict(r.receipt['simulator']['runtime']);root=runtime.get('runtimeRoot','');expected=root+'/Applications/Preferences.app'
+        location=urlsplit(settings.get('Bundle',''))
+        need11(root.startswith('/Library/Developer/CoreSimulator/Volumes/')and root.endswith('/Contents/Resources/RuntimeRoot')and
+            settings.get('CFBundleIdentifier')=='com.apple.Preferences'and settings.get('CFBundleExecutable')=='Preferences'and
+            settings.get('CFBundleName')==settings.get('CFBundleDisplayName')=='Settings'and settings.get('ApplicationType')=='System'and
+            settings.get('Path')==expected and location.scheme=='file'and not location.netloc and
+            unquote(location.path).rstrip('/')==expected,'PLATFORM14_ACTUAL_SYSTEM_SETTINGS_REQUIRED')
+        launch_start=time.time();raw=r.text('platform14-settings-launch',['xcrun','simctl','launch',device,'com.apple.Preferences'],timeout=60)
+        match=re.fullmatch(r'com\.apple\.Preferences: ([1-9][0-9]*)',raw);need11(match is not None,'PLATFORM14_ACTUAL_SETTINGS_PID')
+        pid=int(match.group(1));deadline=time.monotonic()+60
+        def observe(name,argv):
+            remaining=deadline-time.monotonic();need11(remaining>0,'PLATFORM14_OBSERVATION_EXPIRED')
+            value=r.text(name,argv,env={**r.env,'LC_ALL':'C'},timeout=min(3,remaining))
+            need11(time.monotonic()<=deadline,'PLATFORM14_OBSERVATION_LATE');return value
+        support=observe('platform14-host-ps-supported-fields',['/bin/ps','-L'])
+        need11({'pid','stat','lstart','comm'}<=set(support.split()),'PLATFORM14_PS_SUPPORT')
+        argv=['/bin/ps','-ww','-p',str(pid),'-o','pid=,stat=,lstart=,comm=']
+        first=settings_process14(observe('platform14-settings-exact-process',argv),pid,expected+'/Preferences',launch_start,time.time())
+        final=settings_process14(observe('platform14-settings-recheck-process',argv),pid,expected+'/Preferences',launch_start,time.time(),first)
+        need11(r.receipt['simulator']['udid']==device and r.receipt['simulator']['runtime']==runtime and time.monotonic()<=deadline,'PLATFORM14_CURRENT_DEVICE_RUNTIME')
+        r.run('platform14-settings-terminate',['xcrun','simctl','terminate',device,'com.apple.Preferences'],timeout=60)
+        state.update(status='PASS',system_bundle='com.apple.Preferences',device=device,runtime=runtime,process=final,
+            launch_start=launch_start,observation_deadline=deadline,legacy_enumeration_invoked=False,
+            target_app_not_launched_by_probe=True,settings_interaction=False,target_data_mutation=False)
+        r.persist();r.passed('platform14-bootstrap',dict(state))
+    except BaseException as error:
+        state.update(status='FAIL',terminal=True,error_type=type(error).__name__);r.persist();raise
+
+
 def early_host12(r,n):
     """One real inventory before install/source suites; never a cached readiness pass."""
     need11(r.receipt.get('host_first12')is True,'HOST_FIRST_CONTEXT')
@@ -586,7 +664,9 @@ def execute(r,n,d,payload,inventory,*,same_process11=False):
         device=n.prepare_simulator(r,'normal');installed=n.install_simulator_app(r,device,app,BUNDLE)
         installed10(r,n,installed,app,inventory,device,'before',same_process11=same_process11)
         n.write_json(r.output/'INSTALLED_REPLAY_BINDING.json',bind(r,device))
-        n.platform_bootstrap36(r,device);first_pid=n.launch_and_verify(r,device,BUNDLE)
+        if r.receipt.get('targeted_platform14')is True:platform_bootstrap14(r,n,device)
+        else:n.platform_bootstrap36(r,device)
+        first_pid=n.launch_and_verify(r,device,BUNDLE)
         data=Path(r.text('replay-data-container',['xcrun','simctl','get_app_container',device,BUNDLE,'data'],timeout=300)).resolve(strict=True)
         expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'
         need(data.parent==expected and str(uuid.UUID(data.name)).lower()==data.name.lower(),'OWN_DATA_CONTAINER');r._storage05_first_data_container=data
@@ -1186,7 +1266,8 @@ def lifecycle13(r,n,d,project,products,device,installed,inventory,envelope,env,a
 def main():
     if sys.argv[1:2]==['--test-command13']:
         need11(len(sys.argv)==3,'PROTOCOL13_TEST_COMMAND_ARGUMENT');return test_command13(Path(sys.argv[2]))
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');p.add_argument('--targeted-platform14',action='store_true');args=p.parse_args()
+    if args.targeted_platform14:args.prepared_observer13=True
     if args.prepared_observer13:args.host_first12=True
     if args.host_first12:args.same_process11=True
     token=os.environ.pop('C47_ARTIFACT_READ_TOKEN','');need(bool(token),'EPHEMERAL_READ_TOKEN')
@@ -1197,10 +1278,10 @@ def main():
     def coordinator_timeout(*_):raise ValueError('C47_REPLAY11_COORDINATOR_MAX84'if args.same_process11 else'C47_REPLAY10_COORDINATOR_MAX84')
     signal.signal(signal.SIGALRM,coordinator_timeout);signal.alarm(84*60)
     r=n.Runner(root,output,seconds=78*60);coordinator_deadline=r.deadline+6*60
-    r.receipt.update(stage='diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
-        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH13 if args.prepared_observer13 else AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
+    r.receipt.update(stage='diagnostic-targeted-platform14'if args.targeted_platform14 else'diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
+        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH14 if args.targeted_platform14 else AUTH13 if args.prepared_observer13 else AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
     try:
-        ctx=(context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
+        ctx=(context14 if args.targeted_platform14 else context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
         if args.host_first12:early_host12(r,n)
         run,_=n._stage_api('/actions/runs/'+str(PRODUCER['run_id']),token)
         job,_=n._stage_api('/actions/jobs/'+str(PRODUCER['job_id']),token)
@@ -1227,10 +1308,10 @@ def main():
         policy={'maximum_bytes':n.MAX_EVIDENCE,'observed_bytes':n.evidence_total(r),'upload_within_limit':n.evidence_total(r)<n.MAX_EVIDENCE-9*1024**2}
         r.receipt.update(artifact_policy=policy,finished_utc=n.utc());r.persist()
         files=[{'path':p.relative_to(output).as_posix(),**n.stage_file_digest(p)}for p in sorted(output.rglob('*'))if p.is_file()]
-        n.write_json(output/('replay-provenance13.json'if args.prepared_observer13 else'replay-provenance12.json'if args.host_first12 else'replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
+        n.write_json(output/('replay-provenance14.json'if args.targeted_platform14 else'replay-provenance13.json'if args.prepared_observer13 else'replay-provenance12.json'if args.host_first12 else'replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
             'runner_source':r.receipt.get('source'),'execution':r.receipt.get('replay_execution11'if args.same_process11 else'replay_execution10'),'files':files,
             'ordinary_admitted':False,'internal_admitted':False,'producer70_sealed':False,'release':'NO_GO'})
         if not policy['upload_within_limit']:code=1
-    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
+    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':76 if args.targeted_platform14 else 75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
     return code
 if __name__=='__main__':raise SystemExit(main())

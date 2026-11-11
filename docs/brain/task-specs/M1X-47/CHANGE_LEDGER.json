@@ -10528,6 +10528,73 @@
       "release": "NO_GO",
       "status": "PARTIAL_BLOCKED_NATIVE75_PLATFORM_STOP_REQUIRED_UNUSED76_78_NO_GO",
       "causal_boundary": "C13 actual finite native endpoint,2026-11-11: PARTIAL_BLOCKED / NO_GO. Sole75 ran source168 3460d75dd692a797c8a16223bfb2323964b133a1/tree c74714e21a8b98432d24d947fe7baa343d0e697b, run43083129673/job130740570627/run_attempt1, standard macos-26-intel, and FAILED before target-app launch or consent. Genuine early inventory, normal installation/hooks/installed bytes, original source30/ordered60, observer74, runtime157/signing15/current54/native202/172 controls and exact historical app70 extracted/installed-before signature/Mach-O/JS/inventory verification passed. The mandatory existing platform-readiness probe launched the actual system Settings app, then its required simctl spawn launchctl list read timed out at the unchanged60-second limit, coordinator timeout exit124, complete empty stdout/stderr; measured start-to-finished receipt68.286972s includes collection/termination overhead. This timeout status is not an original native OS/app privacy error. The outer ValueError has no retained allowlisted code. No Simulator/service/main-thread cause is established and no privacy/Keychain/storage cause is invented.\nThe later optional screenshot command separately timed out at30seconds but left a valid retained PNG showing system Settings. It supplies no target-app PID, observer binding, consent action or privacy-origin proof. Owned Simulator shutdown passed. Target app warm launch/30-second survival, isolated diagnostic UI-runner build/xctestrun, actual prepared namespace/READY/eight checkpoints, native XCTest/xcresult and explicit-consent prefix were NOT_RUN; no installed-after product proof was reached. The repaired lifecycle remains source-qualified only; actual Mac74-control success is not genuine Swift runner execution. First post-consent privacy rejection remains UNKNOWN. Native67's2PASS/1FAIL PrivacyCheck,72 cold-start failure,74 unknown timeout operation, original corrupted-JSON attribution and all earlier genuine failures remain open and distinct.\nC13 mandatory STOP is final for native execution:75 consumed,76-78 REQUIRED_UNUSED, no second diagnostic/fresh host/attempt2/hidden or parallel Mac/79. No causal app repair or privacy causal RED is justified. Clean application build76, complete ordinary3/77, internal5/78, export integrity/path/content hash/removal remain NOT_RUN. App70 remains historical instrumented producer149 with its missing complete-stage seal still refused by the original consumer. It was not rebuilt, altered, re-signed or admitted as ordinary/current software.\nExact material166 and167 each passed all13 required local profiles;167 has74 observer groups, original30/60/nested21/runtime157/sign15/current54/native202/172 and complete uncached7122 root tests under the disclosed four-worker Windows CLI, uncached type/lint and raw dependency graph. Seal168 changed only the two generated worklists and passed frozen73/nested21 with all165 starting ancestors exact. Actual source168 hosted quality retains7122/uncached type/lint/two strict30 positives despite11 SDK recommendations/Doctor20-of21 failure; current hosted Windows74/30/60/frozen73 and iOS source/PG15/17/iOS+Android exports passed. Security/candidate29/G97/scanners failed and remain unwaived; full database validation/final exact-source CI are separately collected in the authenticated return, not inferred from this dated closure snapshot. Current technical scanner retains128 Semgrep findings/one PartialParsing warning,1164 redacted Gitleaks findings and12 OSV records. C11's original Windows failures, supplemental failed platform profiles and historical DB port ownership remain unwaived; no unrelated DB/scanner/security repair or acceptance claim.\nThis closure changes four custody documents only, preserving every code/test/descriptor/workflow/ordinary Swift/Ruby/installer/dependency/signing/app/consent byte. The exact168 one-shot native guard stays parked; a later final documentation/worklist seal must leave native unallocated. Required custody validation, exact prose-only equivalence, final-head source CI and the authenticated owner-private report/compact ZIP/fresh/tamper/source proofs are completed outside source after final sealing. Private raw evidence, process/device details and temporary download references are not published here. Same draft/open/unmerged PR48; auto-merge and maintainer edits OFF. All38 whole requirements/18 owner gates unaccepted; original SDK/Security/candidate29/G97/rule custody/scanners and historical failures unwaived. No merge/deployment/release/M2/J01/clinical/account/purchase/owner admission/Campaign48. Finish authenticated delivery and stop for independent Brain review."
+    },
+    {
+      "UTC": "2026-11-11T22:33:28.314157+00:00",
+      "authorization": "BRAIN-C47-TARGETED-PLATFORM-PRIVACY14",
+      "preimage_head": "ca3229765a9a1b2519c481e78e9b2be78a29e58f",
+      "preimage_tree": "79352a203f0d59b5873669a24eb95e2d33ff3d4f",
+      "paths": [
+        ".github/workflows/campaign47-native-runtime.yml",
+        "ONSKIN_BRAIN_HANDOFF.txt",
+        "PROGRESS.md",
+        "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+        "docs/brain/task-specs/M1X-47/TASK.md",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "scripts/release/full-app-j01/pinned_app70_replay10.py",
+        "scripts/release/full-app-j01/storage_trace47.py",
+        "scripts/release/full-app-j01/storage_trace47.test.py"
+      ],
+      "all170AncestorsRequired": true,
+      "preservedObserverGroups": 74,
+      "ASTIdenticalPreviousGroups": 73,
+      "oneHistoricalWorkflowWitness": [
+        "test_new_afterimage_and_finite_workflow_keep_original_bounds_and_sequence"
+      ],
+      "newTargetedGroups": 6,
+      "focusedPython31280PASS": true,
+      "supplementalPython39Observer80": "FAILED_3_OLD_LONG_PATH_FIXTURE_ERRORS_RETAINED_NOT_WAIVED",
+      "originalOrdinaryInputsByteIdentical": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "bytes": 302739,
+          "sha256": "eba7c1132113089094709a9c689f38b173f8626b989054c9f9899242d1edfc7e"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "bytes": 56139,
+          "sha256": "bffe625e84a8000338de6166d6df1582b6caea524ea7d69682d15a6c75859956"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "bytes": 10701,
+          "sha256": "cf95125bbc0ca6321614f0d9514fa0d1ea12d133654dcdde050948b2fb616481"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "bytes": 40645,
+          "sha256": "c660cd49020f19bb08a5b8ec8fa931966d9fc9b071c28cd8cc6a5f78e1a371af"
+        },
+        {
+          "path": "package-lock.json",
+          "bytes": 574016,
+          "sha256": "71aef9b618c23b3d15c94251f5d9548d4a3c6a1a88af42471ed03ad3d0b062aa"
+        }
+      ],
+      "completeMandatoryPreflight": "PENDING",
+      "nativeStarted14": 0,
+      "maximumNewStarts": 5,
+      "primary": 76,
+      "harnessCorrection77": "LOCKED_EXACT_SOURCE_BOUND_PRECONSENT_HARNESS_DEFECT_RED_MINIMAL_REPAIR_FULL_PREFLIGHT_REQUIRED",
+      "conditionalQualification": [
+        78,
+        79,
+        80
+      ],
+      "privacyOrigin": "UNKNOWN",
+      "release": "NO_GO",
+      "causal_boundary": "C14 BRAIN-C47-TARGETED-PLATFORM-PRIVACY14: finite diagnostic preparation, NO_GO. Authenticated entire original20894-byte directive SHA25656b0267915d3b220f91f4dbb887de00d037341dc1c09097f49a7d48e2d8b68fb and complete pasted request read. Starting170 ca3229765a9a1b2519c481e78e9b2be78a29e58f/tree79352a203f0d59b5873669a24eb95e2d33ff3d4f, all170 ancestors, C46 base/main/frozen plan and same draftPR48 preserved. C13 original anchored verifier/complete report/raw75's164payloads/136streams verified;75's required60second empty-output simctl-spawn launchctl-list timeout remains authentic, underlying causeUNKNOWN. No target app launch/XCTest/consent occurred75 and its lifecycle is only source-qualified.\nSmall diagnostic-only platform successor validates the exact original system Settings registry/runtime checks, launches on the fresh owned device, verifies actual installed ps field support, reads only the returned PID at full width with live state/exact runtime executable/contemporary start, rechecks stable PID/start/executable/device/runtime before required scoped termination. All replacement observations share one absolute60second envelope including collection; each host subprocess capped3seconds; late/unknown/malformed/absent/replaced/zombie/failed/ambiguous identities fail terminally. No sleep, polling, legacy first/fallback, process search, global service reset or deadline extension. Distinct platform14 receipt never claims legacy launchctl PASS. Original platform_bootstrap36/native_runtime47 and full ordinary Swift/Ruby, application/signing/dependency bytes remain exact170. App70 remains immutable historical producer149, missing complete seal refusedordinary; no rebuild or re-sign. Preserve C13 real cross-process lifecycle, same app PID/source and all UI/ACK limits.\nAll74 prior observer groups retained,73AST-identical and one original168 workflow witness bound to immutable170 bytes with all assertions preserved; six targeted groups make80, passed under the existing isolated WindowsPython3.12 profile. An extra baselinePython3.9 observer probe failed three older long-path fixture subcases; preserve that failed profile, not a privacy/native failure or waiver. Six initial focused controls exposed missing local inspect imports in two new test methods; actual failed output retained, corrected imports and fixed result separate. Complete mandatory exact-source source30/ordered60/nested21/runtime157/signing15/current54/native202/172/uncached7122 four-worker root/type/lint controls remainPENDING before any Mac allocation. No original privacy rejection or production repair is claimed.\nC13unused76-78 remain CLOSED. C14new prospective76 primary only is exact next source172/run_attempt1 guarded;77 requires retained exact pre-consent harness defect from76, actual preimageRED/minimal scoped repair/renewed complete preflight, not unknown OS timeout/readiness/integrity/binding failure or fresh-host retry. Only native original privacy origin plus real causal app regression and smallest repair unlock78clean ordinary product,79completeordinary3,80internal5/export/removal. No81/attempt2/parallel/hidden start; one Mac at a time, fresh zero-paid-spend/access/storage checks and unchanged90/84minute,300inventory/600boot/900UI/600test/5ACK/3subprocess/30Begin/500MiB/3day limits. Native76 and all qualification stagesNOT_RUN at preparation. All38/18unaccepted; Security/candidate29/G97/SDK/rulecustody/scanners/historical supplemental failuresunwaived. No merge/deployment/release/account/purchase/owner/M2/J01/clinical/Campaign48. Finish actual authenticated return and stop for independent Brain review.",
+      "status": "ACTIVE_C14_DIAGNOSTIC76_NOT_RUN_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
