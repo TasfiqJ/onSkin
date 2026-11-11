@@ -10191,6 +10191,90 @@
       "ordinary3": "NOT_RUN",
       "internal5": "NOT_RUN",
       "status": "PARTIAL_BLOCKED_NO_GO_MANDATORY_STOP"
+    },
+    {
+      "authorization": "BRAIN-C47-HOST-FIRST-BOUNDED-RECOVERY12",
+      "UTC": "2026-11-11T08:24:50.354174+00:00",
+      "preimage_head": "6b1e1b3adfd048e6a5e90a654721cf950fbafdf7",
+      "preimage_tree": "5d89e7d7b1e414f9a6975dd4143697f8bc8fb2e0",
+      "paths": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_bytes": 4100,
+          "preimage_sha256": "661d14065e4f04b2a7b79ec4756b5c20d273ef24d4333d4f0b4d4053ce17fac9"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_bytes": 60175,
+          "preimage_sha256": "4b0217a37f3dff20db061c8e725be549afb0b905d2cdf0b788c8168a0e48730a"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_bytes": 679613,
+          "preimage_sha256": "ae4e4605b0d7d4a4f03c2cfac9456b02fcc3ce475bb4d5d616de5aa241f7ce3b"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_bytes": 799921,
+          "preimage_sha256": "30ff4cc2f495dfa3b70b4cdeeb02c58ce7c177cfa8f6530b45669442d05a5bd1"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_bytes": 186095,
+          "preimage_sha256": "b5afe503b4c0999e550b7688db6b6b62bbed91f248f3e823ce12b4cd498d0785"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_bytes": 23821,
+          "preimage_sha256": "327466484d86748bf16ade5645e3bf9ebfa39155f7d4e227bf94745533e92fff"
+        },
+        {
+          "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+          "preimage_bytes": 50630,
+          "preimage_sha256": "fa87e8fe51d3afa1a9d4f319089f53a616426275af87d15e3ac7bb63c5232f98"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_bytes": 166195,
+          "preimage_sha256": "777a0a1ccbd381fdb5cb3ac05a648b198e06d81bd49f779c0ce8842fcec71155"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "preimage_bytes": 160995,
+          "preimage_sha256": "6f633c602cf55e353e4a0017714033ceeb25d6f85196ab94d68ebcb36d2485e9"
+        }
+      ],
+      "scope": "Existing replay coordinator, source checkpoint guard and focused controls, one-shot workflow, unchanged54 pin identities and necessary custody documents only",
+      "native_started12": 0,
+      "closed_C11_unused": [
+        74,
+        75,
+        76
+      ],
+      "new_slots": {
+        "74": "preflight-gated diagnostic",
+        "75": "only authenticated pre-app infrastructure contingency; not authorized by source/integrity/runner/UI failure",
+        "76": "LOCKED causal clean build",
+        "77": "LOCKED ordinary3",
+        "78": "LOCKED internal5"
+      },
+      "windows": "Original measured profile PASS7122 with diagnostic preload; prior failures remain unwaived. Measured mobile4-worker profile PASS7122, strict child18s versus34s, peakchildren6 versus19. Historical contention origin NOT_PROVEN. Final qualification uses explicit Windows-only CLI maxWorkers4, no test/config/production code change or deadline change.",
+      "database": "Original source-CI runner gone; retained log proves bind59110 only, occupant ownership NOT_PROVEN, OPEN_REQUIRED. No unknown listener cleanup, Docker prune, port/profile/SQL change.",
+      "invariants": "Frozen Swift/Ruby and all production privacy/owner/deletion/recovery/consent bytes unchanged. Host-first is fail-fast, not proven inventory timeout cure.",
+      "observer_assertions": {
+        "original59_names_retained": true,
+        "ast_identical": 58,
+        "historical_workflow_witness": [
+          "test_current_one_shot73_and_existing_sandbox_only_observer_are_explicit"
+        ],
+        "added": [
+          "test_current_one_shot_and_early_inventory_order_preserve_all_later_controls",
+          "test_early_inventory_is_single_bounded_current_parse_and_failure_keeps_stage",
+          "test_new_execution_remains_distinct_and_cannot_adopt_or_relax_old_bindings"
+        ]
+      },
+      "causal_boundary": "C12 BRAIN-C47-HOST-FIRST-BOUNDED-RECOVERY12: zero-Mac measured Windows resource isolation and prospective host-first same-process diagnostic74. Starting161 and all older prefixes preserved. C11 remains PARTIAL_BLOCKED/NO_GO, inventory300s/empty streams before app; privacy origin UNKNOWN. Original two Windows full-root failures and final DB bind59110 failure remain authentic/unwaived. A read-only measured original full profile now passed7122; mobile metadata-heavy strict child34s versus18s focused, peak19 live children. Four-worker measurement passed all7122 with strict18s and peak6 live children, within original deadlines but higher total94s. Historical load cause not proven. Required Windows root qualification is explicitly changed CLI scheduling profile (maxWorkers4 forwarded to both test workspaces), not an unchanged-profile pass; all tests/assertions/deadlines stay exact. Repository Vitest config restored byte-exact after the measured A/B experiment. No production behavior change.\nExisting replay only: exact current source/bootstrap/job identity, minimal pinned Xcode/architecture/SDK/host observations, one genuine strict Simulator inventory300s before npm/artifact extraction/expensive source preparation. Bounded original failure-time resources/service collection. Host-first ordering is fail-fast, not a demonstrated hang fix. All original source30/ordered60/nested21, observer59 plus3 groups, runtime157/signing15/current54/native202/172/workflow/property/hooks/installed-byte controls still precede app execution; actual-use fresh inventory/runtime selection, fresh owned device/boot600/signature/install and frozen warm-process binding remain. Exact historical instrumented app70/producer149 is neither recompiled/re-signed nor ordinary-admitted; complete-reader missing-seal refusal remains.\nC11 unused74-76 closed. New finite serial starts74-78 only:74 diagnostic after complete preflight;75 at most one same-material fresh-host contingency only after positively authenticated pre-install infrastructure failure, never source/integrity/runner/unknown/post-install failure. Only one app-executing diagnostic. Genuine source/PID-bound native-tap privacy origin plus pre-fix regression and minimal repair required before76 clean app build,77 full ordinary3,78 internal5; any qualification failure stops remaining stages. No79, attempt2, hidden/parallel run or blind rerun.90m job/84m coordinator500MiB/three-day standard capacity unchanged. DB occupant unknown/OPEN_REQUIRED; no cleanup or protected SQL/profile changes. All38 requirements/18 gates unaccepted and original Security/candidate29/G97/SDK/rule/supplemental failures unwaived. No merge/deployment/release/M2/J01/clinical/owner admission/Campaign48. Independent Brain review required; NO_GO.",
+      "status": "PREPARING_PREFLIGHT_HOST_FIRST_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

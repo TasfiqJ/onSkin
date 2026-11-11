@@ -201,19 +201,33 @@ DOMAIN11='PINNED_APP70_SAME_PROCESS_DIAGNOSTIC11'
 START11='a50628e009c69ee00bf532e1335fde6ed9d3f51e'
 JOB11='C47 same-process app70 replay73'
 SEAL_COUNT11=159
+AUTH12='BRAIN-C47-HOST-FIRST-BOUNDED-RECOVERY12'
+DOMAIN12='PINNED_APP70_HOST_FIRST_DIAGNOSTIC12'
+START12='6b1e1b3adfd048e6a5e90a654721cf950fbafdf7'
+SLOT12=74
+SEAL_COUNT12=163
+JOB12='C47 host-first app70 replay'+str(SLOT12)
 PHASES11=('PRE_ACTIVATE','POST_ACTIVATE','WELCOME_CHECK','WELCOME_READY','PRE_CONSENT','POST_CONSENT','GOALS_CHECK','GOALS_READY')
 RUNNER_BUNDLE11='internal.c47.native-ui.xctrunner'
 
 def need11(value,code):
     if not value:raise ValueError('C47_REPLAY11_'+code)
 
+def execution_domain12(ctx):
+    need11(type(ctx['native_attempt'])is int,'NATIVE_ATTEMPT_TYPE')
+    if ctx['native_attempt']==73 and ctx['job_name']==JOB11:return DOMAIN11
+    need11(type(ctx['native_attempt'])is int and ctx['native_attempt']in (74,75) and
+        ctx['job_name']=='C47 host-first app70 replay'+str(ctx['native_attempt'])and
+        ctx.get('authorization')==AUTH12,'HOST_FIRST_EXECUTION')
+    return DOMAIN12
+
 def binding11(r,device=None,pid=None):
     source={k:r.receipt['source'][k]for k in ['head','tree']};ctx=r.receipt['replay_execution11'];warm=r.receipt.get('warm_process11')
-    need11(source=={'head':ctx['runner_head'],'tree':ctx['runner_tree']}and type(ctx['native_attempt'])is int and ctx['native_attempt']==73 and
-        ctx['job_name']==JOB11 and type(ctx['run_attempt'])is int and ctx['run_attempt']==1 and source['head']!=PRODUCER['head'],'RUNNER_SOURCE')
+    domain=execution_domain12(ctx)
+    need11(source=={'head':ctx['runner_head'],'tree':ctx['runner_tree']}and type(ctx['run_attempt'])is int and ctx['run_attempt']==1 and source['head']!=PRODUCER['head'],'RUNNER_SOURCE')
     if device is not None:need11(r.receipt['simulator']['udid']==device and str(uuid.UUID(device)).lower()==device.lower(),'OWN_DEVICE')
     if pid is not None:need11(warm is not None and type(pid)is int and pid==warm['pid'],'FROZEN_WARM_PID')
-    value={'domain':DOMAIN11,'producer':dict(PRODUCER),'runner_source':dict(source),'execution':{**ctx,'device':device,
+    value={'domain':domain,'producer':dict(PRODUCER),'runner_source':dict(source),'execution':{**ctx,'device':device,
         'app_pid':warm['pid']if warm else None},'warm_process':warm,'app':dict(APP),'diagnostic_transform_sha256':RECORDED['storage-origin05/PRIVACY08_TRANSFORM.json'],
         'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
     value['binding_id']=hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest();return value
@@ -222,13 +236,13 @@ def validate_binding11(value):
     need11(set(value)=={'domain','producer','runner_source','execution','warm_process','app','diagnostic_transform_sha256','ordinary_admitted','internal_admitted','release','binding_id'},'BINDING_SCHEMA')
     unsigned={k:v for k,v in value.items()if k!='binding_id'}
     need11(value['binding_id']==hashlib.sha256(json.dumps(unsigned,sort_keys=True,separators=(',',':')).encode()).hexdigest(),'BINDING_DIGEST')
-    need11(value['domain']==DOMAIN11 and value['producer']==PRODUCER and value['app']==APP and
+    need11(value['domain']==execution_domain12(value['execution'])and value['producer']==PRODUCER and value['app']==APP and
         value['diagnostic_transform_sha256']==RECORDED['storage-origin05/PRIVACY08_TRANSFORM.json']and value['ordinary_admitted']is False and
         value['internal_admitted']is False and value['release']=='NO_GO','BINDING_DOMAIN')
     ctx=value['execution'];source=value['runner_source'];warm=value['warm_process']
     need11(source=={'head':ctx['runner_head'],'tree':ctx['runner_tree']}and source['head']!=PRODUCER['head']and
-        all(re.fullmatch('[a-f0-9]{40}',q)for q in source.values())and ctx['repository']=='TasfiqJ/onSkin'and ctx['job_name']==JOB11 and
-        type(ctx['native_attempt'])is int and ctx['native_attempt']==73 and type(ctx['run_attempt'])is int and ctx['run_attempt']==1 and
+        all(re.fullmatch('[a-f0-9]{40}',q)for q in source.values())and ctx['repository']=='TasfiqJ/onSkin'and
+        type(ctx['run_attempt'])is int and ctx['run_attempt']==1 and
         all(type(ctx[k])is int and ctx[k]>0 for k in ['run_id','job_id','runner_id'])and ctx['configured_labels']==['macos-26-intel'],'EXECUTION')
     need11(str(uuid.UUID(ctx['device'])).lower()==ctx['device'].lower()and type(ctx['app_pid'])is int and 0<ctx['app_pid']<=2147483647 and
         type(warm)is dict and set(warm)=={'pid','executable','process_start_sha256'}and type(warm['pid'])is int and warm['pid']==ctx['app_pid']and
@@ -453,6 +467,43 @@ def context11(r,n,token):
         'run_attempt':1,'native_attempt':73,'job_name':JOB11,'runner_id':job['runner_id'],'configured_labels':job['labels']}
     r.receipt['replay_execution11']=ctx;r.persist();return ctx
 
+def context12(r,n,token):
+    env=r.env;need11(sys.platform=='darwin'and env.get('GITHUB_REPOSITORY')=='TasfiqJ/onSkin'and env.get('GITHUB_EVENT_NAME')=='pull_request'and
+        env.get('GITHUB_JOB')=='native-build'and env.get('GITHUB_RUN_ATTEMPT')=='1','ONE_HOSTED12')
+    head=env.get('C47_EXPECTED_HEAD','');need11(re.fullmatch('[a-f0-9]{40}',head),'EXPECTED_RUNNER_HEAD')
+    g=lambda *a:subprocess.check_output(['git','--no-replace-objects',*a],cwd=r.root,env=env,timeout=30).decode().strip()
+    need11(g('rev-parse','HEAD')==head and g('rev-list','--count',n.BASE+'..HEAD')==str(SEAL_COUNT12)and
+        g('rev-parse','HEAD~'+str(SEAL_COUNT12-161))==START12 and not g('status','--porcelain'),'EXACT_C12_161_PREFIX')
+    run_id=int(env['GITHUB_RUN_ID']);jobs,_=n._stage_api('/actions/runs/'+str(run_id)+'/jobs?per_page=100',token)
+    selected=[q for q in jobs['jobs']if q['name']==JOB12];need11(len(selected)==1,'EXECUTION_JOB_UNIQUE');job=selected[0]
+    need11(job['head_sha']==head and job['run_id']==run_id and type(job['run_attempt'])is int and job['run_attempt']==1 and job['status']=='in_progress'and
+        type(job['runner_id'])is int and job['runner_id']>0 and job['labels']==['macos-26-intel'],'ACTUAL_STANDARD_JOB')
+    ctx={'repository':'TasfiqJ/onSkin','runner_head':head,'runner_tree':g('rev-parse','HEAD^{tree}'),'run_id':run_id,'job_id':job['id'],
+        'run_attempt':1,'native_attempt':SLOT12,'job_name':JOB12,'runner_id':job['runner_id'],'configured_labels':job['labels'],'authorization':AUTH12}
+    r.receipt['replay_execution11']=ctx;r.receipt['host_first12']=True;r.persist();return ctx
+
+def early_host12(r,n):
+    """One real inventory before install/source suites; never a cached readiness pass."""
+    need11(r.receipt.get('host_first12')is True,'HOST_FIRST_CONTEXT')
+    for key,value in n.ENVIRONMENT.items():need11(r.env.get(key)==value,'HOST_ENVIRONMENT')
+    need11(Path(r.env['DEVELOPER_DIR']).is_dir(),'PINNED_XCODE_UNAVAILABLE')
+    ctx=r.receipt['replay_execution11'];r.receipt['source']={'head':ctx['runner_head'],'tree':ctx['runner_tree']};r.persist()
+    tools={}
+    for name,argv in [('os',['sw_vers']),('architecture',['uname','-m']),('xcode',['xcodebuild','-version']),
+        ('sdks',['xcodebuild','-showsdks']),('simulator-sdk',['xcrun','--sdk','iphonesimulator','--show-sdk-version'])]:
+        tools[name]=r.text('early12-'+name,argv,timeout=60)
+    need11(tools['xcode'].startswith('Xcode 26.4'),'XCODE_VERSION');n.require_simulator_host(tools['architecture'])
+    tools['runner_image']={key:r.env.get(key)for key in ('ImageOS','ImageVersion','RUNNER_OS','RUNNER_ARCH')}
+    n.write_json(r.output/'EARLY_HOST12.json',tools);n.simulator_resources(r,'early12-before-inventory')
+    try:
+        raw=r.text('early12-simulator-inventory',['xcrun','simctl','list','--json'],timeout=300)
+        document=n.stage_json(raw.encode());runtime,template=n.available_iphone(document,tools['simulator-sdk'],tools['architecture'])
+        n.write_json(r.output/'EARLY_INVENTORY12.json',{'identity':identity(raw.encode()),'runtime':runtime,'template':template,
+            'not_indefinite_readiness':True,'source':r.receipt['source'],'execution':ctx})
+        r.receipt['early_inventory12']='PASS';r.persist()
+    except Exception:
+        r.receipt['early_inventory12']='FAIL';r.persist();n.simulator_install_diagnostics(r,None,phase='startup');raise
+
 def execute(r,n,d,payload,inventory,*,same_process11=False):
     device=None;observations=[];result=None
     bind=binding11 if same_process11 else binding
@@ -490,7 +541,8 @@ def execute(r,n,d,payload,inventory,*,same_process11=False):
         (project_input/'LayerwellStaging.xcodeproj/project.pbxproj').write_bytes(project_bytes)
     n.write_json(r.output/'PRESIGN_RUNNER_INPUT.json',{'archive':identity(cfg),'project':identity(project_bytes),
         'role':'AUTHENTIC_PRE_SIGN_DIRECTORY_FOR_ISOLATED_UI_GENERATOR_ONLY','application_build':False,'producer':PRODUCER})
-    products=temporary/('c47-replay73-products'if same_process11 else'c47-replay72-products');need(not products.exists(),'NEW_TEST_PRODUCTS');products.mkdir();r.receipt['products_directory']=str(products);r.persist()
+    slot=r.receipt['replay_execution11']['native_attempt']if same_process11 else 72
+    products=temporary/('c47-replay'+str(slot)+'-products');need(not products.exists(),'NEW_TEST_PRODUCTS');products.mkdir();r.receipt['products_directory']=str(products);r.persist()
     try:
         device=n.prepare_simulator(r,'normal');installed=n.install_simulator_app(r,device,app,BUNDLE)
         installed10(r,n,installed,app,inventory,device,'before',same_process11=same_process11)
@@ -551,7 +603,8 @@ def execute(r,n,d,payload,inventory,*,same_process11=False):
         n.retain_result_bundles(r)
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');args=p.parse_args()
+    if args.host_first12:args.same_process11=True
     token=os.environ.pop('C47_ARTIFACT_READ_TOKEN','');need(bool(token),'EPHEMERAL_READ_TOKEN')
     root=Path(__file__).resolve().parents[3];n=module(root,'native_runtime47.py');d=module(root,'storage_trace47.py')
     output=args.output.absolute();need(not output.exists()and not output.resolve().is_relative_to(root),'NEW_OUTSIDE_EVIDENCE')
@@ -560,10 +613,11 @@ def main():
     def coordinator_timeout(*_):raise ValueError('C47_REPLAY11_COORDINATOR_MAX84'if args.same_process11 else'C47_REPLAY10_COORDINATOR_MAX84')
     signal.signal(signal.SIGALRM,coordinator_timeout);signal.alarm(84*60)
     r=n.Runner(root,output,seconds=78*60);coordinator_deadline=r.deadline+6*60
-    r.receipt.update(stage='diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
-        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH11 if args.same_process11 else AUTH);r.persist();code=1
+    r.receipt.update(stage='diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
+        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
     try:
-        ctx=(context11 if args.same_process11 else context)(r,n,token)
+        ctx=(context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
+        if args.host_first12:early_host12(r,n)
         run,_=n._stage_api('/actions/runs/'+str(PRODUCER['run_id']),token)
         job,_=n._stage_api('/actions/jobs/'+str(PRODUCER['job_id']),token)
         artifact,_=n._stage_api('/actions/artifacts/'+str(PRODUCER['artifact_id']),token)
@@ -573,7 +627,7 @@ def main():
             {'wire_bytes':RAW['bytes'],'service_digest':'sha256:'+RAW['sha256']},token,raw_path);token=None
         payload,inventory,proof=raw70(n,raw_path,root);r.receipt['upstream_payload_bytes']=proof['payload_bytes']
         n.write_json(output/'PINNED_PRODUCER149_INPUT.json',proof)
-        result=execute(r,n,d,payload,inventory,same_process11=args.same_process11);n.write_json(output/('REPLAY73_RESULT.json'if args.same_process11 else'REPLAY72_RESULT.json'),result)
+        result=execute(r,n,d,payload,inventory,same_process11=args.same_process11);n.write_json(output/('REPLAY'+str(ctx['native_attempt'])+'_RESULT.json'),result)
         code=0 if result['origin_candidate']is not None else 1
         r.receipt.update(status=result['classification'],replay_result=result,stage_complete=code==0)
     except Exception as e:
@@ -589,10 +643,10 @@ def main():
         policy={'maximum_bytes':n.MAX_EVIDENCE,'observed_bytes':n.evidence_total(r),'upload_within_limit':n.evidence_total(r)<n.MAX_EVIDENCE-9*1024**2}
         r.receipt.update(artifact_policy=policy,finished_utc=n.utc());r.persist()
         files=[{'path':p.relative_to(output).as_posix(),**n.stage_file_digest(p)}for p in sorted(output.rglob('*'))if p.is_file()]
-        n.write_json(output/('replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
+        n.write_json(output/('replay-provenance12.json'if args.host_first12 else'replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
             'runner_source':r.receipt.get('source'),'execution':r.receipt.get('replay_execution11'if args.same_process11 else'replay_execution10'),'files':files,
             'ordinary_admitted':False,'internal_admitted':False,'producer70_sealed':False,'release':'NO_GO'})
         if not policy['upload_within_limit']:code=1
-    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
+    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
     return code
 if __name__=='__main__':raise SystemExit(main())

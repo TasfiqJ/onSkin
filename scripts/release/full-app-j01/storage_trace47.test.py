@@ -1304,7 +1304,13 @@ class SameProcessReplay11Tests(unittest.TestCase):
 
     def test_current_one_shot73_and_existing_sandbox_only_observer_are_explicit(self):
         import inspect
-        q,r,b,native,trace,ps=self.fixture();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_bytes().decode()
+        q,r,b,native,trace,ps=self.fixture()
+        # Preserve all original73 assertions against its exact historical bytes;
+        # current74 authorization is separately checked below.
+        import hashlib
+        raw=subprocess.check_output(['git','--no-replace-objects','show',q.START12+':.github/workflows/campaign47-native-runtime.yml'],cwd=ROOT,timeout=30)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'661d14065e4f04b2a7b79ec4756b5c20d273ef24d4333d4f0b4d4053ce17fac9')
+        workflow=raw.decode()
         for item in ['commits == 159','github.run_attempt == 1','number == 48','runs-on: macos-26-intel',
             'timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','actions: read',
             'pinned_app70_replay10.py --same-process11 --output','500 * 1024 * 1024',q.JOB11]:self.assertIn(item,workflow)
@@ -1364,5 +1370,68 @@ class SameProcessReplay11Tests(unittest.TestCase):
                 else:
                     self.assertIsNotNone(state['invalid']);self.assertFalse((ipc/('ack-4.json'if failure=='replacement'else'ack-1.json')).exists())
                     self.assertFalse(q.origin_eligible11(state,True))
+
+class HostFirstReplay12Tests(unittest.TestCase):
+    def test_current_one_shot_and_early_inventory_order_preserve_all_later_controls(self):
+        import inspect
+        q,r,b,native,trace,ps=SameProcessReplay11Tests().fixture()
+        workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        for item in ['commits == 163','github.run_attempt == 1','number == 48','runs-on: macos-26-intel',
+            'timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024',
+            'pinned_app70_replay10.py --host-first12 --output',q.JOB12]:self.assertIn(item,workflow)
+        self.assertNotIn('workflow_dispatch',workflow);self.assertEqual(workflow.count('  native-build:'),1)
+        self.assertEqual(q.SLOT12,74);self.assertEqual(q.SEAL_COUNT12,163)
+        self.assertEqual(q.START12,'6b1e1b3adfd048e6a5e90a654721cf950fbafdf7')
+        source=inspect.getsource(q.main)
+        self.assertLess(source.index('early_host12(r,n)'),source.index('producer_metadata(run,job,artifact)'))
+        self.assertLess(source.index('early_host12(r,n)'),source.index('n._stage_download('))
+        source=inspect.getsource(q.execute)
+        for item in ['head,tools,source=n.prepare(r)','privacy08-source-observer-tests','privacy08-current-runtime-controls',
+            'privacy08-simulator-signing-controls','d._native05_full_source_controls53(r,n)','device=n.prepare_simulator(r,']:
+            self.assertIn(item,source)
+        self.assertLess(source.index('head,tools,source=n.prepare(r)'),source.index('n.install_simulator_app('))
+
+    def test_early_inventory_is_single_bounded_current_parse_and_failure_keeps_stage(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock,patch
+        q,_,b,_,_,_=SameProcessReplay11Tests().fixture()
+        for fail in [False,True]:
+            with self.subTest(failed_inventory=fail),tempfile.TemporaryDirectory()as directory:
+                r=SimpleNamespace(env={'DEVELOPER_DIR':directory},receipt={'host_first12':True,'replay_execution11':{
+                    'runner_head':'a'*40,'runner_tree':'b'*40}},output=Path(directory),persist=Mock())
+                def text(name,argv,timeout):
+                    if name=='early12-simulator-inventory':
+                        self.assertEqual(argv,['xcrun','simctl','list','--json']);self.assertEqual(timeout,300)
+                        if fail:raise ValueError('C47_COMMAND_FAILED:early12-simulator-inventory')
+                        return '{"runtimes":[],"devices":{}}'
+                    return {'early12-xcode':'Xcode 26.4','early12-architecture':'x86_64','early12-simulator-sdk':'26.4'}.get(name,'test')
+                r.text=Mock(side_effect=text)
+                n=SimpleNamespace(ENVIRONMENT={},require_simulator_host=Mock(),write_json=Mock(),simulator_resources=Mock(),
+                    stage_json=json.loads,available_iphone=Mock(return_value=({'identifier':'runtime'},{'deviceTypeIdentifier':'type'})),
+                    simulator_install_diagnostics=Mock())
+                if fail:
+                    with self.assertRaisesRegex(ValueError,'C47_COMMAND_FAILED:early12-simulator-inventory'):q.early_host12(r,n)
+                    self.assertEqual(r.receipt['early_inventory12'],'FAIL');n.available_iphone.assert_not_called()
+                    n.simulator_install_diagnostics.assert_called_once_with(r,None,phase='startup')
+                else:
+                    q.early_host12(r,n);self.assertEqual(r.receipt['early_inventory12'],'PASS')
+                    n.stage_json=json.loads;n.available_iphone.assert_called_once();n.simulator_install_diagnostics.assert_not_called()
+                self.assertEqual(sum(c.args[0]=='early12-simulator-inventory'for c in r.text.call_args_list),1)
+                self.assertNotIn('simulator',r.receipt)
+
+    def test_new_execution_remains_distinct_and_cannot_adopt_or_relax_old_bindings(self):
+        import copy
+        q,r,b,native,trace,ps=SameProcessReplay11Tests().fixture()
+        self.assertEqual(q.validate_binding11(b),321)
+        ctx=r.receipt['replay_execution11'];ctx.update(native_attempt=74,job_name=q.JOB12,authorization=q.AUTH12)
+        current=q.binding11(r,b['execution']['device'],321)
+        self.assertEqual(current['domain'],q.DOMAIN12);self.assertEqual(q.validate_binding11(current),321)
+        self.assertNotEqual(current['binding_id'],b['binding_id'])
+        for patch in [{'native_attempt':76},{'native_attempt':True},{'authorization':'wrong'},{'job_name':q.JOB11}]:
+            bad=copy.deepcopy(ctx);bad.update(patch)
+            with self.assertRaises(ValueError):q.execution_domain12(bad)
+        after=q.prefix11((ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes().split(b'\nimport UIKit',1)[0],current)
+        q.validate_prefix11(after,current)
+        with self.assertRaises(ValueError):q.validate_prefix11(after,b)
 
 if __name__=='__main__':unittest.main()
