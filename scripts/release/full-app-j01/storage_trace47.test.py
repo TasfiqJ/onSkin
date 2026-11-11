@@ -1397,9 +1397,12 @@ class HostFirstReplay12Tests(unittest.TestCase):
         state={'invalid':None};q.invalidate11(state,ValueError('PRIVATE_MESSAGE'));self.assertNotIn('PRIVATE',json.dumps(state));self.assertNotIn('timeout_operation',state['invalid'])
 
     def test_current_one_shot_and_early_inventory_order_preserve_all_later_controls(self):
-        import inspect
+        import inspect,hashlib
         q,r,b,native,trace,ps=SameProcessReplay11Tests().fixture()
-        workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        # Preserve the complete C12 witness at its authenticated165 source; C13's current gate is separately tested.
+        raw=subprocess.check_output(['git','--no-replace-objects','show',q.START13+':.github/workflows/campaign47-native-runtime.yml'],cwd=ROOT,timeout=30)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'bf07405b9131ae67a776e3267044ea586adfbadbd3e1d7a201c976355b4fab25')
+        workflow=raw.decode()
         for item in ['commits == 163','github.run_attempt == 1','number == 48','runs-on: macos-26-intel',
             'timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024',
             'pinned_app70_replay10.py --host-first12 --output',q.JOB12]:self.assertIn(item,workflow)
@@ -1457,5 +1460,311 @@ class HostFirstReplay12Tests(unittest.TestCase):
         after=q.prefix11((ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes().split(b'\nimport UIKit',1)[0],current)
         q.validate_prefix11(after,current)
         with self.assertRaises(ValueError):q.validate_prefix11(after,b)
+
+class PreparedObserver13Tests(unittest.TestCase):
+    def fixture(self,root):
+        import os,time
+        q,r,_,native,trace,ps=SameProcessReplay11Tests().fixture()
+        r.receipt['replay_execution11'].update(native_attempt=75,job_name=q.JOB13,authorization=q.AUTH13)
+        b=q.binding11(r,r.receipt['simulator']['udid'],321);control=root/'control';control.mkdir();ipc=root/'ipc';ipc.mkdir()
+        state=q.state13(b,control,time.monotonic_ns()-1_000_000);state.update(runner={'pid':os.getpid()},_ipc=ipc,_ipc_pin=q.directory13(ipc),invited_nonce='d'*32)
+        return q,b,state,ipc
+
+    def message(self,b,state,*,ready=True):
+        import time
+        issued=time.monotonic_ns();v={'schema':1,'binding':b['binding_id'],'kind':'READY'if ready else'CHECKPOINT','pid':321,
+            'runner_pid':state['runner']['pid'],'runner_source':b['runner_source']['head'],'nonce':'d'*32,'issued_ns':issued,'deadline_ns':issued+5_000_000_000}
+        if not ready:v.update(sequence=len(state['checkpoints'])+1,phase='PRE_ACTIVATE',state=4)
+        return v
+
+    def test_real_cross_process_files_delayed_preparation_and_all_eight_checkpoints(self):
+        import os,sys,time
+        from unittest.mock import patch
+        child=r'''
+import importlib.util,json,os,sys,time
+from pathlib import Path
+testfile,fixture=sys.argv[1:];spec=importlib.util.spec_from_file_location('c13_fixture',testfile);t=importlib.util.module_from_spec(spec);spec.loader.exec_module(t)
+root=Path(fixture);q=t.PinnedApp70Replay10Tests().replay();b=json.loads((root/'binding.json').read_bytes());ipc=root/'ipc'
+hello={'schema':1,'binding':b['binding_id'],'kind':'HELLO','pid':321,'runner_pid':os.getpid(),'runner_source':b['runner_source']['head'],'runner_bundle':q.RUNNER_BUNDLE11,'nonce':'d'*32}
+temporary=ipc/'peer.tmp';temporary.write_text(json.dumps(hello));os.replace(temporary,ipc/'hello.json');end=time.monotonic()+5
+while not(ipc/'invitation.json').exists()or(ipc/'invitation.json').stat().st_nlink!=1:
+    assert time.monotonic()<end;time.sleep(.002)
+t.stabilize_owned_fixture09(ipc/'invitation.json',root);invitation=json.loads(q.read13(ipc/'invitation.json')[0])
+assert set(invitation)==set(hello)|{'prepared_ns','deadline_ns'}and invitation['kind']=='PREPARED'
+assert all(invitation[k]==v for k,v in hello.items()if k!='kind')and invitation['prepared_ns']<=time.monotonic_ns()<invitation['deadline_ns']
+for number,phase in enumerate(['READY',*q.PHASES11]):
+    issued=time.monotonic_ns();v={'schema':1,'binding':b['binding_id'],'kind':'READY'if number==0 else'CHECKPOINT','pid':321,'runner_pid':os.getpid(),
+        'runner_source':b['runner_source']['head'],'nonce':'d'*32,'issued_ns':issued,'deadline_ns':issued+5_000_000_000}
+    if number:v.update(sequence=number,phase=phase,state=4)
+    path=ipc/('ready.json'if number==0 else'request-'+str(number)+'.json');tmp=ipc/'peer.tmp';tmp.write_text(json.dumps(v));os.replace(tmp,path)
+    ack=ipc/('ready-ack.json'if number==0 else'ack-'+str(number)+'.json')
+    while not ack.exists()or ack.lstat().st_nlink!=1:
+        assert time.monotonic_ns()<v['deadline_ns'];time.sleep(.002)
+    # Only normalize metadata of this owned Windows synthetic fixture, never native observations.
+    t.stabilize_owned_fixture09(ack,root);raw,_=q.read13(ack);q.ack13(json.loads(raw),v)
+print(json.dumps({'exchanges':10,'orderedCheckpoints':8,'nativeQualified':False}))
+'''
+        with tempfile.TemporaryDirectory(prefix='c47-wire13-')as temp:
+            root=Path(temp).resolve();q,b,state,ipc=self.fixture(root);(root/'binding.json').write_text(json.dumps(b))
+            # Delayed build finishes BEFORE starting either peer/observer; no namespace query occurs during it.
+            preparation_started=time.monotonic_ns();time.sleep(.04);state['prepared_ns']=time.monotonic_ns()
+            process=subprocess.Popen([sys.executable,'-I','-B','-c',child,str(Path(__file__).resolve()),str(root)],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            state['runner']['pid']=process.pid;state.pop('invited_nonce');observed=[];real_read=q.read13
+            def read(path,maximum=4096):stabilize_owned_fixture09(path,root);return real_read(path,maximum)
+            def observe(deadline):
+                self.assertGreater(time.monotonic_ns(),state['prepared_ns']);q.remaining13(deadline);observed.append(time.monotonic_ns());time.sleep(.003)
+            with patch.object(q,'read13',side_effect=read):
+                end=time.monotonic()+20
+                while process.poll()is None and time.monotonic()<end:
+                    if 'invited_nonce'not in state:q.prepare_wire13(state,b,ipc,observe,int(end*1e9))
+                    else:q.serve13(state,b,ipc,observe)
+                    time.sleep(.002)
+            if process.poll()is None:process.kill()
+            stdout,stderr=process.communicate(timeout=5)
+            self.assertEqual(process.returncode,0,stderr.decode());self.assertEqual(json.loads(stdout),{'exchanges':10,'orderedCheckpoints':8,'nativeQualified':False})
+            self.assertEqual(len(observed),20);self.assertEqual([r['phase']for r in state['checkpoints']],list(q.PHASES11));self.assertTrue(state['armed'])
+            self.assertGreater(state['prepared_ns'],preparation_started);self.assertTrue(all(row['remaining_ns']>0 for row in state['checkpoints']))
+
+    def test_composed_deadline_late_ack_and_terminal_failure_never_grant(self):
+        import time,subprocess
+        with tempfile.TemporaryDirectory(prefix='c47-budget13-')as temp:
+            q,b,state,ipc=self.fixture(Path(temp).resolve());v=self.message(b,state);now=time.monotonic_ns();state['prepared_ns']=now-6_000_000_000;v.update(issued_ns=now-4_980_000_000,deadline_ns=now+20_000_000)
+            caps=[]
+            def slow(deadline):caps.append(q.remaining13(deadline));time.sleep(.025)
+            with self.assertRaisesRegex(ValueError,'DEADLINE'):q.accept13(state,b,v,slow)
+            self.assertTrue(all(0<x<.021 for x in caps));self.assertFalse(list(ipc.glob('*ack*.json')))
+            error=subprocess.TimeoutExpired(['PRIVATE_ARGUMENT'],.02);q.invalidate13(state,error,'PROCESS_PAIR',v['deadline_ns']);first=state['invalid'].copy()
+            self.assertEqual(first['phase'],'PREPARATION');self.assertEqual(first['operation'],'PROCESS_PAIR');self.assertEqual(first['timeout_seconds'],.02)
+            self.assertNotIn('PRIVATE',json.dumps(first));self.assertTrue(state['_failed'].is_set());self.assertTrue((ipc/'failure.json').exists())
+            with self.assertRaisesRegex(ValueError,'TERMINAL'):q.accept13(state,b,self.message(b,state),lambda _:None)
+            q.invalidate13(state,ValueError('LATER_PRIVATE_ERROR'),'REQUEST',time.monotonic_ns());self.assertEqual(first,state['invalid'])
+            reply={**self.message(b,state),'valid':True,'code':'OBSERVER_ARMED','completed_ns':time.monotonic_ns()}
+            request={k:v for k,v in reply.items()if k not in ['valid','code','completed_ns']};request['deadline_ns']=time.monotonic_ns()-1;reply['deadline_ns']=request['deadline_ns']
+            with self.assertRaisesRegex(ValueError,'ACK'):q.ack13(reply,request)
+
+    def test_closed_wire_binding_order_and_ack_negatives(self):
+        import time,copy
+        with tempfile.TemporaryDirectory(prefix='c47-bind13-')as temp:
+            q,b,state,ipc=self.fixture(Path(temp).resolve());ready=self.message(b,state);reply=q.accept13(state,b,ready,lambda deadline:q.remaining13(deadline));self.assertTrue(q.ack13(reply,ready))
+            for key,value in [('binding','0'*64),('runner_pid',state['runner']['pid']+1),('runner_source','0'*40),('pid',322),('nonce','bad'),('schema',True),('extra',1)]:
+                bad={**ready,key:value}
+                with self.subTest(key=key),self.assertRaises(ValueError):q.accept13(state,b,bad,lambda _:None)
+            checkpoint=self.message(b,state,ready=False)
+            for key,value in [('sequence',2),('phase','POST_ACTIVATE'),('state',0),('kind','READY'),('nonce','c'*32),('issued_ns',True),('deadline_ns',time.monotonic_ns()-1)]:
+                with self.subTest(key=key),self.assertRaises(ValueError):q.accept13(state,b,{**checkpoint,key:value},lambda _:None)
+            out=q.accept13(state,b,checkpoint,lambda deadline:q.remaining13(deadline));self.assertTrue(q.ack13(out,checkpoint));state['checkpoints'].append({'phase':'PRE_ACTIVATE'})
+            with self.assertRaises(ValueError):q.accept13(state,b,checkpoint,lambda _:None)
+            for key,value in [('valid',False),('sequence',2),('phase','POST_ACTIVATE'),('binding','e'*64),('runner_source','e'*40),('completed_ns',checkpoint['deadline_ns']+1),('extra',1)]:
+                with self.subTest(ack_key=key),self.assertRaises(ValueError):q.ack13({**out,key:value},checkpoint)
+
+    def test_real_unsafe_paths_binary_replacement_and_exclusive_publication(self):
+        import os,hashlib
+        with tempfile.TemporaryDirectory(prefix='c47-files13-')as temp:
+            root=Path(temp).resolve();q,b,state,ipc=self.fixture(root);binary=root/'binary';binary.write_bytes(b'compiled-fixture');stabilize_owned_fixture09(binary,root)
+            pin=q.pin_binary13(binary,q.identity(binary.read_bytes()))
+            try:
+                q.check_binary13(pin);binary.write_bytes(b'changed-fixture')
+                with self.assertRaises(ValueError):q.check_binary13(pin)
+            finally:pin[0].close()
+            q.atomic13(ipc,'ack-1.json',{'valid':False})
+            with self.assertRaises(ValueError):q.atomic13(ipc,'ack-1.json',{'valid':True})
+            self.assertFalse(json.loads((ipc/'ack-1.json').read_bytes())['valid'])
+            with self.assertRaises(ValueError):q.atomic13(ipc,'../escape.json',{})
+            original=ipc/'original';original.write_bytes(b'owned');linked=ipc/'hardlink';os.link(original,linked)
+            with self.assertRaises(ValueError):q.read13(linked)
+            link=root/'symlink'
+            try:link.symlink_to(ipc,target_is_directory=True)
+            except OSError as error:
+                # Real Windows reparse/link guards are also exercised by original source30; no native pass inferred.
+                self.assertEqual(os.name,'nt');self.assertIsNotNone(error.winerror)
+            else:
+                with self.assertRaises(ValueError):q.directory13(link)
+            saved=root/'saved';ipc.rename(saved);ipc.mkdir()
+            with self.assertRaises(ValueError):q.directory13(ipc,state['_ipc_pin'])
+
+    def legacy_preparation_trace(self,root):
+        import types,hashlib,time
+        from unittest.mock import patch
+        q,r,b,native,trace,ps=SameProcessReplay11Tests().fixture()
+        raw=subprocess.check_output(['git','--no-replace-objects','show',q.START13+':scripts/release/full-app-j01/pinned_app70_replay10.py'],cwd=ROOT)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'4ce892cb447637faade3b663d5feb95ff831935a6bb3ede57c93fbfbbf11143c')
+        old=types.ModuleType('c13_actual_preimage165');old.__file__=str(ROOT/'scripts/release/full-app-j01/pinned_app70_replay10.py');exec(compile(raw,'actual165', 'exec'),old.__dict__)
+        r.output=root;r.env={};r.deadline=time.monotonic()+10;r._storage05_first_data_container=root
+        state={'invalid':None,'checkpoints':[],'process_checks':0,'runner_data_unavailable':0};calls=[]
+        class Stop:
+            def wait(self,_):return False
+        def query(argv,**kwargs):
+            calls.append({'during_preparation':True,'operation':'RUNNER_DATA_CONTAINER'})
+            if len(calls)==7:raise subprocess.TimeoutExpired(argv,3)
+            return types.SimpleNamespace(returncode=1,stdout=b'',stderr=b'')
+        n=types.SimpleNamespace(read_native_file=lambda p:json.dumps(native if 'Identity'in p.name else trace).encode(),stage_json=json.loads,
+            write_json=lambda p,v:p.write_text(json.dumps(v)),utc=lambda:'SYNTHETIC')
+        d=types.SimpleNamespace(validate_privacy08=s.validate_privacy08,privacy_origin08=s.privacy_origin08)
+        with patch.object(old,'process11',return_value=r.receipt['warm_process11']),patch.object(old.subprocess,'run',side_effect=query):
+            old.observer11(r,n,d,b['execution']['device'],root/'LayerwellStaging.app',{},Stop(),[],state)
+        return {'unready_queries':len(calls),'invalid':state['invalid'],'checkpoints':state['checkpoints'],'nativeCauseProven':False}
+
+    def test_actual_preimage_lifecycle_failure_and_prepared_ordering(self):
+        import time,io,sys
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory(prefix='c47-lifecycle13-')as temp:
+            root=Path(temp).resolve();legacy=root/'legacy';legacy.mkdir();old=self.legacy_preparation_trace(legacy)
+            self.assertEqual(old['unready_queries'],7);self.assertEqual(old['invalid']['error_type'],'TimeoutExpired');self.assertEqual(old['checkpoints'],[])
+            q,r,b,_,_,_=SameProcessReplay11Tests().fixture();output=root/'fixed';output.mkdir();r.output=output;r.env={};r.deadline=time.monotonic()+10
+            host=root/'host';host.mkdir();config=host/'built.xctestrun';config.write_bytes(b'authentic-owned-fixture');stabilize_owned_fixture09(config,root)
+            events=[];prepared={'started_ns':time.monotonic_ns(),'deadline_ns':time.monotonic_ns()+5_000_000_000,'xctestrun':config,'xctestrun_bytes':config.read_bytes(),'host':host,'inventory':[]}
+            def build(*args):
+                events.append('BUILD_STARTED');subprocess.run([sys.executable,'-I','-B','-c','import time;time.sleep(.03)'],check=True,timeout=5)
+                prepared['prepared_ns']=time.monotonic_ns();events.append('BUILD_FINISHED');return prepared
+            def observe(r,n,device,installed,p,envelope,state,stop):
+                self.assertIn('BUILD_FINISHED',events);self.assertGreaterEqual(state['prepared_ns'],p['prepared_ns']);events.append('OBSERVER_STARTED');state['armed']=True
+            def command(*args,**kwargs):
+                events.append('TEST_STARTED');r.receipt['commands']=[{'state':'PASS','capture_complete':True,'exit_code':0,'finished_utc':'SYNTHETIC'}];return ()
+            r.run=command;n=SimpleNamespace(write_json=lambda p,v:p.write_text(json.dumps(v)),bundle_inventory=lambda _:[],NORMAL_UI_CASES04=q.module(ROOT,'native_runtime47.py').NORMAL_UI_CASES04)
+            with patch.object(q,'prepare_runner13',side_effect=build),patch.object(q,'pin_binary13',return_value=(io.BytesIO(),host,())),\
+                patch.object(q,'process11',return_value=r.receipt['warm_process11']),patch.object(q,'observer13',side_effect=observe),patch.object(q,'trace13'),\
+                patch.object(q,'diagnostic_result13',return_value={'outcome':'SYNTHETIC_NOT_NATIVE','ordinary_admitted':False}):
+                result,state=q.lifecycle13(r,n,None,host,host,b['execution']['device'],host,{},b,{},b'afterimage')
+            self.assertEqual(events[:2],['BUILD_STARTED','BUILD_FINISHED']);self.assertGreater(events.index('OBSERVER_STARTED'),events.index('BUILD_FINISHED'))
+            self.assertGreater(events.index('TEST_STARTED'),events.index('BUILD_FINISHED'));self.assertFalse(result['ordinary_admitted']);self.assertEqual(old['unready_queries'],7)
+
+    def test_cross_process_observer_death_before_readiness_and_during_request(self):
+        import os,sys,time
+        from unittest.mock import patch
+        child=r'''
+import json,os,sys,time
+from pathlib import Path
+root=Path(sys.argv[1]);kind=sys.argv[2];b=json.loads((root/'binding.json').read_bytes());issued=time.monotonic_ns()
+v={'schema':1,'binding':b['binding_id'],'kind':kind,'pid':321,'runner_pid':os.getpid(),'runner_source':b['runner_source']['head'],'nonce':'d'*32,'issued_ns':issued,'deadline_ns':issued+5_000_000_000}
+if kind=='CHECKPOINT':v.update(sequence=1,phase='PRE_ACTIVATE',state=4)
+ipc=root/'ipc';request=ipc/('ready.json'if kind=='READY'else'request-1.json');tmp=ipc/'peer.tmp';tmp.write_text(json.dumps(v));os.replace(tmp,request)
+while not(ipc/'failure.json').exists()or(ipc/'failure.json').stat().st_nlink!=1:
+    assert time.monotonic_ns()<v['deadline_ns'];time.sleep(.002)
+assert json.loads((ipc/'failure.json').read_bytes())['code']=='OBSERVER_TERMINAL'
+assert not list(ipc.glob('*ack*.json'));print('OBSERVER_TERMINAL_NO_ACK')
+'''
+        for kind in ['READY','CHECKPOINT']:
+            with self.subTest(kind=kind),tempfile.TemporaryDirectory(prefix='c47-death13-')as temp:
+                root=Path(temp).resolve();q,b,state,ipc=self.fixture(root);(root/'binding.json').write_text(json.dumps(b))
+                if kind=='CHECKPOINT':state.update(armed=True,nonce='d'*32,armed_ns=state['prepared_ns'],phase='ACTIVE')
+                child_process=subprocess.Popen([sys.executable,'-I','-B','-c',child,str(root),kind],stdout=subprocess.PIPE,stderr=subprocess.PIPE);state['runner']['pid']=child_process.pid
+                failed=False;end=time.monotonic()+8;original=q.read13
+                def read(path,maximum=4096):stabilize_owned_fixture09(path,root);return original(path,maximum)
+                def die(_):raise SystemExit('PRIVATE_OBSERVER_DEATH')
+                with patch.object(q,'read13',side_effect=read):
+                    while child_process.poll()is None and time.monotonic()<end:
+                        if not failed:
+                            try:q.serve13(state,b,ipc,die)
+                            except BaseException as error:q.invalidate13(state,error,'REQUEST'if kind=='CHECKPOINT'else'READY',state.get('_operation_deadline',time.monotonic_ns()));failed=True
+                        time.sleep(.002)
+                if child_process.poll()is None:child_process.kill()
+                stdout,stderr=child_process.communicate(timeout=5);self.assertEqual(child_process.returncode,0,stderr.decode());self.assertIn(b'OBSERVER_TERMINAL_NO_ACK',stdout)
+                self.assertTrue(failed);self.assertEqual(state['invalid']['phase'],'ACTIVE'if kind=='CHECKPOINT'else'PREPARATION');self.assertNotIn('PRIVATE',json.dumps(state['invalid']))
+                self.assertFalse(q.origin_eligible11(state,True));self.assertFalse(list(ipc.glob('*ack*.json')))
+
+    def test_new_afterimage_and_finite_workflow_keep_original_bounds_and_sequence(self):
+        import hashlib,inspect
+        q,r,_,_,_,_=SameProcessReplay11Tests().fixture();r.receipt['replay_execution11'].update(native_attempt=75,job_name=q.JOB13,authorization=q.AUTH13)
+        b=q.binding11(r,r.receipt['simulator']['udid'],321);full=(ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes();normal=full.split(b'\nimport UIKit',1)[0];after=q.prefix13(normal,b)
+        self.assertEqual(hashlib.sha256(full).hexdigest(),'bffe625e84a8000338de6166d6df1582b6caea524ea7d69682d15a6c75859956')
+        self.assertEqual(hashlib.sha256(normal).hexdigest(),'7687fb14aeb9091ce91b4a9d0d4065b81abbe7c9eaf4418bb9fe2b8e1e7ebacc')
+        for text in [b'5_000_000_000',b'executionTimeAllowance = 600',b'private let deadline: TimeInterval = 30',b'guard c13Prepare(app), c13Exchange("READY"',b'kind == "READY" ? "ready.json" : "request-',b'absoluteDeadline - now',b'referenceCount',b'completed <= DispatchTime.now()',b'c13RunnerSource']:
+            self.assertIn(text,after)
+        self.assertLess(after.index(b'guard c13Prepare(app), c13Exchange("READY"'),after.index(b'guard sameProcess11("PRE_ACTIVATE"'))
+        case=after[after.index(b'    func testV04ExplicitWithdrawalReviewCancelAndFreshReconsent()'):]
+        ordered=[b'attachWarm11(app)',b'tap("Begin", app)',b'enterAdultDate(app)',b'requireInitialConsent(app)',b'requireDisclosure(app)',b'sameProcess11("PRE_CONSENT"',b'tap("I agree. Continue", app)',b'sameProcess11("POST_CONSENT"',b'sameProcess11("GOALS_CHECK"',b'requireFreshGoals(app)']
+        self.assertEqual([case.index(v)for v in ordered],sorted(case.index(v)for v in ordered));self.assertNotIn(b'Thread.sleep',after);self.assertNotIn(b'app.launch(',case)
+        workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        for text in ['commits == 167','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--prepared-observer13',q.JOB13]:self.assertIn(text,workflow)
+        self.assertNotIn('workflow_dispatch',workflow);self.assertEqual(workflow.count('  native-build:'),1)
+        source=inspect.getsource(q.prepare_runner13)+inspect.getsource(q.lifecycle13)
+        for text in ['900_000_000_000','test-without-building','build-for-testing','remaining13(prepared[\'deadline_ns\'],900)',"'-maximum-test-execution-time-allowance','600'",'n.bundle_inventory','xctestrun_bytes','read13']:
+            self.assertIn(text,source)
+        self.assertLess(inspect.getsource(q.lifecycle13).index('prepare_runner13('),inspect.getsource(q.lifecycle13).index('thread.start()'))
+
+    def test_real_prepared_product_config_and_shared_budget_refuse_foreign_inputs(self):
+        import plistlib,time
+        from types import SimpleNamespace
+        for kind in ['legacy','v2','foreign-host','extra-target','automatic-app']:
+            with self.subTest(kind=kind),tempfile.TemporaryDirectory(prefix='c47-product13-')as temp:
+                root=Path(temp).resolve();q,_,_,_,_,_=SameProcessReplay11Tests().fixture();products=root/'products';products.mkdir();output=root/'output';output.mkdir();calls=[]
+                started=time.monotonic_ns()-1_000_000_000;deadline=started+6_000_000_000
+                r=SimpleNamespace(output=output,deadline=(deadline+10_000_000_000)/1e9,receipt={'source':{'head':'a'*40,'tree':'b'*40},'ui_operation13':{'started_ns':started,'deadline_ns':deadline}})
+                def inventory(path):
+                    return [{'path':p.relative_to(path).as_posix(),'type':'file',**q.identity(p.read_bytes())}for p in sorted(path.rglob('*'))if p.is_file()]
+                native_module=q.module(ROOT,'native_runtime47.py')
+                def native_read(path):stabilize_owned_fixture09(path,root);return native_module.read_native_file(path)
+                swift=root/'native_ui47.swift';swift.write_bytes(b'owned synthetic compiled-source fixture');stabilize_owned_fixture09(swift,root)
+                (output/'DIAGNOSTIC_PREFIX11.json').write_text(json.dumps({'compiled_prefix':q.identity(swift.read_bytes())}))
+                def run(name,argv,**kwargs):
+                    calls.append({'name':name,'argv':list(map(str,argv)),'timeout':kwargs['timeout']});self.assertLessEqual(kwargs['timeout'],(deadline-time.monotonic_ns())/1e9+.05)
+                    stdout=output/(name+'.stdout');stderr=output/(name+'.stderr');stderr.write_bytes(b'')
+                    if 'help'in name:stdout.write_text('build-for-testing test-without-building -xctestrun -derivedDataPath -test-timeouts-enabled -maximum-test-execution-time-allowance')
+                    else:
+                        build=products/'derived-ui13/Build/Products';host=build/'Debug-iphonesimulator/C47NativeUI-Runner.app';bundle=host/'PlugIns/C47NativeUI.xctest';bundle.mkdir(parents=True)
+                        (host/'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier':q.RUNNER_BUNDLE11,'CFBundleExecutable':'C47NativeUI-Runner'}));(host/'C47NativeUI-Runner').write_bytes(b'own runner fixture')
+                        (bundle/'Info.plist').write_bytes(plistlib.dumps({'CFBundleExecutable':'C47NativeUI'}));(bundle/'C47NativeUI').write_bytes(b'own test fixture')
+                        target={'BlueprintName':'C47NativeUI','IsUITestBundle':True,'TestHostPath':'__TESTROOT__/Debug-iphonesimulator/C47NativeUI-Runner.app','TestBundlePath':'__TESTHOST__/PlugIns/C47NativeUI.xctest'}
+                        if kind=='foreign-host':target['TestHostPath']='__TESTROOT__/../../foreign.app'
+                        if kind=='automatic-app':target['UITargetAppBundleIdentifier']=q.BUNDLE
+                        config={'C47NativeUI':target}if kind in ['legacy','foreign-host','automatic-app']else{'TestConfigurations':[{'TestTargets':[target]*(2 if kind=='extra-target'else 1)}]}
+                        path=build/'C47NativeUI.xctestrun';path.write_bytes(plistlib.dumps(config))
+                        for owned in build.rglob('*'):
+                            if owned.is_file():stabilize_owned_fixture09(owned,root)
+                        stdout.write_bytes(b'BUILD SUCCEEDED (synthetic product fixture only)')
+                    return stdout,stderr
+                r.run=run;n=SimpleNamespace(read_native_file=native_read,stage_json=json.loads,stage_file_digest=native_module.stage_file_digest,SIMULATOR_BUILD_FLAGS=['CODE_SIGNING_ALLOWED=NO','ARCHS=x86_64'],
+                    write_json=lambda p,v:p.write_text(json.dumps(v)),bundle_inventory=inventory,evidence_total=lambda _:0,MAX_EVIDENCE=500*1024**2)
+                if kind in ['legacy','v2']:
+                    proof=q.prepare_runner13(r,n,root/'isolated.xcodeproj',products,'11111111-1111-1111-1111-111111111111',{})
+                    self.assertEqual(proof['deadline_ns'],deadline);self.assertEqual(len(proof['binaries']),2);self.assertTrue((output/'compiled-ui-runner13.tar.gz').is_file())
+                else:
+                    with self.assertRaises((ValueError,FileNotFoundError)):q.prepare_runner13(r,n,root/'isolated.xcodeproj',products,'11111111-1111-1111-1111-111111111111',{})
+                self.assertEqual(len(calls),2);self.assertIn('build-for-testing',calls[1]['argv']);self.assertNotIn('test',calls[1]['argv']);self.assertTrue(all(x['timeout']<6 for x in calls))
+
+    def test_combined_fresh_process_checks_reject_each_actual_identity_mismatch(self):
+        import time,hashlib
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory(prefix='c47-pair13-')as temp:
+            root=Path(temp).resolve();q,b,state,ipc=self.fixture(root);data=root/'app-data';(data/'Documents').mkdir(parents=True)
+            native={'schema':1,'pid':321,'sourceHead':q.PRODUCER['head'],'bundle':q.BUNDLE};path=data/'Documents/C47StorageOrigin05Identity.json';path.write_text(json.dumps(native));stabilize_owned_fixture09(path,root)
+            executable='/owned/C47NativeUI-Runner.app/C47NativeUI-Runner';runner_line=('654 Tue Nov 10 21:38:00 2026 '+executable).encode()
+            state['runner']=q.process_record11({**native,'pid':654},runner_line,654,executable);state['_binaries']=[]
+            app_line=('321 Tue Nov 10 21:38:00 2026 '+b['warm_process']['executable']).encode();r=SimpleNamespace(env={},_storage05_first_data_container=data);n=SimpleNamespace(stage_json=json.loads)
+            correct=app_line+b'\n'+runner_line+b'\n';cases=[correct,b'',app_line+b'\n',correct.replace(b'321 ',b'322 ',1),correct.replace(b'21:38:00',b'21:38:01',1),correct.replace(b'LayerwellStaging',b'WrongExecutable',1),correct.replace(b'654 ',b'655 ',1)]
+            for index,stdout in enumerate(cases):
+                with self.subTest(identity=index),patch.object(q.subprocess,'run',return_value=SimpleNamespace(returncode=0,stdout=stdout))as process:
+                    if index==0:q.pair13(r,n,state,b,time.monotonic_ns()+5_000_000_000)
+                    else:
+                        with self.assertRaises(ValueError):q.pair13(r,n,state,b,time.monotonic_ns()+5_000_000_000)
+                    self.assertLessEqual(process.call_args.kwargs['timeout'],3)
+            path.write_text(json.dumps({**native,'sourceHead':'f'*40}));stabilize_owned_fixture09(path,root)
+            with patch.object(q.subprocess,'run')as process:
+                with self.assertRaisesRegex(ValueError,'APP_SOURCE'):q.pair13(r,n,state,b,time.monotonic_ns()+5_000_000_000)
+                process.assert_not_called()
+
+    def test_diagnostic_failure_reader_never_relaxes_ordinary_or_origin_admission(self):
+        import copy
+        q= PinnedApp70Replay10Tests().replay();n=q.module(ROOT,'native_runtime47.py');fixture=q.module(ROOT,'native_runtime47.test.py')
+        summary,tests,old,device,_=fixture.SchemaBackedResult04Controls().documents(True);method=n.NORMAL_UI_CASES04[2]
+        summary['testFailures'][0].update(testName=method,testIdentifierString='C47NativeUI/'+method+'()')
+        tests['testNodes'][0].update(name=method+'()',nodeIdentifier='C47NativeUI/'+method+'()')
+        for text,classification,swift in [('failed - C47_OBSERVER13_TERMINAL','OBSERVER_OR_BINDING_FAILURE',b'XCTFail("C47_OBSERVER13_TERMINAL")'),
+            ('XCTAssertTrue failed','GOALS_ASSERTION',b'XCTAssertTrue(c11Goals)'),('XCTAssertTrue failed','OTHER_DIAGNOSTIC_ASSERTION',b'XCTAssertTrue(other)')]:
+            summary['testFailures'][0]['failureText']=text;tests['testNodes'][0]['children'][0]['name']='native_ui47.swift:1: '+text
+            result=q.diagnostic_documents13(n,summary,tests,method,device,swift)
+            self.assertEqual(result['classification'],classification);self.assertEqual(result['executed'],1);self.assertEqual(result['failed'],1);self.assertFalse(result['ordinary_admitted'])
+            if text.startswith('failed -'):
+                with self.assertRaisesRegex(ValueError,'ASSERTION_KIND_REQUIRED'):n.normal_assertion_failure_documents04(summary,tests,method,device)
+        with self.assertRaisesRegex(ValueError,'EXACT_CASE03'):q.diagnostic_documents13(n,summary,tests,old,device,b'XCTAssertTrue(c11Goals)')
+        for key,value in [('totalTestCount',0),('totalTestCount',True),('skippedTests',1),('expectedFailures',1)]:
+            with self.subTest(key=key),self.assertRaises(ValueError):q.diagnostic_documents13(n,{**summary,key:value},tests,method,device,b'XCTAssertTrue(c11Goals)')
+        with tempfile.TemporaryDirectory(prefix='c47-origin13-')as temp:
+            q,b,state,_=self.fixture(Path(temp).resolve());state.update(checkpoints=[{'phase':p}for p in q.PHASES11[:7]],explicit_consent_native_tap=False)
+            self.assertFalse(q.origin_eligible11(state,True));state['explicit_consent_native_tap']=True;self.assertTrue(q.origin_eligible11(state,True))
+            native={'schema':1,'pid':321,'sourceHead':'wrong','bundle':q.BUNDLE}
+            with self.assertRaisesRegex(ValueError,'TRACE_APP_SOURCE_PID'):q.trace_binding11(s,b'{}',native,b)
 
 if __name__=='__main__':unittest.main()

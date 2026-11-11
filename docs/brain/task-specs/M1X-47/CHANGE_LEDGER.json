@@ -10362,6 +10362,94 @@
       "all62PredecessorMethodsASTUnchanged": true,
       "causal_boundary": "C12 finite native endpoint: PARTIAL_BLOCKED / NO_GO. Actual sole74 run42991493591/job130425234546/attempt1 on standard macos-26-intel completed with failure. Early genuine inventory passed7.090773s at unchanged300s bound before npm/source preparation. Normal install/hooks/byte checks and all mandatory Mac source30/60, observer62, runtime157/signing15/current54/native202/172 controls passed. Exact historical diagnostic app70/producer149 was verified, freshly installed, launched and survived30s; its isolated current diagnostic Swift really compiled/linked and one native XCTest executed,0PASS/1FAIL/0skipped/0expected failures. It failed before activation at C47_WARM11_BINDING_REFUSED, not at consent or Goals. The observer retained TimeoutExpired/OBSERVER_UNAVAILABLE after seven process checks and six unavailable-runner-container queries, zero completed checkpoints. The original timeout operation was not retained, so no command or load cause is invented. A separate optional vm_stat probe timed out; it is not an app privacy cause. The original strict normal-result reader separately refused this diagnostic failure-message category with C47_NORMAL04_ASSERTION_KIND_REQUIRED; no normal parser assertion was relaxed. No native Begin/explicit-consent tap or privacy origin was obtained. App70 remains historical/instrumented/producer-unsealed, never ordinary-admitted.\nBecause74 reached installation,75 is FORBIDDEN.76-78 never unlocked without an actual source/PID-bound privacy origin and causal app RED/fix. All four remain REQUIRED_UNUSED. No further Mac, attempt2, hidden/repeated diagnostic,79 or unrelated cleanup. Complete ordinary3, internal5 and actual export integrity/removal remain NOT_RUN. Native74's uniquely owned Simulator was shut down after failure evidence collection; no unrelated device or recovery state was erased. Cold-start72 and original privacy67 remain open; corrupted-JSON attribution remains unknown.\nThe only post-native source correction retains an allowlisted static subprocess-operation enum and actual3s timeout at the existing original first invalidation. It never records command arguments, PID/device/account/owner data, outputs or arbitrary exception messages; observer/classifier failure remains closed, first failure cannot be replaced, no retry/deadline/admission change. Real163 predecessor RED and current fixed tests prove the missing-retention defect only. All62 predecessor methods are AST-identical; add one focused group for63. This correction has NOT executed natively and does not establish which operation timed out in74 or cure the privacy defect. Production app/Swift/Ruby/consent/owner/crypto/deletion/recovery behavior remains byte-stable.\nActual runner163 source CI is terminal:7PASS/8FAIL/1SKIP jobs,4 failed workflows/1 passed;15 decoded logs and10 official artifacts are authenticated, four strict source30 programs/240 ordered events. Current DB reset/test/lint/drift validation passed in the unchanged canonical source-CI environment. C11's bind59110 failure and unknown occupant remain unwaived; no listener kill, Docker prune, protected SQL/profile/port change or historical repair claim. Root7122/uncached type/lint/PG15/17/exports/iOS-source/Windows source positives do not qualify Simulator journeys. Security/candidate29/G97/SDK/Doctor/original rule custody and supplemental platform failures remain unwaived; technical Semgrep retains128 findings plus two Timeout warnings and one PartialParsing warning on163. Original full Windows deadline failures remain authentic; C12's complete four-worker CLI profile is explicitly changed scheduling, with all original tests/assertions/deadlines intact. All38 requirements/18 gates unaccepted. No merge/deployment/release/M2/J01/clinical/owner admission/Campaign48. Complete final source validation and authenticated return, then stop for independent Brain review.",
       "status": "PARTIAL_BLOCKED_NATIVE_STOP_REQUIRED_UNUSED_75_78_NO_GO"
+    },
+    {
+      "UTC": "2026-11-11T18:02:23.247832+00:00",
+      "authorization": "BRAIN-C47-OBSERVER-LIFECYCLE-CAUSAL-REPLAY13",
+      "preimage_head": "6f6f9733a0551b26809057bae1d510c96349c371",
+      "preimage_tree": "b2ffabddbac73c64f195917e65d817fdfbf7444f",
+      "paths": [
+        ".github/workflows/campaign47-native-runtime.yml",
+        "ONSKIN_BRAIN_HANDOFF.txt",
+        "PROGRESS.md",
+        "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+        "docs/brain/task-specs/M1X-47/TASK.md",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "scripts/release/full-app-j01/pinned_app70_replay10.py",
+        "scripts/release/full-app-j01/storage_trace47.py",
+        "scripts/release/full-app-j01/storage_trace47.test.py"
+      ],
+      "all165AncestorsRequired": true,
+      "preservedObserverMethods": 63,
+      "ASTIdenticalMethods": 62,
+      "oneHistoricalWorkflowWitnessVersionedWithAllAssertionsRetained": [
+        "test_current_one_shot_and_early_inventory_order_preserve_all_later_controls"
+      ],
+      "newTargetedGroups": 10,
+      "focusedTargetedPASS": true,
+      "completeRequiredPreflight": "PENDING_NOT_NATIVE_ADMISSION",
+      "frozenInputs": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "bytes": 56139,
+          "sha256": "bffe625e84a8000338de6166d6df1582b6caea524ea7d69682d15a6c75859956"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "bytes": 10701,
+          "sha256": "cf95125bbc0ca6321614f0d9514fa0d1ea12d133654dcdde050948b2fb616481"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "bytes": 302739,
+          "sha256": "eba7c1132113089094709a9c689f38b173f8626b989054c9f9899242d1edfc7e"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "bytes": 40645,
+          "sha256": "c660cd49020f19bb08a5b8ec8fa931966d9fc9b071c28cd8cc6a5f78e1a371af"
+        },
+        {
+          "path": "package-lock.json",
+          "bytes": 574016,
+          "sha256": "71aef9b618c23b3d15c94251f5d9548d4a3c6a1a88af42471ed03ad3d0b062aa"
+        }
+      ],
+      "realLifecycleRedFixed": [
+        {
+          "label": "RED_ACTUAL165_PREPARATION",
+          "exit": 1,
+          "success": false,
+          "elapsedSeconds": 0.3130000000091968,
+          "syntheticControlFlowOnly": true,
+          "actual165ObserverSourceSHA256": "4ce892cb447637faade3b663d5feb95ff831935a6bb3ede57c93fbfbbf11143c",
+          "notOriginal74TimeoutOperationOrPrivacyCause": true
+        },
+        {
+          "label": "FIXED_CURRENT_LIFECYCLE",
+          "exit": 0,
+          "success": true,
+          "elapsedSeconds": 0.5,
+          "syntheticControlFlowOnly": true,
+          "actual165ObserverSourceSHA256": "4ce892cb447637faade3b663d5feb95ff831935a6bb3ede57c93fbfbbf11143c",
+          "notOriginal74TimeoutOperationOrPrivacyCause": true
+        }
+      ],
+      "nativeStarted13": 0,
+      "maximumNewStarts": 4,
+      "soleDiagnostic": 75,
+      "conditionalQualification": [
+        76,
+        77,
+        78
+      ],
+      "noSecondDiagnosticOr79": true,
+      "privacyOrigin": "UNKNOWN",
+      "ordinary3": "NOT_RUN",
+      "internal5": "NOT_RUN",
+      "release": "NO_GO",
+      "causal_boundary": "C13 BRAIN-C47-OBSERVER-LIFECYCLE-CAUSAL-REPLAY13: finite prospective diagnostic preparation, NO_GO. Starting165 6f6f9733a0551b26809057bae1d510c96349c371/tree b2ffabddbac73c64f195917e65d817fdfbf7444f preserved append-only. Raw mandate24338bytes/SHA2564dff9cfbe943c86461a231672c0c42684b5fb150433e390184a4e076ad82ef38 authenticated and fully read; C12 original verifier and complete report/raw74 payloads/180 streams authenticated. Actual74 still failed PRE_ACTIVATE before activation/Begin/consent; its timed-out operation remains UNKNOWN_NOT_RETAINED. The synthetic actual165 scheduling witness reproduces seven unready-runner-container probes and terminal timeout; it is not native74 command attribution or a privacy causal RED.\nDiagnostic-only repair splits isolated runner build-for-testing from test-without-building under ONE900-second operation envelope, preserving the600-second test, five-second end-to-end acknowledgment, three-second subprocess maxima,30-second Begin and84/90-minute coordinator/host ceilings. A real executing runner and its compiled/configuration/source/device namespace must be authenticated; no manual-container-survival assumption. HELLO/preparation invitation carries actual checked peer identities before the timed READY challenge, then all eight ordered checkpoints. Preparation is real owned product/namespace/identity work, never an app-readiness sleep or consent grant. Each request is immutable and atomically acknowledged; stale/reordered/expired/unsafe bindings and any terminal observer failure remain closed. App binary verification is invocation-local via held authenticated descriptors and fresh file/process/source/start checks, with original full before/after app/signature inventories retained; no cross-run pass cache. Redundant full hashing and separate same-PID process reads are removed only from the bounded acknowledgment path. The first observer failure retains phase/time/static operation/deadline without private arguments and stops only the owned test group. Ordinary result-kind guards are unchanged; the separate diagnostic reader cannot admit ordinary3 or internal5.\nOriginal63 observer controls remain,62 AST-identical; one exact C12 workflow witness moves to authenticated165 historical bytes with every original assertion preserved. Ten targeted groups add real cross-process HELLO/readiness/eight checkpoint files, delayed preparation, composed deadlines, actual process/source/start and namespace negatives, observer death before arming/during request, compiled-product/configuration and diagnostic-reader refusal controls. Targeted checks passed; complete mandatory current-source/installer/root/type/lint preflight is still PENDING until its exact166 receipts exist. Preserve all failed local fixture runs and C11 full-root failures. Use only the disclosed complete7122-test four-worker Windows CLI profile with all original deadlines/assertions. Current DB technical success never supplies owner admission; historical port ownership remains unknown. No production app/consent, authoritative Swift payload, ordinary Swift/Ruby, dependency, DB fixture or signing privilege change.\nC12 unused75-78 remain historically closed. C13 newly authorizes sole diagnostic75 only after every mandatory local/source/protocol control passes and live capacity/access is rechecked. No second diagnostic, fresh-host contingency, run_attempt2, hidden/parallel Mac or79. Any infrastructure/readiness/binding/pre-consent failure, incomplete evidence, or no original source/PID/tap-bound privacy rejection stops75 and leaves76-78 REQUIRED_UNUSED. Only actual native privacy origin followed by a genuine causal regression/minimal repair unlocks clean uninstrumented build76, complete ordinary3/77 and then internal5/export/removal78. A harness RED/fixed result or instrumented prefix PASS never opens that gate. Native75/ordinary3/internal5 currently NOT_RUN; privacy origin UNKNOWN. Same draft PR48, auto-merge and maintainer edits OFF; all38 requirements/18 owner gates unaccepted. SDK/Doctor/Security/candidate29/G97/rule custody/scanners/supplemental failures remain unwaived. No merge/deployment/release/M2/J01/clinical/account/purchase/owner admission/Campaign48. Finish the finite mandate, return authenticated actual evidence, then stop for independent Brain review.",
+      "status": "ACTIVE_C13_SOURCE_PREPARATION_NATIVE75_NOT_RUN_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

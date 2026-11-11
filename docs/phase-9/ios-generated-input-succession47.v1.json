@@ -246,8 +246,8 @@
     },
     {
       "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
-      "bytes": 56085,
-      "sha256": "4ce892cb447637faade3b663d5feb95ff831935a6bb3ede57c93fbfbbf11143c"
+      "bytes": 105057,
+      "sha256": "f24e46692f8e796caaaaad7d4aac69898c31a1d7c637d363863090285ec65e17"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
@@ -276,13 +276,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 166760,
-      "sha256": "77493a6277d217d174238a04f6b2e90a1d90d31aa0f2af622f52bf54a730bf4d"
+      "bytes": 167327,
+      "sha256": "8f2d282f1ebd64138a39619e6fdb0d9da82ad8f22411e72e28def363b6848671"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 168454,
-      "sha256": "39b8c570c2cf15a31f93462ac4614b7e3ba933e6114dc94e84906f0f2da5ebad"
+      "bytes": 198984,
+      "sha256": "4b5808051dbdde71dcab7f602b1b3868883e61d3faffe5182e1628c359b0ed19"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

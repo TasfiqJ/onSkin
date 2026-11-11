@@ -1,4 +1,4 @@
-# C12 host-first app70 diagnostic74 ONLY; exact PR48/163/a1; producer149 stays distinct; no app rebuild or ordinary/internal admission.
+# C13 prepared-observer app70 diagnostic75 ONLY; exact PR48/167/a1; producer149 stays distinct; no app rebuild or ordinary/internal admission.
 name: Campaign47 Simulator native runtime
 
 on:
@@ -29,11 +29,11 @@ env:
 
 jobs:
   native-build:
-    name: C47 host-first app70 replay74
+    name: C47 prepared observer app70 replay75
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 163 && github.run_attempt == 1
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 167 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -59,7 +59,7 @@ jobs:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
           C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
-        run: python3 -I -B scripts/release/full-app-j01/pinned_app70_replay10.py --host-first12 --output "$RUNNER_TEMP/c47-evidence"
+        run: python3 -I -B scripts/release/full-app-j01/pinned_app70_replay10.py --prepared-observer13 --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
@@ -88,7 +88,7 @@ jobs:
         if: always() && steps.evidence-budget.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: campaign47-host-first-app70-replay74-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: campaign47-prepared-observer-app70-replay75-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/c47-evidence
           if-no-files-found: error
           retention-days: 3

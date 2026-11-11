@@ -505,6 +505,12 @@ def source_scope05(phase, root):
     host_first12_prefix=g('rev-list','--reverse',verifier.BASE+'..'+host_first12_checkpoint).splitlines()
     if len(host_first12_prefix)!=161 or result['commits'][:161]!=host_first12_prefix:
         raise ValueError('C47_HOST12_EXACT161_PREFIX')
+    lifecycle13_checkpoint='6f6f9733a0551b26809057bae1d510c96349c371'
+    if g('rev-parse',lifecycle13_checkpoint+'^{tree}')!='b2ffabddbac73c64f195917e65d817fdfbf7444f' or g('merge-base',lifecycle13_checkpoint,result['head'])!=lifecycle13_checkpoint:
+        raise ValueError('C47_LIFECYCLE13_PRESERVED165_CHECKPOINT')
+    lifecycle13_prefix=g('rev-list','--reverse',verifier.BASE+'..'+lifecycle13_checkpoint).splitlines()
+    if len(lifecycle13_prefix)!=165 or result['commits'][:165]!=lifecycle13_prefix:
+        raise ValueError('C47_LIFECYCLE13_EXACT165_PREFIX')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
         'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':73,
         'historical_validator_file_modified':False,'diagnostic_only':False,
