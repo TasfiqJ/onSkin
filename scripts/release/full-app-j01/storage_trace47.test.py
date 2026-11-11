@@ -1181,8 +1181,11 @@ class PinnedApp70Replay10Tests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'RAW_PIN'):q.raw70(n,raw,ROOT)
 
     def test_one_shot_workflow_and_coordinator_never_compile_or_replace_app(self):
-        import inspect
-        q=self.replay();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_bytes().decode()
+        import inspect,hashlib
+        q=self.replay();raw=subprocess.check_output(['git','--no-replace-objects','show',
+            'a50628e009c69ee00bf532e1335fde6ed9d3f51e:.github/workflows/campaign47-native-runtime.yml'],cwd=ROOT)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'4201de90184b35a6080fc0c5fad5d321440af456b51f0e9f69938d70008313db')
+        workflow=raw.decode() # Exact C10 historical witness; C11 current gate is independently tested below.
         for item in ['commits == 155','github.run_attempt == 1','number == 48','runs-on: macos-26-intel',
             'timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','actions: read',
             'pinned_app70_replay10.py --output','500 * 1024 * 1024']:self.assertIn(item,workflow)
@@ -1193,5 +1196,173 @@ class PinnedApp70Replay10Tests(unittest.TestCase):
             "r.receipt.get('simulator',{}).get('udid')"]:self.assertIn(item,source)
         for item in ['n.build(',"'npx'",'codesign -s','r.receipt[\'source\']=','normal_suite_aggregate04']:
             self.assertNotIn(item,source)
+
+class SameProcessReplay11Tests(unittest.TestCase):
+    def fixture(self):
+        from types import SimpleNamespace
+        q,_,_,native,trace=PinnedApp70Replay10Tests().fixture()
+        device='11111111-1111-1111-1111-111111111111';executable='/owned/LayerwellStaging.app/LayerwellStaging'
+        ps=('321 Tue Nov 10 21:38:00 2026 '+executable+'\n').encode()
+        warm=q.process_record11(native,ps,321,executable)
+        r=SimpleNamespace(receipt={'source':{'head':'a'*40,'tree':'b'*40,'base':'c'*40,'inventory':[]},
+            'simulator':{'udid':device},'warm_process11':warm,'replay_execution11':{
+                'repository':'TasfiqJ/onSkin','runner_head':'a'*40,'runner_tree':'b'*40,'run_id':123,'job_id':456,
+                'run_attempt':1,'native_attempt':73,'job_name':q.JOB11,'runner_id':789,'configured_labels':['macos-26-intel']}})
+        return q,r,q.binding11(r,device,321),native,trace,ps
+
+    def test_actual_frozen_restart_prefix_is_RED_and_diagnostic_attach_preserves_ordinary(self):
+        import hashlib
+        q,r,b,native,trace,ps=self.fixture();full=(ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes();before=full.split(b'\nimport UIKit',1)[0]
+        self.assertEqual(hashlib.sha256(before).hexdigest(),'7687fb14aeb9091ce91b4a9d0d4065b81abbe7c9eaf4418bb9fe2b8e1e7ebacc')
+        with self.assertRaisesRegex(ValueError,'DIAGNOSTIC_PREFIX_RESTART'):q.validate_prefix11(q.prefix(before),b)
+        after=q.prefix11(before,b);q.validate_prefix11(after,b)
+        marker=b'    func testV04ExplicitWithdrawalReviewCancelAndFreshReconsent() throws {';case=after[after.index(marker):]
+        self.assertNotIn(b'launchFreshOrdinary(app)',case);self.assertNotIn(b'app.launch(',case)
+        self.assertIn(b'guard attachWarm11(app) else { return }',case);self.assertEqual(after.count(b'app.activate()'),1)
+        ordered=[b'attachWarm11(app)',b'tap("Begin", app)',b'enterAdultDate(app)',b'requireInitialConsent(app)',b'requireDisclosure(app)',
+            b'sameProcess11("PRE_CONSENT", app)',b'tap("I agree. Continue", app)',b'sameProcess11("POST_CONSENT", app)',
+            b'sameProcess11("GOALS_CHECK", app)',b'requireFreshGoals(app)',b'sameProcess11("GOALS_READY", app)']
+        self.assertEqual([case.index(v)for v in ordered],sorted(case.index(v)for v in ordered))
+        start=b'    private func launchFreshOrdinary(';end=b'    private func enterAdultDate('
+        self.assertEqual(before[before.index(start):before.index(end)],after[after.index(start):after.index(end)])
+        self.assertEqual((ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes(),full)
+        with self.assertRaises(ValueError):q.prefix11(before+b'changed',b)
+
+    def test_same_process_identity_rejects_absence_replacement_wrong_source_or_executable(self):
+        q,r,b,native,trace,ps=self.fixture();warm=r.receipt['warm_process11'];exe=warm['executable']
+        self.assertEqual(q.process_record11(native,ps,321,exe,warm),warm)
+        for raw,pid,value in [(b'',321,native),(ps,322,native),(ps.replace(b'21:38:00',b'21:38:01'),321,native),
+            (ps.replace(exe.encode(),b'/foreign'),321,native),(ps,321,{**native,'sourceHead':'c'*40}),
+            (ps,321,{**native,'pid':322}),(ps,True,native),(ps,321,{**native,'schema':True})]:
+            with self.assertRaises(ValueError):q.process_record11(value,raw,pid,exe,warm)
+
+    def test_closed_binding_rejects_wrong_app_runner_trace_and_ordinary_admission(self):
+        import copy,hashlib
+        q,r,b,native,trace,ps=self.fixture();self.assertEqual(q.validate_binding11(b),321)
+        changes=[lambda x:x['producer'].update(head='c'*40),lambda x:x['app'].update(sha256='c'*64),
+            lambda x:x['runner_source'].update(head='c'*40),lambda x:x['execution'].update(native_attempt=72),
+            lambda x:x['execution'].update(run_attempt=2),lambda x:x['execution'].update(run_attempt=True),
+            lambda x:x['execution'].update(job_name=q.JOB),lambda x:x['execution'].update(runner_id=True),
+            lambda x:x['execution'].update(app_pid=322),lambda x:x['warm_process'].update(pid=322),
+            lambda x:x.update(diagnostic_transform_sha256='c'*64),lambda x:x.update(ordinary_admitted=True),
+            lambda x:x.update(internal_admitted=True),lambda x:x.update(domain=q.DOMAIN)]
+        for change in changes:
+            other=copy.deepcopy(b);change(other);other.pop('binding_id');other['binding_id']=hashlib.sha256(json.dumps(other,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+            with self.assertRaises(ValueError):q.validate_binding11(other)
+        self.assertEqual(q.trace_binding11(s,json.dumps(trace).encode(),native,b),trace)
+        for value in [{**native,'pid':322},{**native,'sourceHead':'a'*40}]:
+            with self.assertRaises(ValueError):q.trace_binding11(s,json.dumps(trace).encode(),value,b)
+        with self.assertRaises(ValueError):q.validate_binding(b) # C10 reader never silently admits this successor.
+
+    def test_request_ack_requires_exact_live_stage_sequence_pid_and_non_stale_binding(self):
+        q,r,b,native,trace,ps=self.fixture();checkpoints=[]
+        for seq,phase in enumerate(q.PHASES11,1):
+            request={'schema':1,'binding':b['binding_id'],'sequence':seq,'phase':phase,'pid':321,'state':4}
+            reply=q.request11(request,b,checkpoints);self.assertTrue(reply['valid']);self.assertEqual(reply['sequence'],seq)
+            for key,value in [('schema',True),('binding','c'*64),('sequence',seq-1),('sequence',True),
+                ('phase','UNKNOWN'),('pid',322),('pid',True),('state',1),('state',True)]:
+                with self.assertRaises(ValueError):q.request11({**request,key:value},b,checkpoints)
+            if seq>1:
+                with self.assertRaises(ValueError):q.request11({**request,'state':3},b,checkpoints)
+            checkpoints.append(reply)
+        with self.assertRaises(ValueError):q.request11(request,b,checkpoints)
+
+    def test_origin_gate_requires_real_native_consent_and_current_process_through_goal_boundary(self):
+        import copy
+        q,r,b,native,trace,ps=self.fixture();state={'invalid':None,'explicit_consent_native_tap':True,'checkpoints':[{'phase':v}for v in q.PHASES11[:7]]}
+        self.assertTrue(q.origin_eligible11(state,True));self.assertFalse(q.origin_eligible11(state,False))
+        for change in [lambda x:x.update(invalid={'code':'C47_REPLAY11_PROCESS_REPLACED'}),
+            lambda x:x.update(explicit_consent_native_tap=False),lambda x:x['checkpoints'].pop(),
+            lambda x:x['checkpoints'][0].update(phase='GOALS_READY')]:
+            other=copy.deepcopy(state);change(other);self.assertFalse(q.origin_eligible11(other,True))
+        valid=b'    t = 2.00s Tap "Begin" Button\n    t = 5.00s Tap "I agree. Continue" Button\n'
+        self.assertTrue(q.explicit_tap11(valid));self.assertFalse(q.explicit_tap11(valid.splitlines(keepends=True)[0]))
+        self.assertFalse(q.explicit_tap11(valid+valid));self.assertFalse(q.explicit_tap11(b'\n'.join(reversed(valid.splitlines()))))
+        q.invalidate11(state,ValueError('C47_REPLAY11_PROCESS_REPLACED'));first=copy.deepcopy(state['invalid'])
+        q.invalidate11(state,RuntimeError('PRIVATE_UNKNOWN_MESSAGE'));self.assertEqual(state['invalid'],first)
+
+    def test_original_rejection_controls_remain_closed_for_unclassified_superseded_or_pregrant(self):
+        import copy
+        q,r,b,native,trace,ps=self.fixture();self.assertIsNotNone(s.privacy_origin08(q.trace_binding11(s,json.dumps(trace).encode(),native,b)))
+        for change in [lambda x:x['events'][1].update(grant=0),lambda x:x['events'][1].update(tokenCurrent=False),
+            lambda x:x['events'][1]['error'][0].update(code='UNCLASSIFIED')]:
+            other=copy.deepcopy(trace);change(other);self.assertIsNone(s.privacy_origin08(q.trace_binding11(s,json.dumps(other).encode(),native,b)))
+        for change in [lambda x:x.update(dropped=1),lambda x:x.update(flushFailures=1),lambda x:x.update(pid=322),
+            lambda x:x.update(sourceHead='a'*40),lambda x:x.update(ownerId='PRIVATE')]:
+            other=copy.deepcopy(trace);change(other)
+            with self.assertRaises(ValueError):q.trace_binding11(s,json.dumps(other).encode(),native,b)
+
+    def test_failure_capture_keeps_original_wait_result_before_abort_and_no_readiness_relaxation(self):
+        q,r,b,native,trace,ps=self.fixture();before=(ROOT/'scripts/release/full-app-j01/native_ui47.swift').read_bytes().split(b'\nimport UIKit',1)[0];after=q.prefix11(before,b)
+        self.assertIn(b'let c11Exists = element.waitForExistence(timeout: deadline)',after)
+        self.assertLess(after.index(b'capture("c11-at-visible-refusal"'),after.index(b'XCTAssertTrue(c11Exists, description)'))
+        self.assertLess(after.index(b'capture("c11-initial-goals-decision"'),after.index(b'XCTAssertTrue(c11Goals)'))
+        for item in [b'private let deadline: TimeInterval = 30',b'continueAfterFailure = false',b'executionTimeAllowance = 600',
+            b'timeout: 5',b'No stale goal or completed profile may advance',b'The actual explicit disclosure must include',b'must be enabled before tapping']:
+            self.assertIn(item,after)
+        for item in [b'Thread.sleep',b'launchArguments =',b'launchEnvironment =',b'activate()\n        app.launch',b'getPrivateItem(']:self.assertNotIn(item,after)
+
+    def test_current_one_shot73_and_existing_sandbox_only_observer_are_explicit(self):
+        import inspect
+        q,r,b,native,trace,ps=self.fixture();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_bytes().decode()
+        for item in ['commits == 159','github.run_attempt == 1','number == 48','runs-on: macos-26-intel',
+            'timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','actions: read',
+            'pinned_app70_replay10.py --same-process11 --output','500 * 1024 * 1024',q.JOB11]:self.assertIn(item,workflow)
+        self.assertNotIn('workflow_dispatch',workflow);self.assertEqual(workflow.count('  native-build:'),1)
+        self.assertEqual(q.SEAL_COUNT11,159);self.assertEqual(q.START11,'a50628e009c69ee00bf532e1335fde6ed9d3f51e')
+        source=inspect.getsource(q.observer11)
+        for item in ['process11(r,n,installed,pid,warm)','C47PrivacyOrigin08-','request11(request,envelope',"'Documents/C47Replay11'",'RUNNER_BUNDLE11',"'ORIGIN_CANDIDATE.json'"]:
+            self.assertIn(item,source)
+        for item in ['socket','http://','getPrivateItem','app.launch','codesign -s']:self.assertNotIn(item,source)
+        self.assertEqual(q.RUNNER_BUNDLE11,'internal.c47.native-ui.xctrunner')
+        # Actual observer control flow over only an owned synthetic filesystem.
+        # No Simulator/process success is inferred from these deterministic fixtures.
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        import time,os
+        parent=str(Path(tempfile.gettempdir()).resolve())
+        # Only our new owned fixture uses native extended spelling on Windows;
+        # the real Mac paths and all existing production path/race guards stay exact.
+        if os.name=='nt':parent='\\\\?\\'+parent
+        for failure in [None,'replacement','foreign-runner']:
+            with self.subTest(observer_fixture=failure),tempfile.TemporaryDirectory(prefix='c47-process11-ipc-',dir=parent)as temp:
+                root=Path(temp).resolve();self.assertEqual(root.parent,Path(parent).resolve())
+                home=root/'home';device=b['execution']['device']
+                base=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'
+                app_data=base/'22222222-2222-2222-2222-222222222222';runner_data=base/'33333333-3333-3333-3333-333333333333'
+                (app_data/'Documents').mkdir(parents=True);runner_data.mkdir();output=root/'evidence';output.mkdir()
+                r.output=output;r.env={};r.deadline=time.monotonic()+60;r._storage05_first_data_container=app_data
+                (app_data/'Documents/C47StorageOrigin05Identity.json').write_bytes(json.dumps(native).encode())
+                (app_data/'Documents/C47PrivacyOrigin08-321.json').write_bytes(json.dumps(trace).encode())
+                ipc=runner_data/'Documents/C47Replay11'/b['binding_id'];ipc.mkdir(parents=True)
+                state={'invalid':None,'checkpoints':[],'process_checks':0,'runner_data_unavailable':0};observations=[]
+                class Steps:
+                    number=0
+                    def wait(self,seconds):
+                        self.number+=1
+                        if self.number>8:return True
+                        request={'schema':1,'binding':b['binding_id'],'sequence':self.number,'phase':q.PHASES11[self.number-1],'pid':321,'state':4}
+                        (ipc/'request.json').write_bytes(json.dumps(request).encode());return False
+                steps=Steps()
+                def guard(*args):
+                    if failure=='replacement'and steps.number==4:raise ValueError('C47_REPLAY11_PROCESS_REPLACED')
+                    return r.receipt['warm_process11']
+                def write(path,value):path.write_bytes((json.dumps(value)+'\n').encode())
+                n=SimpleNamespace(read_native_file=lambda p:p.read_bytes(),stage_json=json.loads,write_json=write,utc=lambda:'SYNTHETIC_UNIT_TIME')
+                d=SimpleNamespace(_native05_observed_pid62=lambda *args:321,validate_privacy08=s.validate_privacy08,privacy_origin08=s.privacy_origin08)
+                found=root/'foreign'if failure=='foreign-runner'else runner_data
+                if failure=='foreign-runner':found.mkdir()
+                with patch.object(q.Path,'home',return_value=home),patch.object(q,'process11',side_effect=guard),\
+                    patch.object(q.subprocess,'run',return_value=SimpleNamespace(returncode=0,stdout=str(found).encode(),stderr=b'')):
+                    q.observer11(r,n,d,device,root/'LayerwellStaging.app',{},steps,observations,state)
+                if failure is None:
+                    self.assertIsNone(state['invalid']);self.assertEqual(len(state['checkpoints']),8)
+                    for seq in range(1,9):
+                        ack=json.loads((ipc/('ack-'+str(seq)+'.json')).read_bytes());self.assertTrue(ack['valid']);self.assertEqual(ack['pid'],321)
+                    self.assertTrue((output/'replay-capture11/ORIGIN_CANDIDATE.json').is_file())
+                    self.assertFalse(q.origin_eligible11(state,True),'Synthetic trace/handshake cannot fabricate the required real native tap')
+                else:
+                    self.assertIsNotNone(state['invalid']);self.assertFalse((ipc/('ack-4.json'if failure=='replacement'else'ack-1.json')).exists())
+                    self.assertFalse(q.origin_eligible11(state,True))
 
 if __name__=='__main__':unittest.main()

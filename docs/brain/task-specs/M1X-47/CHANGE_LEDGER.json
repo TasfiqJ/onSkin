@@ -10079,6 +10079,71 @@
       "ordinary3": "NOT_RUN",
       "internal5": "NOT_RUN",
       "status": "PARTIAL_BLOCKED_NO_GO_MANDATORY_STOP"
+    },
+    {
+      "authorization": "BRAIN-C47-SAME-PROCESS-PRIVACY-ORIGIN11",
+      "preimage_head": "a50628e009c69ee00bf532e1335fde6ed9d3f51e",
+      "paths": [
+        {
+          "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+          "preimage_bytes": 26449,
+          "preimage_sha256": "32ef5815dd6bd0767080b7e9ac79e3651363610eea46ac63d843050da089c887",
+          "preimage_git_blob": "a629d59729721d5c42b59c9ffc03c7494b64de2a"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "preimage_bytes": 145876,
+          "preimage_sha256": "c7df35f0179c1da8c281e829d78a8b11dfa561881e42c0db9c4001abab7cd67e",
+          "preimage_git_blob": "4f190edb0ed9d11ac675b90f244588672b6788d0"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_bytes": 165608,
+          "preimage_sha256": "16eb12cb2d42fbbe476f0785ebf43da785f83f09dfceb705f70109838bd3d53d",
+          "preimage_git_blob": "0a451118b055519a6f14b75a2a1463a26749b9d9"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_bytes": 4060,
+          "preimage_sha256": "4201de90184b35a6080fc0c5fad5d321440af456b51f0e9f69938d70008313db",
+          "preimage_git_blob": "680a6c397fa008796d61b4d2a2ff4de548ce72db"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_bytes": 23821,
+          "preimage_sha256": "7ab5701bbffa5a6f4531e445216b1772c12229bea39af51692e92f21bec64801",
+          "preimage_git_blob": "5a5ba3c4e7ffe3e8dec3930eadafd4cc298483f2"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_bytes": 787603,
+          "preimage_sha256": "a1d6f7603ed516ba49ab47e44568be9e007a5845c68c5905a2ad623eac9e5ac9",
+          "preimage_git_blob": "e5610f11e6933941eedc7d76b1b3f1bed8a0136c"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_bytes": 179886,
+          "preimage_sha256": "06fbc14baf34d9800292f6722a0bd20bd2bcad3952fb3117aeb405114bc89867",
+          "preimage_git_blob": "ae5367005a56b2d20ba0a451e08f27a7d1533ece"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_bytes": 673404,
+          "preimage_sha256": "41c4fe2663cfa4b2c327413d0db355e714542089a967f04a25e34313e9ce003a",
+          "preimage_git_blob": "0881c9272f7e69e4509c3806ec4e10f5fbe5be54"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_bytes": 53966,
+          "preimage_sha256": "da79b4bdcb673695557277b3d5d6b749c4675ea784d703c222704befcad6df3a",
+          "preimage_git_blob": "8dad7051559a2485997ae16f89453145ae33eb45"
+        }
+      ],
+      "causal_boundary": "C11 BRAIN-C47-SAME-PROCESS-PRIVACY-ORIGIN11: prospective bounded warm-process diagnostic73, not C10 unused permission. Exact raw72 failure AX970/SHA f2cd0bdae2ff276279cb9c4bfb6735613d83a0e153a84355a6191a376da453bf exposes splash/no Begin; teardown AX6876/SHA624e9120028aab4bdd2179c90925e603290107007f15d6ee53e0076dfde8b113 shows Welcome in the same process6.506s later. The original log explicitly terminates the warm process during app.launch. All four Brain-pinned objects and attachment timestamps were verified offline; original72 remains failed, cold-start readiness OPEN_REQUIRED and original post-consent privacy cause UNKNOWN.\nReuse exact instrumented app70/source149 without app compile/re-sign/modification. Ordinary full56139 and normal19552 Swift/Ruby remain frozen. Only a separately authenticated diagnostic afterimage replaces case03 launchFreshOrdinary with verified already-running activation, preserving exact Begin/30s, existing-account entry, synthetic adult typing, WHAT/WHY/NEVER, real I agree. Continue, original fresh-empty Goals, foreground5s, private-denial/scroll/key rules and600/900s test limits. Freeze original warm PID/process-start/source/executable; never follow replacement identity files. Small own UI-runner sandbox request/ack synchronizes source-bound checks before/after activation, Welcome, consent and first Goals decision. Bounded content-free observation cannot grant consent or change app routing; original failure-time captures precede assertion abort. No new service/dependency/entitlement or protected-store access.\nAll51 predecessor observer controls remain; add eight focused same-process groups and preserve the C10 workflow assertion against exact historical157 input plus strict current73 one-shot guard. Source30/ordered60/nested21/runtime157/sign15/finite73/current54 pins and affected root7122/type/lint stay mandatory, without timeout increases. All157 ancestors, base/main and frozen plan remain unchanged. Diagnostic73 NOT_STARTED pending complete preflight, source seal, current capacity/access/headroom and live checks. A failed readiness/process/infrastructure/trace stage, missing origin or non-reproduction stops73;74-76 REQUIRED_UNUSED in those outcomes. Only an actual source/PID-bound original post-consent rejection unlocks causal regression/repair and prospective clean74 -> ordinary3/75 -> internal5/76. No77/attempt2/parallel Mac/hidden run. Same draftPR48, maintainer edits/auto-merge OFF. All38 whole requirements/18 owner gates unaccepted; SDK/Doctor/Security/candidate29/G97/original rule custody/scanners/supplemental platform failures unwaived. No merge/deployment/release/M2/J01/clinical/owner admission/Campaign48; NO_GO.",
+      "native_started11": 0,
+      "unconditional73": 1,
+      "conditional74_75_76": "LOCKED_NO_ORIGINAL_POST_CONSENT_ORIGIN",
+      "status": "PREPARING_SAME_PROCESS_DIAGNOSTIC_NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
