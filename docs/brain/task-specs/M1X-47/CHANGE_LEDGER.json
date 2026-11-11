@@ -10144,6 +10144,53 @@
       "unconditional73": 1,
       "conditional74_75_76": "LOCKED_NO_ORIGINAL_POST_CONSENT_ORIGIN",
       "status": "PREPARING_SAME_PROCESS_DIAGNOSTIC_NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-SAME-PROCESS-PRIVACY-ORIGIN11",
+      "preimage_head": "a83af486f80c332c54d93b806e2f2cafca47f9d5",
+      "paths": [
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "bytes": 793306,
+          "sha256": "f778f8ed464c5b5d60252237eb50a80bffbf0e3d764322872ad0412650e74733",
+          "preimage_head": "a83af486f80c332c54d93b806e2f2cafca47f9d5",
+          "invariant": "Truthful C11 mandatory stop; no app/query/consent/privacy/owner/deletion/signing/installer or runner code change;159 exact ancestors and tested source preserved",
+          "real_test": "Exact four-document delta, unchanged code and original assertions/deadlines; current source controls/uncached tests and final source CI; worklist-only final seal; no new native allocation"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "bytes": 182588,
+          "sha256": "f2c0732abe9e02dadfe3609529c02440603003d37de0421a7bb1801a243fa93e",
+          "preimage_head": "a83af486f80c332c54d93b806e2f2cafca47f9d5",
+          "invariant": "Truthful C11 mandatory stop; no app/query/consent/privacy/owner/deletion/signing/installer or runner code change;159 exact ancestors and tested source preserved",
+          "real_test": "Exact four-document delta, unchanged code and original assertions/deadlines; current source controls/uncached tests and final source CI; worklist-only final seal; no new native allocation"
+        },
+        {
+          "path": "PROGRESS.md",
+          "bytes": 676106,
+          "sha256": "a5c798272c2fff1b59264abfdcdff099037d065dd0f8f74184f99d4cdfc6b6e2",
+          "preimage_head": "a83af486f80c332c54d93b806e2f2cafca47f9d5",
+          "invariant": "Truthful C11 mandatory stop; no app/query/consent/privacy/owner/deletion/signing/installer or runner code change;159 exact ancestors and tested source preserved",
+          "real_test": "Exact four-document delta, unchanged code and original assertions/deadlines; current source controls/uncached tests and final source CI; worklist-only final seal; no new native allocation"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "bytes": 56668,
+          "sha256": "4412685354c908847e93f10b457caa234320c61db9b2d2b8baf064e564d7fc27",
+          "preimage_head": "a83af486f80c332c54d93b806e2f2cafca47f9d5",
+          "invariant": "Truthful C11 mandatory stop; no app/query/consent/privacy/owner/deletion/signing/installer or runner code change;159 exact ancestors and tested source preserved",
+          "real_test": "Exact four-document delta, unchanged code and original assertions/deadlines; current source controls/uncached tests and final source CI; worklist-only final seal; no new native allocation"
+        }
+      ],
+      "causal_boundary": "C11 final native boundary: PARTIAL_BLOCKED / NO_GO. Authorization BRAIN-C47-SAME-PROCESS-PRIVACY-ORIGIN11. Sole diagnostic73 used exact runner159 a83af486f80c332c54d93b806e2f2cafca47f9d5 / tree16c9f7c2a2e589cf24c446865b9adb9cf693310e, run42962094496/job130330786377/attempt1, on the existing serial standard macos-26-intel profile. The exact historical instrumented app70/source149 and all original producer/raw/app/transform/inventory/signature anchors were authenticated. Extracted product platform/signature checks passed; the app was not rebuilt, modified or re-signed. Genuine current Mac source30/ordered60, observer59, runtime157, signing15 and original source/native/installer controls passed. Normal installation used hooks and exact installed-byte checks. This refers to dependency/payload installation, not Simulator app installation.\nThe required xcrun simctl list --json inventory command timed out after its unchanged300-second bound with exit124 and empty complete stdout/stderr. Host memory/disk/process/service observations were retained. No campaign-owned Simulator UUID was created, no app was installed or launched, no warm PID was frozen, no diagnostic Swift UI prefix was generated/compiled/executed and no XCTest/xcresult or privacy trace was produced. The infrastructure stall's underlying cause is not established; separate host-service observations do not identify an app privacy cause. Do not confuse the hosted FAILURE with an XCTest assertion failure or a privacy rejection.\nC11 mandatory STOP after73 applies. One of four prospective starts was consumed;74-76 REQUIRED_UNUSED. No retry, attempt2, second diagnostic, hidden/parallel native run or77 is authorized. No original post-consent rejection was observed, no causal app RED/fix is justified, and complete current ordinary3/internal5/export integrity/removal remain NOT_RUN. The new warm attachment has local RED/fixed source controls but has not compiled or executed natively. The original normal19552/full56139 Swift and Ruby remain unchanged; source tests do not qualify the app. The actual native72 failure-time splash versus later same-process Welcome was independently decoded offline and preserved, with cold-start/readiness OPEN_REQUIRED. Historical67's later post-consent Privacy Check remains UNKNOWN; no denial, consent, owner, age, encryption, deletion, recovery or explicit-save guard was bypassed.\nAll157 starting ancestors, the accepted C46 base, main and frozen plan remain exact append-only history. Material158 passed all13 required local profiles; seal159 changed only two worklists. Closure changes only these four documents; the exact159/a1 native workflow guard remains parked at the final documentation/worklist seal. Final-head source CI and all actual failures are retained separately from native qualification. Original npm mismatch, unsigned historical Keychain failure, UI stalls, unattributed corrupted-JSON diagnostic, SDK/Doctor, Security, candidate29, G97, original rule custody/scanners and failed supplemental Windows Python3.12 profiles remain unwaived. No protected rules or timeouts were changed. Private raw evidence, host details and temporary download capabilities are excluded here. Same draft/open/unmerged PR48; auto-merge and maintainer modifications OFF. All38 requirements/18 owner gates unaccepted. No merge/deployment/release/M2/J01/clinical/paid or Apple-account action/owner admission/Campaign48. Complete the authenticated return and stop for independent Brain review.",
+      "native_started11": 1,
+      "native_stopped": true,
+      "slots74_75_76": "REQUIRED_UNUSED",
+      "app_repair": false,
+      "origin_observed": false,
+      "ordinary3": "NOT_RUN",
+      "internal5": "NOT_RUN",
+      "status": "PARTIAL_BLOCKED_NO_GO_MANDATORY_STOP"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
