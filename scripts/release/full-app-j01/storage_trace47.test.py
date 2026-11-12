@@ -2218,6 +2218,31 @@ class RunnerInventory15Tests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'INVENTORY15_SCHEMA'):self.compare(f)
             v=json.loads((f.r.output/'RUNNER_INVENTORY15.json').read_bytes());self.assertTrue(v['original_predicate_result']);self.assertFalse(v['difference']['schema_valid']);self.assertFalse(f.state['armed'])
 
+    def test_rich_source_receipt_keeps_exact_wire_identity_and_rejects_changed_or_missing_fields(self):
+        import ast
+        from unittest.mock import patch
+        raw=subprocess.check_output(['git','show','81f3c3431f658fa8c23bada7bef71630459d4afe:scripts/release/full-app-j01/pinned_app70_replay10.py'],cwd=ROOT)
+        node=next(x for x in ast.parse(raw).body if isinstance(x,ast.FunctionDef)and x.name=='compare_runner15')
+        for old in [True,False]:
+            with self.subTest(preimage179=old),self.temporary()as tmp:
+                f=self.fixture(Path(tmp).resolve());f.r.receipt['source']=dict(f.r.receipt['source']);f.r.receipt['source'].update(base=f.n.BASE,base_tree='02f4b093d399631c4e36b32bf163fa543b61fc3e',helper='scripts/release/full-app-j01/source_completion46.py',helper_sha256='e'*64,inventory={'files':1,'bytes':1,'inventory_sha256':'f'*64,'method':'ALL_HEAD_TRACKED_REGULAR_SINGLE_LINK_FILES_STREAMED_GIT_BLOB_AND_SHA256'})
+                scope=dict(vars(f.q));exec(compile(ast.Module(body=[node],type_ignores=[]),'actual179-compare-runner','exec'),scope)
+                if old:
+                    with patch.object(f.q,'compare_runner15',scope['compare_runner15']):
+                        with self.assertRaisesRegex(ValueError,'INVENTORY15_SOURCE_DEVICE'):self.compare(f)
+                    self.assertFalse((f.r.output/'RUNNER_INVENTORY15.json').exists())
+                else:
+                    self.assertEqual(self.compare(f),f.prepared['inventory']);self.assertTrue((f.r.output/'RUNNER_INVENTORY15.json').exists())
+                self.assertFalse(f.state['armed']);self.assertEqual(f.state['checkpoints'],[])
+        for key in ['head','tree']:
+            for missing in [False,True]:
+                with self.subTest(key=key,missing=missing),self.temporary()as tmp:
+                    f=self.fixture(Path(tmp).resolve())
+                    if missing:del f.r.receipt['source'][key]
+                    else:f.r.receipt['source'][key]='f'*40
+                    with self.assertRaises((ValueError,KeyError)):self.compare(f)
+                    self.assertFalse(f.state['armed']);self.assertEqual(f.state['checkpoints'],[]);self.assertFalse((f.r.output/'RUNNER_INVENTORY15.json').exists())
+
     def test_actual_context15_accepts_only_exact179_source_and_first_standard_job(self):
         from types import SimpleNamespace
         from unittest.mock import Mock,patch

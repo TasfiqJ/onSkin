@@ -1188,7 +1188,7 @@ def runner_process15(r,record,deadline):
 
 def compare_runner15(r,n,state,envelope,device,prepared,installed,deadline):
     need11(state['invalid']is None and not state['armed']and not state['checkpoints'],'PROTOCOL13_TERMINAL')
-    validate_binding11(envelope);need11(envelope['runner_source']==r.receipt['source']and envelope['execution']['device']==device and r.receipt.get('inventory15')is True,'INVENTORY15_SOURCE_DEVICE')
+    validate_binding11(envelope);need11(envelope['runner_source']=={key:r.receipt['source'][key]for key in ('head','tree')}and envelope['execution']['device']==device and r.receipt.get('inventory15')is True,'INVENTORY15_SOURCE_DEVICE')
     expected_root=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application'
     need11(installed.name=='C47NativeUI-Runner.app'and installed.parent.parent==expected_root and str(uuid.UUID(installed.parent.name)).lower()==installed.parent.name.lower()and Path(state['runner']['executable'])==installed/'C47NativeUI-Runner','INVENTORY15_OWNED_CODE_ROOT')
     need11(not r.output.resolve().is_relative_to(installed.resolve())and not r.output.resolve().is_relative_to(prepared['host'].resolve()),'INVENTORY15_OUTSIDE_CODE')
