@@ -217,6 +217,10 @@ DOMAIN14='PINNED_APP70_TARGETED_PLATFORM_DIAGNOSTIC14'
 START14='ca3229765a9a1b2519c481e78e9b2be78a29e58f'
 SEAL_COUNT14=172
 JOB14='C47 targeted platform app70 replay76'
+SOURCE76='629e2a2cccd3661d14d34a2121b8667932c906d8'
+TREE76='20388be05f91c697b14256ccbab5619087cc21d6'
+SEAL_COUNT77=174
+JOB77='C47 corrected action proof app70 replay77'
 PHASES11=('PRE_ACTIVATE','POST_ACTIVATE','WELCOME_CHECK','WELCOME_READY','PRE_CONSENT','POST_CONSENT','GOALS_CHECK','GOALS_READY')
 RUNNER_BUNDLE11='internal.c47.native-ui.xctrunner'
 
@@ -226,6 +230,7 @@ def need11(value,code):
 def execution_domain12(ctx):
     need11(type(ctx['native_attempt'])is int,'NATIVE_ATTEMPT_TYPE')
     if ctx['native_attempt']==76 and ctx['job_name']==JOB14 and ctx.get('authorization')==AUTH14:return DOMAIN14
+    if ctx['native_attempt']==77 and ctx['job_name']==JOB77 and ctx.get('authorization')==AUTH14:return DOMAIN14
     if ctx['native_attempt']==75 and ctx['job_name']==JOB13 and ctx.get('authorization')==AUTH13:return DOMAIN13
     if ctx['native_attempt']==73 and ctx['job_name']==JOB11:return DOMAIN11
     need11(type(ctx['native_attempt'])is int and ctx['native_attempt']in (74,75) and
@@ -396,7 +401,7 @@ ATTACH_SWIFT11=r'''
         // After activation, also bind the actual XCUI application hierarchy to it.
         if phase != "PRE_ACTIVATE" {
             let description = app.debugDescription
-            let expression = try! NSRegularExpression(pattern: "(?m)^(?:Attributes: | â†’)?Application, 0x[0-9a-fA-F]+, pid: ([0-9]+),")
+            let expression = try! NSRegularExpression(pattern: "(?m)^(?:Attributes: | Ã¢â€ â€™)?Application, 0x[0-9a-fA-F]+, pid: ([0-9]+),")
             let range = NSRange(description.startIndex..<description.endIndex, in: description)
             let pids = Set(expression.matches(in: description, range: range).compactMap { match -> Int? in
                 guard let value = Range(match.range(at: 1), in: description) else { return nil }
@@ -541,6 +546,26 @@ def context14(r,n,token):
     ctx={'repository':'TasfiqJ/onSkin','runner_head':head,'runner_tree':g('rev-parse','HEAD^{tree}'),'run_id':run_id,'job_id':job['id'],
         'run_attempt':1,'native_attempt':76,'job_name':JOB14,'runner_id':job['runner_id'],'configured_labels':job['labels'],'authorization':AUTH14}
     r.receipt.update(replay_execution11=ctx,host_first12=True,prepared_observer13=True,targeted_platform14=True);r.persist();return ctx
+
+
+def context77(r,n,token):
+    env=r.env;need11(sys.platform=='darwin'and env.get('GITHUB_REPOSITORY')=='TasfiqJ/onSkin'and env.get('GITHUB_EVENT_NAME')=='pull_request'and
+        env.get('GITHUB_JOB')=='native-build'and env.get('GITHUB_RUN_ATTEMPT')=='1','ONE_HOSTED77')
+    head=env.get('C47_EXPECTED_HEAD','');need11(re.fullmatch('[a-f0-9]{40}',head),'EXPECTED_RUNNER_HEAD')
+    g=lambda *a:subprocess.check_output(['git','--no-replace-objects',*a],cwd=r.root,env=env,timeout=30).decode().strip()
+    need11(g('rev-parse','HEAD')==head and g('rev-list','--count',n.BASE+'..HEAD')==str(SEAL_COUNT77)and
+        g('rev-parse','HEAD~'+str(SEAL_COUNT77-172))==SOURCE76 and g('rev-parse',SOURCE76+'^{tree}')==TREE76 and
+        not g('status','--porcelain'),'EXACT_CORRECTION77_SOURCE172_PREFIX')
+    run_id=int(env['GITHUB_RUN_ID']);jobs,_=n._stage_api('/actions/runs/'+str(run_id)+'/jobs?per_page=100',token)
+    selected=[q for q in jobs['jobs']if q['name']==JOB77];need11(len(selected)==1,'EXECUTION_JOB_UNIQUE');job=selected[0]
+    need11(job['head_sha']==head and job['run_id']==run_id and type(job['run_attempt'])is int and job['run_attempt']==1 and job['status']=='in_progress'and
+        type(job['runner_id'])is int and job['runner_id']>0 and job['labels']==['macos-26-intel'],'ACTUAL_STANDARD_JOB')
+    ctx={'repository':'TasfiqJ/onSkin','runner_head':head,'runner_tree':g('rev-parse','HEAD^{tree}'),'run_id':run_id,'job_id':job['id'],
+        'run_attempt':1,'native_attempt':77,'job_name':JOB77,'runner_id':job['runner_id'],'configured_labels':job['labels'],'authorization':AUTH14}
+    r.receipt.update(replay_execution11=ctx,host_first12=True,prepared_observer13=True,targeted_platform14=True,corrected_xcode77=True,
+        correction76={'head':SOURCE76,'tree':TREE76,'run_id':43119312843,'job_id':130855391100,
+            'raw_sha256':'4f54dfb5f812f9a0a56cf445db7464d0043781d1e980d6d38851aabb681ef059',
+            'boundary':'PROTOCOL13_ACTUAL_XCODE_OPTIONS_ACTION_ADVERTISEMENT'});r.persist();return ctx
 
 
 def settings_process14(raw,pid,executable,launch_start,observed_at,previous=None):
@@ -1054,9 +1079,11 @@ def prepare_runner13(r,n,project,products,device,env):
     operation=r.receipt['ui_operation13'];started=operation['started_ns'];deadline=operation['deadline_ns']
     need11(type(started)is int and type(deadline)is int and started<=time.monotonic_ns()<deadline<=started+900_000_000_000 and deadline<=int(r.deadline*1e9),'PROTOCOL13_SHARED_UI_ENVELOPE')
     n.write_json(r.output/'UI_OPERATION13.json',{'started_ns':started,'deadline_ns':deadline,'maximum_seconds':900,'test_maximum_seconds':600})
-    help_paths=r.run('diagnostic13-xcodebuild-help',['xcodebuild','-help'],timeout=min(30,remaining13(deadline,30)),required=False)
+    help_paths=r.run('diagnostic13-xcodebuild-help',['xcodebuild','-help'],timeout=min(30,remaining13(deadline,30)),required=True)
     help_text=b'\n'.join(n.read_native_file(p)for p in help_paths).decode('utf8')
-    need11(all(q in help_text for q in ['build-for-testing','test-without-building','-xctestrun','-derivedDataPath','-test-timeouts-enabled','-maximum-test-execution-time-allowance']),'PROTOCOL13_ACTUAL_XCODE_OPTIONS')
+    # Installed help advertises <buildaction>, not action names. Required build/test
+    # execution and verified products/results below remain the action-support proof.
+    need11(all(q in help_text for q in ['-xctestrun','-derivedDataPath','-test-timeouts-enabled','-maximum-test-execution-time-allowance']),'PROTOCOL13_ACTUAL_XCODE_OPTIONS')
     derived=products/'derived-ui13';need11(not derived.exists(),'PROTOCOL13_NEW_DERIVED')
     swift=project.parent/'native_ui47.swift';prefix_record=n.stage_json(n.read_native_file(r.output/'DIAGNOSTIC_PREFIX11.json'))
     need11(n.stage_file_digest(swift)==prefix_record['compiled_prefix'],'PROTOCOL13_COMPILER_AFTERIMAGE_BEFORE')
@@ -1266,7 +1293,8 @@ def lifecycle13(r,n,d,project,products,device,installed,inventory,envelope,env,a
 def main():
     if sys.argv[1:2]==['--test-command13']:
         need11(len(sys.argv)==3,'PROTOCOL13_TEST_COMMAND_ARGUMENT');return test_command13(Path(sys.argv[2]))
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');p.add_argument('--targeted-platform14',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');p.add_argument('--targeted-platform14',action='store_true');p.add_argument('--corrected-xcode77',action='store_true');args=p.parse_args()
+    if args.corrected_xcode77:args.targeted_platform14=True
     if args.targeted_platform14:args.prepared_observer13=True
     if args.prepared_observer13:args.host_first12=True
     if args.host_first12:args.same_process11=True
@@ -1278,10 +1306,10 @@ def main():
     def coordinator_timeout(*_):raise ValueError('C47_REPLAY11_COORDINATOR_MAX84'if args.same_process11 else'C47_REPLAY10_COORDINATOR_MAX84')
     signal.signal(signal.SIGALRM,coordinator_timeout);signal.alarm(84*60)
     r=n.Runner(root,output,seconds=78*60);coordinator_deadline=r.deadline+6*60
-    r.receipt.update(stage='diagnostic-targeted-platform14'if args.targeted_platform14 else'diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
+    r.receipt.update(stage='diagnostic-corrected-xcode77'if args.corrected_xcode77 else'diagnostic-targeted-platform14'if args.targeted_platform14 else'diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
         application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH14 if args.targeted_platform14 else AUTH13 if args.prepared_observer13 else AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
     try:
-        ctx=(context14 if args.targeted_platform14 else context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
+        ctx=(context77 if args.corrected_xcode77 else context14 if args.targeted_platform14 else context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
         if args.host_first12:early_host12(r,n)
         run,_=n._stage_api('/actions/runs/'+str(PRODUCER['run_id']),token)
         job,_=n._stage_api('/actions/jobs/'+str(PRODUCER['job_id']),token)
@@ -1312,6 +1340,6 @@ def main():
             'runner_source':r.receipt.get('source'),'execution':r.receipt.get('replay_execution11'if args.same_process11 else'replay_execution10'),'files':files,
             'ordinary_admitted':False,'internal_admitted':False,'producer70_sealed':False,'release':'NO_GO'})
         if not policy['upload_within_limit']:code=1
-    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':76 if args.targeted_platform14 else 75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
+    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':77 if args.corrected_xcode77 else 76 if args.targeted_platform14 else 75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
     return code
 if __name__=='__main__':raise SystemExit(main())

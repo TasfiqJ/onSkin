@@ -517,6 +517,12 @@ def source_scope05(phase, root):
     platform14_prefix=g('rev-list','--reverse',verifier.BASE+'..'+platform14_checkpoint).splitlines()
     if len(platform14_prefix)!=170 or result['commits'][:170]!=platform14_prefix:
         raise ValueError('C47_PLATFORM14_EXACT170_PREFIX')
+    correction77_checkpoint='629e2a2cccd3661d14d34a2121b8667932c906d8'
+    if g('rev-parse',correction77_checkpoint+'^{tree}')!='20388be05f91c697b14256ccbab5619087cc21d6' or g('merge-base',correction77_checkpoint,result['head'])!=correction77_checkpoint:
+        raise ValueError('C47_CORRECTION77_PRESERVED172_CHECKPOINT')
+    correction77_prefix=g('rev-list','--reverse',verifier.BASE+'..'+correction77_checkpoint).splitlines()
+    if len(correction77_prefix)!=172 or result['commits'][:172]!=correction77_prefix:
+        raise ValueError('C47_CORRECTION77_EXACT172_PREFIX')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
         'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':73,
         'historical_validator_file_modified':False,'diagnostic_only':False,

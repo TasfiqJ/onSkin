@@ -1877,7 +1877,11 @@ class TargetedPlatform14Tests(unittest.TestCase):
 
     def test_current_one_shot_uses_c13_lifecycle_and_historical_ordinary_helpers_unchanged(self):
         import inspect
-        q,_,_,_,_,_=self.fixture();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        q,_,_,_,_,_=self.fixture()
+        # Preserve complete original primary76 witness; secondary77 has its own strict current guard.
+        raw=subprocess.check_output(['git','show','629e2a2cccd3661d14d34a2121b8667932c906d8:.github/workflows/campaign47-native-runtime.yml'],cwd=ROOT)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'c28425118d3a12ce23fa89f7e5cc15281ef23445060bbfe1f28cb10d500a4c3c')
+        workflow=raw.decode()
         for text in ['commits == 172','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--targeted-platform14',q.JOB14]:self.assertIn(text,workflow)
         self.assertEqual(workflow.count('  native-build:'),1);self.assertNotIn('workflow_dispatch',workflow)
         self.assertEqual(q.SEAL_COUNT14,172);self.assertEqual(q.START14,'ca3229765a9a1b2519c481e78e9b2be78a29e58f')
@@ -1889,5 +1893,95 @@ class TargetedPlatform14Tests(unittest.TestCase):
             self.assertEqual((ROOT/path).read_bytes(),subprocess.check_output(['git','show',q.START14+':'+path],cwd=ROOT))
         source=inspect.getsource(q.execute);self.assertIn('if r.receipt.get(\'targeted_platform14\')is True:platform_bootstrap14(r,n,device)',source)
         self.assertIn('else:n.platform_bootstrap36(r,device)',source);self.assertIn('lifecycle13(',source)
+
+
+class HelpAction77Tests(unittest.TestCase):
+    OPTIONS=('-xctestrun','-derivedDataPath','-test-timeouts-enabled','-maximum-test-execution-time-allowance')
+    def fixture(self,root,help_bytes=None,*,help_failure=False):
+        import time
+        from types import SimpleNamespace
+        q=PinnedApp70Replay10Tests().replay();native=q.module(ROOT,'native_runtime47.py');output=root/'out';output.mkdir();products=root/'products';products.mkdir();project=root/'runner/C47NativeUI.xcodeproj';project.parent.mkdir();project.mkdir()
+        swift=project.parent/'native_ui47.swift';swift.write_bytes(b'owned synthetic compiled-source identity fixture')
+        native.write_json(output/'DIAGNOSTIC_PREFIX11.json',{'compiled_prefix':q.identity(swift.read_bytes())})
+        help_bytes=help_bytes if help_bytes is not None else ('Usage: xcodebuild [<buildaction>]...\nOptions: '+' '.join(self.OPTIONS)).encode()
+        a=output/'help.stdout';b=output/'help.stderr';a.write_bytes(b'');b.write_bytes(help_bytes)
+        now=time.monotonic_ns();calls=[];r=SimpleNamespace(output=output,deadline=(now+900_000_000_000)/1e9,receipt={'ui_operation13':{'started_ns':now,'deadline_ns':now+900_000_000_000}})
+        class RequiredBuildFailure(Exception):pass
+        def run(name,argv,**kwargs):
+            calls.append({'name':name,'argv':list(map(str,argv)),'required':kwargs.get('required',True),'timeout':kwargs['timeout']})
+            if name=='diagnostic13-xcodebuild-help':
+                if help_failure:raise subprocess.CalledProcessError(64,argv)
+                return a,b
+            if name=='diagnostic13-build-for-testing':raise RequiredBuildFailure('owned synthetic required-action failure')
+            raise AssertionError('no later test, observer or product may be admitted')
+        r.run=run
+        n=SimpleNamespace(write_json=native.write_json,read_native_file=lambda p:Path(p).read_bytes(),stage_json=json.loads,
+            stage_file_digest=lambda p:q.identity(Path(p).read_bytes()),SIMULATOR_BUILD_FLAGS=native.SIMULATOR_BUILD_FLAGS)
+        return q,r,n,project,products,calls,RequiredBuildFailure
+
+    def test_generic_installed_help_grammar_requires_actual_build_not_action_advertisement(self):
+        with tempfile.TemporaryDirectory(prefix='c47-help77-')as tmp:
+            q,r,n,project,products,calls,failed=self.fixture(Path(tmp).resolve())
+            with self.assertRaises(failed):q.prepare_runner13(r,n,project,products,'11111111-1111-1111-1111-111111111111',{})
+            self.assertEqual([c['name']for c in calls],['diagnostic13-xcodebuild-help','diagnostic13-build-for-testing'])
+            self.assertTrue(all(c['required']for c in calls));self.assertEqual(calls[0]['timeout'],30);self.assertLessEqual(calls[1]['timeout'],900)
+            self.assertEqual(calls[1]['argv'][:2],['xcodebuild','build-for-testing']);self.assertFalse((products/'derived-ui13').exists())
+
+    def test_each_required_option_missing_failed_help_and_invalid_encoding_stay_closed(self):
+        import time
+        raw=('Usage: xcodebuild [<buildaction>]...\nOptions: '+' '.join(self.OPTIONS)).encode()
+        for bad in [*(raw.replace(flag.encode(),b'')for flag in self.OPTIONS),b'',b'\xff']:
+            with self.subTest(bad=bad[:25]),tempfile.TemporaryDirectory(prefix='c47-help77-')as tmp:
+                q,r,n,project,products,calls,failed=self.fixture(Path(tmp).resolve(),bad)
+                with self.assertRaises((ValueError,UnicodeDecodeError)):q.prepare_runner13(r,n,project,products,'11111111-1111-1111-1111-111111111111',{})
+                self.assertEqual([c['name']for c in calls],['diagnostic13-xcodebuild-help']);self.assertFalse((products/'derived-ui13').exists())
+        with tempfile.TemporaryDirectory(prefix='c47-help77-')as tmp:
+            q,r,n,project,products,calls,failed=self.fixture(Path(tmp).resolve(),help_failure=True)
+            with self.assertRaises(subprocess.CalledProcessError):q.prepare_runner13(r,n,project,products,'11111111-1111-1111-1111-111111111111',{})
+            self.assertTrue(calls[0]['required']);self.assertEqual(len(calls),1)
+        with tempfile.TemporaryDirectory(prefix='c47-help77-')as tmp:
+            q,r,n,project,products,calls,failed=self.fixture(Path(tmp).resolve());r.receipt['ui_operation13']['deadline_ns']=time.monotonic_ns()-1
+            with self.assertRaisesRegex(ValueError,'SHARED_UI_ENVELOPE'):q.prepare_runner13(r,n,project,products,'11111111-1111-1111-1111-111111111111',{})
+            self.assertEqual(calls,[])
+
+    def test_actual_immutable76_function_reproduces_false_help_rejection_and_current_preserves_action_refusal(self):
+        import ast,inspect
+        raw=subprocess.check_output(['git','show','629e2a2cccd3661d14d34a2121b8667932c906d8:scripts/release/full-app-j01/pinned_app70_replay10.py'],cwd=ROOT)
+        node=next(n for n in ast.parse(raw).body if isinstance(n,ast.FunctionDef)and n.name=='prepare_runner13')
+        with tempfile.TemporaryDirectory(prefix='c47-help77-old-')as tmp:
+            q,r,n,project,products,calls,failed=self.fixture(Path(tmp).resolve());scope=dict(vars(q));exec(compile(ast.Module(body=[node],type_ignores=[]),'actual76-prepare-runner','exec'),scope)
+            with self.assertRaisesRegex(ValueError,'PROTOCOL13_ACTUAL_XCODE_OPTIONS'):scope['prepare_runner13'](r,n,project,products,'11111111-1111-1111-1111-111111111111',{})
+            self.assertEqual(len(calls),1)
+        source=inspect.getsource(q.prepare_runner13)+inspect.getsource(q.lifecycle13)
+        for term in ['build-for-testing','test-without-building','remaining13(deadline,900)',"'-maximum-test-execution-time-allowance','600'",'n.bundle_inventory','PROTOCOL13_COMPILER_AFTERIMAGE_BEFORE','PROTOCOL13_COMPILER_AFTERIMAGE_AFTER','xctestrun_bytes','PROTOCOL13_BUILT_INPUTS_NOT_ALTERED']:
+            self.assertIn(term,source)
+
+    def test_secondary77_exact_one_shot_preserves_primary76_identity_and_rejects_other_slots(self):
+        import inspect
+        from types import SimpleNamespace
+        from unittest.mock import Mock,patch
+        q=PinnedApp70Replay10Tests().replay();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        for term in ['commits == 174','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--corrected-xcode77',q.JOB77]:self.assertIn(term,workflow)
+        self.assertEqual(workflow.count('  native-build:'),1);self.assertNotIn('workflow_dispatch',workflow);self.assertEqual(q.SEAL_COUNT77,174)
+        self.assertEqual(q.SOURCE76,'629e2a2cccd3661d14d34a2121b8667932c906d8');self.assertIn('EXACT_CORRECTION77_SOURCE172_PREFIX',inspect.getsource(q.context77))
+        for attempt,job in [(76,q.JOB14),(77,q.JOB77)]:self.assertEqual(q.execution_domain12({'native_attempt':attempt,'job_name':job,'authorization':q.AUTH14}),q.DOMAIN14)
+        for ctx in [{'native_attempt':77,'job_name':q.JOB14,'authorization':q.AUTH14},{'native_attempt':78,'job_name':q.JOB77,'authorization':q.AUTH14},{'native_attempt':True,'job_name':q.JOB77,'authorization':q.AUTH14},{'native_attempt':77,'job_name':q.JOB77,'authorization':q.AUTH13}]:
+            with self.assertRaises(ValueError):q.execution_domain12(ctx)
+        env={'GITHUB_REPOSITORY':'TasfiqJ/onSkin','GITHUB_EVENT_NAME':'pull_request','GITHUB_JOB':'native-build','GITHUB_RUN_ATTEMPT':'1','C47_EXPECTED_HEAD':'d'*40,'GITHUB_RUN_ID':'123'}
+        job={'name':q.JOB77,'head_sha':'d'*40,'run_id':123,'run_attempt':1,'status':'in_progress','runner_id':8,'labels':['macos-26-intel'],'id':456}
+        r=SimpleNamespace(env=env,root=ROOT,receipt={},persist=Mock());n=SimpleNamespace(BASE='02aa4ba879fb844f3ca0aa929591203ee45f4163',_stage_api=Mock(return_value=({'jobs':[job]},None)))
+        def git(argv,**kwargs):
+            args=argv[2:]
+            if args==['rev-parse','HEAD']:return b'd'*40
+            if args[:2]==['rev-list','--count']:return b'174'
+            if args==['rev-parse','HEAD~2']:return q.SOURCE76.encode()
+            if args==['rev-parse',q.SOURCE76+'^{tree}']:return q.TREE76.encode()
+            if args==['status','--porcelain']:return b''
+            if args==['rev-parse','HEAD^{tree}']:return b'e'*40
+            raise AssertionError(args)
+        with patch.object(q.sys,'platform','darwin'),patch.object(q.subprocess,'check_output',side_effect=git):
+            ctx=q.context77(r,n,'owned-fixture-token');self.assertEqual(ctx['native_attempt'],77);self.assertTrue(r.receipt['corrected_xcode77'])
+            env['GITHUB_RUN_ATTEMPT']='2'
+            with self.assertRaisesRegex(ValueError,'ONE_HOSTED77'):q.context77(r,n,'owned-fixture-token')
 
 if __name__=='__main__':unittest.main()
