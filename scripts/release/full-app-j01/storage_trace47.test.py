@@ -1905,7 +1905,9 @@ class HelpAction77Tests(unittest.TestCase):
         native.write_json(output/'DIAGNOSTIC_PREFIX11.json',{'compiled_prefix':q.identity(swift.read_bytes())})
         help_bytes=help_bytes if help_bytes is not None else ('Usage: xcodebuild [<buildaction>]...\nOptions: '+' '.join(self.OPTIONS)).encode()
         a=output/'help.stdout';b=output/'help.stderr';a.write_bytes(b'');b.write_bytes(help_bytes)
-        now=time.monotonic_ns();calls=[];r=SimpleNamespace(output=output,deadline=(now+900_000_000_000)/1e9,receipt={'ui_operation13':{'started_ns':now,'deadline_ns':now+900_000_000_000}})
+        now=time.monotonic_ns();calls=[];outer=(now+900_000_000_000)/1e9
+        # The synthetic inner bound must fit the represented outer bound on every host.
+        r=SimpleNamespace(output=output,deadline=outer,receipt={'ui_operation13':{'started_ns':now,'deadline_ns':min(now+900_000_000_000,int(outer*1e9))}})
         class RequiredBuildFailure(Exception):pass
         def run(name,argv,**kwargs):
             calls.append({'name':name,'argv':list(map(str,argv)),'required':kwargs.get('required',True),'timeout':kwargs['timeout']})
@@ -1955,6 +1957,20 @@ class HelpAction77Tests(unittest.TestCase):
         source=inspect.getsource(q.prepare_runner13)+inspect.getsource(q.lifecycle13)
         for term in ['build-for-testing','test-without-building','remaining13(deadline,900)',"'-maximum-test-execution-time-allowance','600'",'n.bundle_inventory','PROTOCOL13_COMPILER_AFTERIMAGE_BEFORE','PROTOCOL13_COMPILER_AFTERIMAGE_AFTER','xctestrun_bytes','PROTOCOL13_BUILT_INPUTS_NOT_ALTERED']:
             self.assertIn(term,source)
+
+    def test_fixture_rounding_never_exceeds_either_original_bound_and_expiry_stays_closed(self):
+        import time
+        from unittest.mock import patch
+        for now in [10**16+1,10**16+3]:
+            with self.subTest(now=now),tempfile.TemporaryDirectory(prefix='c47-help77-clock-')as tmp,patch.object(time,'monotonic_ns',return_value=now):
+                q,r,n,project,products,calls,failed=self.fixture(Path(tmp).resolve())
+                inner=r.receipt['ui_operation13']['deadline_ns']
+                self.assertLessEqual(inner,now+900_000_000_000);self.assertLessEqual(inner,int(r.deadline*1e9))
+                with self.assertRaises(failed):q.prepare_runner13(r,n,project,products,'11111111-1111-1111-1111-111111111111',{})
+                self.assertEqual([c['name']for c in calls],['diagnostic13-xcodebuild-help','diagnostic13-build-for-testing'])
+                r.receipt['ui_operation13']['deadline_ns']=now-1;calls.clear()
+                with self.assertRaisesRegex(ValueError,'SHARED_UI_ENVELOPE'):q.prepare_runner13(r,n,project,products,'11111111-1111-1111-1111-111111111111',{})
+                self.assertEqual(calls,[])
 
     def test_secondary77_exact_one_shot_preserves_primary76_identity_and_rejects_other_slots(self):
         import inspect
