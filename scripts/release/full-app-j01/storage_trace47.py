@@ -445,7 +445,12 @@ def source_scope05(phase, root):
                'apps/mobile/src/lib/auth/localAccountIsolation.ts',
                'scripts/phase9/ios-privacy-lock-succession46.mjs',
                'scripts/release/full-app-j01/native_preflight09.test.mjs',
-               'scripts/release/full-app-j01/pinned_app70_replay10.py'}
+               'scripts/release/full-app-j01/pinned_app70_replay10.py',
+               'scripts/release/full-app-j01/observer_probe16.py',
+               'scripts/release/full-app-j01/observer_probe16.test.py',
+               'docs/brain/c47-c16/README.md',
+               'docs/brain/c47-c16/observer-preparation16.patch',
+               }
     if verifier.PATHS & additions:
         raise ValueError('C47_STORAGE05_NEW_PATH_PREDECESSOR_COLLISION')
     verifier.PATHS=frozenset(verifier.PATHS)|additions
@@ -479,8 +484,8 @@ def source_scope05(phase, root):
     sealed_prefix=g('rev-list','--reverse',verifier.BASE+'..'+sealed_checkpoint).splitlines()
     if len(sealed_prefix)!=103 or result['commits'][:103]!=sealed_prefix:
         raise ValueError('C47_STORAGE05_EXACT103_ORDINARY_SOURCE50_PREFIX')
-    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=73:
-        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE73')
+    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=77:
+        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE77')
     preflight09_checkpoint='2b35b7399ffa8727f3166a0c35fb93e20f33611b'
     if g('rev-parse',preflight09_checkpoint+'^{tree}')!='87d82877d1810141edbc9d25ed4ed51929e1f736' or g('merge-base',preflight09_checkpoint,result['head'])!=preflight09_checkpoint:
         raise ValueError('C47_PREFLIGHT09_PRESERVED145_CHECKPOINT')
@@ -530,7 +535,7 @@ def source_scope05(phase, root):
     if len(inventory15_prefix)!=177 or result['commits'][:177]!=inventory15_prefix:
         raise ValueError('C47_INVENTORY15_EXACT177_PREFIX')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
-        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':73,
+        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':77,
         'historical_validator_file_modified':False,'diagnostic_only':False,
         'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC73_NO_NATIVE_ADMISSION'}}
 

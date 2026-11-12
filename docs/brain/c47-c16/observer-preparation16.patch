@@ -1,0 +1,41 @@
+--- a/scripts/release/full-app-j01/pinned_app70_replay10.py
++++ b/scripts/release/full-app-j01/pinned_app70_replay10.py
+@@ -308,6 +308,8 @@
+     """Static source-operation only; never retain private command arguments."""
+     cmd=error.cmd
+     if type(cmd)not in(list,tuple)or len(cmd)>6 or not all(type(q)is str and len(q)<=512 for q in cmd):return 'UNKNOWN_OPERATION'
++    if list(cmd)==['/bin/ps','-axo','pid=,lstart=,comm=']:return 'RUNNER_PROCESS_DISCOVERY'
++    if len(cmd)==5 and list(cmd[:2])==['/bin/ps','-p']and re.fullmatch(r'[1-9][0-9]*,[1-9][0-9]*',cmd[2])and cmd[3:]in(['-o','pid=,lstart=,comm='],('-o','pid=,lstart=,comm=')):return 'APP_RUNNER_PROCESS_PAIR_PS'
+     if len(cmd)==5 and list(cmd[:2])==['/bin/ps','-p']and cmd[2].isdigit()and cmd[3]=='-o':
+         if cmd[4]=='pid=,lstart=,comm=':return 'WARM_PROCESS_PS'
+         if cmd[4]=='comm=':return 'BOUNDARY_EXECUTABLE_PS'
+@@ -1321,7 +1323,9 @@
+     """Discover an EXECUTING runner first; exactly one container query, never during compilation."""
+     if r.receipt.get('inventory15')is True:need11(state['invalid']is None and not state['armed']and not state['checkpoints'],'PROTOCOL13_TERMINAL')
+     state['operation']='RUNNER_DISCOVERY'
+-    p=subprocess.run(['/bin/ps','-axo','pid=,lstart=,comm='],capture_output=True,env={**r.env,'LC_ALL':'C'},timeout=remaining13(deadline))
++    probe=module(Path(__file__).resolve().parents[3],'observer_probe16.py')
++    p=probe.run_preparation_probe16(state,'RUNNER_PROCESS_DISCOVERY',
++        ['/bin/ps','-axo','pid=,lstart=,comm='],{**r.env,'LC_ALL':'C'},deadline)
+     need11(p.returncode==0 and len(p.stdout)<=1024*1024,'PROTOCOL13_RUNNER_PROCESS_LIST')
+     expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application';found=[]
+     for line in p.stdout.splitlines():
+@@ -1339,7 +1343,8 @@
+     need11(installed_inventory==prepared['inventory'],'PROTOCOL13_INSTALLED_RUNNER_BYTES')
+     for relative,wanted in prepared['binaries']:state['_binaries'].append(pin_binary13(installed/relative,wanted))
+     state['operation']='RUNNER_NAMESPACE';need11(state['runner_discovery_queries']==0,'PROTOCOL13_DISCOVERY_REPEATED');state['runner_discovery_queries']+=1
+-    p=subprocess.run(['xcrun','simctl','get_app_container',device,RUNNER_BUNDLE11,'data'],capture_output=True,env=r.env,timeout=remaining13(deadline))
++    p=probe.run_preparation_probe16(state,'RUNNER_DATA_CONTAINER',
++        ['xcrun','simctl','get_app_container',device,RUNNER_BUNDLE11,'data'],r.env,deadline)
+     need11(p.returncode==0 and 0<len(p.stdout)<=4096,'PROTOCOL13_EXECUTING_RUNNER_CONTAINER')
+     data=Path(p.stdout.decode().strip());expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'
+     need11(data.parent==expected and str(uuid.UUID(data.name)).lower()==data.name.lower(),'PROTOCOL13_OWN_RUNNER_CONTAINER')
+@@ -1353,7 +1358,7 @@
+     try:
+         target.mkdir(exist_ok=True);directory13(target)
+         need11(state['prepared_ns']>=prepared['prepared_ns'],'PROTOCOL13_NOT_BUILT')
+-        while not stop.wait(.01):
++        while not stop.wait(.25 if 'runner'not in state else .01):
+             remaining13(deadline,900);need11(state['invalid']is None,'PROTOCOL13_TERMINAL')
+             if 'runner'not in state:
+                 if not discover13(r,n,state,envelope,device,prepared,deadline):continue

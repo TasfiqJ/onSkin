@@ -1,4 +1,4 @@
-# C15 retained operands diagnostic78 ONLY; exact PR48/179/a1; historical producer149 remains diagnostic-only.
+# C16 diagnostic79 preparation; execution locked until source/capacity qualification is restored.
 name: Campaign47 Simulator native runtime
 
 on:
@@ -29,11 +29,11 @@ env:
 
 jobs:
   native-build:
-    name: C47 retained runner inventory app70 replay78
+    name: C47 C16 preparation diagnostic79
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 179 && github.run_attempt == 1
+    if: false && github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 183 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -59,7 +59,7 @@ jobs:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
           C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
-        run: python3 -I -B scripts/release/full-app-j01/pinned_app70_replay10.py --retained-inventory15 --output "$RUNNER_TEMP/c47-evidence"
+        run: python3 -I -B scripts/release/full-app-j01/pinned_app70_replay10.py --autonomous16 --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
@@ -88,7 +88,7 @@ jobs:
         if: always() && steps.evidence-budget.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: campaign47-retained-inventory-app70-replay78-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: campaign47-autonomous16-app70-diagnostic79-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/c47-evidence
           if-no-files-found: error
           retention-days: 3

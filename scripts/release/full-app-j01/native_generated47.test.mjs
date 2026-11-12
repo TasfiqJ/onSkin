@@ -40,9 +40,13 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
   // New current source is independently pinned; the historical202 witness remains exact.
   const replay10 = 'scripts/release/full-app-j01/pinned_app70_replay10.py';
-  const beforeReplay10 = SOURCE_PATHS47.filter(path => path !== replay10);
+  const beforeReplay10 = SOURCE_PATHS47.filter(path => path !== replay10 && !path.includes('observer_probe16.'));
   assert.equal(beforeReplay10.length, 53);
-  assert.equal(SOURCE_PATHS47.length, 54);
+  assert.equal(SOURCE_PATHS47.length, 56);
+  assert.deepEqual(SOURCE_PATHS47.filter(path => path.includes('observer_probe16.')), [
+    'scripts/release/full-app-j01/observer_probe16.py',
+    'scripts/release/full-app-j01/observer_probe16.test.py',
+  ]);
   assert.equal(SOURCE_PATHS47.filter(path => path === replay10).length, 1);
   const exact153 = spawnSync('git', ['--no-replace-objects', 'show',
     'f4fb6fb488d119d536fe189bf872512b27bfc719:' + DESCRIPTOR47],

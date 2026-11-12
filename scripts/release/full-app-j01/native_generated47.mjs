@@ -37,6 +37,9 @@ export const STORAGE_ORIGIN05 = {
   "internalAdmission": false
 };
 export const SOURCE_PATHS47 = [
+  'scripts/release/full-app-j01/observer_probe16.py',
+  'scripts/release/full-app-j01/observer_probe16.test.py',
+
   'scripts/release/full-app-j01/pinned_app70_replay10.py',
   'scripts/phase9/ios-privacy-lock-succession46.mjs',
   'scripts/release/full-app-j01/native_preflight09.test.mjs',

@@ -666,6 +666,42 @@
       "causal_need": "Explicit C10 separate historical pinned diagnostic replay; no incomplete ordinary producer import",
       "invariant": "Exact app70/source149/current runner/new PID identities and original closed-stage/ordinary refusals unchanged",
       "validation": "Eight replay negatives plus unchanged full source/native/privacy controls and actual sole72 evidence"
+    },
+    {
+      "path": "scripts/release/full-app-j01/observer_probe16.py",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "C16 explicitly authorized Brain preparation probe contribution, independently reviewed and corrected bounded capture.",
+      "invariant": "Preparation-only <=15 seconds within original UI deadline. No identity/readiness/permission admission.",
+      "validation": "Original15 policy controls preserved with bounded capture adapter; real overflow/timeout/concurrency/retention negatives; current complete source checkpoint required."
+    },
+    {
+      "path": "scripts/release/full-app-j01/observer_probe16.test.py",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "C16 explicitly authorized Brain preparation probe contribution, independently reviewed and corrected bounded capture.",
+      "invariant": "Preparation-only <=15 seconds within original UI deadline. No identity/readiness/permission admission.",
+      "validation": "Original15 policy controls preserved with bounded capture adapter; real overflow/timeout/concurrency/retention negatives; current complete source checkpoint required."
+    },
+    {
+      "path": "docs/brain/c47-c16/README.md",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "C16 explicitly authorized Brain preparation probe contribution, independently reviewed and corrected bounded capture.",
+      "invariant": "Preparation-only <=15 seconds within original UI deadline. No identity/readiness/permission admission.",
+      "validation": "Original15 policy controls preserved with bounded capture adapter; real overflow/timeout/concurrency/retention negatives; current complete source checkpoint required."
+    },
+    {
+      "path": "docs/brain/c47-c16/observer-preparation16.patch",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "C16 explicitly authorized Brain preparation probe contribution, independently reviewed and corrected bounded capture.",
+      "invariant": "Preparation-only <=15 seconds within original UI deadline. No identity/readiness/permission admission.",
+      "validation": "Original15 policy controls preserved with bounded capture adapter; real overflow/timeout/concurrency/retention negatives; current complete source checkpoint required."
     }
   ],
   "amendments": [
@@ -11027,6 +11063,122 @@
       "requiredRevalidation": "Exact corrected final-source controls and final-head CI; no further Mac.",
       "release": "NO_GO",
       "causal_boundary": "C15 finite native STOP / PARTIAL_BLOCKED / NO_GO. Actual native78 ran the exact published179 81f3c3431f658fa8c23bada7bef71630459d4afe/tree57141eb84483efb8cad27ee7fab2da2e54602db9 on the sole standard serial Mac. Original30 source cases/ordered60, Mac100 observer groups/runtime157/sign15, normal clean install/hooks/exact inputs, targeted Settings launch-PID/runtime/start recheck/required termination, unchanged historical app70 input/signature checks before/after, actual app launch/frozen process/30-second survival, and real isolated UI-runner build-for-testing passed. The authenticated raw artifact contains231members/230payload hashes/176command streams;88commands have87PASS and one owned-aborted UI command exit-15.\nThe actual first refusal is C47_REPLAY11_OBSERVER_UNAVAILABLE: TimeoutExpired, PREPARATION/RUNNER_DISCOVERY, timeout_seconds3, timeout_operationUNKNOWN_OPERATION. No executing runner was bound, no runner namespace was obtained, READY stayed false, process_checks0/checkpoints0 and no actual consent tap. Installed-runner inventory comparison was NOT reached; RUNNER_INVENTORY15.json and an installed-code snapshot are absent. Prepared and final build-product comparison records are complete and equal, including exact ordered inventories and raw xctestrun operands. No XCTest result bundle was produced; executed method count is UNKNOWN, never a zero-test PASS. Original native77 differing installed operand/cause and native67 post-consent privacy origin remain UNKNOWN. No app/privacy/storage/signing repair is justified by this OS/harness timeout. Historical instrumented producer149 remains distinct from source179/execution78 and cannot qualify ordinary3/internal5.\nThe C15 gate therefore REQUIRES STOP: only78 consumed;79-82 required UNUSED, may-start-now0. No correction79, fresh-host/unchanged retry, third diagnostic, attempt2, hidden or parallel Mac. Unknown native operation and missing runner/inventory binding do not unlock another job. Clean ordinary product, full ordinary3, internal5 and export destination/schema/content SHA/removal are NOT_RUN. All original timer, safety, source/signature/inventory, owner/consent/deletion and private-evidence rules remain unchanged. Owned shutdown completed; all actual artifacts and prior failures are retained for the private authenticated return.\nSeparately, checking the new retainer against the real78 receipt schema exposed a deterministic SOURCE-ONLY defect in its unreached source check. Its wire identity is exactly{head,tree}; the authenticated source receipt additionally has base/base_tree/helper/helper_sha256/inventory. Comparing these entire dictionaries always falsely refuses a valid binding. A real-code-tree local RED on exact179 reproduces INVENTORY15_SOURCE_DEVICE before capture. The minimal successor compares the exact two schema-defined identity fields while preserving full original source authentication, strict wire schemas and the original raw inventory equality. Missing or changed head/tree still denies; a valid richer receipt retains the same operands without arming READY. All100 existing test method ASTs/assertions remain exact, plus one adverse schema-binding group (101total). This correction was NOT reached in78, does NOT repair or explain its timeout, is NOT natively qualified and does NOT authorize79. No timeout, protocol, app, ordinary Swift/helper/Ruby, dependency, signing or global source-equality policy changes.\nExact final corrected material source controls and final-head CI are pending at this checkpoint; later authenticated results must be attributed to their real source. Workflow179/a1 remains immutable and cannot allocate a Mac at the final later head. All179 published ancestors, accepted C46 base, main and original frozen plan remain exact. Same draft/open/unmerged PR48, auto-merge/maintainer editsOFF. SDK/Doctor/Security/candidate29/G97/scanners/rule custody and all historical/supplemental failed profiles remain unwaived. All38 requirements and18 owner gates remain unaccepted. No merge/deployment/release/owner/M2/J01/clinical/Apple account/billing privilege change/Campaign48. Complete final-source CI, full authenticated report/ZIP/external hashes/fresh/tamper/source proofs and stop for independent Brain review."
+    },
+    {
+      "UTC": "2026-11-12T20:43:32.136259+00:00",
+      "authorization": "BRAIN-C47-AUTONOMOUS-NATIVE-COMPLETION16",
+      "preimage_head": "51769a8f19eb605ff1b36336c685c06e9668ab76",
+      "preimage_tree": "1a45a01e8c599a3a1cdd5814f385b108606b5ece",
+      "paths": [
+        {
+          "path": "scripts/release/full-app-j01/observer_probe16.py",
+          "state": "ABSENT"
+        },
+        {
+          "path": "scripts/release/full-app-j01/observer_probe16.test.py",
+          "state": "ABSENT"
+        },
+        {
+          "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+          "state": "PRESENT",
+          "bytes": 134792,
+          "sha256": "d8fc43a49ec18afe44922bf09747f596457ac227a708e39b7070fe5d17ca4212"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "state": "PRESENT",
+          "bytes": 244794,
+          "sha256": "1b732dc80418da7d56ccda4fe7ea0937380c318323642d5ca12841376bf5df8c"
+        },
+        {
+          "path": "docs/brain/c47-c16/README.md",
+          "state": "ABSENT"
+        },
+        {
+          "path": "docs/brain/c47-c16/observer-preparation16.patch",
+          "state": "ABSENT"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "state": "PRESENT",
+          "bytes": 23822,
+          "sha256": "64d9af4e18abea454eee553ff882833d2039974babff3740435296cdce5ea31a"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "state": "PRESENT",
+          "bytes": 4097,
+          "sha256": "b76edfe9ae059c6f71ebb707ddf34799fc74e62c417c22f246404a154c083c2f"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "state": "PRESENT",
+          "bytes": 873915,
+          "sha256": "d1bf244a52cc2285487ffee1678f058e7d99023b4520b47b0a650a0095fba63f"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "state": "PRESENT",
+          "bytes": 224824,
+          "sha256": "07fcfe1ace085c91c930721befa84efe3fa67aa4ba40156a4b56bdd54ed8441a"
+        },
+        {
+          "path": "PROGRESS.md",
+          "state": "PRESENT",
+          "bytes": 718342,
+          "sha256": "8d3de2d2dfefa5ec93ddaae02025f728d8124b057763b6ec6096f1bbe7fb8e7b"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "state": "PRESENT",
+          "bytes": 98904,
+          "sha256": "aa3ac00dd4fa04fef0335f43fb5cbe0ce467760eb4bf0bcfaab1f5ea8679b6a8"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "state": "PRESENT",
+          "bytes": 169028,
+          "sha256": "7ab429edc11b74dbabe049206941eb30f1d2a586d503ceec1eb490bcb8c55c44"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "state": "PRESENT",
+          "bytes": 69939,
+          "sha256": "f21d9d924bd5383b56559af55ed732ce7e4d55801c9cf235d462e73ff263f60f"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "state": "PRESENT",
+          "bytes": 65895,
+          "sha256": "0496c510ba4ba0c55c5c858589ab3a9511ae5b93ec60b40f8f8f5789c2e5e3e6"
+        }
+      ],
+      "invariant": "No app/privacy/consent permission changes; exact inventory equality and active 3/5/30 second bounds remain. Preparation-only bounded capture stays within original absolute UI deadline.",
+      "cause": "Retain actual preparation operation and bounded process outputs before terminal refusal; qualify Brain preparation contribution and its source/workflow custody.",
+      "native_started": [],
+      "release": "NO_GO"
+    },
+    {
+      "UTC": "2026-11-12T20:59:48.922256+00:00",
+      "authorization": "BRAIN-C47-AUTONOMOUS-NATIVE-COMPLETION16",
+      "status": "LOCAL_SOURCE_UNQUALIFIED_EXTERNAL_PERMISSION_BOUNDARY",
+      "native_started": [],
+      "unused_attempts": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86
+      ],
+      "remote_head": "51769a8f19eb605ff1b36336c685c06e9668ab76",
+      "release": "NO_GO",
+      "baseline_7122": "NOT_EXECUTED_SETUP_FAILED",
+      "native_workflow_locked": true,
+      "final_source_frozen_seal": "NOT_CLAIMED",
+      "cause_record": "C16 LOCAL SOURCE CHECKPOINT / PARTIAL_BLOCKED / PUSH_BLOCKED / NO_GO. No native starts79-86 were allocated. The actual Windows sandbox refuses the required dependency symlink (normal npm ci EPERM -4048); supported npm --install-links refuses the unchanged lockfile (EUSAGE missing packed decode-uri-component0.5.1), so neither install passed and dependencies/lock were not changed. Normal git push dry-run cannot launch the configured shell credential helper; a native invocation of the existing credential helper independently returns Failed to enumerate credentials [0x5] Access is denied. No GITHUB_TOKEN/GH_TOKEN is present. No account, credential, provider, signing or billing change was made. The available connector exposes per-file contents commits, not atomic publication of this reviewed source tree; it was not used to publish transient inconsistent code or trigger jobs. Current-source and zero-paid capacity qualifications cannot be completed here.\nBrain contribution disposition: revised partial integration, not acceptance. Original15 helper controls PASS; a real-process output-overflow RED is retained. Bounded capture now terminates/reaps the overflowing child, retains actual bounded failure streams/operation/timing/hash/errno with explicit truncation, and refuses concurrent/terminal/late probes. All21 helper controls and3 coordinator integrations PASS on Windows Python3.9. Existing101 observer test names remain;3 current methods were adapted for prospective77-path scope, the same subprocess transport fixture and an anchored immutable78 workflow witness. Add3 prospective coordinator controls,104groups total; complete104 suite NOT_QUALIFIED. No original inventory/permission/active3/5/30 assertion was removed. A fixture-path correction replaces an unwritable drive-root temporary path with the existing user temp directory; real hardlink publication still fails honestly with WinError5. It was not mocked away or converted to PASS.\nDevelopment outcomes remain distinct: initial observer invocation interrupted without complete result; bounded101 invocation TIMED_OUT at120seconds with existing dependency/fixture failures; focused custody20 first has26errors from AppContainer MAX_PATH, then20/0failures/15errors after a shorter owned temp path, now exposing actual hardlink denial. Runtime157 executed with156PASS/1ERROR (WinError206 from redirected TEMP); signing15 and properties passed. Forced uncached root four-worker, typecheck, lint, install-hook, full30, workflow19/current-source and dependency-graph invocations failed setup with missing dependencies;7122 baseline was NOT_EXECUTED, never a zero-case PASS. Raw outputs retained outside source. No current-source equivalence or historical C15 pass erases these failures.\nNo app source or consent/owner/age/encryption/withdrawal/deletion/recovery policy changed. Source review traced explicit grant through authoritative lifecycle/activation routing and exact-window onboarding revalidation; it has not proved native67 causality or a new production defect. Native77 inventory mismatch and78 discovery cause remain unknown. Diagnostic79, clean build, ordinary3, internal5/export/removal are NOT_RUN. No current CI/native execution validates this local source. The native workflow is explicitly false until complete source and fresh capacity qualification; prospective183 guard is not an execution grant. Current source pins/scope are updated, but final SOURCE_FROZEN/worklist seal is not claimed while setup is blocked. All181 remote ancestors and frozen plan remain exact. Same draft/open/unmerged PR48; remote still181, auto-merge/maintainer edits OFF. Preserve this local append-only material and return it for independent Brain review; all38 requirements/18 owner gates remain unaccepted."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

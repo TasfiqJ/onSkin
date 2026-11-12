@@ -221,13 +221,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 69939,
-      "sha256": "f21d9d924bd5383b56559af55ed732ce7e4d55801c9cf235d462e73ff263f60f"
+      "bytes": 70053,
+      "sha256": "44547a4eba39dfa496c02178a5f1707f5200f9584d2da163c3a654619b27cad4"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 65895,
-      "sha256": "0496c510ba4ba0c55c5c858589ab3a9511ae5b93ec60b40f8f8f5789c2e5e3e6"
+      "bytes": 66145,
+      "sha256": "ae252a36ecade3f3d52a8afd91924d792a9396b2483fd475ec10af307d9deaea"
     },
     {
       "path": "scripts/release/full-app-j01/native_preflight09.test.mjs",
@@ -245,9 +245,19 @@
       "sha256": "0e8616985d0e963c45d7ccfb95ccaa0f1385921979fe3926e50ad463e6d5e00f"
     },
     {
+      "path": "scripts/release/full-app-j01/observer_probe16.py",
+      "bytes": 8849,
+      "sha256": "59b6fd6c643e533bef6935c4fb6379d490b2d0a9b3e1c8ec1f129a14aa338cba"
+    },
+    {
+      "path": "scripts/release/full-app-j01/observer_probe16.test.py",
+      "bytes": 12106,
+      "sha256": "581ba8a68c5790ba3873647216e91643dc94a178d478f2b4d1e521c359eeddbf"
+    },
+    {
       "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
-      "bytes": 134792,
-      "sha256": "d8fc43a49ec18afe44922bf09747f596457ac227a708e39b7070fe5d17ca4212"
+      "bytes": 139084,
+      "sha256": "9c55903c8fcf140d45668e50542f2cd767b95494c05df7c61d21e1007a974846"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
@@ -276,13 +286,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 169028,
-      "sha256": "7ab429edc11b74dbabe049206941eb30f1d2a586d503ceec1eb490bcb8c55c44"
+      "bytes": 169297,
+      "sha256": "e55ea3072b5a34353c82d5fbcd8767e399d6b925ff76ba9385747e3965324a25"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 244794,
-      "sha256": "1b732dc80418da7d56ccda4fe7ea0937380c318323642d5ca12841376bf5df8c"
+      "bytes": 250164,
+      "sha256": "c3476712dd757c0af84827f4569acb619299689cfaa6deb30bc09168e2dab0ae"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

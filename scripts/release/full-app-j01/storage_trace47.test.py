@@ -488,20 +488,23 @@ class SourceScope59Tests(unittest.TestCase):
         preflight09={'scripts/phase9/ios-privacy-lock-succession46.mjs',
             'scripts/release/full-app-j01/native_preflight09.test.mjs'}
         replay10={'scripts/release/full-app-j01/pinned_app70_replay10.py'}
-        self.assertEqual(additions-preflight09-replay10, expected)
-        self.assertEqual(additions, expected|preflight09|replay10)
+        preparation16={'scripts/release/full-app-j01/observer_probe16.py',
+            'scripts/release/full-app-j01/observer_probe16.test.py',
+            'docs/brain/c47-c16/README.md','docs/brain/c47-c16/observer-preparation16.patch'}
+        self.assertEqual(additions-preflight09-replay10-preparation16, expected)
+        self.assertEqual(additions, expected|preflight09|replay10|preparation16)
         self.assertFalse(original.PATHS & additions)
         self.assertEqual(len(frozenset(original.PATHS)|expected),70)
         current = frozenset(original.PATHS) | additions
-        self.assertEqual(len(current), 73)
+        self.assertEqual(len(current), 77)
         historical=subprocess.run(['git','--no-replace-objects','show',s.PRIVACY09_START+':scripts/release/full-app-j01/storage_trace47.py'],cwd=ROOT,capture_output=True,timeout=30)
         self.assertEqual(historical.returncode,0)
         self.assertIn(b"result['finite_declared_paths']!=70",historical.stdout)
         self.assertIn(b"'finite_paths':70",historical.stdout)
         self.assertIn(b'C47_STORAGE05_EXACT87_PREFIX_FINITE70',historical.stdout)
-        self.assertIn("result['finite_declared_paths']!=73", source)
-        self.assertIn("'finite_paths':73", source)
-        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE73', source)
+        self.assertIn("result['finite_declared_paths']!=77", source)
+        self.assertIn("'finite_paths':77", source)
+        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE77', source)
         self.assertIn('C47_REPLAY10_EXACT153_PREFIX', source)
         prior=subprocess.check_output(['git','--no-replace-objects','show','f4fb6fb488d119d536fe189bf872512b27bfc719:scripts/release/full-app-j01/storage_trace47.py'],cwd=ROOT)
         self.assertIn(b"'finite_paths':72",prior)
@@ -2007,7 +2010,10 @@ class RunnerInventory15Tests(unittest.TestCase):
     def temporary(self):
         import os
         # Keep the real owned Simulator-style namespace under Windows MAX_PATH.
-        return tempfile.TemporaryDirectory(prefix='c15-',dir=Path(tempfile.gettempdir()).anchor if os.name=='nt'else None)
+        # AppContainer's redirected TEMP can exceed MAX_PATH with the genuine
+        # Simulator hierarchy. Keep the fixture in the existing user temp root.
+        parent=Path.home()/'AppData/Local/Temp'if os.name=='nt'else None
+        return tempfile.TemporaryDirectory(prefix='c15-',dir=parent)
     def fixture(self, root):
         import hashlib,time
         from types import SimpleNamespace
@@ -2028,7 +2034,7 @@ class RunnerInventory15Tests(unittest.TestCase):
         b={'domain':q.DOMAIN15,'producer':q.PRODUCER,'runner_source':{'head':'a'*40,'tree':'b'*40},'execution':ctx,'warm_process':{'pid':321,'executable':'/synthetic/LayerwellStaging.app/LayerwellStaging','process_start_sha256':'c'*64},'app':q.APP,'diagnostic_transform_sha256':q.RECORDED['storage-origin05/PRIVACY08_TRANSFORM.json'],'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
         b['binding_id']=hashlib.sha256(json.dumps(b,sort_keys=True,separators=(',',':')).encode()).hexdigest()
         runner=q.process_record11({'schema':1,'pid':654,'sourceHead':q.PRODUCER['head'],'bundle':q.BUNDLE},('654 Wed Nov 11 12:00:00 2026 '+str(installed/'C47NativeUI-Runner')+'\n').encode(),654,str(installed/'C47NativeUI-Runner'))
-        state={'invalid':None,'armed':False,'checkpoints':[],'_binaries':[],'runner_discovery_queries':0,'runner':runner}
+        state={'invalid':None,'phase':'PREPARATION','armed':False,'checkpoints':[],'_binaries':[],'runner_discovery_queries':0,'runner':runner}
         r=SimpleNamespace(env={},output=out,receipt={'inventory15':True,'source':b['runner_source'],'replay_execution11':ctx,'authorization':q.AUTH15})
         prepared={'inventory':n.bundle_inventory(host),'host':host,'xctestrun':run,'xctestrun_bytes':run.read_bytes(),'compiled_swift':{'bytes':1,'sha256':'d'*64},'binaries':[(p,q.identity((host/p).read_bytes()))for p in ['C47NativeUI-Runner','PlugIns/Test.xctest/Test']]}
         original=q.read13
@@ -2056,7 +2062,7 @@ class RunnerInventory15Tests(unittest.TestCase):
                 f=self.fixture(Path(tmp).resolve());path=f.installed/'Info.plist';path.write_bytes(b'changed owned code');stabilize_owned_fixture09(path,Path(tmp).resolve())
                 before=f.n.bundle_inventory(f.installed);scope=dict(vars(f.q));exec(compile(ast.Module(body=[node],type_ignores=[]),'actual177-discover13','exec'),scope)
                 ps=('654 Wed Nov 11 12:00:00 2026 '+str(f.installed/'C47NativeUI-Runner')+'\n').encode()
-                with patch.object(f.q.Path,'home',return_value=f.home),patch.object(f.q.subprocess,'run',return_value=SimpleNamespace(returncode=0,stdout=ps,stderr=b'')),patch.object(f.q,'read13',side_effect=f.read):
+                with patch.object(f.q.Path,'home',return_value=f.home),patch.object(f.q.subprocess,'run',return_value=SimpleNamespace(returncode=0,stdout=ps,stderr=b'')),patch.object(f.q,'read13',side_effect=f.read),patch.object(f.q,'preparation_probe16',return_value=SimpleNamespace(returncode=0,stdout=ps,stderr=b'')):
                     with self.assertRaisesRegex(ValueError,'PROTOCOL13_INSTALLED_RUNNER_BYTES'):(scope['discover13']if old else f.q.discover13)(f.r,f.n,f.state,f.b,f.device,f.prepared,f.deadline)
                 record=f.r.output/'RUNNER_INVENTORY15.json';self.assertEqual(record.exists(),not old)
                 if not old:
@@ -2174,8 +2180,8 @@ class RunnerInventory15Tests(unittest.TestCase):
             source=inspect.getsource(f.q.inventory15);self.assertIn('operation.__code__',source);self.assertIn("{**operation.__globals__,'sha':checked_sha}",source)
 
     def test_current78_one_shot_keeps_historical77_workflow_and_all_bounds(self):
-        import inspect
-        q=PinnedApp70Replay10Tests().replay();w=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        import inspect,hashlib
+        q=PinnedApp70Replay10Tests().replay();raw=subprocess.check_output(['git','show','51769a8f19eb605ff1b36336c685c06e9668ab76:.github/workflows/campaign47-native-runtime.yml'],cwd=ROOT);self.assertEqual(hashlib.sha256(raw).hexdigest(),'b76edfe9ae059c6f71ebb707ddf34799fc74e62c417c22f246404a154c083c2f');w=raw.decode()
         for term in ['commits == 179','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--retained-inventory15',q.JOB15]:self.assertIn(term,w)
         self.assertEqual(w.count('  native-build:'),1);self.assertNotIn('workflow_dispatch',w);self.assertEqual(q.SEAL_COUNT15,179)
         self.assertEqual(q.execution_domain12({'native_attempt':78,'job_name':q.JOB15,'authorization':q.AUTH15}),q.DOMAIN15)
@@ -2259,6 +2265,67 @@ class RunnerInventory15Tests(unittest.TestCase):
                 job[key]=previous
             env['GITHUB_RUN_ATTEMPT']='2'
             with self.assertRaisesRegex(ValueError,'ONE_HOSTED_INVENTORY15'):q.context15(r,n,'owned-fixture-token')
+
+
+class AutonomousPreparation16Tests(unittest.TestCase):
+    def test_exact_one_shot_context16_and_protected_historical_context15(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock,patch
+        q=PinnedApp70Replay10Tests().replay()
+        env={'GITHUB_REPOSITORY':'TasfiqJ/onSkin','GITHUB_EVENT_NAME':'pull_request',
+            'GITHUB_JOB':'native-build','GITHUB_RUN_ATTEMPT':'1','C47_EXPECTED_HEAD':'d'*40,'GITHUB_RUN_ID':'123'}
+        job={'name':q.JOB16,'head_sha':'d'*40,'run_id':123,'run_attempt':1,'status':'in_progress',
+             'runner_id':8,'labels':['macos-26-intel'],'id':456}
+        r=SimpleNamespace(env=env,root=ROOT,receipt={},persist=Mock())
+        n=SimpleNamespace(BASE='02aa4ba879fb844f3ca0aa929591203ee45f4163',_stage_api=Mock(return_value=({'jobs':[job]},None)))
+        values={('rev-parse','HEAD'):'d'*40,('rev-list','--count',n.BASE+'..HEAD'):str(q.SEAL_COUNT16),
+            ('rev-parse','HEAD~'+str(q.SEAL_COUNT16-181)):q.START16,('rev-parse',q.START16+'^{tree}'):q.TREE16,
+            ('status','--porcelain'):'',('rev-parse','HEAD^{tree}'):'e'*40}
+        def git(argv,**kwargs):return values[tuple(argv[2:])].encode()
+        with patch.object(q.sys,'platform','darwin'),patch.object(q.subprocess,'check_output',side_effect=git):
+            ctx=q.context16(r,n,'synthetic-token');self.assertEqual(ctx['native_attempt'],79)
+            self.assertTrue(r.receipt['inventory15']);self.assertTrue(r.receipt['autonomous16'])
+            self.assertEqual(q.execution_domain12(ctx),q.DOMAIN16)
+            for key,bad in [('run_attempt',2),('runner_id',0),('labels',['macos-latest']),('head_sha','f'*40)]:
+                old=job[key];job[key]=bad
+                with self.assertRaisesRegex(ValueError,'ACTUAL_STANDARD_JOB'):q.context16(r,n,'synthetic-token')
+                job[key]=old
+            env['GITHUB_RUN_ATTEMPT']='2'
+            with self.assertRaisesRegex(ValueError,'ONE_HOSTED_AUTONOMOUS16'):q.context16(r,n,'synthetic-token')
+        self.assertEqual(q.SEAL_COUNT15,179)
+        for attempt in [True,78,80,81,82,83,84,85,86,87]:
+            with self.assertRaises(ValueError):q.execution_domain12(dict(ctx,native_attempt=attempt))
+
+    def test_real_helper_timeout_retained_by_coordinator_before_terminal_propagation(self):
+        import base64,time
+        from types import SimpleNamespace
+        from unittest.mock import Mock,patch
+        q=PinnedApp70Replay10Tests().replay();probe=q.module(ROOT,'observer_probe16.py')
+        state={'phase':'PREPARATION','invalid':None,'armed':False,'checkpoints':[]}
+        cmd=['/bin/ps','-axo','pid=,lstart=,comm=']
+        error=subprocess.TimeoutExpired(cmd,.1,output=b'original synthetic stdout',stderr=b'original synthetic stderr')
+        r=SimpleNamespace(receipt={'source':{'head':'a'*40,'tree':'b'*40}})
+        n=SimpleNamespace(evidence_total=lambda r:0,MAX_EVIDENCE=500*1024**2)
+        saved=[]
+        def publish(r,name,value):saved.append((name,value));return {'saved':True}
+        with patch.object(q,'module',return_value=probe),patch.object(probe,'_bounded_run',side_effect=error),patch.object(q,'evidence15',side_effect=publish):
+            with self.assertRaises(subprocess.TimeoutExpired):q.preparation_probe16(r,n,state,'RUNNER_PROCESS_DISCOVERY',cmd,None,time.monotonic_ns()+1_000_000_000)
+        self.assertEqual(len(saved),1);name,value=saved[0]
+        self.assertEqual(name,'PREPARATION_FAILURE16.json')
+        self.assertEqual(base64.b64decode(value['stdout_base64']),error.output)
+        self.assertEqual(base64.b64decode(value['stderr_base64']),error.stderr)
+        self.assertEqual(value['operation']['operation'],'RUNNER_PROCESS_DISCOVERY')
+        self.assertFalse(state['armed']);self.assertEqual(state['checkpoints'],[])
+        self.assertEqual(state['first_preparation_failure16']['retention'],{'saved':True})
+
+    def test_preparation_policy_leaves_active_caps_and_original_inventory_predicate(self):
+        import inspect
+        q=PinnedApp70Replay10Tests().replay()
+        self.assertEqual(q.remaining13(__import__('time').monotonic_ns()+20_000_000_000),3)
+        self.assertIn("need11(installed_inventory==prepared['inventory'],'PROTOCOL13_INSTALLED_RUNNER_BYTES')",inspect.getsource(q.discover13))
+        self.assertIn(".25 if 'runner'not in state else .01",inspect.getsource(q.observer13))
+        self.assertIn('capture_complete=False',inspect.getsource(q.compare_runner15))
+        self.assertIn("{key:r.receipt['source'][key]for key in ('head','tree')}",inspect.getsource(q.compare_runner15))
 
 
 if __name__=='__main__':unittest.main()

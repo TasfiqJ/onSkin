@@ -235,6 +235,7 @@ TREE15='e33df884e00a4e31cd0b80f954c89c7b4cc056f3'
 SEAL_COUNT15=179
 
 def execution_domain12(ctx):
+    if type(ctx.get('native_attempt'))is int and ctx['native_attempt']==ATTEMPT16 and ctx.get('job_name')==JOB16 and ctx.get('authorization')==AUTH16:return DOMAIN16
     if type(ctx.get('native_attempt'))is int and ctx['native_attempt']==78 and ctx.get('job_name')==JOB15 and ctx.get('authorization')==AUTH15:return DOMAIN15
     need11(type(ctx['native_attempt'])is int,'NATIVE_ATTEMPT_TYPE')
     if ctx['native_attempt']==76 and ctx['job_name']==JOB14 and ctx.get('authorization')==AUTH14:return DOMAIN14
@@ -308,6 +309,8 @@ def timeout_operation12(error):
     """Static source-operation only; never retain private command arguments."""
     cmd=error.cmd
     if type(cmd)not in(list,tuple)or len(cmd)>6 or not all(type(q)is str and len(q)<=512 for q in cmd):return 'UNKNOWN_OPERATION'
+    if list(cmd)==['/bin/ps','-axo','pid=,lstart=,comm=']:return 'RUNNER_PROCESS_DISCOVERY'
+    if len(cmd)==5 and list(cmd[:2])==['/bin/ps','-p']and re.fullmatch(r'[1-9][0-9]*,[1-9][0-9]*',cmd[2])and cmd[3:]in(['-o','pid=,lstart=,comm='],('-o','pid=,lstart=,comm=')):return 'APP_RUNNER_PROCESS_PAIR_PS'
     if len(cmd)==5 and list(cmd[:2])==['/bin/ps','-p']and cmd[2].isdigit()and cmd[3]=='-o':
         if cmd[4]=='pid=,lstart=,comm=':return 'WARM_PROCESS_PS'
         if cmd[4]=='comm=':return 'BOUNDARY_EXECUTABLE_PS'
@@ -576,6 +579,38 @@ def context77(r,n,token):
             'boundary':'PROTOCOL13_ACTUAL_XCODE_OPTIONS_ACTION_ADVERTISEMENT'});r.persist();return ctx
 
 
+AUTH16='BRAIN-C47-AUTONOMOUS-NATIVE-COMPLETION16'
+DOMAIN16='PINNED_APP70_AUTONOMOUS_PREPARATION_DIAGNOSTIC16'
+JOB16='C47 C16 preparation diagnostic79'
+ATTEMPT16=79
+SEAL_COUNT16=183
+START16='51769a8f19eb605ff1b36336c685c06e9668ab76'
+TREE16='1a45a01e8c599a3a1cdd5814f385b108606b5ece'
+
+
+def context16(r,n,token):
+    env=r.env
+    need11(sys.platform=='darwin' and env.get('GITHUB_REPOSITORY')=='TasfiqJ/onSkin'
+        and env.get('GITHUB_EVENT_NAME')=='pull_request' and env.get('GITHUB_JOB')=='native-build'
+        and env.get('GITHUB_RUN_ATTEMPT')=='1','ONE_HOSTED_AUTONOMOUS16')
+    head=env.get('C47_EXPECTED_HEAD','');need11(re.fullmatch('[a-f0-9]{40}',head),'EXPECTED_RUNNER_HEAD')
+    g=lambda *a:subprocess.check_output(['git','--no-replace-objects',*a],cwd=r.root,env=env,timeout=30).decode().strip()
+    need11(g('rev-parse','HEAD')==head and g('rev-list','--count',n.BASE+'..HEAD')==str(SEAL_COUNT16)
+        and g('rev-parse','HEAD~'+str(SEAL_COUNT16-181))==START16
+        and g('rev-parse',START16+'^{tree}')==TREE16 and not g('status','--porcelain'),'EXACT_AUTONOMOUS16_SOURCE181_PREFIX')
+    run_id=int(env['GITHUB_RUN_ID']);jobs,_=n._stage_api('/actions/runs/'+str(run_id)+'/jobs?per_page=100',token)
+    selected=[q for q in jobs['jobs']if q['name']==JOB16];need11(len(selected)==1,'EXECUTION_JOB_UNIQUE');job=selected[0]
+    need11(job['head_sha']==head and job['run_id']==run_id and type(job['run_attempt'])is int
+        and job['run_attempt']==1 and job['status']=='in_progress' and type(job['runner_id'])is int
+        and job['runner_id']>0 and job['labels']==['macos-26-intel'],'ACTUAL_STANDARD_JOB')
+    ctx={'repository':'TasfiqJ/onSkin','runner_head':head,'runner_tree':g('rev-parse','HEAD^{tree}'),
+        'run_id':run_id,'job_id':job['id'],'run_attempt':1,'native_attempt':ATTEMPT16,'job_name':JOB16,
+        'runner_id':job['runner_id'],'configured_labels':job['labels'],'authorization':AUTH16}
+    r.receipt.update(replay_execution11=ctx,host_first12=True,prepared_observer13=True,
+        targeted_platform14=True,corrected_xcode77=True,inventory15=True,autonomous16=True)
+    r.persist();return ctx
+
+
 def context15(r,n,token):
     env=r.env;need11(sys.platform=='darwin'and env.get('GITHUB_REPOSITORY')=='TasfiqJ/onSkin'and env.get('GITHUB_EVENT_NAME')=='pull_request'and env.get('GITHUB_JOB')=='native-build'and env.get('GITHUB_RUN_ATTEMPT')=='1','ONE_HOSTED_INVENTORY15')
     head=env.get('C47_EXPECTED_HEAD','');need11(re.fullmatch('[a-f0-9]{40}',head),'EXPECTED_RUNNER_HEAD')
@@ -673,6 +708,7 @@ def execute(r,n,d,payload,inventory,*,same_process11=False):
         ('privacy08-current-runtime-controls','native_runtime47.test.py',300),
         ('privacy08-simulator-signing-controls','simulator_signing47.test.py',120)]:
         r.run(name,['python3','-I','-B','scripts/release/full-app-j01/'+script],timeout=bound)
+    if r.receipt.get('autonomous16')is True:r.run('preparation16-probe-controls',['python3','-I','-B','scripts/release/full-app-j01/observer_probe16.test.py'],timeout=120)
     r.passed('replay10-current-source-controls',d._native05_full_source_controls53(r,n))
     need(r.deadline-time.monotonic()>=2400,'MEASURED_RUNTIME_HEADROOM')
     temporary=Path(r.env['RUNNER_TEMP']).resolve(strict=True);extracted=temporary/'c47-pinned-app70'
@@ -1100,7 +1136,7 @@ RUNNER_CODE_BYTES15=64*1024*1024
 
 def evidence15(r,name,value):
     """Exclusive, bounded private evidence publication; never a wire ACK or admission."""
-    need11(name in {'RUNNER_INVENTORY15.json','PREPARED_INPUTS15.json','FINAL_INPUTS15.json','INSTALLED_SNAPSHOT15.json'},'INVENTORY15_RECORD_NAME')
+    need11(name in {'RUNNER_INVENTORY15.json','PREPARED_INPUTS15.json','FINAL_INPUTS15.json','INSTALLED_SNAPSHOT15.json','PREPARATION_FAILURE16.json'},'INVENTORY15_RECORD_NAME')
     root=r.output;pin=directory13(root);raw=(json.dumps(value,ensure_ascii=True,separators=(',',':'))+'\n').encode()
     need11(len(raw)<=INVENTORY_JSON15,'INVENTORY15_RECORD_BOUND');target=root/name;temporary=root/(name+'.tmp')
     need11(not os.path.lexists(target)and not os.path.lexists(temporary),'INVENTORY15_RECORD_EXISTS')
@@ -1317,11 +1353,27 @@ def prepare_runner13(r,n,project,products,device,env):
     return {'started_ns':started,'deadline_ns':deadline,'prepared_ns':time.monotonic_ns(),'xctestrun':run,'xctestrun_bytes':raw,'host':host,
         'inventory':inventory,'compiled_swift':prefix_record['compiled_prefix'],'binaries':[(q,{k:records[q][k]for k in ['bytes','sha256']})for q in wanted]}
 
+def preparation_probe16(r,n,state,operation,argv,env,deadline):
+    probe=module(Path(__file__).resolve().parents[3],'observer_probe16.py')
+    def retain(record,stdout,stderr):
+        import base64
+        need11(len(stdout)+len(stderr)<=probe.MAX_OUTPUT_BYTES,'PREPARATION16_CAPTURE_BOUND')
+        need11(n.evidence_total(r)+2*probe.MAX_OUTPUT_BYTES<n.MAX_EVIDENCE-9*1024**2,'PREPARATION16_EVIDENCE_BUDGET')
+        value={'schema':1,'qualification':'ACTUAL_PREPARATION_FAILURE_OUTPUT_ONLY_NOT_IDENTITY_OR_READINESS',
+            'source':r.receipt['source'],'operation':record,
+            'stdout_base64':base64.b64encode(stdout).decode('ascii'),
+            'stderr_base64':base64.b64encode(stderr).decode('ascii'),
+            'ordinary_admitted':False,'release':'NO_GO'}
+        return evidence15(r,'PREPARATION_FAILURE16.json',value)
+    return probe.run_preparation_probe16(state,operation,argv,env,deadline,retain_failure=retain)
+
+
 def discover13(r,n,state,envelope,device,prepared,deadline):
     """Discover an EXECUTING runner first; exactly one container query, never during compilation."""
     if r.receipt.get('inventory15')is True:need11(state['invalid']is None and not state['armed']and not state['checkpoints'],'PROTOCOL13_TERMINAL')
     state['operation']='RUNNER_DISCOVERY'
-    p=subprocess.run(['/bin/ps','-axo','pid=,lstart=,comm='],capture_output=True,env={**r.env,'LC_ALL':'C'},timeout=remaining13(deadline))
+    p=preparation_probe16(r,n,state,'RUNNER_PROCESS_DISCOVERY',
+        ['/bin/ps','-axo','pid=,lstart=,comm='],{**r.env,'LC_ALL':'C'},deadline)
     need11(p.returncode==0 and len(p.stdout)<=1024*1024,'PROTOCOL13_RUNNER_PROCESS_LIST')
     expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application';found=[]
     for line in p.stdout.splitlines():
@@ -1339,7 +1391,8 @@ def discover13(r,n,state,envelope,device,prepared,deadline):
     need11(installed_inventory==prepared['inventory'],'PROTOCOL13_INSTALLED_RUNNER_BYTES')
     for relative,wanted in prepared['binaries']:state['_binaries'].append(pin_binary13(installed/relative,wanted))
     state['operation']='RUNNER_NAMESPACE';need11(state['runner_discovery_queries']==0,'PROTOCOL13_DISCOVERY_REPEATED');state['runner_discovery_queries']+=1
-    p=subprocess.run(['xcrun','simctl','get_app_container',device,RUNNER_BUNDLE11,'data'],capture_output=True,env=r.env,timeout=remaining13(deadline))
+    p=preparation_probe16(r,n,state,'RUNNER_DATA_CONTAINER',
+        ['xcrun','simctl','get_app_container',device,RUNNER_BUNDLE11,'data'],r.env,deadline)
     need11(p.returncode==0 and 0<len(p.stdout)<=4096,'PROTOCOL13_EXECUTING_RUNNER_CONTAINER')
     data=Path(p.stdout.decode().strip());expected=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'
     need11(data.parent==expected and str(uuid.UUID(data.name)).lower()==data.name.lower(),'PROTOCOL13_OWN_RUNNER_CONTAINER')
@@ -1353,7 +1406,7 @@ def observer13(r,n,device,installed,prepared,envelope,state,stop):
     try:
         target.mkdir(exist_ok=True);directory13(target)
         need11(state['prepared_ns']>=prepared['prepared_ns'],'PROTOCOL13_NOT_BUILT')
-        while not stop.wait(.01):
+        while not stop.wait(.25 if 'runner'not in state else .01):
             remaining13(deadline,900);need11(state['invalid']is None,'PROTOCOL13_TERMINAL')
             if 'runner'not in state:
                 if not discover13(r,n,state,envelope,device,prepared,deadline):continue
@@ -1497,7 +1550,8 @@ def lifecycle13(r,n,d,project,products,device,installed,inventory,envelope,env,a
 def main():
     if sys.argv[1:2]==['--test-command13']:
         need11(len(sys.argv)==3,'PROTOCOL13_TEST_COMMAND_ARGUMENT');return test_command13(Path(sys.argv[2]))
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');p.add_argument('--targeted-platform14',action='store_true');p.add_argument('--corrected-xcode77',action='store_true');p.add_argument('--retained-inventory15',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');p.add_argument('--targeted-platform14',action='store_true');p.add_argument('--corrected-xcode77',action='store_true');p.add_argument('--retained-inventory15',action='store_true');p.add_argument('--autonomous16',action='store_true');args=p.parse_args()
+    if args.autonomous16:args.retained_inventory15=True
     if args.retained_inventory15:args.corrected_xcode77=True
     if args.corrected_xcode77:args.targeted_platform14=True
     if args.targeted_platform14:args.prepared_observer13=True
@@ -1511,10 +1565,10 @@ def main():
     def coordinator_timeout(*_):raise ValueError('C47_REPLAY11_COORDINATOR_MAX84'if args.same_process11 else'C47_REPLAY10_COORDINATOR_MAX84')
     signal.signal(signal.SIGALRM,coordinator_timeout);signal.alarm(84*60)
     r=n.Runner(root,output,seconds=78*60);coordinator_deadline=r.deadline+6*60
-    r.receipt.update(stage='diagnostic-retained-inventory15'if args.retained_inventory15 else'diagnostic-corrected-xcode77'if args.corrected_xcode77 else'diagnostic-targeted-platform14'if args.targeted_platform14 else'diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
-        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH15 if args.retained_inventory15 else AUTH14 if args.targeted_platform14 else AUTH13 if args.prepared_observer13 else AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
+    r.receipt.update(stage='diagnostic-autonomous16'if args.autonomous16 else'diagnostic-retained-inventory15'if args.retained_inventory15 else'diagnostic-corrected-xcode77'if args.corrected_xcode77 else'diagnostic-targeted-platform14'if args.targeted_platform14 else'diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN16 if args.autonomous16 else DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
+        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH16 if args.autonomous16 else AUTH15 if args.retained_inventory15 else AUTH14 if args.targeted_platform14 else AUTH13 if args.prepared_observer13 else AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
     try:
-        ctx=(context15 if args.retained_inventory15 else context77 if args.corrected_xcode77 else context14 if args.targeted_platform14 else context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
+        ctx=(context16 if args.autonomous16 else context15 if args.retained_inventory15 else context77 if args.corrected_xcode77 else context14 if args.targeted_platform14 else context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
         if args.host_first12:early_host12(r,n)
         run,_=n._stage_api('/actions/runs/'+str(PRODUCER['run_id']),token)
         job,_=n._stage_api('/actions/jobs/'+str(PRODUCER['job_id']),token)
@@ -1526,7 +1580,7 @@ def main():
         payload,inventory,proof=raw70(n,raw_path,root);r.receipt['upstream_payload_bytes']=proof['payload_bytes']
         n.write_json(output/'PINNED_PRODUCER149_INPUT.json',proof)
         result=execute(r,n,d,payload,inventory,same_process11=args.same_process11);n.write_json(output/('REPLAY'+str(ctx['native_attempt'])+'_RESULT.json'),result)
-        code=0 if result['origin_candidate']is not None else 1
+        code=0 if result['origin_candidate']is not None or args.autonomous16 and result['classification']=='DIAGNOSTIC_NOT_REPRODUCED' else 1
         r.receipt.update(status=result['classification'],replay_result=result,stage_complete=code==0)
     except Exception as e:
         detail=str(e);safe=detail if re.fullmatch(r'C47_[A-Z0-9_:-]+',detail)else None
@@ -1541,10 +1595,10 @@ def main():
         policy={'maximum_bytes':n.MAX_EVIDENCE,'observed_bytes':n.evidence_total(r),'upload_within_limit':n.evidence_total(r)<n.MAX_EVIDENCE-9*1024**2}
         r.receipt.update(artifact_policy=policy,finished_utc=n.utc());r.persist()
         files=[{'path':p.relative_to(output).as_posix(),**n.stage_file_digest(p)}for p in sorted(output.rglob('*'))if p.is_file()]
-        n.write_json(output/('replay-provenance15.json'if args.retained_inventory15 else'replay-provenance14.json'if args.targeted_platform14 else'replay-provenance13.json'if args.prepared_observer13 else'replay-provenance12.json'if args.host_first12 else'replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
+        n.write_json(output/('replay-provenance16.json'if args.autonomous16 else'replay-provenance15.json'if args.retained_inventory15 else'replay-provenance14.json'if args.targeted_platform14 else'replay-provenance13.json'if args.prepared_observer13 else'replay-provenance12.json'if args.host_first12 else'replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN16 if args.autonomous16 else DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
             'runner_source':r.receipt.get('source'),'execution':r.receipt.get('replay_execution11'if args.same_process11 else'replay_execution10'),'files':files,
             'ordinary_admitted':False,'internal_admitted':False,'producer70_sealed':False,'release':'NO_GO'})
         if not policy['upload_within_limit']:code=1
-    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':78 if args.retained_inventory15 else 77 if args.corrected_xcode77 else 76 if args.targeted_platform14 else 75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
+    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN16 if args.autonomous16 else DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':ATTEMPT16 if args.autonomous16 else 78 if args.retained_inventory15 else 77 if args.corrected_xcode77 else 76 if args.targeted_platform14 else 75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
     return code
 if __name__=='__main__':raise SystemExit(main())
