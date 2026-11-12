@@ -1,0 +1,79 @@
+--- a/scripts/release/full-app-j01/observer_probe16.test.py
++++ b/scripts/release/full-app-j01/observer_probe16.test.py
+@@ -190,10 +190,73 @@
+                                  m.MAX_OUTPUT_BYTES)
+ 
+     def test_real_timeout_retains_partial_output_and_reaps_child(self):
+-        with self.assertRaises(subprocess.TimeoutExpired) as caught:
+-            self.child('import sys,time; print("partial",flush=True); time.sleep(5)', .4)
+-        self.assertEqual(caught.exception.output.strip(), b'partial')
++        # Test collection after output exists, independently of interpreter startup.
++        # The deliberate startup delay exceeds the OLD fixture's total 0.4s budget.
++        # A separate test below covers a fresh child timing out before any output.
++        import threading
++        source = ('import os,sys,time; time.sleep(.6); '
++                  'os.write(sys.stdout.fileno(), b"partial\\n"); '
++                  'os.write(sys.stderr.fileno(), b"READY\\n"); time.sleep(30)')
++        command = [sys.executable, '-c', source]
++        process = subprocess.Popen(command, stdin=subprocess.DEVNULL,
++                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE,
++                                   env=os.environ.copy())
++        ready = threading.Event()
++        observation = {}
++
++        def await_ready():
++            try:
++                observation['token'] = process.stderr.read(6)
++            except Exception as error:
++                observation['error_type'] = type(error).__name__
++            finally:
++                ready.set()
++
++        waiter = threading.Thread(target=await_ready, daemon=True)
++        try:
++            waiter.start()
++            self.assertTrue(ready.wait(5), 'owned fixture did not become ready')
++            waiter.join(timeout=1)
++            self.assertFalse(waiter.is_alive())
++            self.assertEqual(observation, {'token': b'READY\n'})
++            self.assertIsNone(process.poll())
++            # Only construction is substituted. Collection, deadline, kill and reap
++            # use the actual implementation and this actual already-ready child.
++            with patch.object(m.subprocess, 'Popen', return_value=process) as spawn:
++                with self.assertRaises(subprocess.TimeoutExpired) as caught:
++                    self.child(source, .4)
++                spawn.assert_called_once()
++                self.assertEqual(spawn.call_args.args[0], command)
++            self.assertEqual(caught.exception.output.strip(), b'partial')
++            self.assertFalse(caught.exception.capture_truncated)
++            self.assertIsNotNone(process.poll(), 'timed-out child was not reaped')
++        finally:
++            if process.poll() is None:
++                process.kill()
++            process.wait(timeout=1)
++            if waiter.ident is not None:
++                waiter.join(timeout=1)
++            for stream in (process.stdout, process.stderr):
++                if not stream.closed:
++                    stream.close()
++
++    def test_real_timeout_before_output_retains_empty_prefix_and_reaps_child(self):
++        # A timeout does not promise that the child ran far enough to emit data.
++        processes = []
++        real_popen = subprocess.Popen
++
++        def capture_process(*args, **kwargs):
++            child = real_popen(*args, **kwargs)
++            processes.append(child)
++            return child
++
++        with patch.object(m.subprocess, 'Popen', side_effect=capture_process):
++            with self.assertRaises(subprocess.TimeoutExpired) as caught:
++                self.child('import time; time.sleep(5); print("too late", flush=True)', .4)
++        self.assertEqual(caught.exception.output, b'')
+         self.assertFalse(caught.exception.capture_truncated)
++        self.assertEqual(len(processes), 1)
++        self.assertIsNotNone(processes[0].poll(), 'timed-out child was not reaped')
+ 
+     def test_failure_sink_receives_bounded_original_bytes_and_identity(self):
+         import hashlib
