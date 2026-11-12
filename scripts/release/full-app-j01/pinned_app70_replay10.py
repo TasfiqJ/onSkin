@@ -227,7 +227,15 @@ RUNNER_BUNDLE11='internal.c47.native-ui.xctrunner'
 def need11(value,code):
     if not value:raise ValueError('C47_REPLAY11_'+code)
 
+AUTH15='BRAIN-C47-RUNNER-INVENTORY-CAUSAL15'
+DOMAIN15='PINNED_APP70_RETAINED_RUNNER_INVENTORY_DIAGNOSTIC15'
+JOB15='C47 retained runner inventory app70 replay78'
+START15='c331d14cbce7cd7f4a797734bbc140c41676274f'
+TREE15='e33df884e00a4e31cd0b80f954c89c7b4cc056f3'
+SEAL_COUNT15=179
+
 def execution_domain12(ctx):
+    if type(ctx.get('native_attempt'))is int and ctx['native_attempt']==78 and ctx.get('job_name')==JOB15 and ctx.get('authorization')==AUTH15:return DOMAIN15
     need11(type(ctx['native_attempt'])is int,'NATIVE_ATTEMPT_TYPE')
     if ctx['native_attempt']==76 and ctx['job_name']==JOB14 and ctx.get('authorization')==AUTH14:return DOMAIN14
     if ctx['native_attempt']==77 and ctx['job_name']==JOB77 and ctx.get('authorization')==AUTH14:return DOMAIN14
@@ -566,6 +574,17 @@ def context77(r,n,token):
         correction76={'head':SOURCE76,'tree':TREE76,'run_id':43119312843,'job_id':130855391100,
             'raw_sha256':'4f54dfb5f812f9a0a56cf445db7464d0043781d1e980d6d38851aabb681ef059',
             'boundary':'PROTOCOL13_ACTUAL_XCODE_OPTIONS_ACTION_ADVERTISEMENT'});r.persist();return ctx
+
+
+def context15(r,n,token):
+    env=r.env;need11(sys.platform=='darwin'and env.get('GITHUB_REPOSITORY')=='TasfiqJ/onSkin'and env.get('GITHUB_EVENT_NAME')=='pull_request'and env.get('GITHUB_JOB')=='native-build'and env.get('GITHUB_RUN_ATTEMPT')=='1','ONE_HOSTED_INVENTORY15')
+    head=env.get('C47_EXPECTED_HEAD','');need11(re.fullmatch('[a-f0-9]{40}',head),'EXPECTED_RUNNER_HEAD')
+    g=lambda *a:subprocess.check_output(['git','--no-replace-objects',*a],cwd=r.root,env=env,timeout=30).decode().strip()
+    need11(g('rev-parse','HEAD')==head and g('rev-list','--count',n.BASE+'..HEAD')==str(SEAL_COUNT15)and g('rev-parse','HEAD~'+str(SEAL_COUNT15-177))==START15 and g('rev-parse',START15+'^{tree}')==TREE15 and not g('status','--porcelain'),'EXACT_INVENTORY15_SOURCE177_PREFIX')
+    run_id=int(env['GITHUB_RUN_ID']);jobs,_=n._stage_api('/actions/runs/'+str(run_id)+'/jobs?per_page=100',token);selected=[q for q in jobs['jobs']if q['name']==JOB15];need11(len(selected)==1,'EXECUTION_JOB_UNIQUE');job=selected[0]
+    need11(job['head_sha']==head and job['run_id']==run_id and type(job['run_attempt'])is int and job['run_attempt']==1 and job['status']=='in_progress'and type(job['runner_id'])is int and job['runner_id']>0 and job['labels']==['macos-26-intel'],'ACTUAL_STANDARD_JOB')
+    ctx={'repository':'TasfiqJ/onSkin','runner_head':head,'runner_tree':g('rev-parse','HEAD^{tree}'),'run_id':run_id,'job_id':job['id'],'run_attempt':1,'native_attempt':78,'job_name':JOB15,'runner_id':job['runner_id'],'configured_labels':job['labels'],'authorization':AUTH15}
+    r.receipt.update(replay_execution11=ctx,host_first12=True,prepared_observer13=True,targeted_platform14=True,corrected_xcode77=True,inventory15=True);r.persist();return ctx
 
 
 def settings_process14(raw,pid,executable,launch_start,observed_at,previous=None):
@@ -1074,6 +1093,183 @@ def prefix13(before,envelope,deadline_ns=None):
         b'Thread.sleep'not in after and after.count(b'app.activate()')==1,'PROTOCOL13_UI_BOUNDS')
     return after
 
+INVENTORY_ROWS15=4096
+INVENTORY_JSON15=4*1024*1024
+RUNNER_CODE_BYTES15=64*1024*1024
+
+
+def evidence15(r,name,value):
+    """Exclusive, bounded private evidence publication; never a wire ACK or admission."""
+    need11(name in {'RUNNER_INVENTORY15.json','PREPARED_INPUTS15.json','FINAL_INPUTS15.json','INSTALLED_SNAPSHOT15.json'},'INVENTORY15_RECORD_NAME')
+    root=r.output;pin=directory13(root);raw=(json.dumps(value,ensure_ascii=True,separators=(',',':'))+'\n').encode()
+    need11(len(raw)<=INVENTORY_JSON15,'INVENTORY15_RECORD_BOUND');target=root/name;temporary=root/(name+'.tmp')
+    need11(not os.path.lexists(target)and not os.path.lexists(temporary),'INVENTORY15_RECORD_EXISTS')
+    with temporary.open('xb')as stream:stream.write(raw);stream.flush();os.fsync(stream.fileno())
+    directory13(root,pin);os.link(temporary,target,follow_symlinks=False);temporary.unlink();directory13(root,pin)
+    need11(read13(target,INVENTORY_JSON15)[0]==raw,'INVENTORY15_RECORD_READBACK')
+    r.receipt.setdefault('inventory15_records',[]).append({'path':name,**identity(raw),'publication':'EXCLUSIVE_ATOMIC_FSYNC_READBACK','published_ns':time.monotonic_ns(),'maximum_bytes':INVENTORY_JSON15})
+    return identity(raw)
+
+
+def tree15(root):
+    """Code-only metadata window around the existing inventory operation, no directory-link traversal."""
+    root=Path(root);pin=directory13(root);rows={};total=0
+    for path in sorted(root.rglob('*')):
+        relative=path.relative_to(root).as_posix();need11(len(rows)<INVENTORY_ROWS15,'INVENTORY15_TREE_BOUND');directory13(path.parent)
+        value=path.lstat();need11(not getattr(value,'st_file_attributes',0)&0x400,'INVENTORY15_REPARSE')
+        if stat.S_ISREG(value.st_mode):
+            need11(value.st_nlink==1 and value.st_size<=RUNNER_CODE_BYTES15,'INVENTORY15_CODE_FILE');total+=value.st_size
+        elif stat.S_ISLNK(value.st_mode):
+            target=os.readlink(path);need11(not os.path.isabs(target)and path.resolve(strict=True).is_relative_to(root),'INVENTORY15_CODE_LINK')
+        else:need11(stat.S_ISDIR(value.st_mode),'INVENTORY15_CODE_TYPE')
+        need11(total<=RUNNER_CODE_BYTES15,'INVENTORY15_CODE_BOUND');rows[relative]=stat13(value)
+    directory13(root,pin);return pin,rows
+
+
+def inventory15(n,root):
+    """Execute the existing inventory bytecode once with a call-local no-follow digest.
+
+    The ordinary helper/module is not mutated. Row generation, fields and ordering
+    stay original; only its existing SHA read is bound to the existing checked reader.
+    """
+    import types
+    before=tree15(root);operation=n.bundle_inventory
+    def checked_sha(path):
+        directory13(Path(root),before[0]);value=n.stage_file_digest(Path(path),RUNNER_CODE_BYTES15)
+        directory13(Path(root),before[0]);return value['sha256']
+    checked=types.FunctionType(operation.__code__,{**operation.__globals__,'sha':checked_sha},operation.__name__,operation.__defaults__,operation.__closure__)
+    actual=checked(root)
+    need11(tree15(root)==before,'INVENTORY15_TREE_CHANGED')
+    return actual,before
+
+
+def difference15(prepared,installed):
+    """Raw operands remain ordered and untouched; anomalies never become an equal admission."""
+    anomalies=[];groups=[]
+    for side,rows in [('prepared',prepared),('installed',installed)]:
+        need11(type(rows)is list and len(rows)<=INVENTORY_ROWS15,'INVENTORY15_LIST_BOUND');mapping={}
+        if not rows:anomalies.append({'side':side,'kind':'EMPTY'})
+        for index,row in enumerate(rows):
+            valid=type(row)is dict;path=row.get('path')if valid else None
+            if type(path)is not str or not path or len(path)>1024 or path.startswith('/')or any(p in ('','.','..')for p in path.split('/'))or any(c in path for c in '\\:\r\n\x00'):
+                anomalies.append({'side':side,'index':index,'kind':'PATH_SCHEMA'});continue
+            mapping.setdefault(path,[]).append(index)
+            kind=row.get('type');keys={'path','mode','type'}|({'bytes','sha256'}if kind=='file'else{'target','sha256'}if kind=='symlink'else set())
+            mode=row.get('mode');valid=kind in ('file','directory','symlink')and set(row)==keys and type(mode)is str and re.fullmatch(r'0o[0-7]{1,4}',mode)is not None
+            valid=valid and int(mode,8)&0o7000==0
+            if kind=='file':valid=valid and type(row.get('bytes'))is int and 0<=row['bytes']<=RUNNER_CODE_BYTES15
+            if kind in ('file','symlink'):valid=valid and type(row.get('sha256'))is str and re.fullmatch('[a-f0-9]{64}',row['sha256'])is not None
+            if kind=='symlink':valid=valid and type(row.get('target'))is str and 0<len(row['target'])<=1024 and not row['target'].startswith('/')and '\x00'not in row['target']
+            if not valid:anomalies.append({'side':side,'index':index,'kind':'ENTRY_SCHEMA_OR_PRIVILEGE'})
+        for path,indices in mapping.items():
+            if len(indices)>1:anomalies.append({'side':side,'path':path,'indices':indices,'kind':'DUPLICATE'})
+        groups.append(mapping)
+    missing=[];added=[];changed=[]
+    for path in sorted(set(groups[0])|set(groups[1])):
+        left=groups[0].get(path,[]);right=groups[1].get(path,[])
+        for occurrence in range(max(len(left),len(right))):
+            if occurrence>=len(left):added.append({'path':path,'occurrence':occurrence,'installed_index':right[occurrence],'entry':installed[right[occurrence]]});continue
+            if occurrence>=len(right):missing.append({'path':path,'occurrence':occurrence,'prepared_index':left[occurrence],'entry':prepared[left[occurrence]]});continue
+            a=prepared[left[occurrence]];b=installed[right[occurrence]];fields=[]
+            for key in sorted(set(a)|set(b)):
+                if (key in a)!=(key in b)or a.get(key)!=b.get(key):fields.append({'field':key,'prepared_present':key in a,'installed_present':key in b,'prepared':a.get(key),'installed':b.get(key)})
+            if fields:changed.append({'path':path,'occurrence':occurrence,'prepared_index':left[occurrence],'installed_index':right[occurrence],'fields':fields})
+    order=[r.get('path')if type(r)is dict else None for r in prepared]==[r.get('path')if type(r)is dict else None for r in installed]
+    return {'original_equality':prepared==installed,'schema_valid':not anomalies,'ordering_equal':order,'order_only':not order and not added and not missing and not changed and not anomalies,
+        'added':added,'missing':missing,'changed':changed,'anomalies':anomalies,'normalization_applied':False}
+
+
+def runner_process15(r,record,deadline):
+    end=remaining13(deadline,3);p=subprocess.run(['/bin/ps','-p',str(record['pid']),'-o','pid=,lstart=,comm='],capture_output=True,env={**r.env,'LC_ALL':'C'},timeout=end)
+    need11(p.returncode==0,'INVENTORY15_PROCESS_ABSENT')
+    value=process_record11({'schema':1,'pid':record['pid'],'sourceHead':PRODUCER['head'],'bundle':BUNDLE},p.stdout,record['pid'],record['executable'],record)
+    remaining13(deadline);return value
+
+
+def compare_runner15(r,n,state,envelope,device,prepared,installed,deadline):
+    need11(state['invalid']is None and not state['armed']and not state['checkpoints'],'PROTOCOL13_TERMINAL')
+    validate_binding11(envelope);need11(envelope['runner_source']==r.receipt['source']and envelope['execution']['device']==device and r.receipt.get('inventory15')is True,'INVENTORY15_SOURCE_DEVICE')
+    expected_root=Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application'
+    need11(installed.name=='C47NativeUI-Runner.app'and installed.parent.parent==expected_root and str(uuid.UUID(installed.parent.name)).lower()==installed.parent.name.lower()and Path(state['runner']['executable'])==installed/'C47NativeUI-Runner','INVENTORY15_OWNED_CODE_ROOT')
+    need11(not r.output.resolve().is_relative_to(installed.resolve())and not r.output.resolve().is_relative_to(prepared['host'].resolve()),'INVENTORY15_OUTSIDE_CODE')
+    expected_bytes=json.dumps(prepared['inventory'],ensure_ascii=True,separators=(',',':')).encode()
+    record={'schema':1,'role':'OWNED_EXECUTING_UI_RUNNER_CODE_ONLY','binding':envelope,'runner':state['runner'],'device':device,'installed_bundle':str(installed),
+        'prepared_bundle':str(prepared['host']),'xctestrun':identity(prepared['xctestrun_bytes']),'compiled_swift':prepared['compiled_swift'],'prepared_executables':prepared['binaries'],'prepared_inventory':prepared['inventory'],'installed_inventory':None,
+        'capture_started_utc':__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),'capture_started_ns':time.monotonic_ns(),
+        'process_before':None,'process_after':None,'capture_complete':False,'original_predicate_result':None,'first_failure':None,'ordinary_admitted':False,'release':'NO_GO'}
+    stage='PROCESS_BEFORE'
+    try:
+        record['process_before']=runner_process15(r,state['runner'],deadline);stage='INSTALLED_CODE_INVENTORY'
+        actual,pin=inventory15(n,installed);actual_bytes=json.dumps(actual,ensure_ascii=True,separators=(',',':')).encode();record['installed_inventory']=actual;record['original_predicate_result']=actual==prepared['inventory'];stage='PROCESS_AFTER'
+        record['process_after']=runner_process15(r,state['runner'],deadline);stage='DELTA';record['difference']=difference15(prepared['inventory'],actual)
+        record.update(capture_complete=True,capture_finished_ns=time.monotonic_ns(),capture_finished_utc=__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),continuous_process_binding_claimed=False)
+        stage='EVIDENCE_PUBLICATION';digest=evidence15(r,'RUNNER_INVENTORY15.json',record)
+        state['_inventory15']={'root':installed,'inventory':actual,'tree':pin,'record':digest,'deadline':deadline}
+        need11(json.dumps(prepared['inventory'],ensure_ascii=True,separators=(',',':')).encode()==expected_bytes and json.dumps(actual,ensure_ascii=True,separators=(',',':')).encode()==actual_bytes,'INVENTORY15_OPERAND_CHANGED')
+        need11(tree15(installed)==pin,'INVENTORY15_TREE_CHANGED_AFTER_PUBLICATION')
+        need11(record['difference']['schema_valid'],'INVENTORY15_SCHEMA');remaining13(deadline)
+        return actual
+    except BaseException as error:
+        detail=str(error);code=detail if re.fullmatch(r'C47_[A-Z0-9_:-]+',detail)else None
+        numeric={key:getattr(error,key)for key in ['errno','winerror']if type(getattr(error,key,None))is int}
+        record.update(capture_complete=False,first_failure={'stage':stage,'type':type(error).__name__,'code':code,'numeric':numeric},capture_finished_ns=time.monotonic_ns())
+        r.receipt.setdefault('inventory15_failures',[]).append(record['first_failure'])
+        if not os.path.lexists(r.output/'RUNNER_INVENTORY15.json'):
+            try:evidence15(r,'RUNNER_INVENTORY15.json',record)
+            except Exception:pass
+        raise
+
+
+def prepared_comparison15(r,n,name,prepared,host,run,raw):
+    import base64
+    value={'schema':1,'role':'PREPARED_UI_RUNNER_CODE_AND_XCTESTRUN_ONLY','source':r.receipt['source'],'execution':r.receipt['replay_execution11'],
+        'prepared_inventory':prepared,'observed_inventory':None,'prepared_xctestrun':base64.b64encode(raw).decode(),
+        'observed_xctestrun':None,'xctestrun_equal':None,'capture_complete':False,'executing_process_observation':'NOT_PART_OF_THIS_PRODUCT_COMPARISON','ordinary_admitted':False,'release':'NO_GO'}
+    stage='PREPARED_CODE_INVENTORY'
+    try:
+        actual,pin=inventory15(n,host);value['observed_inventory']=actual;value['difference']=difference15(prepared,actual);stage='XCTESTRUN_IDENTITY'
+        run_actual=read13(run,1024*1024)[0];value.update(observed_xctestrun=base64.b64encode(run_actual).decode(),xctestrun_equal=run_actual==raw,capture_complete=True)
+        stage='EVIDENCE_PUBLICATION';evidence15(r,name,value);need11(tree15(host)==pin,'INVENTORY15_TREE_CHANGED_AFTER_PUBLICATION');need11(value['difference']['schema_valid'],'INVENTORY15_SCHEMA')
+        return actual,run_actual
+    except BaseException as error:
+        detail=str(error);failure={'stage':stage,'type':type(error).__name__,'code':detail if re.fullmatch(r'C47_[A-Z0-9_:-]+',detail)else None,'numeric':{key:getattr(error,key)for key in ['errno','winerror']if type(getattr(error,key,None))is int}}
+        r.receipt.setdefault('inventory15_failures',[]).append(failure);value.update(capture_complete=False,first_failure=failure)
+        if not os.path.lexists(r.output/name):
+            try:evidence15(r,name,value)
+            except Exception:pass
+        raise
+
+
+def installed_snapshot15(r,n,state):
+    """After terminal invalidation only: a later code snapshot, never the77/rejection-time operand."""
+    import io,tarfile
+    saved=state.get('_inventory15')
+    if not saved:return
+    result={'schema':1,'role':'LATER_OWNED_UI_RUNNER_CODE_SNAPSHOT','comparison_record':saved['record'],'exact_rejection_time_copy_claimed':False,'status':'NOT_SAVED','ordinary_admitted':False,'release':'NO_GO'}
+    try:
+        need11(state['invalid']is not None or state.get('_stop')is not None and state['_stop'].is_set(),'INVENTORY15_ARCHIVE_ONLY_AFTER_INVALIDATION');end=min(saved['deadline'],time.monotonic_ns()+15_000_000_000)
+        remaining13(end);root=saved['root'];need11(tree15(root)==saved['tree'],'INVENTORY15_LATER_TREE_CHANGED')
+        need11(n.evidence_total(r)+RUNNER_CODE_BYTES15<n.MAX_EVIDENCE-20*1024**2,'INVENTORY15_ARCHIVE_FAMILY_BOUND')
+        destination=r.output/'installed-ui-runner15.tar.gz';temporary=r.output/'installed-ui-runner15.tar.gz.tmp';need11(not os.path.lexists(destination)and not os.path.lexists(temporary),'INVENTORY15_ARCHIVE_EXISTS');outpin=directory13(r.output)
+        with temporary.open('xb')as output:
+            with tarfile.open(fileobj=output,mode='w:gz',format=tarfile.PAX_FORMAT)as archive:
+                for row in saved['inventory']:
+                    remaining13(end);path=root/row['path'];need11(stat13(path.lstat())==saved['tree'][1][row['path']],'INVENTORY15_LATER_FILE_CHANGED');item=tarfile.TarInfo('C47NativeUI-Runner.app/'+row['path']);item.mode=int(row['mode'],8)
+                    if row['type']=='file':
+                        before=path.lstat();fd=os.open(path,os.O_RDONLY|getattr(os,'O_BINARY',0)|getattr(os,'O_NOFOLLOW',0))
+                        with os.fdopen(fd,'rb')as stream:need11(stat13(os.fstat(stream.fileno()))==stat13(before),'INVENTORY15_ARCHIVE_RACE');data=stream.read(row['bytes']+1);need11(stat13(os.fstat(stream.fileno()))==stat13(path.lstat())==stat13(before),'INVENTORY15_ARCHIVE_RACE')
+                        need11(identity(data)=={k:row[k]for k in ['bytes','sha256']},'INVENTORY15_ARCHIVE_BYTES');item.size=len(data);archive.addfile(item,io.BytesIO(data))
+                    elif row['type']=='directory':item.type=tarfile.DIRTYPE;archive.addfile(item)
+                    else:need11(os.readlink(path)==row['target'],'INVENTORY15_ARCHIVE_LINK');item.type=tarfile.SYMTYPE;item.linkname=row['target'];archive.addfile(item)
+            output.flush();os.fsync(output.fileno())
+        need11(tree15(root)==saved['tree'],'INVENTORY15_LATER_TREE_CHANGED');remaining13(end);directory13(r.output,outpin);os.link(temporary,destination,follow_symlinks=False);temporary.unlink()
+        result.update(status='LATER_SNAPSHOT_MATCHES_CAPTURED_INVENTORY',archive=n.stage_file_digest(destination,RUNNER_CODE_BYTES15),inventory=saved['inventory'])
+    except Exception as error:
+        detail=str(error);result['failure']={'type':type(error).__name__,'code':detail if re.fullmatch(r'C47_[A-Z0-9_:-]+',detail)else None}
+    try:evidence15(r,'INSTALLED_SNAPSHOT15.json',result)
+    except Exception:pass
+
+
 def prepare_runner13(r,n,project,products,device,env):
     import plistlib,tarfile
     operation=r.receipt['ui_operation13'];started=operation['started_ns'];deadline=operation['deadline_ns']
@@ -1115,12 +1311,15 @@ def prepare_runner13(r,n,project,products,device,env):
     with(r.output/'C47Prepared13.xctestrun').open('xb')as retained:retained.write(raw)
     need11(n.evidence_total(r)+sum(q.get('bytes',0)for q in inventory)<n.MAX_EVIDENCE-20*1024**2,'PROTOCOL13_COMPILED_RETENTION_BOUND')
     with tarfile.open(r.output/'compiled-ui-runner13.tar.gz','w:gz',format=tarfile.PAX_FORMAT)as archive:archive.add(host,arcname=host.name)
-    need11(n.bundle_inventory(host)==inventory and read13(run,1024*1024)[0]==raw,'PROTOCOL13_PREPARED_INPUTS_UNCHANGED')
+    if r.receipt.get('inventory15')is True:observed_inventory,observed_run=prepared_comparison15(r,n,'PREPARED_INPUTS15.json',inventory,host,run,raw)
+    else:observed_inventory,observed_run=n.bundle_inventory(host),read13(run,1024*1024)[0]
+    need11(observed_inventory==inventory and observed_run==raw,'PROTOCOL13_PREPARED_INPUTS_UNCHANGED')
     return {'started_ns':started,'deadline_ns':deadline,'prepared_ns':time.monotonic_ns(),'xctestrun':run,'xctestrun_bytes':raw,'host':host,
-        'inventory':inventory,'binaries':[(q,{k:records[q][k]for k in ['bytes','sha256']})for q in wanted]}
+        'inventory':inventory,'compiled_swift':prefix_record['compiled_prefix'],'binaries':[(q,{k:records[q][k]for k in ['bytes','sha256']})for q in wanted]}
 
 def discover13(r,n,state,envelope,device,prepared,deadline):
     """Discover an EXECUTING runner first; exactly one container query, never during compilation."""
+    if r.receipt.get('inventory15')is True:need11(state['invalid']is None and not state['armed']and not state['checkpoints'],'PROTOCOL13_TERMINAL')
     state['operation']='RUNNER_DISCOVERY'
     p=subprocess.run(['/bin/ps','-axo','pid=,lstart=,comm='],capture_output=True,env={**r.env,'LC_ALL':'C'},timeout=remaining13(deadline))
     need11(p.returncode==0 and len(p.stdout)<=1024*1024,'PROTOCOL13_RUNNER_PROCESS_LIST')
@@ -1136,7 +1335,8 @@ def discover13(r,n,state,envelope,device,prepared,deadline):
     need11(len(found)<=1,'PROTOCOL13_RUNNER_PROCESS_COUNT')
     if not found:return False
     state['runner']=found[0];installed=Path(found[0]['executable']).parent
-    need11(n.bundle_inventory(installed)==prepared['inventory'],'PROTOCOL13_INSTALLED_RUNNER_BYTES')
+    installed_inventory=compare_runner15(r,n,state,envelope,device,prepared,installed,deadline)if r.receipt.get('inventory15')is True else n.bundle_inventory(installed)
+    need11(installed_inventory==prepared['inventory'],'PROTOCOL13_INSTALLED_RUNNER_BYTES')
     for relative,wanted in prepared['binaries']:state['_binaries'].append(pin_binary13(installed/relative,wanted))
     state['operation']='RUNNER_NAMESPACE';need11(state['runner_discovery_queries']==0,'PROTOCOL13_DISCOVERY_REPEATED');state['runner_discovery_queries']+=1
     p=subprocess.run(['xcrun','simctl','get_app_container',device,RUNNER_BUNDLE11,'data'],capture_output=True,env=r.env,timeout=remaining13(deadline))
@@ -1288,12 +1488,17 @@ def lifecycle13(r,n,d,project,products,device,installed,inventory,envelope,env,a
         joined=stop_threads13(state,threads)
         n.write_json(r.output/'OBSERVER13.json',{'binding':envelope,'state':{k:v for k,v in state.items()if not k.startswith('_')},'thread_joined':joined,'ordinary_admitted':False})
         for pin in state['_binaries']:pin[0].close()
-        need11(read13(prepared['xctestrun'],1024*1024)[0]==prepared['xctestrun_bytes']and n.bundle_inventory(prepared['host'])==prepared['inventory'],'PROTOCOL13_BUILT_INPUTS_NOT_ALTERED')
+        if r.receipt.get('inventory15')is True:
+            installed_snapshot15(r,n,state)
+            final_inventory,final_run=prepared_comparison15(r,n,'FINAL_INPUTS15.json',prepared['inventory'],prepared['host'],prepared['xctestrun'],prepared['xctestrun_bytes'])
+        else:final_inventory,final_run=n.bundle_inventory(prepared['host']),read13(prepared['xctestrun'],1024*1024)[0]
+        need11(final_run==prepared['xctestrun_bytes']and final_inventory==prepared['inventory'],'PROTOCOL13_BUILT_INPUTS_NOT_ALTERED')
 
 def main():
     if sys.argv[1:2]==['--test-command13']:
         need11(len(sys.argv)==3,'PROTOCOL13_TEST_COMMAND_ARGUMENT');return test_command13(Path(sys.argv[2]))
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');p.add_argument('--targeted-platform14',action='store_true');p.add_argument('--corrected-xcode77',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--same-process11',action='store_true');p.add_argument('--host-first12',action='store_true');p.add_argument('--prepared-observer13',action='store_true');p.add_argument('--targeted-platform14',action='store_true');p.add_argument('--corrected-xcode77',action='store_true');p.add_argument('--retained-inventory15',action='store_true');args=p.parse_args()
+    if args.retained_inventory15:args.corrected_xcode77=True
     if args.corrected_xcode77:args.targeted_platform14=True
     if args.targeted_platform14:args.prepared_observer13=True
     if args.prepared_observer13:args.host_first12=True
@@ -1306,10 +1511,10 @@ def main():
     def coordinator_timeout(*_):raise ValueError('C47_REPLAY11_COORDINATOR_MAX84'if args.same_process11 else'C47_REPLAY10_COORDINATOR_MAX84')
     signal.signal(signal.SIGALRM,coordinator_timeout);signal.alarm(84*60)
     r=n.Runner(root,output,seconds=78*60);coordinator_deadline=r.deadline+6*60
-    r.receipt.update(stage='diagnostic-corrected-xcode77'if args.corrected_xcode77 else'diagnostic-targeted-platform14'if args.targeted_platform14 else'diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
-        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH14 if args.targeted_platform14 else AUTH13 if args.prepared_observer13 else AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
+    r.receipt.update(stage='diagnostic-retained-inventory15'if args.retained_inventory15 else'diagnostic-corrected-xcode77'if args.corrected_xcode77 else'diagnostic-targeted-platform14'if args.targeted_platform14 else'diagnostic-prepared-observer13'if args.prepared_observer13 else'diagnostic-host-first12'if args.host_first12 else'diagnostic-same-process11'if args.same_process11 else'diagnostic-replay10',lane=DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,diagnostic_only=True,ordinary_admitted=False,producer_sealed=False,
+        application_build_performed=False,internal_supported_owner='NOT_RUN',authorization=AUTH15 if args.retained_inventory15 else AUTH14 if args.targeted_platform14 else AUTH13 if args.prepared_observer13 else AUTH12 if args.host_first12 else AUTH11 if args.same_process11 else AUTH);r.persist();code=1
     try:
-        ctx=(context77 if args.corrected_xcode77 else context14 if args.targeted_platform14 else context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
+        ctx=(context15 if args.retained_inventory15 else context77 if args.corrected_xcode77 else context14 if args.targeted_platform14 else context13 if args.prepared_observer13 else context12 if args.host_first12 else context11 if args.same_process11 else context)(r,n,token)
         if args.host_first12:early_host12(r,n)
         run,_=n._stage_api('/actions/runs/'+str(PRODUCER['run_id']),token)
         job,_=n._stage_api('/actions/jobs/'+str(PRODUCER['job_id']),token)
@@ -1336,10 +1541,10 @@ def main():
         policy={'maximum_bytes':n.MAX_EVIDENCE,'observed_bytes':n.evidence_total(r),'upload_within_limit':n.evidence_total(r)<n.MAX_EVIDENCE-9*1024**2}
         r.receipt.update(artifact_policy=policy,finished_utc=n.utc());r.persist()
         files=[{'path':p.relative_to(output).as_posix(),**n.stage_file_digest(p)}for p in sorted(output.rglob('*'))if p.is_file()]
-        n.write_json(output/('replay-provenance14.json'if args.targeted_platform14 else'replay-provenance13.json'if args.prepared_observer13 else'replay-provenance12.json'if args.host_first12 else'replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
+        n.write_json(output/('replay-provenance15.json'if args.retained_inventory15 else'replay-provenance14.json'if args.targeted_platform14 else'replay-provenance13.json'if args.prepared_observer13 else'replay-provenance12.json'if args.host_first12 else'replay-provenance11.json'if args.same_process11 else'replay-provenance10.json'),{'schema':1,'domain':DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'producer':PRODUCER,
             'runner_source':r.receipt.get('source'),'execution':r.receipt.get('replay_execution11'if args.same_process11 else'replay_execution10'),'files':files,
             'ordinary_admitted':False,'internal_admitted':False,'producer70_sealed':False,'release':'NO_GO'})
         if not policy['upload_within_limit']:code=1
-    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':77 if args.corrected_xcode77 else 76 if args.targeted_platform14 else 75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
+    print(json.dumps({'status':r.receipt['status'],'domain':DOMAIN15 if args.retained_inventory15 else DOMAIN14 if args.targeted_platform14 else DOMAIN13 if args.prepared_observer13 else DOMAIN12 if args.host_first12 else DOMAIN11 if args.same_process11 else DOMAIN,'native_attempt':78 if args.retained_inventory15 else 77 if args.corrected_xcode77 else 76 if args.targeted_platform14 else 75 if args.prepared_observer13 else SLOT12 if args.host_first12 else 73 if args.same_process11 else 72,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}))
     return code
 if __name__=='__main__':raise SystemExit(main())

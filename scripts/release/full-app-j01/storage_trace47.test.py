@@ -1976,7 +1976,9 @@ class HelpAction77Tests(unittest.TestCase):
         import inspect
         from types import SimpleNamespace
         from unittest.mock import Mock,patch
-        q=PinnedApp70Replay10Tests().replay();workflow=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        q=PinnedApp70Replay10Tests().replay();raw=subprocess.check_output(['git','show','c331d14cbce7cd7f4a797734bbc140c41676274f:.github/workflows/campaign47-native-runtime.yml'],cwd=ROOT)
+        import hashlib
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'2380b9549aa9e89b9dc859aabda0485000797162d400026b762ea74e59f6cf1e');workflow=raw.decode()
         for term in ['commits == 174','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--corrected-xcode77',q.JOB77]:self.assertIn(term,workflow)
         self.assertEqual(workflow.count('  native-build:'),1);self.assertNotIn('workflow_dispatch',workflow);self.assertEqual(q.SEAL_COUNT77,174)
         self.assertEqual(q.SOURCE76,'629e2a2cccd3661d14d34a2121b8667932c906d8');self.assertIn('EXACT_CORRECTION77_SOURCE172_PREFIX',inspect.getsource(q.context77))
@@ -1999,5 +2001,239 @@ class HelpAction77Tests(unittest.TestCase):
             ctx=q.context77(r,n,'owned-fixture-token');self.assertEqual(ctx['native_attempt'],77);self.assertTrue(r.receipt['corrected_xcode77'])
             env['GITHUB_RUN_ATTEMPT']='2'
             with self.assertRaisesRegex(ValueError,'ONE_HOSTED77'):q.context77(r,n,'owned-fixture-token')
+
+class RunnerInventory15Tests(unittest.TestCase):
+    """Synthetic owned code only; retention correctness is not a privacy-origin claim."""
+    def temporary(self):
+        import os
+        # Keep the real owned Simulator-style namespace under Windows MAX_PATH.
+        return tempfile.TemporaryDirectory(prefix='c15-',dir=Path(tempfile.gettempdir()).anchor if os.name=='nt'else None)
+    def fixture(self, root):
+        import hashlib,time
+        from types import SimpleNamespace
+        q=PinnedApp70Replay10Tests().replay();n=q.module(ROOT,'native_runtime47.py')
+        home=root/'home';device='11111111-1111-1111-1111-111111111111'
+        installed=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Bundle/Application/22222222-2222-2222-2222-222222222222/C47NativeUI-Runner.app'
+        host=root/'build/C47NativeUI-Runner.app';out=root/'evidence'
+        for base in [installed,host,out]:base.mkdir(parents=True)
+        for base in [installed,host]:
+            (base/'C47NativeUI-Runner').write_bytes(b'owned executable fixture')
+            (base/'Info.plist').write_bytes(b'owned code metadata fixture')
+            (base/'PlugIns').mkdir();(base/'PlugIns/Test.xctest').mkdir()
+            (base/'PlugIns/Test.xctest/Test').write_bytes(b'owned test-bundle fixture')
+        run=root/'build/test.xctestrun';run.write_bytes(b'owned synthetic xctestrun, not a native product')
+        for path in root.rglob('*'):
+            if path.is_file():stabilize_owned_fixture09(path,root)
+        ctx={'repository':'TasfiqJ/onSkin','runner_head':'a'*40,'runner_tree':'b'*40,'run_id':1,'job_id':2,'run_attempt':1,'runner_id':3,'configured_labels':['macos-26-intel'],'native_attempt':78,'job_name':q.JOB15,'authorization':q.AUTH15,'device':device,'app_pid':321}
+        b={'domain':q.DOMAIN15,'producer':q.PRODUCER,'runner_source':{'head':'a'*40,'tree':'b'*40},'execution':ctx,'warm_process':{'pid':321,'executable':'/synthetic/LayerwellStaging.app/LayerwellStaging','process_start_sha256':'c'*64},'app':q.APP,'diagnostic_transform_sha256':q.RECORDED['storage-origin05/PRIVACY08_TRANSFORM.json'],'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
+        b['binding_id']=hashlib.sha256(json.dumps(b,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        runner=q.process_record11({'schema':1,'pid':654,'sourceHead':q.PRODUCER['head'],'bundle':q.BUNDLE},('654 Wed Nov 11 12:00:00 2026 '+str(installed/'C47NativeUI-Runner')+'\n').encode(),654,str(installed/'C47NativeUI-Runner'))
+        state={'invalid':None,'armed':False,'checkpoints':[],'_binaries':[],'runner_discovery_queries':0,'runner':runner}
+        r=SimpleNamespace(env={},output=out,receipt={'inventory15':True,'source':b['runner_source'],'replay_execution11':ctx,'authorization':q.AUTH15})
+        prepared={'inventory':n.bundle_inventory(host),'host':host,'xctestrun':run,'xctestrun_bytes':run.read_bytes(),'compiled_swift':{'bytes':1,'sha256':'d'*64},'binaries':[(p,q.identity((host/p).read_bytes()))for p in ['C47NativeUI-Runner','PlugIns/Test.xctest/Test']]}
+        original=q.read13
+        def read(path,maximum=4096):
+            # Only a newly published synthetic OUTPUT needs the existing Windows adapter.
+            if Path(path).parent==out:stabilize_owned_fixture09(Path(path),root)
+            return original(path,maximum)
+        return SimpleNamespace(q=q,n=n,home=home,device=device,installed=installed,host=host,r=r,b=b,state=state,prepared=prepared,read=read,deadline=time.monotonic_ns()+30_000_000_000)
+
+    def compare(self,f):
+        from unittest.mock import patch
+        with patch.object(f.q.Path,'home',return_value=f.home),patch.object(f.q,'runner_process15',return_value=f.state['runner']),patch.object(f.q,'read13',side_effect=f.read):
+            actual=f.q.compare_runner15(f.r,f.n,f.state,f.b,f.device,f.prepared,f.installed,f.deadline)
+            f.q.need11(actual==f.prepared['inventory'],'PROTOCOL13_INSTALLED_RUNNER_BYTES')
+            return actual
+
+    def test_actual177_preimage_loses_operands_and_current_retains_original_rejection(self):
+        import ast
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        raw=subprocess.check_output(['git','show','c331d14cbce7cd7f4a797734bbc140c41676274f:scripts/release/full-app-j01/pinned_app70_replay10.py'],cwd=ROOT)
+        node=next(x for x in ast.parse(raw).body if isinstance(x,ast.FunctionDef)and x.name=='discover13')
+        for old in [True,False]:
+            with self.subTest(preimage=old),self.temporary()as tmp:
+                f=self.fixture(Path(tmp).resolve());path=f.installed/'Info.plist';path.write_bytes(b'changed owned code');stabilize_owned_fixture09(path,Path(tmp).resolve())
+                before=f.n.bundle_inventory(f.installed);scope=dict(vars(f.q));exec(compile(ast.Module(body=[node],type_ignores=[]),'actual177-discover13','exec'),scope)
+                ps=('654 Wed Nov 11 12:00:00 2026 '+str(f.installed/'C47NativeUI-Runner')+'\n').encode()
+                with patch.object(f.q.Path,'home',return_value=f.home),patch.object(f.q.subprocess,'run',return_value=SimpleNamespace(returncode=0,stdout=ps,stderr=b'')),patch.object(f.q,'read13',side_effect=f.read):
+                    with self.assertRaisesRegex(ValueError,'PROTOCOL13_INSTALLED_RUNNER_BYTES'):(scope['discover13']if old else f.q.discover13)(f.r,f.n,f.state,f.b,f.device,f.prepared,f.deadline)
+                record=f.r.output/'RUNNER_INVENTORY15.json';self.assertEqual(record.exists(),not old)
+                if not old:
+                    v=json.loads(record.read_bytes());self.assertEqual(v['installed_inventory'],before);self.assertEqual(v['prepared_inventory'],f.prepared['inventory']);self.assertFalse(v['original_predicate_result']);self.assertTrue(v['capture_complete']);self.assertFalse(v['continuous_process_binding_claimed'])
+                self.assertFalse(f.state['armed']);self.assertEqual(f.state['checkpoints'],[])
+
+    def test_equal_inventory_retains_raw_order_without_arming_or_mutating_code(self):
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());before=(f.q.tree15(f.host),f.q.tree15(f.installed));original_sha=f.n.sha
+            actual=self.compare(f);v=json.loads((f.r.output/'RUNNER_INVENTORY15.json').read_bytes())
+            self.assertEqual(actual,f.prepared['inventory']);self.assertTrue(v['difference']['original_equality']);self.assertTrue(v['difference']['schema_valid']);self.assertFalse(v['difference']['normalization_applied'])
+            self.assertEqual(before,(f.q.tree15(f.host),f.q.tree15(f.installed)));self.assertIs(f.n.sha,original_sha);self.assertFalse(f.state['armed']);self.assertEqual(f.state['checkpoints'],[])
+
+    def test_real_content_missing_extra_type_changes_retain_every_field_and_abort(self):
+        for fault in ['executable','test-bundle','missing','extra','type']:
+            with self.subTest(fault=fault),self.temporary()as tmp:
+                f=self.fixture(Path(tmp).resolve());p=f.installed/'Info.plist'
+                if fault in ['executable','test-bundle']:
+                    p=f.installed/('C47NativeUI-Runner'if fault=='executable'else'PlugIns/Test.xctest/Test');p.write_bytes(b'changed owned bytes');stabilize_owned_fixture09(p,Path(tmp).resolve())
+                elif fault=='extra':p=f.installed/'extra';p.write_bytes(b'extra code');stabilize_owned_fixture09(p,Path(tmp).resolve())
+                else:
+                    p.unlink()
+                    if fault=='type':p.mkdir()
+                before=(f.q.tree15(f.host),f.q.tree15(f.installed))
+                with self.assertRaisesRegex(ValueError,'PROTOCOL13_INSTALLED_RUNNER_BYTES'):self.compare(f)
+                v=json.loads((f.r.output/'RUNNER_INVENTORY15.json').read_bytes());d=v['difference'];self.assertTrue(d['changed']or d['added']or d['missing']);self.assertFalse(d['original_equality']);self.assertEqual(before,(f.q.tree15(f.host),f.q.tree15(f.installed)));self.assertFalse(f.state['armed'])
+
+    def test_mode_order_duplicate_schema_and_empty_are_explicit_without_normalization(self):
+        q=PinnedApp70Replay10Tests().replay();row={'path':'Runner','mode':'0o755','type':'file','bytes':1,'sha256':'a'*64};other={**row,'path':'Test'}
+        for changed in [{**row,'mode':'0o555'},{**row,'mode':'0o4755'},{**row,'bytes':True},{k:v for k,v in row.items()if k!='sha256'},{**row,'extra':'unknown'}]:
+            d=q.difference15([row],[changed]);self.assertEqual(d['original_equality'],row==changed);self.assertFalse(d['normalization_applied'])
+            if type(changed.get('bytes'))is bool:self.assertFalse(d['schema_valid'])
+            else:self.assertTrue(d['changed'])
+        self.assertTrue(q.difference15([row,other],[other,row])['order_only']);self.assertFalse(q.difference15([row],[row,row])['schema_valid']);self.assertFalse(q.difference15([],[])['schema_valid']);self.assertFalse(q.difference15([row],[{**row,'path':'../outside'}])['schema_valid'])
+
+    def test_safe_and_unsafe_symlink_targets_and_real_mode_difference(self):
+        import os
+        q=PinnedApp70Replay10Tests().replay()
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());p=f.host/'Info.plist';p.chmod(0o444);f.prepared['inventory']=f.n.bundle_inventory(f.host)
+            try:
+                with self.assertRaisesRegex(ValueError,'PROTOCOL13_INSTALLED_RUNNER_BYTES'):self.compare(f)
+                d=json.loads((f.r.output/'RUNNER_INVENTORY15.json').read_bytes())['difference'];self.assertEqual([x['field']for x in d['changed'][0]['fields']],['mode'])
+            finally:p.chmod(0o666)
+        # Real symlink behavior is exercised on the native POSIX host; Windows may forbid creation.
+        with self.temporary()as tmp:
+            root=Path(tmp).resolve();target=root/'file';target.write_bytes(b'owned');stabilize_owned_fixture09(target,root)
+            link=root/'link'
+            try:os.symlink('file',link)
+            except OSError as error:
+                self.assertEqual(os.name,'nt');self.assertIn(getattr(error,'winerror',None),[5,1314]);return
+            n=q.module(ROOT,'native_runtime47.py')
+            if os.name=='nt':
+                with self.assertRaisesRegex(ValueError,'INVENTORY15_REPARSE'):q.inventory15(n,root)
+            else:
+                rows,_=q.inventory15(n,root);self.assertEqual(next(r for r in rows if r['path']=='link')['target'],'file')
+            link.unlink();os.symlink('../outside',link)
+            with self.assertRaises((ValueError,FileNotFoundError)):q.inventory15(n,root)
+
+    def test_changed_during_capture_and_hardlink_are_closed(self):
+        import os
+        from unittest.mock import patch
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());original=f.n.stage_file_digest
+            def race(path,maximum):
+                result=original(path,maximum);path.write_bytes(path.read_bytes()+b'changed');return result
+            with patch.object(f.n,'stage_file_digest',side_effect=race):
+                with self.assertRaisesRegex(ValueError,'INVENTORY15_TREE_CHANGED'):self.compare(f)
+            v=json.loads((f.r.output/'RUNNER_INVENTORY15.json').read_bytes());self.assertFalse(v['capture_complete']);self.assertEqual(v['first_failure']['stage'],'INSTALLED_CODE_INVENTORY');self.assertFalse(f.state['armed'])
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());os.link(f.installed/'Info.plist',f.installed/'linked')
+            with self.assertRaisesRegex(ValueError,'INVENTORY15_CODE_FILE'):self.compare(f)
+
+    def test_recording_failure_bounds_and_terminal_state_never_admit(self):
+        from unittest.mock import patch
+        for fault in ['write','overflow','invalid']:
+            with self.subTest(fault=fault),self.temporary()as tmp:
+                f=self.fixture(Path(tmp).resolve())
+                if fault=='invalid':f.state['invalid']={'code':'synthetic terminal'}
+                with patch.object(f.q,'evidence15',side_effect=OSError(28,'private unknown path'))if fault=='write'else patch.object(f.q,'INVENTORY_JSON15',1 if fault=='overflow'else 4*1024*1024):
+                    with self.assertRaises((OSError,ValueError)):self.compare(f)
+                self.assertFalse(f.state['armed']);self.assertEqual(f.state['checkpoints'],[]);self.assertFalse((f.r.output/'RUNNER_INVENTORY15.json').exists())
+                if fault=='write':self.assertEqual(f.r.receipt['inventory15_failures'][0]['numeric'],{'errno':28});self.assertNotIn('private unknown',json.dumps(f.r.receipt))
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());f.state['invalid']={'code':'synthetic terminal'}
+            with patch.object(f.q.subprocess,'run')as run:
+                with self.assertRaisesRegex(ValueError,'PROTOCOL13_TERMINAL'):f.q.discover13(f.r,f.n,f.state,f.b,f.device,f.prepared,f.deadline)
+                run.assert_not_called()
+
+    def test_prepared_xctestrun_both_raw_operands_survive_unchanged_guard(self):
+        import base64
+        from unittest.mock import patch
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());p=f.prepared['xctestrun'];p.write_bytes(b'changed owned xctestrun');stabilize_owned_fixture09(p,Path(tmp).resolve())
+            with patch.object(f.q,'read13',side_effect=f.read):
+                a,b=f.q.prepared_comparison15(f.r,f.n,'PREPARED_INPUTS15.json',f.prepared['inventory'],f.host,p,f.prepared['xctestrun_bytes'])
+                with self.assertRaisesRegex(ValueError,'PROTOCOL13_PREPARED_INPUTS_UNCHANGED'):f.q.need11(a==f.prepared['inventory']and b==f.prepared['xctestrun_bytes'],'PROTOCOL13_PREPARED_INPUTS_UNCHANGED')
+            v=json.loads((f.r.output/'PREPARED_INPUTS15.json').read_bytes());self.assertEqual(base64.b64decode(v['prepared_xctestrun']),f.prepared['xctestrun_bytes']);self.assertEqual(base64.b64decode(v['observed_xctestrun']),p.read_bytes());self.assertFalse(v['xctestrun_equal']);self.assertTrue(v['capture_complete'])
+
+    def test_snapshot_failure_is_later_only_and_original_inventory_survives(self):
+        from unittest.mock import patch
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());self.compare(f);original=(f.r.output/'RUNNER_INVENTORY15.json').read_bytes();f.state['invalid']={'code':'synthetic terminal'}
+            (f.installed/'Info.plist').write_bytes(b'changed later')
+            with patch.object(f.q,'read13',side_effect=f.read):f.q.installed_snapshot15(f.r,f.n,f.state)
+            v=json.loads((f.r.output/'INSTALLED_SNAPSHOT15.json').read_bytes());self.assertEqual(v['status'],'NOT_SAVED');self.assertFalse(v['exact_rejection_time_copy_claimed']);self.assertEqual((f.r.output/'RUNNER_INVENTORY15.json').read_bytes(),original)
+
+    def test_inventory_uses_existing_bytecode_once_without_mutating_original_globals(self):
+        import inspect
+        from unittest.mock import patch
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());operation=f.n.bundle_inventory;digest=f.n.sha;calls=[];original=f.n.stage_file_digest
+            with patch.object(f.n,'stage_file_digest',side_effect=lambda p,m:(calls.append(p),original(p,m))[1]):actual,_=f.q.inventory15(f.n,f.host)
+            self.assertEqual(actual,f.prepared['inventory']);self.assertEqual(len(calls),3);self.assertIs(f.n.bundle_inventory,operation);self.assertIs(f.n.sha,digest)
+            source=inspect.getsource(f.q.inventory15);self.assertIn('operation.__code__',source);self.assertIn("{**operation.__globals__,'sha':checked_sha}",source)
+
+    def test_current78_one_shot_keeps_historical77_workflow_and_all_bounds(self):
+        import inspect
+        q=PinnedApp70Replay10Tests().replay();w=(ROOT/'.github/workflows/campaign47-native-runtime.yml').read_text()
+        for term in ['commits == 179','github.run_attempt == 1','number == 48','runs-on: macos-26-intel','timeout-minutes: 90','cancel-in-progress: false','retention-days: 3','500 * 1024 * 1024','--retained-inventory15',q.JOB15]:self.assertIn(term,w)
+        self.assertEqual(w.count('  native-build:'),1);self.assertNotIn('workflow_dispatch',w);self.assertEqual(q.SEAL_COUNT15,179)
+        self.assertEqual(q.execution_domain12({'native_attempt':78,'job_name':q.JOB15,'authorization':q.AUTH15}),q.DOMAIN15)
+        for attempt in [True,77,79,80,81,82]:
+            with self.assertRaises(ValueError):q.execution_domain12({'native_attempt':attempt,'job_name':q.JOB15,'authorization':q.AUTH15})
+        self.assertIn('EXACT_INVENTORY15_SOURCE177_PREFIX',inspect.getsource(q.context15));self.assertEqual(q.START15,'c331d14cbce7cd7f4a797734bbc140c41676274f');self.assertEqual(q.TREE15,'e33df884e00a4e31cd0b80f954c89c7b4cc056f3')
+
+    def test_missing_process_after_capture_retains_available_operand_and_binding_gap(self):
+        from unittest.mock import patch
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve())
+            with patch.object(f.q.Path,'home',return_value=f.home),patch.object(f.q,'runner_process15',side_effect=[f.state['runner'],ValueError('C47_REPLAY11_INVENTORY15_PROCESS_ABSENT')]),patch.object(f.q,'read13',side_effect=f.read):
+                with self.assertRaisesRegex(ValueError,'INVENTORY15_PROCESS_ABSENT'):f.q.compare_runner15(f.r,f.n,f.state,f.b,f.device,f.prepared,f.installed,f.deadline)
+            v=json.loads((f.r.output/'RUNNER_INVENTORY15.json').read_bytes());self.assertEqual(v['installed_inventory'],f.prepared['inventory']);self.assertIsNone(v['process_after']);self.assertFalse(v['capture_complete']);self.assertEqual(v['first_failure']['stage'],'PROCESS_AFTER');self.assertFalse(f.state['armed'])
+
+    def test_later_snapshot_success_is_bound_to_captured_bytes_not_rejection_time(self):
+        import tarfile
+        from unittest.mock import patch
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());self.compare(f);f.state['invalid']={'code':'synthetic terminal'};original=f.n.stage_file_digest
+            def output_digest(path,*args):
+                if path.parent==f.r.output:stabilize_owned_fixture09(path,Path(tmp).resolve())
+                return original(path,*args)
+            with patch.object(f.n,'evidence_total',return_value=0),patch.object(f.n,'stage_file_digest',side_effect=output_digest),patch.object(f.q,'read13',side_effect=f.read):f.q.installed_snapshot15(f.r,f.n,f.state)
+            v=json.loads((f.r.output/'INSTALLED_SNAPSHOT15.json').read_bytes());self.assertEqual(v['status'],'LATER_SNAPSHOT_MATCHES_CAPTURED_INVENTORY');self.assertFalse(v['exact_rejection_time_copy_claimed'])
+            with tarfile.open(f.r.output/'installed-ui-runner15.tar.gz')as archive:
+                for row in v['inventory']:
+                    item=archive.getmember('C47NativeUI-Runner.app/'+row['path']);self.assertEqual(item.mode,int(row['mode'],8))
+                    if row['type']=='file':self.assertEqual(f.q.identity(archive.extractfile(item).read()),{k:row[k]for k in ['bytes','sha256']})
+
+    def test_publication_is_exclusive_and_schema_equal_boolean_still_cannot_admit(self):
+        from unittest.mock import patch
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());self.compare(f);path=f.r.output/'RUNNER_INVENTORY15.json';before=path.read_bytes()
+            with self.assertRaisesRegex(ValueError,'INVENTORY15_RECORD_EXISTS'):self.compare(f)
+            self.assertEqual(path.read_bytes(),before);self.assertFalse(f.state['armed'])
+        with self.temporary()as tmp:
+            f=self.fixture(Path(tmp).resolve());rows=f.prepared['inventory'];rows[0]['unexpected']=True
+            with patch.object(f.q,'inventory15',return_value=(rows,f.q.tree15(f.installed))):
+                with self.assertRaisesRegex(ValueError,'INVENTORY15_SCHEMA'):self.compare(f)
+            v=json.loads((f.r.output/'RUNNER_INVENTORY15.json').read_bytes());self.assertTrue(v['original_predicate_result']);self.assertFalse(v['difference']['schema_valid']);self.assertFalse(f.state['armed'])
+
+    def test_actual_context15_accepts_only_exact179_source_and_first_standard_job(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock,patch
+        q=PinnedApp70Replay10Tests().replay();env={'GITHUB_REPOSITORY':'TasfiqJ/onSkin','GITHUB_EVENT_NAME':'pull_request','GITHUB_JOB':'native-build','GITHUB_RUN_ATTEMPT':'1','C47_EXPECTED_HEAD':'d'*40,'GITHUB_RUN_ID':'123'}
+        job={'name':q.JOB15,'head_sha':'d'*40,'run_id':123,'run_attempt':1,'status':'in_progress','runner_id':8,'labels':['macos-26-intel'],'id':456};r=SimpleNamespace(env=env,root=ROOT,receipt={},persist=Mock());n=SimpleNamespace(BASE='02aa4ba879fb844f3ca0aa929591203ee45f4163',_stage_api=Mock(return_value=({'jobs':[job]},None)))
+        def git(argv,**kwargs):
+            args=argv[2:];values={('rev-parse','HEAD'):'d'*40,('rev-list','--count',n.BASE+'..HEAD'):'179',('rev-parse','HEAD~2'):q.START15,('rev-parse',q.START15+'^{tree}'):q.TREE15,('status','--porcelain'):'',('rev-parse','HEAD^{tree}'):'e'*40}
+            self.assertIn(tuple(args),values);return values[tuple(args)].encode()
+        with patch.object(q.sys,'platform','darwin'),patch.object(q.subprocess,'check_output',side_effect=git):
+            ctx=q.context15(r,n,'owned-fixture-token');self.assertEqual(ctx['native_attempt'],78);self.assertTrue(r.receipt['inventory15'])
+            for key,bad in [('run_attempt',2),('runner_id',0),('labels',['macos-latest']),('head_sha','f'*40)]:
+                previous=job[key];job[key]=bad
+                with self.assertRaisesRegex(ValueError,'ACTUAL_STANDARD_JOB'):q.context15(r,n,'owned-fixture-token')
+                job[key]=previous
+            env['GITHUB_RUN_ATTEMPT']='2'
+            with self.assertRaisesRegex(ValueError,'ONE_HOSTED_INVENTORY15'):q.context15(r,n,'owned-fixture-token')
+
 
 if __name__=='__main__':unittest.main()

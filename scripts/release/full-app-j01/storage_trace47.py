@@ -523,6 +523,12 @@ def source_scope05(phase, root):
     correction77_prefix=g('rev-list','--reverse',verifier.BASE+'..'+correction77_checkpoint).splitlines()
     if len(correction77_prefix)!=172 or result['commits'][:172]!=correction77_prefix:
         raise ValueError('C47_CORRECTION77_EXACT172_PREFIX')
+    inventory15_checkpoint='c331d14cbce7cd7f4a797734bbc140c41676274f'
+    if g('rev-parse',inventory15_checkpoint+'^{tree}')!='e33df884e00a4e31cd0b80f954c89c7b4cc056f3' or g('merge-base',inventory15_checkpoint,result['head'])!=inventory15_checkpoint:
+        raise ValueError('C47_INVENTORY15_PRESERVED177_CHECKPOINT')
+    inventory15_prefix=g('rev-list','--reverse',verifier.BASE+'..'+inventory15_checkpoint).splitlines()
+    if len(inventory15_prefix)!=177 or result['commits'][:177]!=inventory15_prefix:
+        raise ValueError('C47_INVENTORY15_EXACT177_PREFIX')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
         'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':73,
         'historical_validator_file_modified':False,'diagnostic_only':False,
