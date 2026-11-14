@@ -11249,6 +11249,59 @@
       "brain_contribution": "d872dadfdee77340794afadf2a7907e2c313b160",
       "source_helper_unchanged": true,
       "observations": "C16 RESUMED on updated CLI0.169.0. Verified clean local182 0626b82741163e901115c8c4c9377b3522ec217b/tree6a6fee6b87296331f5617e44b4cc6b80e55a4997 and published18151769a8f preserved. Actual active session danger-full-access/approval never differs from saved workspace-write/on-request; ordinary OS symlinks refuse1314, real hardlink/atomic replacement pass. No escalation mechanism is available and no security/privilege/configuration setting was changed. Normal exact-lock npm11.20.0 ci now PASSES including install hooks, unchanged package/lock hashes, and normal existing authenticated push dry-run passes. These current results supersede only those earlier blocked capabilities; historical failures remain retained.\nIndependently reviewed Brain d872dadfdee77340794afadf2a7907e2c313b160. Its readiness handshake starts the collection deadline only after the actual owned child emits partial stdout (with0.6s intentional startup delay); real collection/timeout/kill/reap remain unchanged. Added separate empty-prefix timeout/reaping coverage. Original21 helper controls and disposable corrected22 each pass. Integrate only this reviewed fixture; revised production helper59b6fd6c643e533bef6935c4fb6379d490b2d0a9b3e1c8ec1f129a14aa338cba remains exact. Existing prospective one-shot diagnostic count is184 for material183 then seal184; workflow remains explicitly false pending full exact-source validation and renewed capacity. No native allocation, ordinary/internal admission, source-frozen claim or acceptance at this preparation checkpoint. All104 existing observer groups and active3/5/30/inventory/security/privacy/owner assertions remain. Release NO_GO."
+    },
+    {
+      "UTC": "2026-11-14T01:12:25.519810+00:00",
+      "authorization": "BRAIN-C47-AUTONOMOUS-NATIVE-COMPLETION16",
+      "preimage_head": "bfff14e0c9bb8a2032e5e5da5459f622721ef14a",
+      "preimage_tree": "e3f35bc3cec0f0986597eed78797c5d7370b7a18",
+      "paths": [
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "state": "PRESENT",
+          "bytes": 106531,
+          "sha256": "82279a09af4e85afe36214281f4debe7891db717de7fcd7499ae458c94d20871"
+        },
+        {
+          "path": "PROGRESS.md",
+          "state": "PRESENT",
+          "bytes": 725969,
+          "sha256": "2ecd0e87f32832baab00f115a43f868a56c13c08b508a5bec19f470cc4c55567"
+        },
+        {
+          "path": "docs/brain/c47-c16/README.md",
+          "state": "PRESENT",
+          "bytes": 8053,
+          "sha256": "02cae4734d9fdde1f81dc4c0a7346fea0d77f3f3d3bcf9b3f00bd6568c57e8ea"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "state": "PRESENT",
+          "bytes": 232451,
+          "sha256": "e4b2fa3ec2de965d6efcbc58fbdf7ca3f3a0d43011fbf284f666f98c11da0fd2"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "state": "PRESENT",
+          "bytes": 889405,
+          "sha256": "0236e939e8bc7cab9b9303d9a035ed6b7126215407b34589e6137157a9ab9df8"
+        }
+      ],
+      "cause": "Document actual current-source results and external native-capacity boundary without changing tested code.",
+      "invariant": "Five documentation/ledger paths only; exact code/config/test/input blob equivalence to tested183; final worklist-only seal and full source custody still required.",
+      "qualification": "C16 resumed source qualification completed on exact material183 bfff14e0c9bb8a2032e5e5da5459f622721ef14a/treee3f35bc3cec0f0986597eed78797c5d7370b7a18. Normal exact-lock npm11.20.0 ci and hooks PASS with unchanged package/lock hashes. All14 required local profiles PASS: SOURCE_PENDING77/all23747 tracked regular single-link files streamed, postinstall checks, uncached7122 root tests with explicit Windows four-worker CLI, uncached type/lint, helper22, established Windows Python3.12 observer104, runtime157 onPython3.9, signing15, properties8, workflow19, complete original30 source cases/all60 ordered events and12 expected actual child outcomes, current-source56 and raw dependency graph. These are source controls, not native proof. No security/privacy/owner/age/encryption/deletion/recovery/inventory or active3/5/30 assertion was removed or relaxed.\nThe default Python3.9 observer run remains a genuine separate FAIL:104groups/3errors in the same299-character synthetic-path fixture. Direct comparison provesPython3.9 pathlib.resolve strips that fixture's explicit extended Windows prefix; existingPython3.12 preserves it. Reused the existing C15 Windows observer profile and authenticated existing official runtime/archive; no download, install, security setting, shorter identity, test edit or assertion waiver. Full104 Python3.12 PASS does not relabel thePython3.9failure. OriginalC16 permission/install/helper failures remain authenticated historical records.\nNative capacity is NOT_ESTABLISHED. Normal existing authenticated Git push dry-run and public repo/PR/no-active-job/cache reads now pass; billing endpoints return404, and computer use stopped because the browser URL could not be established safely. No alternate UI/permission bypass was attempted. Savedworkspace-write/on-request differs from actualdanger-full-access/approvalnever. Ordinary symbolic links still refuseWinError1314; real hardlinks/atomic replacement pass; normalnpm uses its native Windows junction without override. The historical app70 hosted artifact is no longer listed; do not assume that replay prerequisite exists or infer its deletion cause. No native job was allocated, all79-86 remainUNUSED, hostedminutes0/infrastructurerepeats0. Diagnostic, clean product build, complete ordinary3, internal5/export/removal remainNOT_RUN. Native67/77/78 causes remainUNKNOWN.\nThis final bookkeeping commit changes only five existing documentation/ledger paths; every application/test/configuration/installer/native/descriptor blob is exact to tested183. The next separate final commit changes only the two existing generated worklists. Existing SOURCE_FROZEN/current-source/nested controls and explicit blob-equivalence proof must pass before normal append-only source publication to the same draftPR48. The native workflow stays explicitlyfalse; its prospective184 guard is deliberately inadmissible at the later final seal. No Mac allocation is authorized by this source-only publication. Final-headCI is independently collected after publication; its failures/skips and protected Security/candidate29/G97/SDK/scanner findings remain unwaived. All38 requirements/18owner gates remain unaccepted; releaseNO_GO. No merge, deployment, release, owner acceptance orJ01 qualification.",
+      "native_started": [],
+      "unused_attempts": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86
+      ],
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
