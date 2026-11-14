@@ -11179,6 +11179,76 @@
       "native_workflow_locked": true,
       "final_source_frozen_seal": "NOT_CLAIMED",
       "cause_record": "C16 LOCAL SOURCE CHECKPOINT / PARTIAL_BLOCKED / PUSH_BLOCKED / NO_GO. No native starts79-86 were allocated. The actual Windows sandbox refuses the required dependency symlink (normal npm ci EPERM -4048); supported npm --install-links refuses the unchanged lockfile (EUSAGE missing packed decode-uri-component0.5.1), so neither install passed and dependencies/lock were not changed. Normal git push dry-run cannot launch the configured shell credential helper; a native invocation of the existing credential helper independently returns Failed to enumerate credentials [0x5] Access is denied. No GITHUB_TOKEN/GH_TOKEN is present. No account, credential, provider, signing or billing change was made. The available connector exposes per-file contents commits, not atomic publication of this reviewed source tree; it was not used to publish transient inconsistent code or trigger jobs. Current-source and zero-paid capacity qualifications cannot be completed here.\nBrain contribution disposition: revised partial integration, not acceptance. Original15 helper controls PASS; a real-process output-overflow RED is retained. Bounded capture now terminates/reaps the overflowing child, retains actual bounded failure streams/operation/timing/hash/errno with explicit truncation, and refuses concurrent/terminal/late probes. All21 helper controls and3 coordinator integrations PASS on Windows Python3.9. Existing101 observer test names remain;3 current methods were adapted for prospective77-path scope, the same subprocess transport fixture and an anchored immutable78 workflow witness. Add3 prospective coordinator controls,104groups total; complete104 suite NOT_QUALIFIED. No original inventory/permission/active3/5/30 assertion was removed. A fixture-path correction replaces an unwritable drive-root temporary path with the existing user temp directory; real hardlink publication still fails honestly with WinError5. It was not mocked away or converted to PASS.\nDevelopment outcomes remain distinct: initial observer invocation interrupted without complete result; bounded101 invocation TIMED_OUT at120seconds with existing dependency/fixture failures; focused custody20 first has26errors from AppContainer MAX_PATH, then20/0failures/15errors after a shorter owned temp path, now exposing actual hardlink denial. Runtime157 executed with156PASS/1ERROR (WinError206 from redirected TEMP); signing15 and properties passed. Forced uncached root four-worker, typecheck, lint, install-hook, full30, workflow19/current-source and dependency-graph invocations failed setup with missing dependencies;7122 baseline was NOT_EXECUTED, never a zero-case PASS. Raw outputs retained outside source. No current-source equivalence or historical C15 pass erases these failures.\nNo app source or consent/owner/age/encryption/withdrawal/deletion/recovery policy changed. Source review traced explicit grant through authoritative lifecycle/activation routing and exact-window onboarding revalidation; it has not proved native67 causality or a new production defect. Native77 inventory mismatch and78 discovery cause remain unknown. Diagnostic79, clean build, ordinary3, internal5/export/removal are NOT_RUN. No current CI/native execution validates this local source. The native workflow is explicitly false until complete source and fresh capacity qualification; prospective183 guard is not an execution grant. Current source pins/scope are updated, but final SOURCE_FROZEN/worklist seal is not claimed while setup is blocked. All181 remote ancestors and frozen plan remain exact. Same draft/open/unmerged PR48; remote still181, auto-merge/maintainer edits OFF. Preserve this local append-only material and return it for independent Brain review; all38 requirements/18 owner gates remain unaccepted."
+    },
+    {
+      "UTC": "2026-11-14T00:46:50.933339+00:00",
+      "authorization": "BRAIN-C47-AUTONOMOUS-NATIVE-COMPLETION16",
+      "preimage_head": "0626b82741163e901115c8c4c9377b3522ec217b",
+      "preimage_tree": "6a6fee6b87296331f5617e44b4cc6b80e55a4997",
+      "paths": [
+        {
+          "path": "scripts/release/full-app-j01/observer_probe16.test.py",
+          "state": "PRESENT",
+          "bytes": 12106,
+          "sha256": "581ba8a68c5790ba3873647216e91643dc94a178d478f2b4d1e521c359eeddbf"
+        },
+        {
+          "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+          "state": "PRESENT",
+          "bytes": 139084,
+          "sha256": "9c55903c8fcf140d45668e50542f2cd767b95494c05df7c61d21e1007a974846"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "state": "PRESENT",
+          "bytes": 4072,
+          "sha256": "2ff9b78cc772947cdab8a59430c32d86fa7b0bfb9012142c0a7330d707a3a416"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "state": "PRESENT",
+          "bytes": 24194,
+          "sha256": "06db4a8925abb447e00b124eb0e1a40689492ada20d956b7aabfd9d2e34ac4f6"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "state": "PRESENT",
+          "bytes": 884531,
+          "sha256": "df7c59870e80c732b64b131945927c6b358dbcbed4476d9ce0f89ac585569d06"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "state": "PRESENT",
+          "bytes": 230789,
+          "sha256": "8fbd180bd02edcdf647b96792271327a6fe16f20e72d6e6c454bacb7e0a0c104"
+        },
+        {
+          "path": "docs/brain/c47-c16/README.md",
+          "state": "PRESENT",
+          "bytes": 6391,
+          "sha256": "0327ad44941c3134baef32796d637a0c84e41964c2b9e600554c723dc29b3302"
+        },
+        {
+          "path": "PROGRESS.md",
+          "state": "PRESENT",
+          "bytes": 724307,
+          "sha256": "29edb4a57095aa5f8d14b73cb5bd2bec3114d31571bb544f5ace1a32af98adf2"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "state": "PRESENT",
+          "bytes": 104869,
+          "sha256": "2533e89c1540afa51fc9bf1f799aa7e4849171d6114b0350370de40b67013ca1"
+        }
+      ],
+      "cause": "Exact-lock install and normal authenticated push dry-run now pass. Integrate independently reviewed Brain deterministic timeout fixture d872dadf without altering revised production helper; account for next material183/seal184 in existing prospective diagnostic guard. Native allocation remains disabled pending full source and fresh capacity.",
+      "invariant": "All21 existing helper test names preserved; actual child capture, bounds, kill/reap assertions remain. Add pre-output timeout. All104 observer groups remain; active3/5/30, original inventory equality, owner/age/consent/encryption/deletion/recovery unchanged.",
+      "native_started": [],
+      "release": "NO_GO",
+      "status": "C16_RESUMED_DETERMINISTIC_FIXTURE_PREPARATION",
+      "brain_contribution": "d872dadfdee77340794afadf2a7907e2c313b160",
+      "source_helper_unchanged": true,
+      "observations": "C16 RESUMED on updated CLI0.169.0. Verified clean local182 0626b82741163e901115c8c4c9377b3522ec217b/tree6a6fee6b87296331f5617e44b4cc6b80e55a4997 and published18151769a8f preserved. Actual active session danger-full-access/approval never differs from saved workspace-write/on-request; ordinary OS symlinks refuse1314, real hardlink/atomic replacement pass. No escalation mechanism is available and no security/privilege/configuration setting was changed. Normal exact-lock npm11.20.0 ci now PASSES including install hooks, unchanged package/lock hashes, and normal existing authenticated push dry-run passes. These current results supersede only those earlier blocked capabilities; historical failures remain retained.\nIndependently reviewed Brain d872dadfdee77340794afadf2a7907e2c313b160. Its readiness handshake starts the collection deadline only after the actual owned child emits partial stdout (with0.6s intentional startup delay); real collection/timeout/kill/reap remain unchanged. Added separate empty-prefix timeout/reaping coverage. Original21 helper controls and disposable corrected22 each pass. Integrate only this reviewed fixture; revised production helper59b6fd6c643e533bef6935c4fb6379d490b2d0a9b3e1c8ec1f129a14aa338cba remains exact. Existing prospective one-shot diagnostic count is184 for material183 then seal184; workflow remains explicitly false pending full exact-source validation and renewed capacity. No native allocation, ordinary/internal admission, source-frozen claim or acceptance at this preparation checkpoint. All104 existing observer groups and active3/5/30/inventory/security/privacy/owner assertions remain. Release NO_GO."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

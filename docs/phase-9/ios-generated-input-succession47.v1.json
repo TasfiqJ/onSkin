@@ -251,13 +251,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/observer_probe16.test.py",
-      "bytes": 12106,
-      "sha256": "581ba8a68c5790ba3873647216e91643dc94a178d478f2b4d1e521c359eeddbf"
+      "bytes": 15169,
+      "sha256": "a2eb594a35285be3c68cbd0e8add872765737a64a76a1b4321be3f810bf52d21"
     },
     {
       "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
       "bytes": 139084,
-      "sha256": "9c55903c8fcf140d45668e50542f2cd767b95494c05df7c61d21e1007a974846"
+      "sha256": "a3fc5ac42b0531d47655ddeee0e97a87ba8c7231b10ecbade2de3e74b58b1d02"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
