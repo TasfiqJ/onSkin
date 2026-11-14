@@ -47,6 +47,7 @@ const mocks = vi.hoisted(() => ({
   preparePending: vi.fn(),
   publishImmediateInterlock: vi.fn(),
   read: vi.fn(),
+  lifecycleBytes: new Map<string, string>(),
   record: null as HealthDataLifecycleRecord | null,
   retryRemote: vi.fn(),
   runAccountGenerationOperation: vi.fn(),
@@ -90,6 +91,11 @@ vi.mock('@/lib/auth/accountGeneration', () => ({
     error.code === 'ACCOUNT_GENERATION_CHANGED',
   runAccountGenerationOperation: mocks.runAccountGenerationOperation,
 }));
+vi.mock('@/lib/auth/localAccountIsolation', () => ({
+  LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED: 'LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED',
+  privateMutationReadGeneration46: () => 0,
+  waitForPrivateMutationReadWindow46: async (assertCurrent: () => void) => assertCurrent(),
+}));
 vi.mock('@/lib/auth/sessionOwner', () => ({
   localDataOwnerBinding: vi.fn(async () => OWNER_BINDING),
   readLocalDataOwnership: vi.fn(async () => mocks.ownership),
@@ -104,6 +110,7 @@ vi.mock('@/lib/consent/dependentConsentLocal', () => ({
 }));
 vi.mock('@/features/onboarding/healthConsentStore', () => ({
   hasCurrentHealthDataCollectionConsent: mocks.hasCurrentConsent,
+  hasCurrentHealthDataCollectionConsentStrict: mocks.hasCurrentConsent,
   setHealthDataCollectionConsentLocal: mocks.setLocalConsent,
   synchronizeAuthoritativeHealthDataCollectionConsent: mocks.syncLocalConsent,
 }));
@@ -182,6 +189,56 @@ vi.mock('./remote', () => ({
   retryRemoteHealthDataWithdrawal: mocks.retryRemote,
 }));
 vi.mock('./selectiveCleanup', () => ({ clearHealthPurposeLocalData: mocks.cleanup }));
+
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: vi.fn(async (key: string) => mocks.lifecycleBytes.get(key) ?? null),
+  updatePrivateItem: vi.fn(async (
+    key: string,
+    update: (current: string | null) => string | null,
+  ) => {
+    const next = update(mocks.lifecycleBytes.get(key) ?? null);
+    if (next === null) mocks.lifecycleBytes.delete(key);
+    else mocks.lifecycleBytes.set(key, next);
+  }),
+}));
+
+async function usePersistedLifecycle(initial: HealthDataLifecycleRecord | null) {
+  const store = await vi.importActual<typeof import('./lifecycleStore')>('./lifecycleStore');
+  mocks.lifecycleBytes.clear();
+  if (initial) {
+    // Simulates exact durable bytes left by a preceding process. The real
+    // parser and transition validator are exercised on every following call.
+    mocks.lifecycleBytes.set(store.HEALTH_DATA_LIFECYCLE_KEY, JSON.stringify(initial));
+  }
+  mocks.read.mockImplementation(async (owner: string) => {
+    mocks.record = await store.readHealthDataLifecycle(owner);
+    return mocks.record;
+  });
+  mocks.write.mockImplementation(async (input) => {
+    mocks.record = await store.writeHealthDataLifecycle(input);
+    return mocks.record;
+  });
+  return store;
+}
+
+function interruptedInitialBootstrap(overrides: Partial<HealthDataLifecycleRecord> = {}) {
+  return localRecord('verification_required', {
+    processingEpoch: 0,
+    localCleanupComplete: false,
+    verificationReason: 'authoritative_unconsented',
+    verificationResumeState: 'unconsented',
+    serverVerifiedAt: null,
+    ...overrides,
+  });
+}
+
+function expectNoHealthGrant() {
+  expect(mocks.grantRemote).not.toHaveBeenCalled();
+  expect(mocks.setLocalConsent).not.toHaveBeenCalled();
+  expect(mocks.syncLocalConsent).not.toHaveBeenCalled();
+  expect(mocks.setEpoch).not.toHaveBeenCalled();
+  expect(mocks.activeLease).toBeNull();
+}
 
 function localRecord(
   state: HealthDataLifecycleRecord['state'],
@@ -1137,5 +1194,216 @@ describe('health consent lifecycle orchestration', () => {
     expect(mocks.fetchRemote).not.toHaveBeenCalled();
     expect(mocks.cleanup).not.toHaveBeenCalled();
     expect(mocks.setEpoch).not.toHaveBeenCalled();
+  });
+
+  it('records the actual initial cleanup origin and recovers after that cleanup was interrupted', async () => {
+    mocks.configured = false;
+    mocks.hasCurrentConsent.mockResolvedValue(false);
+    const store = await usePersistedLifecycle(null);
+    mocks.cleanup.mockRejectedValueOnce(new Error('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED'));
+
+    // This first marker comes from the actual orchestration, not a seeded
+    // desired state. A source-level cleanup failure is not native process death.
+    const interrupted = await reconcileHealthDataLifecycle(OWNER);
+    expect(interrupted).toMatchObject({
+      state: 'verification_required', processingEpoch: 0,
+      verificationReason: 'authoritative_unconsented',
+      verificationResumeState: 'unconsented', localCleanupComplete: false,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(interrupted);
+    expectNoHealthGrant();
+
+    const recovered = await reconcileHealthDataLifecycle(OWNER);
+    expect(recovered).toMatchObject({
+      state: 'unconsented', processingEpoch: 0, localCleanupComplete: true,
+      verificationReason: null, verificationResumeState: null,
+      activationRoutePending: false,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(recovered);
+    expect(mocks.cleanup).toHaveBeenCalledTimes(2);
+    expectNoHealthGrant();
+  });
+
+  it('resumes a proved interrupted never-consented bootstrap to initial consent only after durable cleanup', async () => {
+    mocks.configured = false;
+    mocks.hasCurrentConsent.mockResolvedValue(false);
+    const store = await usePersistedLifecycle(interruptedInitialBootstrap());
+    mocks.cleanup.mockImplementationOnce(async () => {
+      expect(await store.readHealthDataLifecycle(OWNER)).toMatchObject({
+        state: 'verification_required',
+        processingEpoch: 0,
+        verificationReason: 'authoritative_unconsented',
+        verificationResumeState: 'unconsented',
+        localCleanupComplete: false,
+      });
+      expectNoHealthGrant();
+    });
+
+    const recovered = await reconcileHealthDataLifecycle(OWNER);
+    expect(recovered).toMatchObject({
+      state: 'unconsented',
+      processingEpoch: 0,
+      localCleanupComplete: true,
+      verificationReason: null,
+      verificationResumeState: null,
+      activationRoutePending: false,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(recovered);
+    expect(mocks.cleanup).toHaveBeenCalledExactlyOnceWith(OWNER);
+    expectNoHealthGrant();
+    expect(mocks.fetchRemote).not.toHaveBeenCalled();
+  });
+
+  it.each(['HEALTH_PURPOSE_LOCAL_CLEAR_FAILED', 'PRIVATE_KV_UNAVAILABLE'])(
+    'keeps interrupted initial bootstrap paused when cleanup fails or cannot read: %s',
+    async (code) => {
+      mocks.configured = false;
+      mocks.hasCurrentConsent.mockResolvedValue(false);
+      const initial = interruptedInitialBootstrap();
+      const store = await usePersistedLifecycle(initial);
+      mocks.cleanup.mockRejectedValueOnce(new Error(code));
+
+      const paused = await reconcileHealthDataLifecycle(OWNER);
+      expect(paused).toMatchObject({
+        state: 'verification_required',
+        processingEpoch: 0,
+        localCleanupComplete: false,
+        verificationReason: 'authoritative_unconsented',
+        verificationResumeState: 'unconsented',
+      });
+      expect(await store.readHealthDataLifecycle(OWNER)).toEqual(initial);
+      expectNoHealthGrant();
+    },
+  );
+
+  it.each([
+    { name: 'nonzero epoch', record: interruptedInitialBootstrap({ processingEpoch: 2 }) },
+    { name: 'prior active authority', record: interruptedInitialBootstrap({
+      processingEpoch: 2, verificationResumeState: 'active',
+    }) },
+    { name: 'lost local grant', record: interruptedInitialBootstrap({
+      processingEpoch: 2, verificationReason: 'local_consent_unavailable',
+      verificationResumeState: 'active',
+    }) },
+  ])('never downgrades $name into initial consent during local cleanup recovery', async ({ record }) => {
+    mocks.configured = false;
+    mocks.hasCurrentConsent.mockResolvedValue(false);
+    const store = await usePersistedLifecycle(record);
+    const paused = await reconcileHealthDataLifecycle(OWNER);
+    expect(paused).toMatchObject({
+      state: 'verification_required',
+      processingEpoch: record.processingEpoch,
+      verificationReason: record.verificationReason,
+      verificationResumeState: record.verificationResumeState,
+      localCleanupComplete: true,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(paused);
+    expectNoHealthGrant();
+  });
+
+  it('preserves a prior terminal withdrawn epoch instead of treating it as initial consent', async () => {
+    mocks.configured = false;
+    mocks.hasCurrentConsent.mockResolvedValue(false);
+    const initial = localRecord('withdrawn', { processingEpoch: 2, localCleanupComplete: true });
+    const store = await usePersistedLifecycle(initial);
+    expect(await reconcileHealthDataLifecycle(OWNER)).toEqual(initial);
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(initial);
+    expect(mocks.cleanup).not.toHaveBeenCalled();
+    expectNoHealthGrant();
+  });
+
+  it('keeps configured status-unavailable data locked without local bootstrap cleanup or reconsent', async () => {
+    mocks.configured = true;
+    const previous = localRecord('active', { processingEpoch: 2 });
+    const store = await usePersistedLifecycle(previous);
+    mocks.fetchRemote.mockRejectedValueOnce(new Error('STATUS_UNAVAILABLE'));
+    const paused = await reconcileHealthDataLifecycle(OWNER);
+    expect(paused).toMatchObject({
+      state: 'verification_required',
+      processingEpoch: 2,
+      verificationReason: 'status_unavailable',
+      verificationResumeState: 'active',
+      localCleanupComplete: false,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(paused);
+    expect(mocks.cleanup).not.toHaveBeenCalled();
+    expectNoHealthGrant();
+  });
+
+  // This case is meaningful ONLY after lifecycle uses the strict reader alias.
+  // It must not be presented as proving the historical tolerant getter is strict.
+  it('does not erase a persisted local active profile when its consent read rejects', async () => {
+    mocks.configured = false;
+    const store = await usePersistedLifecycle(localRecord('active', { processingEpoch: 2 }));
+    mocks.hasCurrentConsent.mockRejectedValueOnce(new Error('PRIVATE_KV_UNAVAILABLE'));
+    const paused = await reconcileHealthDataLifecycle(OWNER);
+    expect(paused).toMatchObject({
+      state: 'verification_required',
+      processingEpoch: 2,
+      verificationReason: 'status_unavailable',
+      verificationResumeState: 'active',
+      localCleanupComplete: false,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(paused);
+    expect(mocks.cleanup).not.toHaveBeenCalled();
+    expectNoHealthGrant();
+  });
+
+  it('distinguishes a genuinely missing consent at first local bootstrap from an unreadable consent', async () => {
+    mocks.configured = false;
+    mocks.hasCurrentConsent.mockResolvedValue(false);
+    const store = await usePersistedLifecycle(null);
+    const initial = await reconcileHealthDataLifecycle(OWNER);
+    expect(initial).toMatchObject({ state: 'unconsented', processingEpoch: 0, localCleanupComplete: true });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(initial);
+    expect(mocks.cleanup).toHaveBeenCalledExactlyOnceWith(OWNER);
+    expectNoHealthGrant();
+  });
+
+  it.each(['HEALTH_CONSENT_INVALID', 'HEALTH_CONSENT_UNSUPPORTED_VERSION'])(
+    'does not clean a persisted local profile when strict consent decoding rejects: %s',
+    async (code) => {
+      mocks.configured = false;
+      const store = await usePersistedLifecycle(localRecord('active', { processingEpoch: 2 }));
+      mocks.hasCurrentConsent.mockRejectedValueOnce(new Error(code));
+      const paused = await reconcileHealthDataLifecycle(OWNER);
+      expect(paused).toMatchObject({
+        state: 'verification_required',
+        processingEpoch: 2,
+        verificationReason: 'status_unavailable',
+        verificationResumeState: 'active',
+        localCleanupComplete: false,
+      });
+      expect(await store.readHealthDataLifecycle(OWNER)).toEqual(paused);
+      expect(mocks.cleanup).not.toHaveBeenCalled();
+      expectNoHealthGrant();
+    },
+  );
+
+  it.each([
+    { name: 'unknown null provenance', overrides: { verificationResumeState: null } },
+    { name: 'an operation-bound record', overrides: { operationId: 'retained-operation' } },
+    { name: 'a server-verified record', overrides: { serverVerifiedAt: NOW } },
+  ])('keeps $name paused and reviewable instead of inventing initial onboarding', async ({ overrides }) => {
+    mocks.configured = false;
+    mocks.hasCurrentConsent.mockResolvedValue(false);
+    const initial = interruptedInitialBootstrap(overrides);
+    const store = await usePersistedLifecycle(initial);
+    const paused = await reconcileHealthDataLifecycle(OWNER);
+    expect(paused).toMatchObject({
+      state: 'verification_required',
+      processingEpoch: initial.processingEpoch,
+      verificationReason: initial.verificationReason,
+      verificationResumeState: initial.verificationResumeState,
+      operationId: initial.operationId,
+      serverVerifiedAt: initial.serverVerifiedAt,
+      localCleanupComplete: true,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(paused);
+    // These are the genuine local shell's cleanup-complete review conditions;
+    // review remains an explicit user action and no grant occurs here.
+    expect(store.verificationRequiresLocalCleanup(paused)).toBe(true);
+    expect(mocks.cleanup).toHaveBeenCalledExactlyOnceWith(OWNER);
+    expectNoHealthGrant();
   });
 });

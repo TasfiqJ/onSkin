@@ -130,9 +130,35 @@ function assertExport(root) {
 function assertCleanup(root) {
   const fn = functionNamed(root, 'clearHealthPurposeLocalData');
   const directReturns = fn.body.statements.filter(ts.isReturnStatement);
-  const terminal = fn.body.statements.at(-1);
+  let terminal = fn.body.statements.at(-1);
+  let ownedSettlementValid = true;
+  if (terminal && ts.isTryStatement(terminal)) {
+    const owned = fn.body.statements.at(-3);
+    const flag = fn.body.statements.at(-2);
+    const success = terminal.tryBlock.statements.at(-1);
+    const finalizer = terminal.finallyBlock?.statements;
+    const ownedDeclaration = owned && ts.isVariableStatement(owned) && owned.declarationList.declarations;
+    const flagDeclaration = flag && ts.isVariableStatement(flag) && flag.declarationList.declarations;
+    ownedSettlementValid =
+      !terminal.catchClause &&
+      ownedDeclaration?.length === 1 && (owned.declarationList.flags & ts.NodeFlags.BlockScoped) === ts.NodeFlags.Const &&
+      ownedDeclaration[0].name.getText(root) === 'settleReadBoundary' &&
+      ownedDeclaration[0].initializer?.getText(root) === 'beginOwnedPrivateKVAccountBoundary39()' &&
+      flagDeclaration?.length === 1 && (flag.declarationList.flags & ts.NodeFlags.BlockScoped) === ts.NodeFlags.Let &&
+      flagDeclaration[0].name.getText(root) === 'readSettlementComplete' &&
+      flagDeclaration[0].initializer?.kind === ts.SyntaxKind.FalseKeyword &&
+      success?.getText(root) === 'readSettlementComplete = true;' &&
+      finalizer?.length === 1 &&
+      finalizer[0].getText(root) === 'settleReadBoundary(readSettlementComplete);' &&
+      nodes(fn.body, (node) => ts.isIdentifier(node) && node.text === 'readSettlementComplete').length === 3 &&
+      nodes(fn.body, (node) => ts.isIdentifier(node) && node.text === 'settleReadBoundary').length === 2 &&
+      nodes(terminal.tryBlock, ts.isReturnStatement).length === 0;
+    terminal = terminal.tryBlock.statements.at(-2);
+    ownedSettlementValid &&= terminal?.getText(root) ===
+      "if (firstFailure) throw new Error('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');";
+  }
   requireValue(
-    directReturns.length === 0 &&
+    directReturns.length === 0 && ownedSettlementValid &&
       ts.isIfStatement(terminal) &&
       terminal.expression.getText(root) === 'firstFailure' &&
       nodes(terminal.thenStatement, ts.isThrowStatement).length === 1,

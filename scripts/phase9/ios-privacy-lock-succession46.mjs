@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { closeSync, fstatSync, lstatSync, openSync, readSync, realpathSync } from 'node:fs';
+import { closeSync, fstatSync, lstatSync, openSync, readSync, realpathSync, writeSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { lockSuccession23, nativeTree23, LOCK_SUCCESSION23_SHA256 } from './ios-privacy-lock-succession23.mjs';
@@ -18,6 +18,13 @@ const hash = value => createHash('sha256').update(value).digest('hex');
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const reject = message => { throw new Error(`CURRENT_NATIVE_SOURCE46_${message}`); };
 const identityKeys = ['dev', 'ino', 'size', 'mtimeNs', 'ctimeNs', 'nlink'];
+let sourceTraceSequence09 = 0;
+function sourceStage09(site) {
+  if (process.env.C47_SOURCE_TRACE09 !== '1' || sourceTraceSequence09 >= 128) return;
+  try { writeSync(3, JSON.stringify({ event: 'C47_SOURCE_STAGE09', site, pid: process.pid, sequence: ++sourceTraceSequence09 }) + '\n'); }
+  catch { /* Observation cannot alter the original assertion. */ }
+}
+
 const sameStat = (a, b) => identityKeys.every(key => a[key] === b[key]);
 const stamp = stat => identityKeys.map(key => String(stat[key]));
 
@@ -157,22 +164,19 @@ export function readNativeFile46(root, name, maximum = 16 * 1024 * 1024) {
   } finally { closeSync(descriptor); }
 }
 
-function git(root, args, maximum = 32 * 1024 * 1024) {
+function git(root, args, maximum = 32 * 1024 * 1024, input) {
   const env = { ...process.env };
   for (const name of Object.keys(env)) if (name.startsWith('GIT_')) delete env[name];
   env.GIT_NO_REPLACE_OBJECTS = '1';
   env.GIT_OPTIONAL_LOCKS = '0';
   const result = spawnSync('git', ['--no-replace-objects', ...args], {
-    cwd: root.absolute, env, windowsHide: true, timeout: 30_000, maxBuffer: maximum,
+    cwd: root.absolute, env, input, windowsHide: true, timeout: 30_000, maxBuffer: maximum,
   });
   if (result.status !== 0) reject('GIT_SOURCE_IDENTITY');
   return result.stdout;
 }
 
-function commit(root, reference) {
-  const sha = git(root, ['rev-parse', '--verify', reference]).toString('ascii').trim();
-  if (!/^[a-f0-9]{40}$/u.test(sha)) reject('HEAD');
-  const bytes = git(root, ['cat-file', 'commit', sha]);
+function decodeCommit09(sha, bytes) {
   if (createHash('sha1').update(`commit ${bytes.length}\0`).update(bytes).digest('hex') !== sha) reject('COMMIT_OBJECT');
   const header = bytes.toString('utf8').split('\n\n', 1)[0].split('\n');
   const tree = header.find(line => line.startsWith('tree '))?.slice(5);
@@ -181,7 +185,56 @@ function commit(root, reference) {
   return { sha, tree, parents };
 }
 
+// The inventory only supplies candidates. Every object is independently hashed,
+// and the original parent walk below proves ancestry without trusting rev-list,
+// grafts, replacement objects, cached receipts or a previous invocation.
+export function parseNativeCommitBatch09(raw, names) {
+  if (!Buffer.isBuffer(raw) || names.length < 1 || names.length > 263 ||
+      new Set(names).size !== names.length || names.some(name => !/^[a-f0-9]{40}$/u.test(name))) reject('COMMIT_OBJECT');
+  const commits = new Map(); let offset = 0;
+  for (const expected of names) {
+    const end = raw.indexOf(10, offset);
+    if (end < offset) reject('COMMIT_OBJECT');
+    const header = raw.subarray(offset, end).toString('ascii');
+    const match = /^([a-f0-9]{40}) commit (0|[1-9][0-9]*)$/u.exec(header);
+    if (!match || match[1] !== expected) reject('COMMIT_OBJECT');
+    const size = Number(match[2]); offset = end + 1;
+    if (!Number.isSafeInteger(size) || size > 32 * 1024 * 1024 ||
+        offset + size >= raw.length || raw[offset + size] !== 10) reject('COMMIT_OBJECT');
+    commits.set(expected, decodeCommit09(expected, raw.subarray(offset, offset + size)));
+    offset += size + 1;
+  }
+  if (offset !== raw.length) reject('COMMIT_OBJECT');
+  return commits;
+}
+
+function commitInventory09(root) {
+  const refs = new Map();
+  for (const reference of [BASE, PREDECESSOR, 'HEAD']) {
+    const sha = git(root, ['rev-parse', '--verify', reference]).toString('ascii').trim();
+    if (!/^[a-f0-9]{40}$/u.test(sha)) reject('HEAD');
+    refs.set(reference, sha);
+  }
+  const checkout = decodeCommit09(refs.get('HEAD'), git(root, ['cat-file', 'commit', refs.get('HEAD')]));
+  const source = checkout.parents.length === 2 ? checkout.parents[1] : checkout.sha;
+  const candidates = git(root, ['rev-list', '--first-parent', '--max-count=257', source])
+    .toString('ascii').trim().split('\n');
+  if (candidates.length > 260 || candidates.some(name => !/^[a-f0-9]{40}$/u.test(name))) reject('COMMIT_OBJECT');
+  const names = [...new Set([...refs.values(), ...candidates])];
+  const commits = parseNativeCommitBatch09(git(root, ['cat-file', '--batch'],
+    32 * 1024 * 1024, names.map(name => name + '\n').join('')), names);
+  for (const [reference, sha] of refs) commits.set(reference, commits.get(sha));
+  return commits;
+}
+
 export function nativeSourceIdentity46(root) {
+  sourceStage09('IDENTITY_BEGIN');
+  const commits = commitInventory09(root);
+  const commit = (_root, reference) => {
+    const value = commits.get(reference);
+    if (!value) reject('APPEND_ONLY_LINEAGE');
+    return value;
+  };
   const base = commit(root, BASE);
   const predecessor = commit(root, PREDECESSOR);
   if (base.tree !== BASE_TREE || predecessor.tree !== PREDECESSOR_TREE) reject('PREDECESSOR');
@@ -203,17 +256,20 @@ export function nativeSourceIdentity46(root) {
     // rev-list/merge-base view must never manufacture accepted ancestry.
     cursor = commit(root, cursor.parents[0]);
   }
+  sourceStage09('IDENTITY_COMPLETE');
   return { checkoutHead: checkout.sha, sourceHead: source.sha, sourceTree: source.tree,
     acceptedBase: BASE, acceptedBaseTree: BASE_TREE, predecessor: PREDECESSOR, predecessorTree: PREDECESSOR_TREE };
 }
 
 /** Final entrypoints require actual committed bytes, not a development receipt. */
 export function assertCurrentNativeHead46(rootValue, expectedHead = process.env.C46_EXPECTED_HEAD) {
+  sourceStage09('COMMITTED_INPUTS_BEGIN');
   const root = checkedNativeRoot46(rootValue);
   const identity = nativeSourceIdentity46(root);
   if (expectedHead !== undefined &&
       (!/^[a-f0-9]{40}$/u.test(expectedHead) || expectedHead !== identity.sourceHead)) reject('EXPECTED_HEAD');
   const descriptor = readNativeFile46(root, IOS_PRIVACY_LOCK_SUCCESSION46_PATH, 4 * 1024 * 1024);
+  sourceStage09('COMMITTED_INPUTS_OPENED');
   if (descriptor.sha256 !== LOCK_SUCCESSION46_SHA256) reject('WITNESS_DRIFT');
   const witness = JSON.parse(descriptor.bytes);
   const paths = [...new Set([IOS_PRIVACY_LOCK_SUCCESSION46_PATH,
@@ -246,6 +302,7 @@ export function assertCurrentNativeHead46(rootValue, expectedHead = process.env.
     offset += size + 1;
   }
   if (offset !== batch.stdout.length || !same(identity, nativeSourceIdentity46(root))) reject('COMMITTED_INPUT_RACE');
+  sourceStage09('COMMITTED_INPUTS_COMPLETE');
   return { ...identity, expectedHead: expectedHead ?? identity.sourceHead,
     committedCriticalInputs: paths.length, descriptorSHA256: descriptor.sha256 };
 }

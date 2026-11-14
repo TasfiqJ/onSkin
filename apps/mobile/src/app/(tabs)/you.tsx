@@ -68,8 +68,9 @@ const APPLE_SIGN_IN_REVOCATION_COPY =
     ? ' If Apple sign-in cannot be revoked automatically, we will show the iPhone Settings steps after deletion.'
     : '';
 const WITHDRAW_HEALTH_DATA_CONFIRM_TITLE = 'Withdraw health-data consent?';
-const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE =
-  'This immediately pauses personalized skin features and starts deleting health-purpose data from this device and the live service. Protected backups, if any, follow the disclosed retention period and are not used for personalization. Your account, App Lock, subscription, billing, and purchase-safety records stay in place. You can start again only with fresh consent and an empty profile.';
+const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE = isSupabaseConfigured
+  ? 'This immediately pauses personalized skin features and starts deleting health-purpose data from this device and the live service. Protected backups, if any, follow the disclosed retention period and are not used for personalization. Your account, App Lock, subscription, billing, and purchase-safety records stay in place. You can start again only with fresh consent and an empty profile.'
+  : 'This immediately pauses personalized skin features and starts clearing health-purpose data from this device. App Lock and purchase-safety records stay in place. This build cannot confirm remote deletion. App Store purchases, if any, are managed separately. You can start again only with fresh consent and an empty profile.';
 const WITHDRAW_HEALTH_DATA_FAILED_TITLE = 'Withdrawal failed';
 const DELETE_ACCOUNT_CONFIRM_TITLE = 'Delete account?';
 const DELETE_ACCOUNT_CONFIRM_MESSAGE = `This permanently closes your account and starts deleting its data. ${ACCOUNT_DELETION_ERASURE_WINDOW_COPY} ${SUBSCRIPTION_STOREFRONT_COPY.billingContinuation}${APPLE_SIGN_IN_REVOCATION_COPY}`;
@@ -904,9 +905,13 @@ export default function YouScreen() {
               hint={
                 supportFloorPrivacyEntry || ultraShortPrivacyEntry
                   ? undefined
-                  : compactPhone
-                    ? 'Pauses health use; starts active-data deletion; keeps billing.'
-                    : 'Pauses personalization and starts deleting health-purpose data from this device and the live service. Protected backups follow disclosed retention and stay out of personalization.'
+                  : !isSupabaseConfigured
+                    ? compactPhone
+                      ? 'Pauses health use; starts clearing health data on this device.'
+                      : 'Pauses personalization and starts clearing health-purpose data from this device. This build cannot confirm remote deletion.'
+                    : compactPhone
+                      ? 'Pauses health use; starts active-data deletion; keeps billing.'
+                      : 'Pauses personalization and starts deleting health-purpose data from this device and the live service. Protected backups follow disclosed retention and stay out of personalization.'
               }
               compact={compactPhone}
               onPress={promptWithdrawHealthData}

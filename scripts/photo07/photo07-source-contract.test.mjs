@@ -77,3 +77,56 @@ test('rejects returning immediately before terminal partial-failure propagation'
     /cleanup must remain reachable from entry/u,
   );
 });
+
+test('retains the legacy terminal-if cleanup shape', () => {
+  const cleanup = `export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<void> {
+    const firstFailure = null;
+    beginEncryptedPhotoAccountBoundary();
+    await waitForEncryptedPhotoWritesToSettle();
+    await purgeSensitiveImageMemory();
+    await clearGeneratedPrivateCacheFiles();
+    await AsyncStorage.multiRemove([]);
+    await clearEncryptedPhotoStorage();
+    if (firstFailure) throw new Error('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');
+  }`;
+  assert.deepEqual(auditPhoto07Sources({ cleanup }), { checks: 6, status: 'pass' });
+});
+
+test('rejects an owned settlement flag initialized as already complete', () => {
+  assert.throws(() => auditPhoto07Sources({ cleanup: photo07Source('cleanup').replace(
+    'let readSettlementComplete = false;', 'let readSettlementComplete = true;',
+  ) }), /partial local deletion failure/u);
+});
+
+test('rejects owned settlement success before partial failure propagates', () => {
+  assert.throws(() => auditPhoto07Sources({ cleanup: photo07Source('cleanup').replace(
+    "    if (firstFailure) throw new Error('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');\n    readSettlementComplete = true;",
+    "    readSettlementComplete = true;\n    if (firstFailure) throw new Error('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');",
+  ) }), /partial local deletion failure/u);
+});
+
+test('rejects omission of the owned cleanup settlement finalizer', () => {
+  assert.throws(() => auditPhoto07Sources({ cleanup: photo07Source('cleanup').replace(
+    '    settleReadBoundary(readSettlementComplete);', '',
+  ) }), /partial local deletion failure/u);
+});
+
+test('rejects a wrapper catch that swallows the cleanup failure', () => {
+  assert.throws(() => auditPhoto07Sources({ cleanup: photo07Source('cleanup').replace(
+    '  } finally {\n    settleReadBoundary(readSettlementComplete);',
+    '  } catch {} finally {\n    settleReadBoundary(readSettlementComplete);',
+  ) }), /partial local deletion failure/u);
+});
+
+test('rejects reporting an unconditional successful owned settlement', () => {
+  assert.throws(() => auditPhoto07Sources({ cleanup: photo07Source('cleanup').replace(
+    'settleReadBoundary(readSettlementComplete);', 'settleReadBoundary(true);',
+  ) }), /partial local deletion failure/u);
+});
+
+test('rejects an extra early write to the owned settlement flag', () => {
+  assert.throws(() => auditPhoto07Sources({ cleanup: photo07Source('cleanup').replace(
+    '  try {\n    beginEncryptedPhotoAccountBoundary();',
+    '  try {\n    readSettlementComplete = true;\n    beginEncryptedPhotoAccountBoundary();',
+  ) }), /partial local deletion failure/u);
+});

@@ -46,12 +46,18 @@ test('Quality directly executes the mounted helper and restored current controls
   ]) assert.equal(commands.filter((line) => line === command).length, 1, command);
 });
 
-test('current native and store inspection retain the original unconditional nine-command step', () => {
+test('native/store wiring retains all nine checks with exact current47 and historical identity branches', () => {
   const candidates = workflow().jobs.checks.steps.filter((step) =>
     step.name === 'Verify installed iOS native sources');
   assert.equal(candidates.length, 1);
-  assert.deepEqual(Object.keys(candidates[0]).sort(), ['name', 'run']);
-  assert.deepEqual(candidates[0].run.trim().split('\n').map((line) => line.trim()), [
+  assert.deepEqual(Object.keys(candidates[0]).sort(), ['env', 'name', 'run']);
+  assert.deepEqual(candidates[0].env, {
+    CURRENT_SOURCE_BRANCH: '${{ github.head_ref || github.ref_name }}',
+    C47_EXPECTED_HEAD: "${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}",
+  });
+  // Preserve the original nine-command non-C47 contract. Only the two native
+  // identity consumers need the independently checked current-source successor.
+  const historicalCommands = [
     'npm run postinstall:check',
     'npm run phase5:expo-widgets-lifecycle:test',
     'npm run phase9:view-shot-privacy:test',
@@ -61,7 +67,18 @@ test('current native and store inspection retain the original unconditional nine
     'npm run phase9:release-candidate-git-contract:test',
     'npm run phase9:verification-wiring:test',
     'npm run phase9:store-build-inspect:check',
-  ]);
+  ];
+  const successors = {
+    'npm run phase9:ios-privacy-source-audit:check':
+      'node scripts/release/full-app-j01/native_generated47.mjs --native-audit47 --strict --check',
+    'npm run phase9:store-build-inspect:check':
+      'node scripts/release/full-app-j01/native_generated47.mjs --native-store47 --check',
+  };
+  const expected = historicalCommands.flatMap(command => Object.hasOwn(successors, command) ? [
+    'if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then',
+    successors[command], 'else', command, 'fi',
+  ] : [command]);
+  assert.deepEqual(candidates[0].run.trim().split('\n').map(line => line.trim()), expected);
 });
 
 // The actual helper process executes a synthetic child CLI boundary here.

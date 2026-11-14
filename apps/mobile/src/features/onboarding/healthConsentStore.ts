@@ -1,8 +1,9 @@
 import type { ConsentType } from '@layerwell/types';
 import * as Crypto from 'expo-crypto';
 
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, getPrivateItemWhenReady, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import type { HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
 
 import { HEALTH_DATA_CONSENT, HEALTH_DATA_WITHDRAWAL } from './consentCopy';
 
@@ -203,6 +204,32 @@ export async function hasCurrentHealthDataCollectionConsent(): Promise<boolean> 
   }
 
   return consent.consentTextHash === CURRENT_GRANT_HASH;
+}
+
+/**
+ * Lifecycle recovery must distinguish a genuinely absent/declined grant from
+ * an unreadable consent proof. Preserve the tolerant observer API above, but
+ * let storage and decode errors close reconciliation without purpose erasure.
+ */
+export async function hasCurrentHealthDataCollectionConsentStrict(): Promise<boolean> {
+  const raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
+  const consent = raw === null ? null : decodeConsent(raw);
+  if (consent?.granted !== true || consent.version !== HEALTH_DATA_CONSENT.version) {
+    return false;
+  }
+
+  return consent.consentTextHash === CURRENT_GRANT_HASH;
+}
+
+/** Prepared onboarding admission retains the original genuine purpose lease.
+ * Preparation occurs outside both draining registries; errors remain errors. */
+export async function hasCurrentHealthDataCollectionConsentForLease(
+  originalLease: HealthDataWriteLease,
+): Promise<boolean> {
+  const raw = await getPrivateItemWhenReady(HEALTH_DATA_CONSENT_KEY, originalLease);
+  const consent = raw === null ? null : decodeConsent(raw);
+  return consent?.granted === true && consent.version === HEALTH_DATA_CONSENT.version &&
+    consent.consentTextHash === CURRENT_GRANT_HASH;
 }
 
 /**

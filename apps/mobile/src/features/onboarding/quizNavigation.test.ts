@@ -28,7 +28,10 @@ vi.mock('@/components/ui', () => ({
   Text: 'Text',
 }));
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
-vi.mock('./healthConsentStore', () => ({ hasCurrentHealthDataCollectionConsent: mocks.consent }));
+vi.mock('./healthConsentStore', () => {
+  const originalPort49 = { hasCurrentHealthDataCollectionConsent: mocks.consent };
+  return { ...originalPort49, hasCurrentHealthDataCollectionConsentForLease: originalPort49.hasCurrentHealthDataCollectionConsent };
+});
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));

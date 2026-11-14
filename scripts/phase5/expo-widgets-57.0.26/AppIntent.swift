@@ -116,6 +116,9 @@ struct WidgetUserInteraction: AppIntent {
       let proposed: [String: Any]
       switch evaluateWidgetButtonPress(layout: layout, props: props, environment: environment) {
       case .success(let result):
+        guard let result else {
+          throw LayerwellWidgetLifecycleError.invalidInput
+        }
         proposed = props.merging(result) { _, new in new }
       case .failure(let error):
         print("[ExpoWidgets] Layerwell button evaluation failed: \(error.message)")

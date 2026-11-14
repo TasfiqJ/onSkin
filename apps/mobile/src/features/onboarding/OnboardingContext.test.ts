@@ -26,7 +26,8 @@ vi.mock('expo-crypto', () => ({
   CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
   digestStringAsync: vi.fn(),
 }));
-vi.mock('@/lib/storage/privateKV', () => ({
+vi.mock('@/lib/storage/privateKV', () => {
+  const originalPort49 = {
   getPrivateItem: async (key: string) => mocks.storage.get(key) ?? null,
   removePrivateItem: async (key: string) => {
     mocks.storage.delete(key);
@@ -36,7 +37,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
     if (next === null) mocks.storage.delete(key);
     else mocks.storage.set(key, next);
   },
-}));
+  };
+  return { ...originalPort49, getPrivateItemWhenReady: originalPort49.getPrivateItem };
+});
 vi.mock('expo-router/build/react-navigation/core/NavigationContext', async () => ({
   NavigationContext: (await import('react')).createContext(undefined),
 }));

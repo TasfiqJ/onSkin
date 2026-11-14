@@ -16,6 +16,7 @@ vi.mock('expo-notifications', () => ({
   clearLastNotificationResponseAsync: vi.fn(async () => undefined),
   dismissAllNotificationsAsync: vi.fn(async () => undefined),
   dismissNotificationAsync: vi.fn(async () => undefined),
+  getBadgeCountAsync: vi.fn(async () => 0),
   scheduleNotificationAsync: vi.fn(async (request: { identifier?: string }) =>
     Promise.resolve(request.identifier ?? 'generated'),
   ),
@@ -29,6 +30,7 @@ function createBackend(): NotificationNativeMutationBackend {
     clearLastNotificationResponseAsync: vi.fn(async () => undefined),
     dismissAllNotificationsAsync: vi.fn(async () => undefined),
     dismissNotificationAsync: vi.fn(async () => undefined),
+    getBadgeCountAsync: vi.fn(async () => 0),
     scheduleNotificationAsync: vi.fn(async (request) => request.identifier ?? 'generated'),
     setBadgeCountAsync: vi.fn(async () => true),
   };
@@ -296,6 +298,7 @@ describe('NotificationNativeMutationCoordinator', () => {
     const backend = createBackend();
     const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
     vi.mocked(backend.setBadgeCountAsync).mockResolvedValueOnce(false);
+    vi.mocked(backend.getBadgeCountAsync).mockResolvedValueOnce(1);
 
     await expect(coordinator.clearAllWithinBound()).rejects.toBeInstanceOf(
       NotificationNativeCleanupError,
@@ -305,6 +308,96 @@ describe('NotificationNativeMutationCoordinator', () => {
     );
     await expect(coordinator.clearAllWithinBound()).resolves.toBeUndefined();
     await expect(coordinator.cancelExact('owner-b-id')).resolves.toBeUndefined();
+  });
+
+  it('finishes cleanup when the permission-disabled setter returns false and native readback proves zero', async () => {
+    const backend = createBackend();
+    const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+    vi.mocked(backend.setBadgeCountAsync).mockResolvedValueOnce(false);
+
+    await expect(coordinator.clearAllWithinBound()).resolves.toBeUndefined();
+    expect(backend.setBadgeCountAsync).toHaveBeenCalledWith(0);
+    expect(backend.getBadgeCountAsync).toHaveBeenCalledTimes(1);
+    await expect(coordinator.cancelExact('owner-b-id')).resolves.toBeUndefined();
+  });
+
+  it.each([1, -1, Number.NaN, undefined, null, '0'])(
+    'keeps cleanup fenced when a false setter has an unproven native badge count %s',
+    async (count) => {
+      const backend = createBackend();
+      const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+      vi.mocked(backend.setBadgeCountAsync).mockResolvedValueOnce(false);
+      vi.mocked(backend.getBadgeCountAsync).mockResolvedValueOnce(count as number);
+
+      await expect(coordinator.clearAllWithinBound()).rejects.toBeInstanceOf(
+        NotificationNativeCleanupError,
+      );
+      expect(() => coordinator.cancelExact('owner-b-id')).toThrow(
+        NotificationNativeMutationFencedError,
+      );
+    },
+  );
+
+  it('keeps a rejected badge read fenced until a complete successful cleanup retry', async () => {
+    const backend = createBackend();
+    const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+    vi.mocked(backend.setBadgeCountAsync).mockResolvedValue(false);
+    vi.mocked(backend.getBadgeCountAsync)
+      .mockRejectedValueOnce(new Error('native badge read unavailable'))
+      .mockResolvedValueOnce(0);
+
+    await expect(coordinator.clearAllWithinBound()).rejects.toBeInstanceOf(
+      NotificationNativeCleanupError,
+    );
+    expect(() => coordinator.cancelExact('owner-b-id')).toThrow(
+      NotificationNativeMutationFencedError,
+    );
+    await expect(coordinator.clearAllWithinBound()).resolves.toBeUndefined();
+    await expect(coordinator.cancelExact('owner-b-id')).resolves.toBeUndefined();
+  });
+
+  it('refuses a malformed setter result even when a badge read could report zero', async () => {
+    const backend = createBackend();
+    const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+    vi.mocked(backend.setBadgeCountAsync).mockResolvedValueOnce(undefined as unknown as boolean);
+
+    await expect(coordinator.clearAllWithinBound()).rejects.toBeInstanceOf(
+      NotificationNativeCleanupError,
+    );
+    expect(backend.getBadgeCountAsync).not.toHaveBeenCalled();
+    expect(coordinator.isOrdinaryMutationFenced()).toBe(true);
+  });
+
+  it('keeps cleanup closed when the native badge read method is missing', async () => {
+    const backend = createBackend();
+    const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+    vi.mocked(backend.setBadgeCountAsync).mockResolvedValueOnce(false);
+    Reflect.deleteProperty(backend, 'getBadgeCountAsync');
+
+    await expect(coordinator.clearAllWithinBound()).rejects.toBeInstanceOf(
+      NotificationNativeCleanupError,
+    );
+    expect(coordinator.isOrdinaryMutationFenced()).toBe(true);
+  });
+
+  it('bounds a hanging native badge read and retains the fence until its true terminal outcome', async () => {
+    const backend = createBackend();
+    const coordinator = new NotificationNativeMutationCoordinator(backend, 25);
+    let resolveBadge!: (count: number) => void;
+    vi.mocked(backend.setBadgeCountAsync).mockResolvedValueOnce(false);
+    vi.mocked(backend.getBadgeCountAsync).mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveBadge = resolve;
+        }),
+    );
+
+    await expect(coordinator.clearAllWithinBound()).rejects.toBeInstanceOf(
+      NotificationNativeCleanupTimeoutError,
+    );
+    expect(coordinator.isOrdinaryMutationFenced()).toBe(true);
+    resolveBadge(0);
+    await vi.waitFor(() => expect(coordinator.isOrdinaryMutationFenced()).toBe(false));
   });
 
   it('requires a retry when stale-schedule compensation fails during cleanup', async () => {

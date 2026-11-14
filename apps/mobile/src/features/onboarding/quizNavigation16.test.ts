@@ -51,7 +51,8 @@ vi.mock('expo-crypto', () => ({
   CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
   digestStringAsync: vi.fn(),
 }));
-vi.mock('@/lib/storage/privateKV', () => ({
+vi.mock('@/lib/storage/privateKV', () => {
+  const originalPort49 = {
   getPrivateItem: async (key: string) => ports.storage.get(key) ?? null,
   removePrivateItem: async (key: string) => {
     ports.storage.delete(key);
@@ -61,7 +62,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
     if (next === null) ports.storage.delete(key);
     else ports.storage.set(key, next);
   },
-}));
+  };
+  return { ...originalPort49, getPrivateItemWhenReady: originalPort49.getPrivateItem };
+});
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));

@@ -88,6 +88,24 @@ function signedOutConfiguredRouteMayMount(segments: readonly string[]): boolean 
 }
 
 function lifecycleMessage(record: HealthDataLifecycleRecord): string {
+  if (!isSupabaseConfigured) {
+    if (record.state === 'withdrawing') {
+      return record.localCleanupComplete
+        ? 'Local health-purpose cleanup is complete. Health features remain paused until withdrawal finishes.'
+        : 'Health features are paused. This device still needs to finish its private-data cleanup.';
+    }
+    if (record.state === 'withdrawn') {
+      return record.localCleanupComplete
+        ? 'Health-purpose data has been cleared from this device. Starting again requires a new explicit consent. This build cannot confirm remote deletion.'
+        : 'Health features remain paused until this device confirms its private-data cleanup.';
+    }
+    if (record.verificationReason === 'status_unavailable') {
+      return 'The current permission could not be read on this device. Existing health data stays locked; this check does not delete it.';
+    }
+    return record.localCleanupComplete
+      ? 'Local health-purpose cleanup is complete. Health features remain paused.'
+      : 'Permission and any required private-data cleanup still need verification on this device. Health features remain locked.';
+  }
   if (record.state === 'withdrawing') {
     return record.localCleanupComplete
       ? 'Your health data is paused on this device. Server deletion is still finishing.'
@@ -146,7 +164,9 @@ export function PausedHealthDataShell({
       onRecord(next);
       setFeedback(
         next.state === 'withdrawn' && next.localCleanupComplete
-          ? 'Active-system withdrawal is complete.'
+          ? isSupabaseConfigured
+            ? 'Active-system withdrawal is complete.'
+            : 'Local health-data cleanup is complete.'
           : 'Status checked. Personalized features remain paused.',
       );
     } catch {
@@ -255,7 +275,9 @@ export function PausedHealthDataShell({
       router.replace('/');
     } catch {
       setFeedback(
-        'Account deletion could not start. Your account and health-data pause are unchanged.',
+        isSupabaseConfigured
+          ? 'Account deletion could not start. Your account and health-data pause are unchanged.'
+          : 'Account deletion is unavailable in this build. Your local data and health-data pause are unchanged.',
       );
       setBusy(null);
       setConfirmDelete(false);
@@ -288,13 +310,17 @@ export function PausedHealthDataShell({
           {rightsOnly ? 'PRIVACY & ACCOUNT' : 'HEALTH DATA PAUSED'}
         </Text>
         <Text variant="title" className="mt-2">
-          Your account is still here.
+          {isSupabaseConfigured
+            ? 'Your account is still here.'
+            : 'Health features are paused on this device.'}
         </Text>
         <Text variant="body" tone="muted" className="mt-3">
           {rightsOnly
             ? 'Age confirmation is still required for health features. Your existing data rights remain available.'
             : lifecycleMessage(record)}{' '}
-          Billing does not stop automatically; use Manage subscription below whenever you need it.
+          {isSupabaseConfigured
+            ? 'Billing does not stop automatically; use Manage subscription below whenever you need it.'
+            : 'App Store purchases, if any, are managed separately.'}
         </Text>
 
         {feedback ? (
@@ -313,7 +339,9 @@ export function PausedHealthDataShell({
             Status: {record.state.replace('_', ' ')}.{' '}
             {record.state === 'verification_required' &&
             record.verificationReason === 'status_unavailable'
-              ? 'Local data is preserved but inaccessible while server status is checked.'
+              ? isSupabaseConfigured
+                ? 'Local data is preserved but inaccessible while server status is checked.'
+                : 'Local data is preserved but inaccessible while device permission is checked.'
               : `Local cleanup ${record.localCleanupComplete ? 'complete' : 'pending'}.`}
           </Text>
           {!terminal ? (
@@ -331,7 +359,11 @@ export function PausedHealthDataShell({
           (record.state === 'verification_required' &&
             record.verificationResumeState === 'active')) ? (
           <Card className="mt-4">
-            <Text variant="bodySm">{HEALTH_DATA_WITHDRAWAL.fullText}</Text>
+            <Text variant="bodySm">
+              {isSupabaseConfigured
+                ? HEALTH_DATA_WITHDRAWAL.fullText
+                : 'Withdrawal pauses health features and starts clearing health-purpose data from this device. App Lock and purchase-safety records stay in place. This build cannot confirm remote deletion. Starting again requires fresh consent and an empty profile.'}
+            </Text>
             {confirmWithdraw ? (
               <>
                 <Button
@@ -394,8 +426,10 @@ export function PausedHealthDataShell({
                   {HEALTH_DATA_CONSENT.never}
                 </Text>
                 <Text variant="bodySm" tone="muted" className="mt-3">
-                  {HEALTH_DATA_CONSENT.footnote} This permission covers collection only; sharing is
-                  requested separately.
+                  {isSupabaseConfigured
+                    ? HEALTH_DATA_CONSENT.footnote
+                    : 'You can withdraw in Settings. Withdrawal clears health-purpose data from this device; starting again requires fresh consent.'}{' '}
+                  This permission covers collection only; sharing is requested separately.
                 </Text>
                 <Button
                   className="mt-4"
@@ -444,7 +478,9 @@ export function PausedHealthDataShell({
                   setFeedback(
                     result.active
                       ? 'Your active subscription is restored.'
-                      : 'No active subscription was found for this account.',
+                      : isSupabaseConfigured
+                        ? 'No active subscription was found for this account.'
+                        : 'No active App Store subscription was found.',
                   ),
                 onError: () => setFeedback('We could not restore purchases. Please try again.'),
               })
@@ -467,8 +503,9 @@ export function PausedHealthDataShell({
           {confirmDelete ? (
             <View className="mt-3 rounded-card border border-hairline p-4">
               <Text accessibilityRole="alert" variant="bodySm" tone="muted">
-                Delete the whole account and its remaining data? Subscription billing may continue
-                until you cancel it in the App Store.
+                {isSupabaseConfigured
+                  ? 'Delete the whole account and its remaining data? Subscription billing may continue until you cancel it in the App Store.'
+                  : 'Account deletion needs a configured account service. This build cannot start or confirm remote deletion. App Store purchases, if any, are managed separately.'}
               </Text>
               <Button
                 className="mt-3"

@@ -8,7 +8,7 @@ import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { colors } from '@/theme/tokens';
 
-import { assertPrivateKVReadable } from './privateKV';
+import { verifyPrivateKVWhenReady } from './privateKV';
 
 const PRIVATE_STORAGE_COPY = {
   loading: 'Opening your private data...',
@@ -48,7 +48,7 @@ function e2ePrivateStorageFailure(reason: VerificationReason): Error | null {
 async function verifyPrivateStorage(reason: VerificationReason): Promise<void> {
   const fixtureError = e2ePrivateStorageFailure(reason);
   if (fixtureError) throw fixtureError;
-  await assertPrivateKVReadable();
+  await verifyPrivateKVWhenReady();
 }
 
 export function PrivateDataAvailabilityGate({ children }: { children: ReactNode }) {

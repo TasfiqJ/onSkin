@@ -25,6 +25,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: mocks.getPrivateItem,
+  getPrivateItemWhenReady: mocks.getPrivateItem,
   setPrivateItem: mocks.setPrivateItem,
   removePrivateItem: mocks.removePrivateItem,
 }));

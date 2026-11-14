@@ -26,7 +26,7 @@ describe('global private data availability gate', () => {
       root.indexOf('<Stack screenOptions={{ headerShown: false }} />'),
     );
     expect(gate).toContain('const { appUnlocked } = useAppLock();');
-    expect(gate).toContain('await assertPrivateKVReadable();');
+    expect(gate).toContain('await verifyPrivateKVWhenReady();');
     expect(gate).toContain('if (!appUnlocked) return;');
     expect(gate).toContain("if (state !== 'active')");
     expect(gate).toContain("void check('foreground')");

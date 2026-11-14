@@ -43,6 +43,7 @@ type PrivateMutationClaim46 = {
 const privateMutationClaims46 = new Map<string, PrivateMutationClaim46>();
 const privateMutationTokens46 = new WeakMap<PrivateMutationIntent46, PrivateMutationClaim46>();
 let privateMutationRevision46 = 0;
+const privateMutationGuardErrors46 = new WeakSet<Error>();
 export const LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED = 'LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED';
 
 function invalidPrivateMutation46(): never {
@@ -81,7 +82,16 @@ export function decodePrivateMutationMarker46(raw: string): PrivateMutationMarke
 /** Capture synchronously before native reads; an arm/clear ABA still retires them. */
 export function privateMutationReadGeneration46(): number { return privateMutationRevision46; }
 export function assertPrivateMutationReadGeneration46(expected: number): void {
-  if (expected !== privateMutationRevision46) invalidPrivateMutation46();
+  if (expected !== privateMutationRevision46) {
+    const error = new Error(LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED);
+    privateMutationGuardErrors46.add(error);
+    throw error;
+  }
+}
+
+/** Only an actual generation mismatch may retire a prepared raw read. */
+export function isPrivateMutationGuardError46(error: unknown): error is Error {
+  return error instanceof Error && privateMutationGuardErrors46.has(error);
 }
 
 /** Global plaintext refusal prevents non-AAD native ciphertext relabeling.

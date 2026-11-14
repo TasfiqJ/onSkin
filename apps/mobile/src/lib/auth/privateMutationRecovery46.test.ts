@@ -6,6 +6,7 @@ const native = vi.hoisted(() => {
   const bytes = new Map<string, string>();
   return {
     bytes,
+    getAllKeys: vi.fn(async () => [...bytes.keys()]),
     getItem: vi.fn(async (key: string) => bytes.get(key) ?? null),
     setItem: vi.fn(async (key: string, value: string) => { bytes.set(key, value); }),
     removeItem: vi.fn(async (key: string) => { bytes.delete(key); }),
@@ -23,6 +24,16 @@ vi.mock('expo-crypto', async () => {
   };
 });
 
+vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
+vi.mock('react-native-get-random-values', () => ({}));
+const secure04 = vi.hoisted(() => new Map<string, string>());
+vi.mock('expo-secure-store', () => ({
+  isAvailableAsync: async () => true,
+  getItemAsync: async (key: string) => secure04.get(key) ?? null,
+  setItemAsync: async (key: string, value: string) => { secure04.set(key, value); },
+  deleteItemAsync: async (key: string) => { secure04.delete(key); },
+}));
+
 const MARKER = 'layerwell.localDataCleanupRequired.v1';
 const OWNER = 'layerwell.localDataOwnerHash.v1';
 const SHELF = 'layerwell.shelf.v1';
@@ -39,9 +50,23 @@ async function runtime() {
   return { marker, owner, account, arm };
 }
 
+async function lifecycleRuntime04() {
+  const cleanup = vi.fn(async () => {});
+  vi.doMock('@/lib/env', () => ({ isSupabaseConfigured: false, env: { appEnvironment: 'staging' } }));
+  vi.doMock('@/lib/supabase/client', () => ({ supabase: {}, readPersistedSupabaseSessionCandidate: vi.fn() }));
+  vi.doMock('@/features/healthConsent/selectiveCleanup', () => ({ clearHealthPurposeLocalData: cleanup }));
+  vi.doMock('@/lib/consent/dependentConsentLifecycle', () => ({ grantHealthDependentConsent: vi.fn(), isHealthDependentConsentActive: vi.fn() }));
+  vi.doMock('@/features/photos/store', () => ({ clearPhotos: vi.fn() }));
+  const lifecycle = await import('@/features/healthConsent/lifecycle');
+  const store = await import('@/features/healthConsent/lifecycleStore');
+  const epoch = await import('@/lib/consent/healthProcessingEpoch');
+  return { lifecycle, store, epoch, cleanup };
+}
+
 beforeEach(() => {
   vi.resetModules();
   native.bytes.clear();
+  secure04.clear();
   native.getItem.mockImplementation(async (key) => native.bytes.get(key) ?? null);
   native.setItem.mockImplementation(async (key, value) => { native.bytes.set(key, value); });
   native.removeItem.mockImplementation(async (key) => { native.bytes.delete(key); });
@@ -311,4 +336,109 @@ describe('C46 durable nondestructive private mutation control state', () => {
     await expect(preparing).rejects.toThrow('ACCOUNT_GENERATION_CHANGED');
     expect(native.bytes.has(MARKER)).toBe(false);
   });
+  it('C04 waits for an actual live C46 writer before reading a fresh lifecycle', async () => {
+    const { marker, arm } = await runtime();
+    const { lifecycle, store, epoch, cleanup } = await lifecycleRuntime04();
+    const token = await arm(SHELF);
+    // Actual production getPrivateItem/store read refuses plaintext during the claim.
+    await expect(store.readHealthDataLifecycle('local-device-unclaimed')).rejects.toThrow(RECOVERY);
+    const pending = lifecycle.reconcileHealthDataLifecycle('local-device-unclaimed');
+    await Promise.resolve();
+    expect(cleanup).not.toHaveBeenCalled();
+    expect(epoch.activeHealthProcessingLeaseSnapshot()).toBeNull();
+    await marker.finishPrivateMutation46(token);
+    const result = await pending;
+    expect(result).toMatchObject({ state: 'unconsented', processingEpoch: 0, localCleanupComplete: true });
+    expect(await store.readHealthDataLifecycle('local-device-unclaimed')).toEqual(result);
+    expect(cleanup).toHaveBeenCalledExactlyOnceWith('local-device-unclaimed');
+    expect(epoch.activeHealthProcessingLeaseSnapshot()).toBeNull();
+  });
+
+  it('C04 retries one actual lifecycle read retired by a completed C46 arm-clear ABA', async () => {
+    const { marker, arm } = await runtime();
+    const { lifecycle, store, epoch } = await lifecycleRuntime04();
+    let release!: () => void;
+    let entered!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    const firstRead = new Promise<void>((resolve) => { entered = resolve; });
+    let intercepted = false;
+    native.getItem.mockImplementation(async (key) => {
+      const value = native.bytes.get(key) ?? null;
+      if (key === store.HEALTH_DATA_LIFECYCLE_KEY && !intercepted) {
+        intercepted = true;
+        entered();
+        await held;
+      }
+      return value;
+    });
+    const pending = lifecycle.reconcileHealthDataLifecycle('local-device-unclaimed');
+    await firstRead;
+    const token = await arm(SHELF);
+    await marker.finishPrivateMutation46(token);
+    release();
+    await expect(pending).resolves.toMatchObject({ state: 'unconsented', processingEpoch: 0, localCleanupComplete: true });
+    expect(epoch.activeHealthProcessingLeaseSnapshot()).toBeNull();
+  });
+
+  it.each(['failed', 'orphan'] as const)('C04 preserves %s C46 recovery instead of clearing or granting', async (mode) => {
+    const { marker, arm } = await runtime();
+    const token = await arm(SHELF);
+    if (mode === 'failed') marker.abandonPrivateMutation46(token);
+    else vi.resetModules();
+    const { lifecycle, epoch, cleanup } = await lifecycleRuntime04();
+    const before = [...native.bytes];
+    await expect(lifecycle.reconcileHealthDataLifecycle('local-device-unclaimed')).resolves.toMatchObject({
+      state: 'verification_required', verificationReason: 'status_unavailable', verificationResumeState: null,
+      processingEpoch: 0, localCleanupComplete: false,
+    });
+    expect([...native.bytes]).toEqual(before);
+    expect(cleanup).not.toHaveBeenCalled();
+    expect(epoch.activeHealthProcessingLeaseSnapshot()).toBeNull();
+  });
+
+  it('C04 preserves fresh onboarding when the real startup cloud-backup removal retires its first read', async () => {
+    const { lifecycle, store, epoch, cleanup } = await lifecycleRuntime04();
+    const { clearUnavailableCloudBackupPreference } = await import('@/features/photos/consent');
+    let release!: () => void;
+    let entered!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    const firstRead = new Promise<void>((resolve) => { entered = resolve; });
+    let intercepted = false;
+    native.getItem.mockImplementation(async (key) => {
+      const value = native.bytes.get(key) ?? null;
+      if (key === store.HEALTH_DATA_LIFECYCLE_KEY && !intercepted) {
+        intercepted = true;
+        entered();
+        await held;
+      }
+      return value;
+    });
+    const pending = lifecycle.reconcileHealthDataLifecycle('local-device-unclaimed');
+    await firstRead;
+    await clearUnavailableCloudBackupPreference();
+    expect(native.bytes.has('layerwell.photos.cloudBackup')).toBe(false);
+    release();
+    await expect(pending).resolves.toMatchObject({ state: 'unconsented', processingEpoch: 0, localCleanupComplete: true });
+    expect(cleanup).toHaveBeenCalledExactlyOnceWith('local-device-unclaimed');
+    expect(epoch.activeHealthProcessingLeaseSnapshot()).toBeNull();
+  });
+
+  it('C04 preserves an unknown lifecycle native read failure as verification, never initial consent', async () => {
+    const { lifecycle, store, epoch, cleanup } = await lifecycleRuntime04();
+    let failed = false;
+    native.getItem.mockImplementation(async (key) => {
+      if (key === store.HEALTH_DATA_LIFECYCLE_KEY && !failed) {
+        failed = true;
+        throw new Error('C04_UNCLASSIFIED_NATIVE_READ');
+      }
+      return native.bytes.get(key) ?? null;
+    });
+    await expect(lifecycle.reconcileHealthDataLifecycle('local-device-unclaimed')).resolves.toMatchObject({
+      state: 'verification_required', verificationReason: 'status_unavailable', verificationResumeState: null,
+      processingEpoch: 0, localCleanupComplete: false,
+    });
+    expect(cleanup).not.toHaveBeenCalled();
+    expect(epoch.activeHealthProcessingLeaseSnapshot()).toBeNull();
+  });
+
 });

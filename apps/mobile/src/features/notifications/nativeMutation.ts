@@ -59,6 +59,7 @@ export type NotificationNativeMutationBackend = Readonly<{
   clearLastNotificationResponseAsync: () => Promise<void>;
   dismissAllNotificationsAsync: () => Promise<void>;
   dismissNotificationAsync: (identifier: string) => Promise<void>;
+  getBadgeCountAsync: () => Promise<number>;
   scheduleNotificationAsync: (request: Notifications.NotificationRequestInput) => Promise<string>;
   setBadgeCountAsync: (badgeCount: number) => Promise<boolean>;
 }>;
@@ -322,7 +323,14 @@ export class NotificationNativeMutationCoordinator {
       invokeNative(() => this.backend.clearLastNotificationResponseAsync()),
       invokeNative(() => this.backend.dismissAllNotificationsAsync()),
       invokeNative(async () => {
-        if (!(await this.backend.setBadgeCountAsync(0))) {
+        const cleared = await this.backend.setBadgeCountAsync(0);
+        // iOS returns false without badge authorization, including when no
+        // badge exists. Only a successful native zero read proves that case;
+        // a failed, malformed or nonzero read remains an unproven cleanup.
+        if (
+          cleared !== true &&
+          (cleared !== false || (await this.backend.getBadgeCountAsync()) !== 0)
+        ) {
           throw new Error('NOTIFICATION_NATIVE_BADGE_CLEAR_FAILED');
         }
       }),

@@ -1,0 +1,543 @@
+{
+  "schemaVersion": 1,
+  "kind": "ios_generated_input_succession47_source_candidate",
+  "authority": "BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01",
+  "repository": "TasfiqJ/onSkin",
+  "acceptedParent": {
+    "commit": "02aa4ba879fb844f3ca0aa929591203ee45f4163",
+    "tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e"
+  },
+  "predecessor46": {
+    "path": "docs/phase-9/ios-sdk-lock-succession46.v1.json",
+    "sha256": "a29190ab7022381d759d2d38b6198784ed7e393ed78f15c368ce259e94942d2a"
+  },
+  "sourceBinding": {
+    "method": "Actual current C47 committed descriptor/readers/mapping and current202 native proof before generation; rehash all202 and installed native trees with only already-declared package-script projection after generation. No parent receipt substitution.",
+    "selfHashExclusions": [
+      "docs/phase-9/ios-generated-input-succession47.v1.json"
+    ],
+    "externalCurrentSource47SealRequired": true
+  },
+  "sourcePins": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 37704,
+      "sha256": "3cf0bd5d363ca18ca133f749d917a4afd4c8bfcda629e1ef81a98b96c20e53d4"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "bytes": 24849,
+      "sha256": "0a9b3584c7a5b79c06a6df024949e9b8697da64b4402cf2023ec9e2486b50874"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+      "bytes": 36277,
+      "sha256": "0fc3cfe1cb14606ae3396892d942c568fd858f9e36f147233ba03d24463d3117"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts",
+      "bytes": 17937,
+      "sha256": "f575b668bece974dc936664e88649f0c9b46f930b1879a7784d20e7fd368de2c"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
+      "bytes": 54151,
+      "sha256": "a18f325558a383a76f78bc70744395fdfe532000b3038c2e6893d43e140c3021"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+      "bytes": 53459,
+      "sha256": "8ee8efd825a5be6fb8691cb74d96fbc4d7dd9c339a690194b52f67053abb549b"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
+      "bytes": 10427,
+      "sha256": "a1b234b369f9fdafb67569fc384cffd38fa49b062717604d690e0a867b5098d4"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
+      "bytes": 7179,
+      "sha256": "c75acc4ac39e37bbe43f5f5335b284f6e1d9f9cb5dfcdcad46f1c52d9ab792bf"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/nativeMutation.test.ts",
+      "bytes": 18134,
+      "sha256": "8384a6c4b668c8c4cddfdec3fde2b3ba8153164c7fe321ec801729612c5c5598"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/nativeMutation.ts",
+      "bytes": 13795,
+      "sha256": "bbd813b495619c8d884914ada4cf2dcfb713678cb99d0a0eb0f67a7e142814da"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts",
+      "bytes": 18320,
+      "sha256": "ff84fcb5d30dd57a94d726a6c3d664c05496bed06acce4870a4526ea62da1021"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.test.ts",
+      "bytes": 5969,
+      "sha256": "e657a7b5f146a78e32494b2c11738597e9cd21192ce81cb1955e184cde8ee250"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.tsx",
+      "bytes": 19094,
+      "sha256": "92dd830e2c37a5eda80ab376ec66a2c811e947a493a74be3d87800fbfab97074"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/ageGateStore.test.ts",
+      "bytes": 8480,
+      "sha256": "b8f313c67bf1c181a5793abd2755cf244a1dfeb5bd5725654faec2b50bef1e3a"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/ageGateStore.ts",
+      "bytes": 3961,
+      "sha256": "bdf07605a9900170a30bd4ca77fb1e3d15833d489d8d79894a39cb336d8b7bc3"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
+      "bytes": 13103,
+      "sha256": "bda08282da2f98cbb5c75ead51207707b81c1aca0667efc65f1c53f2fb7451ca"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
+      "bytes": 9060,
+      "sha256": "1b0dd6ccfc33bbe955ee1cedfd43040b24a230f2bc3a0a0cbdf1d35e4884c080"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingOwner18.test.ts",
+      "bytes": 17345,
+      "sha256": "a79cf1cd4058de7c068cb904b72a5aa553cd9fe3191796e8e383df10a2669e74"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts",
+      "bytes": 4214,
+      "sha256": "7792c39289537fec334b3305cb67762b6f3e0576865903315f1c835923a94bc8"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingRoute18.test.ts",
+      "bytes": 17145,
+      "sha256": "4b5751f272eda249ae65b2c742ad8fae31ab54c7cc6dc0158c7adfac7d21edb7"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/productsFooter16.test.ts",
+      "bytes": 8102,
+      "sha256": "abd1f875528b79acaea768164d11fdc169b41215f540eb4db35b3feb3cb87c2a"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/quizNavigation.test.ts",
+      "bytes": 4319,
+      "sha256": "b3ab7d677a7b01d75333a470c1c04af5c71d284b5a607f981a0b1707b69076f0"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/quizNavigation16.test.ts",
+      "bytes": 6600,
+      "sha256": "23672b00323768b35535f3576430a1791d249644bb39e11a2b1bd156082cb1c7"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "bytes": 13724,
+      "sha256": "ad5592fb5608b617c53e62861f2c008f6e91ecc5d5f4dfe66a300f080b866866"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
+      "bytes": 39901,
+      "sha256": "cc24ee27facd247ba9d3abbbe11b246b4021aa1c11ef76f16b1d61244ca6121b"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
+      "bytes": 38719,
+      "sha256": "d7f165e0a8e581264eb713b6b1d92486bfac1b16d81a7430f00b4bc660425139"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+      "bytes": 24461,
+      "sha256": "d7732158e808f4d038f0ae998e9f25e00c1faab86db5e5df28f35080fbb2e012"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx",
+      "bytes": 7399,
+      "sha256": "d02af99a4442214e178968a4b6a2b6bbba08e6b99e658ba6478b251eaa195956"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateDataAvailabilityGate.test.ts",
+      "bytes": 2902,
+      "sha256": "7de7652984c3bea2773a592ca637b11b7bfd4cd5e0ceb578bd23d4c0c780545d"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKV.ts",
+      "bytes": 58689,
+      "sha256": "f21bfd6bd3830c48530643d88c359da9ecfd97654cc3dd8f21866059c40127ee"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts",
+      "bytes": 33721,
+      "sha256": "d5d825e26a132c541fe8c9e57d3e7119b488beca893fbcb6a1082c9fc9e426ce"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVReadPreparation05.test.ts",
+      "bytes": 25719,
+      "sha256": "0245c460ef7622a90fb2cebb25bfc4feaf91a94572af03670a8714525da6281a"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 543738,
+      "sha256": "e192ec9df7352b9ea9c778a1a5fbc984fb7e7b1b3b02c6fa46c73a64d18cae06"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "bytes": 5325,
+      "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "bytes": 75347,
+      "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "bytes": 16969,
+      "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
+    },
+    {
+      "path": "scripts/phase9/ios-native-obligations47.json",
+      "bytes": 129559,
+      "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-lock-succession46.mjs",
+      "bytes": 24255,
+      "sha256": "3dc33fe15968b0670dedb692b22b18ce8a90ab627315055c10ca89ddf51dba0c"
+    },
+    {
+      "path": "scripts/photo07/photo07-source-contract.mjs",
+      "bytes": 9843,
+      "sha256": "a6a4fac9b6b36ca63e06dd79d908f067c28023fdc9530db996848fb4002f33e7"
+    },
+    {
+      "path": "scripts/photo07/photo07-source-contract.test.mjs",
+      "bytes": 6551,
+      "sha256": "344b87d21558f63db7e059490435cad8c4c4be624df9ebee2b6ab090292feb4b"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.mjs",
+      "bytes": 70053,
+      "sha256": "44547a4eba39dfa496c02178a5f1707f5200f9584d2da163c3a654619b27cad4"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+      "bytes": 66145,
+      "sha256": "ae252a36ecade3f3d52a8afd91924d792a9396b2483fd475ec10af307d9deaea"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_preflight09.test.mjs",
+      "bytes": 4387,
+      "sha256": "b9f94ead8c1288aede3cfd94f8429f69b5eebd6b3816f21ed1ab5e2ff6f0e2a8"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.py",
+      "bytes": 302739,
+      "sha256": "eba7c1132113089094709a9c689f38b173f8626b989054c9f9899242d1edfc7e"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+      "bytes": 222183,
+      "sha256": "0e8616985d0e963c45d7ccfb95ccaa0f1385921979fe3926e50ad463e6d5e00f"
+    },
+    {
+      "path": "scripts/release/full-app-j01/observer_probe16.py",
+      "bytes": 8849,
+      "sha256": "59b6fd6c643e533bef6935c4fb6379d490b2d0a9b3e1c8ec1f129a14aa338cba"
+    },
+    {
+      "path": "scripts/release/full-app-j01/observer_probe16.test.py",
+      "bytes": 15169,
+      "sha256": "a2eb594a35285be3c68cbd0e8add872765737a64a76a1b4321be3f810bf52d21"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pinned_app70_replay10.py",
+      "bytes": 139084,
+      "sha256": "a3fc5ac42b0531d47655ddeee0e97a87ba8c7231b10ecbade2de3e74b58b1d02"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.py",
+      "bytes": 11688,
+      "sha256": "d6f606d958b1b28bbd753687ba3c5bde1c6dcb71f02fcc60586c594069e72b98"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.test.py",
+      "bytes": 8054,
+      "sha256": "0d5390eb51e1634dbb6799583b99badf34c96bbd5fbda64ad1de3e1d128e10ff"
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.py",
+      "bytes": 40645,
+      "sha256": "c660cd49020f19bb08a5b8ec8fa931966d9fc9b071c28cd8cc6a5f78e1a371af"
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+      "bytes": 18035,
+      "sha256": "11b08a482992ec8147b810b707985979b5094600236b3f74a2db56c7f5f6a88c"
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_origin47.mjs",
+      "bytes": 52744,
+      "sha256": "679e9c9ca35ff9b5422f9ab158ae7aab540d92e45f5c109fa31c415c1dce4321"
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_trace47.py",
+      "bytes": 169297,
+      "sha256": "e55ea3072b5a34353c82d5fbcd8767e399d6b925ff76ba9385747e3965324a25"
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+      "bytes": 250164,
+      "sha256": "c3476712dd757c0af84827f4569acb619299689cfaa6deb30bc09168e2dab0ae"
+    },
+    {
+      "path": "scripts/release/full-app-j01/swift_behavior47.py",
+      "bytes": 23554,
+      "sha256": "b382ebe01a65ae40bf2c8f028152d800a9f9272c54da5cf4a33ee7e698eb2462"
+    }
+  ],
+  "registry": [
+    {
+      "path": "node_modules/expo",
+      "version": "57.0.31",
+      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.31.tgz",
+      "integrity": "sha512-+9AJvHZMLIY/Tv6r5Tpu84vWfI75FBTnineYqjjlHAU138IPg2gYQKn9FQFetCB9YScwyc7STk7WGHSCHAdTiQ=="
+    },
+    {
+      "path": "node_modules/expo-build-properties",
+      "version": "57.0.22",
+      "resolved": "https://registry.npmjs.org/expo-build-properties/-/expo-build-properties-57.0.22.tgz",
+      "integrity": "sha512-A5oRf2I02XDRu2NnqKo7Au5kUu244unvyoRMUsB+xvg/BOlsR+G/oyDFGkjbda1cJbeKm9eqposIXbA2ri5UrQ=="
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking",
+      "version": "57.0.16",
+      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-57.0.16.tgz",
+      "integrity": "sha512-OJh6rMMIIZ/dfwOk2FufJjjsUSw5Boy1Y5Tl+zbBmua/FcD03eEg097dkYIf3iBHVkQ6q9eR08qT88qxvnelow=="
+    }
+  ],
+  "installedConsumers": [
+    {
+      "path": "node_modules/expo-build-properties/build/ios.js",
+      "bytes": 4482,
+      "sha256": "ae6869c8583b453c36c99a810ac4f5024d041f65e6230d9020173fdd77232e8e"
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking/build/platforms/apple/apple.js",
+      "bytes": 11280,
+      "sha256": "618cbf356b1f86fc0c22f48a3417e4784cc75dde7ecf1d88984affbe7785cd47"
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking/scripts/ios/autolinking_manager.rb",
+      "bytes": 12163,
+      "sha256": "8a0cf708c5462ef4e563cbfb68955593e50d1956e41f1e9c061829813385ddfc"
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking/build/autolinking/resolveModules.js",
+      "bytes": 2017,
+      "sha256": "85ddb290232fba5c9c185dd4a261191136d994fd570e3d67620a9e2490ad0684"
+    }
+  ],
+  "generatedTransition": {
+    "property": "apple.extraPods",
+    "beforeState": "ABSENT",
+    "pods": [
+      {
+        "name": "GoogleUtilities/Environment",
+        "modular_headers": true
+      },
+      {
+        "name": "RecaptchaInterop",
+        "modular_headers": true
+      }
+    ],
+    "representation": "JSON_STRING_OF_EXACT_ORDERED_POD_TUPLES",
+    "propertiesPreimage": {
+      "path": "apps/mobile/ios/Podfile.properties.json",
+      "bytes": 389,
+      "sha256": "d567f4eabc3292cdc055c7badc0cbade7a8e68cea1dc261f5c521e403a2bc723"
+    },
+    "podfilePreimage": {
+      "path": "apps/mobile/ios/Podfile",
+      "bytes": 2904,
+      "sha256": "6273e7170daaef35e4b8cac0d3168d5687d782ce61ce58e0193f931169bbbab6"
+    },
+    "scope": "GENERATED_UNSIGNED_SIMULATOR_STAGING_AND_INTERNAL_DEVELOPMENT_ONLY",
+    "primarySources": [
+      {
+        "url": "https://raw.githubusercontent.com/CocoaPods/Core/1.17.0/lib/cocoapods-core/podfile/target_definition.rb",
+        "bytes": 40937,
+        "sha256": "cd734a2d77537bbfaccb392ae7d34374a70fa6090ad7907cc8df73db46c25ef7",
+        "purpose": "modular_headers normalization uses Specification.root_name(name); RESOLVED verifies actual installed1.17.0 source bytes."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/google/GoogleUtilities/CocoaPods-8.1.5/GoogleUtilities.podspec",
+        "bytes": 5658,
+        "sha256": "d6eb83b4abd8229b809a298b0d7d033f31be308e6cce2ca3d022ee8466b1a471",
+        "purpose": "No default_subspecs: root pod would expand subspecs; use the already-transitive Environment subspec only."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/google/app-check/CocoaPods-11.3.2/AppCheckCore.podspec",
+        "bytes": 2980,
+        "sha256": "0c82d50eb9fee7ad1e6cfb2b01b8b44f1130a5e0bd4c1709a3a474d1fd005272",
+        "purpose": "AppCheckCore already depends on GoogleUtilities/Environment and UserDefaults plus RecaptchaInterop."
+      }
+    ],
+    "allowedProfiles": [
+      "staging",
+      "development"
+    ],
+    "developmentProjection": {
+      "provenance": "DECLARED_TARGET_NAME_PROJECTION_NOT_OBSERVED_MACOS_GENERATION",
+      "stagingPropertiesUTF8": "{\n  \"expo.jsEngine\": \"hermes\",\n  \"EX_DEV_CLIENT_NETWORK_INSPECTOR\": \"true\",\n  \"ios.deploymentTarget\": \"17.0\",\n  \"expo.inlineModules.watchedDirectories\": \"[]\",\n  \"expo.inlineModules.xcodeProjectTargets\": \"{\\\"mainTarget\\\":\\\"LayerwellStaging\\\",\\\"targets\\\":[]}\",\n  \"ios.forceStaticLinking\": \"[]\",\n  \"apple.privacyManifestAggregationEnabled\": \"true\",\n  \"EXPO_USE_PRECOMPILED_MODULES\": \"true\"\n}\n",
+      "stagingPodfileUTF8": "# Set by expo-router. This enables Fabric-only features from react-native-screens\nENV['RNS_GAMMA_ENABLED'] ||= '1'\nrequire File.join(File.dirname(`node --print \"require.resolve('expo/package.json')\"`), \"scripts/autolinking\")\nrequire File.join(File.dirname(`node --print \"require.resolve('react-native/package.json')\"`), \"scripts/react_native_pods\")\n\nrequire 'json'\npodfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json'))) rescue {}\n\ndef ccache_enabled?(podfile_properties)\n  # Environment variable takes precedence\n  return ENV['USE_CCACHE'] == '1' if ENV['USE_CCACHE']\n\n  # Fall back to Podfile properties\n  podfile_properties['apple.ccacheEnabled'] == 'true'\nend\n\nENV['EX_DEV_CLIENT_NETWORK_INSPECTOR'] ||= podfile_properties['EX_DEV_CLIENT_NETWORK_INSPECTOR']\nENV['RCT_USE_RN_DEP'] ||= podfile_properties['ios.buildReactNativeFromSource'] == 'true' ? '0' : '1'\nENV['RCT_USE_PREBUILT_RNCORE'] ||= podfile_properties['ios.buildReactNativeFromSource'] == 'true' ? '0' : '1'\nENV['RCT_HERMES_V1_ENABLED'] ||= '0' if podfile_properties['expo.useHermesV1'] == 'false'\n# An explicit `ios.usePrecompiledModules: false` must win even when the env var is already set\n# (e.g. EXPO_USE_PRECOMPILED_MODULES exported by EAS Build), so force-disable here before the default.\nENV['EXPO_USE_PRECOMPILED_MODULES'] = '0' if podfile_properties['EXPO_USE_PRECOMPILED_MODULES'] == 'false'\nENV['EXPO_USE_PRECOMPILED_MODULES'] ||= '1'\nplatform :ios, podfile_properties['ios.deploymentTarget'] || '16.4'\n\nprepare_react_native_project!\n\ntarget 'LayerwellStaging' do\n  use_expo_modules!\n\n  if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'\n    config_command = ['node', '-e', \"process.argv=['', '', 'config'];require('@react-native-community/cli').run()\"];\n  else\n    config_command = [\n      'node',\n      '--no-warnings',\n      '--eval',\n      'require(\\'expo/bin/autolinking\\')',\n      'expo-modules-autolinking',\n      'react-native-config',\n      '--json',\n      '--platform',\n      'ios'\n    ]\n  end\n\n  config = use_native_modules!(config_command)\n\n  use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']\n  use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']\n\n  use_react_native!(\n    :path => config[:reactNativePath],\n    :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',\n    # An absolute path to your application root.\n    :app_path => \"#{Pod::Config.instance.installation_root}/..\",\n    :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',\n  )\n\n  post_install do |installer|\n    react_native_post_install(\n      installer,\n      config[:reactNativePath],\n      :mac_catalyst_enabled => false,\n      :ccache_enabled => ccache_enabled?(podfile_properties),\n    )\n  end\nend\n",
+      "propertiesPreimage": {
+        "path": "apps/mobile/ios/Podfile.properties.json",
+        "bytes": 385,
+        "sha256": "f9bfc8664ca3a79cef55b8942d34efca8aad25c31a32ddd7a4e156b69e808a2e"
+      },
+      "podfilePreimage": {
+        "path": "apps/mobile/ios/Podfile",
+        "bytes": 2900,
+        "sha256": "48ef0d322432bcf713754e0e98db9fc2e94336dfd590acf69d87e45d1d6aaa74"
+      }
+    }
+  },
+  "obligations": {
+    "path": "scripts/phase9/ios-native-obligations47.json",
+    "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6",
+    "originalTests": 90,
+    "predecessorSHA256": "eb3c1c1aabc5637cdb9185534656c84fabdbd0eb25e383314ec9378bc66c23bc"
+  },
+  "claims": {
+    "sourceOnly": true,
+    "archiveInspected": false,
+    "binarySignaturesVerified": false,
+    "nativeAccepted": false,
+    "physicalDeviceQualified": false,
+    "appStoreAcceptanceProven": false,
+    "publicReleaseAuthorized": false
+  },
+  "admissions": {
+    "security": false,
+    "db_custody": false,
+    "M1_03": false,
+    "M2": false,
+    "J01": false,
+    "paid": false,
+    "native": false,
+    "apple": false,
+    "public_release": false
+  },
+  "release": "NO_GO",
+  "swiftSourceSuccession": {
+    "authority": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+    "checkpointHead": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+    "checkpointTree": "33898bf4d4e7424a8479139fd0906f8df6f94ae2",
+    "sourceInputs": [
+      {
+        "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+        "before": {
+          "bytes": 5224,
+          "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+        },
+        "after": {
+          "bytes": 5325,
+          "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+        }
+      },
+      {
+        "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+        "before": {
+          "bytes": 75303,
+          "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+        },
+        "after": {
+          "bytes": 75347,
+          "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+        }
+      },
+      {
+        "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+        "before": {
+          "bytes": 16969,
+          "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c"
+        },
+        "after": {
+          "bytes": 16969,
+          "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
+        }
+      }
+    ],
+    "installedFiles": [
+      {
+        "path": "node_modules/expo-widgets/ios/Widgets/AppIntent.swift",
+        "sourcePath": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+        "before": {
+          "bytes": 5224,
+          "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+        },
+        "after": {
+          "bytes": 5325,
+          "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+        }
+      },
+      {
+        "path": "node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift",
+        "sourcePath": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+        "before": {
+          "bytes": 75303,
+          "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+        },
+        "after": {
+          "bytes": 75347,
+          "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+        }
+      }
+    ],
+    "projection": "VERIFY_CURRENT_POSTIMAGES_THEN_INVERT_ONLY_TWO_FILES_FOR_IMMUTABLE_TREE_COMPARISON",
+    "legacy46": "EXPECTED_IDENTITY_REFUSAL_RETAINED_NOT_RELABELLED_PASS",
+    "admissions": false
+  },
+  "simulatorSigning03": {
+    "authority": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+    "sdk": "iphonesimulator",
+    "mechanism": "XCODE_APP_TARGET_SDK_CONDITIONAL_LINKED_SIMULATED_ENTITLEMENTS",
+    "prefix": "C47SIMTEST.",
+    "bundles": [
+      "com.layerwell.app.staging",
+      "com.layerwell.app.development"
+    ],
+    "appleTeam": false,
+    "profiles": false,
+    "deviceSigning": false,
+    "sharing": false,
+    "appEntitlementsOnFrameworksOrTestHost": false,
+    "appProcessSecureStoreRequired": true,
+    "ordinaryWithoutDiagnosticRebuildRequired": true
+  },
+  "storageOrigin05": {
+    "authority": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+    "checkpointHead": "fa4275986b727b3e6d855b059d5688210a09e440",
+    "checkpointTree": "ce88d3d7b8a674e3fae2e9aa2ff3c594efe2ecbd",
+    "sourcePaths": [
+      "scripts/release/full-app-j01/storage_origin47.mjs",
+      "scripts/release/full-app-j01/storage_trace47.py",
+      "scripts/release/full-app-j01/storage_trace47.test.py"
+    ],
+    "entryFile": "apps/mobile/.expo/C47StorageOrigin05.js",
+    "marker": "C47_STORAGE_ORIGIN_DIAGNOSTIC_05",
+    "nativeIdentityFile": "C47StorageOrigin05Identity.json",
+    "diagnosticOnly": true,
+    "exactRestoreRequired": true,
+    "ordinaryProductRebuildRequired": true,
+    "normalProductReuseAllowed": false,
+    "privateStorageQueryChangesAllowed": false,
+    "ordinaryAdmission": false,
+    "internalAdmission": false
+  }
+}

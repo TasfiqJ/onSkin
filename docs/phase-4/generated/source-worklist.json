@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-04T15:45:16.148Z",
+  "generatedAt": "2026-11-14T01:12:26.234Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "898981c3aabc8f9fb5f6de1da7da72fb457b2d72",
+  "gitSha": "6e3731a436df35ac715623fba8971de971bf71ed",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1192,8 +1192,8 @@
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 15985,
-          "sha256": "c453e9f345ae9321f3ae06557b2eb96b57c67b19fffae8e54179c8705a75f1d7"
+          "bytes": 19139,
+          "sha256": "793c5e49a0e12c72b06af0d770e47c5f4f8e1e4771092580562fe99b82c62df8"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
@@ -2338,8 +2338,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 540330,
-          "sha256": "1525743f161ec725f2fe1a812b1e619c1f4ac12dbd60a8a2a089c1c5429cdedf"
+          "bytes": 543738,
+          "sha256": "e192ec9df7352b9ea9c778a1a5fbc984fb7e7b1b3b02c6fa46c73a64d18cae06"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
