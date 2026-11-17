@@ -1,0 +1,37 @@
+{
+  "first": {
+    "role": "button",
+    "label": "Confirm and save this change",
+    "rect": {
+      "left": 41,
+      "right": 389,
+      "top": 390,
+      "bottom": 446,
+      "width": 348,
+      "height": 56,
+      "x": 215,
+      "y": 418
+    },
+    "disabled": false,
+    "clip": {
+      "left": 24,
+      "top": 0,
+      "right": 406,
+      "bottom": 836
+    },
+    "active": true,
+    "hitOwned": true,
+    "hitRole": null,
+    "fullyVisible": true
+  },
+  "second": {
+    "path": "/today",
+    "expectedPath": "/today",
+    "documentVisible": true,
+    "requestedLabel": "Confirm and save this change",
+    "requestedRole": "button",
+    "exactCandidates": 0,
+    "target": null
+  },
+  "outcome": "SECOND_TOUCH_REFUSED_BECAUSE_CONFIRMATION_WAS_ALREADY_REPLACED"
+}

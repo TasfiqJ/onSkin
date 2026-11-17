@@ -1,0 +1,14 @@
+
+> @layerwell/professional-web@0.1.0 build
+> vite build
+
+vite v8.1.6 building client environment for production...
+transforming...✓ 19 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/_headers                    0.39 kB
+dist/index.html                  1.82 kB │ gzip:  0.84 kB
+dist/assets/index-DpRNtaOu.css   1.56 kB │ gzip:  0.69 kB
+dist/assets/index-CRAT92Ck.js   84.92 kB │ gzip: 22.17 kB
+
+✓ built in 231ms

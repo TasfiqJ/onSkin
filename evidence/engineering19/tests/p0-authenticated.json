@@ -1,0 +1,26 @@
+{
+  "label": "p0-authenticated",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/photos/encryptedStorage.test.ts",
+    "src/features/photos/photoDeleteR3.integration.test.ts",
+    "src/features/photos/store.test.ts",
+    "src/features/photos/progressDetailStore.c08b2.test.ts",
+    "src/lib/storage/privateKV.test.ts",
+    "src/features/shelf/formulaHistoryJourney.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-16T21:40:37.816903+00:00",
+  "head": "77d929253ed283fff30cae6f8cc753c61c666320",
+  "tree": "85bbc84c9e0cd5366c921048a125af77f3d44685",
+  "status": "M apps/mobile/src/features/photos/encryptedStorage.test.ts\n M apps/mobile/src/features/photos/encryptedStorage.ts\n M apps/mobile/src/features/photos/photoDeleteJournal.ts\n M apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts\n M apps/mobile/src/features/photos/progressDetailStore.c08b2.test.ts\n M apps/mobile/src/features/photos/store.test.ts\n M apps/mobile/src/features/photos/store.ts\n M apps/mobile/src/lib/storage/privateKV.ts",
+  "exit": 1,
+  "seconds": 6.406,
+  "end": "2026-11-16T21:40:44.349187+00:00",
+  "logSha256": "5747ba417600f38aeb27ae8b070c59f4e7d91de744deae16a283dd27b236e41e"
+}

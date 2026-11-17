@@ -1,0 +1,715 @@
+{
+  "files": [
+    {
+      "path": "professional-browser/queue-430/filter-open-empty.png",
+      "bytes": 34983,
+      "sha256": "1e5a7501b0af1c46b7a2580e64d1fabcd5985bd7e9a00a904d17d0269a5da1b8",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-430/filtered-history-return.png",
+      "bytes": 35521,
+      "sha256": "301b32e6f86dea74ac6e596f177270c5ebdafd4c41afc69e5dcb982145e19c28",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-430/final.png",
+      "bytes": 37137,
+      "sha256": "1eaae21bed9b8c5a47686567480c4b53886dc92ebe6c9edc9c50b524de3c682f",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-430/history.png",
+      "bytes": 42905,
+      "sha256": "74654ee7179100ca41651bbc81e44febd0c69da55452ae5784167d2983cadbeb",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-430/real-unavailable.png",
+      "bytes": 41589,
+      "sha256": "7ece127acaa00226dc39b36a5e1791ddf631e1cbb2a9c0c9545eec134e712a9d",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-430/server.log",
+      "bytes": 72,
+      "sha256": "9deccc5511f1e1b74123886f33246c214b476f4048074284879691c2857fe539",
+      "kind": "utf8",
+      "lines": 4,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-430/summary.json",
+      "bytes": 5012,
+      "sha256": "a4136d0f2fe6fe4a4af6aad2d53bae854b64f11eea593e431d19c6c3c43590ad",
+      "kind": "utf8",
+      "lines": 274,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-owner-375.json",
+      "bytes": 562,
+      "sha256": "5cb69bbe6ee0875129eea9f7b884464f02733a43db1b5dae8f1c19be8df4a38f",
+      "kind": "utf8",
+      "lines": 18,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-owner-375.log",
+      "bytes": 32,
+      "sha256": "4a0a1c63f3487b9de2856ad4bc5c247b7fef7c41d4c10a7469016bb107c5ab0d",
+      "kind": "utf8",
+      "lines": 1,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-owner-430.json",
+      "bytes": 562,
+      "sha256": "def1f801217f3909f6dcc54a47e603f33905eaf2d47157911f7895e8fbf823ec",
+      "kind": "utf8",
+      "lines": 18,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-owner-430.log",
+      "bytes": 32,
+      "sha256": "9585eb04e882ba930f1ba022ff192bd4faec8f86f58b89686289dbe2b9f287fd",
+      "kind": "utf8",
+      "lines": 1,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-queue-375-v2.json",
+      "bytes": 573,
+      "sha256": "fff3a9bd3e59b4a8502c254906ed3fbcc3bd32e6e820f62cbfd88197feb6622c",
+      "kind": "utf8",
+      "lines": 18,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-queue-375-v2.log",
+      "bytes": 19,
+      "sha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c",
+      "kind": "utf8",
+      "lines": 1,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-queue-375.json",
+      "bytes": 570,
+      "sha256": "bae4f101f731c2a07ce2acb10218eabeb7a50b416e28392e0b2d567866348473",
+      "kind": "utf8",
+      "lines": 18,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-queue-375.log",
+      "bytes": 960,
+      "sha256": "f4262fda40105d19f8291bfac582e009ec030aa5d4cbbbe5b86ebd5079cb18a8",
+      "kind": "utf8",
+      "lines": 17,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-queue-430.json",
+      "bytes": 570,
+      "sha256": "de8ab62ecb7479c73c72d44989ffac1b3f8f33b74ad9637e2dd301e72cccc8d6",
+      "kind": "utf8",
+      "lines": 18,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-queue-430.log",
+      "bytes": 19,
+      "sha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+      "kind": "utf8",
+      "lines": 1,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/375x667-exit-progress.json",
+      "bytes": 518,
+      "sha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/375x667-exit-progress.png",
+      "bytes": 36759,
+      "sha256": "2ded590f25f2968dfd387b157ccf8bdfe1c3bc7a357926a5f7d19f892fb5d247",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/375x667-refusal.json",
+      "bytes": 515,
+      "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/375x667-refusal.png",
+      "bytes": 31851,
+      "sha256": "18f316c32099ac6900341d3b2ead812f906c527d43f7c3d654a2af43609a28f4",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/375x667-reload-refusal.json",
+      "bytes": 515,
+      "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/375x667-reload-refusal.png",
+      "bytes": 31851,
+      "sha256": "18f316c32099ac6900341d3b2ead812f906c527d43f7c3d654a2af43609a28f4",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/375x667-retry-0.json",
+      "bytes": 82,
+      "sha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/375x667-retry-1.json",
+      "bytes": 82,
+      "sha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/375x667-retry-controls.json",
+      "bytes": 585,
+      "sha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/375x667-retry-controls.png",
+      "bytes": 35352,
+      "sha256": "b0f9888a5175a082d63bd1478e70263c097f34ad2c7c080343eeffea60f78814",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/430x932-exit-progress.json",
+      "bytes": 518,
+      "sha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/430x932-exit-progress.png",
+      "bytes": 36018,
+      "sha256": "0d93674338105b0719a5c156ea710ac44f244553cfd8dce4ea53053e5be58c5b",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/430x932-refusal.json",
+      "bytes": 515,
+      "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/430x932-refusal.png",
+      "bytes": 31164,
+      "sha256": "38cb74e3ff24b225654256521ac0887cf5cc1a102697ee318a832fcf9d8d7b20",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/430x932-reload-refusal.json",
+      "bytes": 515,
+      "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/430x932-reload-refusal.png",
+      "bytes": 31164,
+      "sha256": "38cb74e3ff24b225654256521ac0887cf5cc1a102697ee318a832fcf9d8d7b20",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/430x932-retry-0.json",
+      "bytes": 80,
+      "sha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/430x932-retry-1.json",
+      "bytes": 80,
+      "sha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/430x932-retry-controls.json",
+      "bytes": 585,
+      "sha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/430x932-retry-controls.png",
+      "bytes": 34894,
+      "sha256": "7df3b796f0a58aca9371c70c22c370e195f30753c1d3c6558a91ef633cf35f1a",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/bootstrap-e19-provenance-375x667-failure.json",
+      "bytes": 2436,
+      "sha256": "13a783675c94bf3c5cfd2829c0f2ca5ba0fb0af7ac8f2acde189aaa867748e96",
+      "kind": "utf8",
+      "lines": 116,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/bootstrap-e19-provenance-375x667-failure.png",
+      "bytes": 35066,
+      "sha256": "b3165b289164bfd591126c939772705068c410fe62e9e300e8ca1ffb481da705",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/bootstrap-e19-provenance-375x667-result.json",
+      "bytes": 567,
+      "sha256": "d505ce7e6f845f80f335011e78e02e24f81988cc5015a4ee7f61798783fe2b33",
+      "kind": "utf8",
+      "lines": 20,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/bootstrap-e19-provenance-430x932-failure.json",
+      "bytes": 2510,
+      "sha256": "61fae6418ef394f0907156649898b9192ba18e53067fadf0ea1c8bf20f8cf99b",
+      "kind": "utf8",
+      "lines": 116,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/bootstrap-e19-provenance-430x932-failure.png",
+      "bytes": 40778,
+      "sha256": "fb7cfe28c043a17aaded5955dbcd5d4c339292886ba3ee8367b4e90624b1a05c",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser/bootstrap-e19-provenance-430x932-result.json",
+      "bytes": 567,
+      "sha256": "2081169ac56b36a0c1bd789706458f3e5437f80bc4fea8a30074f8ca32c268a3",
+      "kind": "utf8",
+      "lines": 20,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/expo-e19-provenance.log",
+      "bytes": 54231,
+      "sha256": "8627bcc444b9089f27a7271054960f11656524c23df5a3cf0a95852aa33e8cc5",
+      "kind": "utf8",
+      "lines": 642,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/network.json",
+      "bytes": 34308,
+      "sha256": "95bac117c644bbd4810e51ff7092de8df6d87b69fb86430d5b2b1aeb316bed1a",
+      "kind": "utf8",
+      "lines": 1650,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser/summary.json",
+      "bytes": 708,
+      "sha256": "665eb6c9ab0a6aac31658a1dc29559e6757c791579757e779e6dac42af160319",
+      "kind": "utf8",
+      "lines": 30,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-exit-progress.json",
+      "bytes": 518,
+      "sha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-exit-progress.png",
+      "bytes": 36776,
+      "sha256": "5046c6f3d31517d0ace0bc63b3d84dbf2472681f02497f76d4042885954efc96",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-explicit-consent-goals.json",
+      "bytes": 452,
+      "sha256": "dcd45f279d92018a46d90a2088f5360cb713bf790fde724cff3ca8c1079ba8af",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-explicit-consent-goals.png",
+      "bytes": 49650,
+      "sha256": "ef544e7df01ede14ace5d6dcaa3a29fd70563845fa1909e2cfdb82f22d8dba06",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-refusal.json",
+      "bytes": 515,
+      "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-refusal.png",
+      "bytes": 31851,
+      "sha256": "18f316c32099ac6900341d3b2ead812f906c527d43f7c3d654a2af43609a28f4",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-reload-refusal.json",
+      "bytes": 515,
+      "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-reload-refusal.png",
+      "bytes": 31851,
+      "sha256": "18f316c32099ac6900341d3b2ead812f906c527d43f7c3d654a2af43609a28f4",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-retry-0.json",
+      "bytes": 82,
+      "sha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-retry-1.json",
+      "bytes": 82,
+      "sha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-retry-controls.json",
+      "bytes": 585,
+      "sha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/375x667-retry-controls.png",
+      "bytes": 35352,
+      "sha256": "b0f9888a5175a082d63bd1478e70263c097f34ad2c7c080343eeffea60f78814",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-exit-progress.json",
+      "bytes": 518,
+      "sha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-exit-progress.png",
+      "bytes": 36015,
+      "sha256": "59f24fb74df9c263acfc0542b7ad0ad7d5cdf92bf6422707adf588aaa43cf04f",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-explicit-consent-goals.json",
+      "bytes": 452,
+      "sha256": "c8c9235e41af10a5b70cd575b812e60bff405033bfff5eadfda75d86ca2bd457",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-explicit-consent-goals.png",
+      "bytes": 51451,
+      "sha256": "efc29a9655180099828b1e7ee2d75e1aea28a533e77f0e2a6b14289f0b67e9dd",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-refusal.json",
+      "bytes": 515,
+      "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-refusal.png",
+      "bytes": 31164,
+      "sha256": "38cb74e3ff24b225654256521ac0887cf5cc1a102697ee318a832fcf9d8d7b20",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-reload-refusal.json",
+      "bytes": 515,
+      "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-reload-refusal.png",
+      "bytes": 31164,
+      "sha256": "38cb74e3ff24b225654256521ac0887cf5cc1a102697ee318a832fcf9d8d7b20",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-retry-0.json",
+      "bytes": 80,
+      "sha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-retry-1.json",
+      "bytes": 80,
+      "sha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-retry-controls.json",
+      "bytes": 585,
+      "sha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/430x932-retry-controls.png",
+      "bytes": 34894,
+      "sha256": "7df3b796f0a58aca9371c70c22c370e195f30753c1d3c6558a91ef633cf35f1a",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "recovery-browser-v2/expo-e19-provenance.log",
+      "bytes": 12542,
+      "sha256": "25f99a59705775153c174041679010d6608eee0db7635ee5368e31515d5932a0",
+      "kind": "utf8",
+      "lines": 147,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/network.json",
+      "bytes": 5881,
+      "sha256": "d2dd32f8dcb42d9acb4c624925872301a46505334052622722cd01a7aa1de557",
+      "kind": "utf8",
+      "lines": 286,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2/summary.json",
+      "bytes": 708,
+      "sha256": "2d4d009cc4f85b62d9370722448624449da8f386d07e4e1b58ced62b5c358a36",
+      "kind": "utf8",
+      "lines": 30,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2.json",
+      "bytes": 540,
+      "sha256": "5efba639d8dbfe258cdd5fa5f7c6106b5c624b44c3512edd05ced3b0d606d3b5",
+      "kind": "utf8",
+      "lines": 16,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser-v2.log",
+      "bytes": 42,
+      "sha256": "fd8786ba9ed9349f69f165c30fdbb9887c9448c9910a01a8ca90064e779414ef",
+      "kind": "utf8",
+      "lines": 1,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-browser.mjs",
+      "bytes": 5646,
+      "sha256": "14a20a27b0852e6361dd88f3187ec04db45150d580ef3a739d2fe92a29d5cbb7",
+      "kind": "utf8",
+      "lines": 84,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-ui.json",
+      "bytes": 1069,
+      "sha256": "5f528e7834199754f8b96c9198bf83aabb038996da8cdcbc380d739b23e0728f",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "recovery-ui.log",
+      "bytes": 452,
+      "sha256": "4435b3742e9c6d6bb28f82957259d21ade0b29ae0906eb2449b621c58a2c01d0",
+      "kind": "utf8",
+      "lines": 13,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "REPRODUCTION.md",
+      "bytes": 1971,
+      "sha256": "937a4664044894f77b7fc7da57f7189e2d11928c84e68df5da82e373fdcde36a",
+      "kind": "utf8",
+      "lines": 12,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "run_check.py",
+      "bytes": 1128,
+      "sha256": "98e323f0daef2fc792a7bd07a1b743a56a4afedff830b164729c7c2a904688e8",
+      "kind": "utf8",
+      "lines": 17,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "SESSION_ENGINEERING18_TO_ENGINEERING19.patch",
+      "bytes": 117642,
+      "sha256": "71cd5259dd2b4598ade02e848aab5408c2fb9898177c7578eb9ea845f5498d1c",
+      "kind": "utf8",
+      "lines": 1414,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "SOURCE_MANIFEST.json",
+      "bytes": 330898,
+      "sha256": "b4ea066371839cff86e64a7832ad00edbaf509aabfc0e527a79caa3a6556ef93",
+      "kind": "utf8",
+      "lines": 7853,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "TEST_MANIFEST.json",
+      "bytes": 31272,
+      "sha256": "74328c9293d52ed9ef5b6d7b08718aa55fba10824a7e5f365b68533206d03990",
+      "kind": "utf8",
+      "lines": 730,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "unsigned-journal-red.json",
+      "bytes": 1008,
+      "sha256": "e81b418574c7b3fb7c41bf6d39b5712e270880ad3e5f0e20633db00849d17c0e",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "unsigned-journal-red.log",
+      "bytes": 4001,
+      "sha256": "5a0cb8680c84ee584a117c63ee7deb0e9d8227acce472a8ed637bd722068ea2d",
+      "kind": "utf8",
+      "lines": 90,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "verified-lint.json",
+      "bytes": 541,
+      "sha256": "32a6fc5c1798425190e523ec42abb4afb94bef75063db5c42fb26d03ecbdb3d7",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "verified-lint.log",
+      "bytes": 1553,
+      "sha256": "7a119c8dc7dc9f3639867606075f42ba019720ef56fa813513e4abac64a648a9",
+      "kind": "utf8",
+      "lines": 36,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "verified-root.json",
+      "bytes": 541,
+      "sha256": "6ebdba1b7658710ad4cb7fa9f36f31a114975bc79d7e760ca7a9b0f9ef3fddce",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "verified-root.log",
+      "bytes": 609364,
+      "sha256": "d9a715e751a737ade392fd1236f886d618c90008b81f104383d7b36ab7076066",
+      "kind": "utf8",
+      "lines": 6218,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "verified-typecheck.json",
+      "bytes": 551,
+      "sha256": "edd82296257060a451dfbd98936952247f4953d773237d7278ca37b61c7b9a8e",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "verified-typecheck.log",
+      "bytes": 1569,
+      "sha256": "b5ac1b19e32f37757b6342a8bf983a28971b6d30e3a4decbbdab6e1496cb59d7",
+      "kind": "utf8",
+      "lines": 35,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "verify_ancestry.py",
+      "bytes": 1516,
+      "sha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    }
+  ]
+}

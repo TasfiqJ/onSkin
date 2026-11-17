@@ -1,0 +1,967 @@
+{
+  "files": [
+    {
+      "sourcePath": "consumer-375/formula-bottle-touch-scrolled.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 753432,
+      "sourceSha256": "73b48cca8e2e6ddaa2946c64456f3037f50253e0f73b61c9ce919d507f3bdb7b",
+      "publishedBytes": 753432,
+      "publishedSha256": "73b48cca8e2e6ddaa2946c64456f3037f50253e0f73b61c9ce919d507f3bdb7b",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/formula-bottle-touch-scrolled.json/part-001.txt",
+          "bytes": 175376,
+          "sha256": "80b89ff8d19968f9339e3fed6f53ddd944e7386d60dde59e1c4c3943c47c5b10"
+        },
+        {
+          "order": 2,
+          "path": "browser/consumer-375/formula-bottle-touch-scrolled.json/part-002.txt",
+          "bytes": 244071,
+          "sha256": "87ec2721ed39649c8dce39f5739544d616c21b0142941ee54c1c50e8880ecb0d"
+        },
+        {
+          "order": 3,
+          "path": "browser/consumer-375/formula-bottle-touch-scrolled.json/part-003.txt",
+          "bytes": 245573,
+          "sha256": "d61f39e36f60f9a3042ea87c69016cc63e45e859d3e4f4125bbb4480ea1a2f82"
+        },
+        {
+          "order": 4,
+          "path": "browser/consumer-375/formula-bottle-touch-scrolled.json/part-004.txt",
+          "bytes": 88412,
+          "sha256": "6c8a8b58167165d63662458519d8e15c0a30e2f628c35a94bd744316f930a3f4"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/network-outcomes35.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 50510,
+      "sourceSha256": "5c7f7527d9285489d37b369fa64fc2ac792deb3f113a6a4355e337a1abd16fd2",
+      "publishedBytes": 50510,
+      "publishedSha256": "5c7f7527d9285489d37b369fa64fc2ac792deb3f113a6a4355e337a1abd16fd2",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/network-outcomes35.json",
+          "bytes": 50510,
+          "sha256": "5c7f7527d9285489d37b369fa64fc2ac792deb3f113a6a4355e337a1abd16fd2"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/order-save-new-actual-version.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2142,
+      "sourceSha256": "1325d9841f780bb451710360f179ef4b4e82f21a685d9c0b3c0b90181308e1cc",
+      "publishedBytes": 2142,
+      "publishedSha256": "1325d9841f780bb451710360f179ef4b4e82f21a685d9c0b3c0b90181308e1cc",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/order-save-new-actual-version.json",
+          "bytes": 2142,
+          "sha256": "1325d9841f780bb451710360f179ef4b4e82f21a685d9c0b3c0b90181308e1cc"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/privacy-explicit-cleanup-retry.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2748,
+      "sourceSha256": "e8be031bc6c3363b5b36306568d834b3e470507c7afb36682abfdfebd760b803",
+      "publishedBytes": 2748,
+      "publishedSha256": "e8be031bc6c3363b5b36306568d834b3e470507c7afb36682abfdfebd760b803",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/privacy-explicit-cleanup-retry.json",
+          "bytes": 2748,
+          "sha256": "e8be031bc6c3363b5b36306568d834b3e470507c7afb36682abfdfebd760b803"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/privacy-export-unavailable-cleanup-pending.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2641,
+      "sourceSha256": "c3eaaa1e682fbfcd66059bfafa6ef7e5637bc21f418452004e386bd77eba10d5",
+      "publishedBytes": 2641,
+      "publishedSha256": "c3eaaa1e682fbfcd66059bfafa6ef7e5637bc21f418452004e386bd77eba10d5",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/privacy-export-unavailable-cleanup-pending.json",
+          "bytes": 2641,
+          "sha256": "c3eaaa1e682fbfcd66059bfafa6ef7e5637bc21f418452004e386bd77eba10d5"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/privacy-paused-keyboard-delete-cancel.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2734,
+      "sourceSha256": "0cc381ccaa5d1b2bfe20de63ba9be65bc98ca816466fc006c518f8fec15b2a77",
+      "publishedBytes": 2734,
+      "publishedSha256": "0cc381ccaa5d1b2bfe20de63ba9be65bc98ca816466fc006c518f8fec15b2a77",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/privacy-paused-keyboard-delete-cancel.json",
+          "bytes": 2734,
+          "sha256": "0cc381ccaa5d1b2bfe20de63ba9be65bc98ca816466fc006c518f8fec15b2a77"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/privacy-paused-recovery.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1177,
+      "sourceSha256": "c5f051c6defb550c44d5cd66821244e731f4bc9bfb6400ba2a842d6c6b24200b",
+      "publishedBytes": 1177,
+      "publishedSha256": "c5f051c6defb550c44d5cd66821244e731f4bc9bfb6400ba2a842d6c6b24200b",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/privacy-paused-recovery.json",
+          "bytes": 1177,
+          "sha256": "c5f051c6defb550c44d5cd66821244e731f4bc9bfb6400ba2a842d6c6b24200b"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/privacy-retired-delete-refused.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 4309,
+      "sourceSha256": "fedfed3ff7d24e47eba5f538dd83f8f0ba029217a36f0d5f570e17d87c86ff78",
+      "publishedBytes": 4309,
+      "publishedSha256": "fedfed3ff7d24e47eba5f538dd83f8f0ba029217a36f0d5f570e17d87c86ff78",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/privacy-retired-delete-refused.json",
+          "bytes": 4309,
+          "sha256": "fedfed3ff7d24e47eba5f538dd83f8f0ba029217a36f0d5f570e17d87c86ff78"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/privacy-retired-withdrawal-refused.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 5275,
+      "sourceSha256": "3a030e6e841478f46733ec8318d110c90f22f79bf4708affc48b10ef2e858053",
+      "publishedBytes": 5275,
+      "publishedSha256": "3a030e6e841478f46733ec8318d110c90f22f79bf4708affc48b10ef2e858053",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/privacy-retired-withdrawal-refused.json",
+          "bytes": 5275,
+          "sha256": "3a030e6e841478f46733ec8318d110c90f22f79bf4708affc48b10ef2e858053"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/retired-apply-refused.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1833,
+      "sourceSha256": "2e9f4ac3c93c1173af137b2f94a5348a1baa8eb500a241e339ed4b60ac4ef326",
+      "publishedBytes": 1833,
+      "publishedSha256": "2e9f4ac3c93c1173af137b2f94a5348a1baa8eb500a241e339ed4b60ac4ef326",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/retired-apply-refused.json",
+          "bytes": 1833,
+          "sha256": "2e9f4ac3c93c1173af137b2f94a5348a1baa8eb500a241e339ed4b60ac4ef326"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/retired-bottle-confirmations-refused.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 3109,
+      "sourceSha256": "5a9eb7c49505a8e2da186bfd477d57bb7f0b1f9c0313b788b7f1da8445ddec2c",
+      "publishedBytes": 3109,
+      "publishedSha256": "5a9eb7c49505a8e2da186bfd477d57bb7f0b1f9c0313b788b7f1da8445ddec2c",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/retired-bottle-confirmations-refused.json",
+          "bytes": 3109,
+          "sha256": "5a9eb7c49505a8e2da186bfd477d57bb7f0b1f9c0313b788b7f1da8445ddec2c"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/retired-retraction-refused.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2690,
+      "sourceSha256": "f1cb409bf4d247c97a8bd3e68fba2022a2b6c57b39f15bc937b0660f20a64e0f",
+      "publishedBytes": 2690,
+      "publishedSha256": "f1cb409bf4d247c97a8bd3e68fba2022a2b6c57b39f15bc937b0660f20a64e0f",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/retired-retraction-refused.json",
+          "bytes": 2690,
+          "sha256": "f1cb409bf4d247c97a8bd3e68fba2022a2b6c57b39f15bc937b0660f20a64e0f"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375/same-sequence-review.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2056,
+      "sourceSha256": "b48ad9e324d652c306da13f2b058414644c2670b1e3b7ea33fd87c6cf41a4263",
+      "publishedBytes": 2056,
+      "publishedSha256": "b48ad9e324d652c306da13f2b058414644c2670b1e3b7ea33fd87c6cf41a4263",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-375/same-sequence-review.json",
+          "bytes": 2056,
+          "sha256": "b48ad9e324d652c306da13f2b058414644c2670b1e3b7ea33fd87c6cf41a4263"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 531,
+      "sourceSha256": "92facdd015c8a394d48d0a0c4461fa2002ff6629693d9ae1ca15f4e9a5a94a66",
+      "publishedBytes": 532,
+      "publishedSha256": "ac6d12ec078f6e585aa51f2a58433f07436ea1516364b617cca1ebd33d4553d1",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 1,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/consumer-375.json",
+          "bytes": 532,
+          "sha256": "ac6d12ec078f6e585aa51f2a58433f07436ea1516364b617cca1ebd33d4553d1"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-375.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 0,
+      "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "publishedBytes": 0,
+      "publishedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/consumer-375.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/01-welcome.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1350,
+      "sourceSha256": "b8a40d75ec4e74050997e82d912096a5feb33ee9fe2d283a64f922427583c199",
+      "publishedBytes": 1350,
+      "publishedSha256": "b8a40d75ec4e74050997e82d912096a5feb33ee9fe2d283a64f922427583c199",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/01-welcome.json",
+          "bytes": 1350,
+          "sha256": "b8a40d75ec4e74050997e82d912096a5feb33ee9fe2d283a64f922427583c199"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/01a-direct-protected-age-gate.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1456,
+      "sourceSha256": "b38fe6dc2d90bb39cb9737230ebdc50805881fb83cfb370a493c2d8556f19aa0",
+      "publishedBytes": 1456,
+      "publishedSha256": "b38fe6dc2d90bb39cb9737230ebdc50805881fb83cfb370a493c2d8556f19aa0",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/01a-direct-protected-age-gate.json",
+          "bytes": 1456,
+          "sha256": "b38fe6dc2d90bb39cb9737230ebdc50805881fb83cfb370a493c2d8556f19aa0"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/02-age-empty.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1456,
+      "sourceSha256": "b38fe6dc2d90bb39cb9737230ebdc50805881fb83cfb370a493c2d8556f19aa0",
+      "publishedBytes": 1456,
+      "publishedSha256": "b38fe6dc2d90bb39cb9737230ebdc50805881fb83cfb370a493c2d8556f19aa0",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/02-age-empty.json",
+          "bytes": 1456,
+          "sha256": "b38fe6dc2d90bb39cb9737230ebdc50805881fb83cfb370a493c2d8556f19aa0"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/03-age-filled.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1457,
+      "sourceSha256": "02640facde3c2545398af90633273eb9615c43d284666e38a6066de5d9e11c19",
+      "publishedBytes": 1457,
+      "publishedSha256": "02640facde3c2545398af90633273eb9615c43d284666e38a6066de5d9e11c19",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/03-age-filled.json",
+          "bytes": 1457,
+          "sha256": "02640facde3c2545398af90633273eb9615c43d284666e38a6066de5d9e11c19"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/03a-after-age-submit.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1593,
+      "sourceSha256": "9450b3d9a39b27088b3a8986fec36fa96797ef13be5f896e1e3f8e146c66d8b7",
+      "publishedBytes": 1593,
+      "publishedSha256": "9450b3d9a39b27088b3a8986fec36fa96797ef13be5f896e1e3f8e146c66d8b7",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/03a-after-age-submit.json",
+          "bytes": 1593,
+          "sha256": "9450b3d9a39b27088b3a8986fec36fa96797ef13be5f896e1e3f8e146c66d8b7"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/04-consent.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1593,
+      "sourceSha256": "9450b3d9a39b27088b3a8986fec36fa96797ef13be5f896e1e3f8e146c66d8b7",
+      "publishedBytes": 1593,
+      "publishedSha256": "9450b3d9a39b27088b3a8986fec36fa96797ef13be5f896e1e3f8e146c66d8b7",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/04-consent.json",
+          "bytes": 1593,
+          "sha256": "9450b3d9a39b27088b3a8986fec36fa96797ef13be5f896e1e3f8e146c66d8b7"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/05-goals.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2121,
+      "sourceSha256": "46c1a16b3cc32ef4e9d766d114f6153475118946ccd376229785325a03f360fb",
+      "publishedBytes": 2121,
+      "publishedSha256": "46c1a16b3cc32ef4e9d766d114f6153475118946ccd376229785325a03f360fb",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/05-goals.json",
+          "bytes": 2121,
+          "sha256": "46c1a16b3cc32ef4e9d766d114f6153475118946ccd376229785325a03f360fb"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/06-goals-selected.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2132,
+      "sourceSha256": "186b49b3dec87c9f092394cbaae1725550d8bb386846003cd91422ca4e62060e",
+      "publishedBytes": 2132,
+      "publishedSha256": "186b49b3dec87c9f092394cbaae1725550d8bb386846003cd91422ca4e62060e",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/06-goals-selected.json",
+          "bytes": 2132,
+          "sha256": "186b49b3dec87c9f092394cbaae1725550d8bb386846003cd91422ca4e62060e"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/07-quiz-01.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1416,
+      "sourceSha256": "5bfdc0391ebacab4f3a2d709bca4016f8c33536601bb573ec5b950e7c6df3a57",
+      "publishedBytes": 1416,
+      "publishedSha256": "5bfdc0391ebacab4f3a2d709bca4016f8c33536601bb573ec5b950e7c6df3a57",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/07-quiz-01.json",
+          "bytes": 1416,
+          "sha256": "5bfdc0391ebacab4f3a2d709bca4016f8c33536601bb573ec5b950e7c6df3a57"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/08-quiz-after-04.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1392,
+      "sourceSha256": "b0814fb8ef8e8912c0ab2d4656ff73b11a02b4a2785605673fb425f2bf2005ce",
+      "publishedBytes": 1392,
+      "publishedSha256": "b0814fb8ef8e8912c0ab2d4656ff73b11a02b4a2785605673fb425f2bf2005ce",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/08-quiz-after-04.json",
+          "bytes": 1392,
+          "sha256": "b0814fb8ef8e8912c0ab2d4656ff73b11a02b4a2785605673fb425f2bf2005ce"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/08-quiz-after-09.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2086,
+      "sourceSha256": "23dbdaf1ea74073567cd0b74c3de2d33a0f1af8fa17a2788c66f53bfbf942239",
+      "publishedBytes": 2086,
+      "publishedSha256": "23dbdaf1ea74073567cd0b74c3de2d33a0f1af8fa17a2788c66f53bfbf942239",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/08-quiz-after-09.json",
+          "bytes": 2086,
+          "sha256": "23dbdaf1ea74073567cd0b74c3de2d33a0f1af8fa17a2788c66f53bfbf942239"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/08-quiz-after-11.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 1669,
+      "sourceSha256": "26666614c765ae047ea1a674aff66b5197819a5bc9e35bc06f7a02a5c54d18c2",
+      "publishedBytes": 1669,
+      "publishedSha256": "26666614c765ae047ea1a674aff66b5197819a5bc9e35bc06f7a02a5c54d18c2",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/08-quiz-after-11.json",
+          "bytes": 1669,
+          "sha256": "26666614c765ae047ea1a674aff66b5197819a5bc9e35bc06f7a02a5c54d18c2"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/09-products-empty.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2699,
+      "sourceSha256": "c46c0152ebaa06f675b13c4e2e2b006dfa9969d99a3a60a7f0c7886a04f79753",
+      "publishedBytes": 2699,
+      "publishedSha256": "c46c0152ebaa06f675b13c4e2e2b006dfa9969d99a3a60a7f0c7886a04f79753",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/09-products-empty.json",
+          "bytes": 2699,
+          "sha256": "c46c0152ebaa06f675b13c4e2e2b006dfa9969d99a3a60a7f0c7886a04f79753"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/10-products-after-1.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 3219,
+      "sourceSha256": "a57b93877ec591bd945c32091d1a89f133f9bffc4c2a66da9109ee25ace58a48",
+      "publishedBytes": 3219,
+      "publishedSha256": "a57b93877ec591bd945c32091d1a89f133f9bffc4c2a66da9109ee25ace58a48",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/10-products-after-1.json",
+          "bytes": 3219,
+          "sha256": "a57b93877ec591bd945c32091d1a89f133f9bffc4c2a66da9109ee25ace58a48"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/11-products-after-2.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 3462,
+      "sourceSha256": "b752914a71b71e11d355a0aa86f56ffdbc1cd1f72e5f642e5cb7210f8129a71c",
+      "publishedBytes": 3462,
+      "publishedSha256": "b752914a71b71e11d355a0aa86f56ffdbc1cd1f72e5f642e5cb7210f8129a71c",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/11-products-after-2.json",
+          "bytes": 3462,
+          "sha256": "b752914a71b71e11d355a0aa86f56ffdbc1cd1f72e5f642e5cb7210f8129a71c"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/12-products-after-3.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 3474,
+      "sourceSha256": "2a99285c983cf28584d139a8fd884c58208102ab1d4c8dece30ab21e2158a696",
+      "publishedBytes": 3474,
+      "publishedSha256": "2a99285c983cf28584d139a8fd884c58208102ab1d4c8dece30ab21e2158a696",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/12-products-after-3.json",
+          "bytes": 3474,
+          "sha256": "2a99285c983cf28584d139a8fd884c58208102ab1d4c8dece30ab21e2158a696"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/13-post-products-continue-current.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 373,
+      "sourceSha256": "45bc81262201aded015953fa7e57afee4aa3c2282e81b89eb9984b313620da7a",
+      "publishedBytes": 373,
+      "publishedSha256": "45bc81262201aded015953fa7e57afee4aa3c2282e81b89eb9984b313620da7a",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/13-post-products-continue-current.json",
+          "bytes": 373,
+          "sha256": "45bc81262201aded015953fa7e57afee4aa3c2282e81b89eb9984b313620da7a"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/14-reveal-checks.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 691,
+      "sourceSha256": "e0983573f8f30de8ad0abc3ed64a44e3a264272fa9005f97f3b461352efddda7",
+      "publishedBytes": 691,
+      "publishedSha256": "e0983573f8f30de8ad0abc3ed64a44e3a264272fa9005f97f3b461352efddda7",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/14-reveal-checks.json",
+          "bytes": 691,
+          "sha256": "e0983573f8f30de8ad0abc3ed64a44e3a264272fa9005f97f3b461352efddda7"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/15-notifications.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 947,
+      "sourceSha256": "66f1f37b1b658f342b21ca13605c4079a1924f702d3b3cc9f5681759100c5877",
+      "publishedBytes": 947,
+      "publishedSha256": "66f1f37b1b658f342b21ca13605c4079a1924f702d3b3cc9f5681759100c5877",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/15-notifications.json",
+          "bytes": 947,
+          "sha256": "66f1f37b1b658f342b21ca13605c4079a1924f702d3b3cc9f5681759100c5877"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/15a-reminder-persistence35.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 279,
+      "sourceSha256": "f897948700183e1b5e692417e52f80b0a5c33547e967fc53435baf8fe6bef1d4",
+      "publishedBytes": 279,
+      "publishedSha256": "f897948700183e1b5e692417e52f80b0a5c33547e967fc53435baf8fe6bef1d4",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/15a-reminder-persistence35.json",
+          "bytes": 279,
+          "sha256": "f897948700183e1b5e692417e52f80b0a5c33547e967fc53435baf8fe6bef1d4"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/15a-reminders-off-saved.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 997,
+      "sourceSha256": "0d39fc964b9febb01fe292776c0f30664b7893495c5bc820647d9735892c038d",
+      "publishedBytes": 997,
+      "publishedSha256": "0d39fc964b9febb01fe292776c0f30664b7893495c5bc820647d9735892c038d",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/15a-reminders-off-saved.json",
+          "bytes": 997,
+          "sha256": "0d39fc964b9febb01fe292776c0f30664b7893495c5bc820647d9735892c038d"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/15b-reminder-continuation35.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 35,
+      "sourceSha256": "e75a92b253d32972326cf154509b02d3ef2e37c574865718f1f6a977c237a897",
+      "publishedBytes": 35,
+      "publishedSha256": "e75a92b253d32972326cf154509b02d3ef2e37c574865718f1f6a977c237a897",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/15b-reminder-continuation35.json",
+          "bytes": 35,
+          "sha256": "e75a92b253d32972326cf154509b02d3ef2e37c574865718f1f6a977c237a897"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/16-account.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 714,
+      "sourceSha256": "daa04d3ccba356a7cab50fd0f09625b3e8c3e304d4087df40718f91fade769db",
+      "publishedBytes": 714,
+      "publishedSha256": "daa04d3ccba356a7cab50fd0f09625b3e8c3e304d4087df40718f91fade769db",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/16-account.json",
+          "bytes": 714,
+          "sha256": "daa04d3ccba356a7cab50fd0f09625b3e8c3e304d4087df40718f91fade769db"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/17-paywall-current.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2838,
+      "sourceSha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300",
+      "publishedBytes": 2838,
+      "publishedSha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/17-paywall-current.json",
+          "bytes": 2838,
+          "sha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/17-paywall.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2838,
+      "sourceSha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300",
+      "publishedBytes": 2838,
+      "publishedSha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/17-paywall.json",
+          "bytes": 2838,
+          "sha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/18-paywall-free-path-visible.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2838,
+      "sourceSha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300",
+      "publishedBytes": 2838,
+      "publishedSha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/18-paywall-free-path-visible.json",
+          "bytes": 2838,
+          "sha256": "5da7edbe7519406aeef3c0b27c03325223a8047b242a1b19a75fa71447613300"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/19-today-free-current.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2655,
+      "sourceSha256": "91f63e61f36b6baa646c90315944365e066f8e0a20597aa369d832ce844ae62b",
+      "publishedBytes": 2655,
+      "publishedSha256": "91f63e61f36b6baa646c90315944365e066f8e0a20597aa369d832ce844ae62b",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/19-today-free-current.json",
+          "bytes": 2655,
+          "sha256": "91f63e61f36b6baa646c90315944365e066f8e0a20597aa369d832ce844ae62b"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/20-free-first-session35.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 713,
+      "sourceSha256": "36a32e80a0be28eac253611741daf40aed6f36b6e769482932d68cebb734ff6f",
+      "publishedBytes": 713,
+      "publishedSha256": "36a32e80a0be28eac253611741daf40aed6f36b6e769482932d68cebb734ff6f",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/20-free-first-session35.json",
+          "bytes": 713,
+          "sha256": "36a32e80a0be28eac253611741daf40aed6f36b6e769482932d68cebb734ff6f"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/20-shelf-after-onboarding.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 7096,
+      "sourceSha256": "fde0c45c864c8955804f8805b4018b79ff9e18be44074dd21c83b14ed2d6b677",
+      "publishedBytes": 7096,
+      "publishedSha256": "fde0c45c864c8955804f8805b4018b79ff9e18be44074dd21c83b14ed2d6b677",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/20-shelf-after-onboarding.json",
+          "bytes": 7096,
+          "sha256": "fde0c45c864c8955804f8805b4018b79ff9e18be44074dd21c83b14ed2d6b677"
+        }
+      ]
+    },
+    {
+      "sourcePath": "consumer-430/actual-applied-reload.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2149,
+      "sourceSha256": "f255a5e6dcaab7b87294cd2616db73a9cf6af2522f1b3a4c54826d48d92483aa",
+      "publishedBytes": 2149,
+      "publishedSha256": "f255a5e6dcaab7b87294cd2616db73a9cf6af2522f1b3a4c54826d48d92483aa",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/consumer-430/actual-applied-reload.json",
+          "bytes": 2149,
+          "sha256": "f255a5e6dcaab7b87294cd2616db73a9cf6af2522f1b3a4c54826d48d92483aa"
+        }
+      ]
+    }
+  ]
+}

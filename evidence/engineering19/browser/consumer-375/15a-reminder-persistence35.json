@@ -1,0 +1,12 @@
+{
+  "sameOwner": true,
+  "currentConsent": true,
+  "persistedOff": true,
+  "authority37": {
+    "generation": 1,
+    "epoch": 1,
+    "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+    "accountGeneration": 1,
+    "identityGeneration": 0
+  }
+}

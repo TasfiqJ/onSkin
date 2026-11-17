@@ -1,0 +1,15 @@
+{
+  "before": {
+    "url": "http://localhost:8491/today?routine=AM",
+    "morning": true,
+    "evening": false
+  },
+  "action": "Fresh document at the existing development AM preview before any optional draft",
+  "after": {
+    "url": "http://localhost:8491/today?routine=AM",
+    "morning": true,
+    "evening": false
+  },
+  "persistedOwnerAndEpochVerified": true,
+  "developmentPreviewOnly": true
+}

@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "bootstrap-e19-provenance-375x667",
+  "browserFailures": [],
+  "completedAt": "2026-11-16T21:50:19.852Z",
+  "error": "Explicit local consent did not release the catalog route.",
+  "fixtureGroup": "e19-provenance",
+  "nativeDeviceProof": false,
+  "startedAt": "2026-11-16T21:49:34.403Z",
+  "surface": "expo-web",
+  "verdict": "fail",
+  "viewport": {
+    "id": "375x667",
+    "width": 375,
+    "height": 667
+  },
+  "failureArtifacts": [
+    "bootstrap-e19-provenance-375x667-failure.json",
+    "bootstrap-e19-provenance-375x667-failure.png"
+  ]
+}

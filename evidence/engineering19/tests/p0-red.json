@@ -1,0 +1,23 @@
+{
+  "label": "p0-red",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/photos/encryptedStorage.test.ts",
+    "-t",
+    "E19"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-16T21:32:42.974655+00:00",
+  "head": "77d929253ed283fff30cae6f8cc753c61c666320",
+  "tree": "85bbc84c9e0cd5366c921048a125af77f3d44685",
+  "status": "M apps/mobile/src/features/photos/encryptedStorage.test.ts",
+  "exit": 1,
+  "seconds": 2.922,
+  "end": "2026-11-16T21:32:46.012769+00:00",
+  "logSha256": "d8f58aa1d49ef6fb11bc5f8efda4b871985376ede5e3cbf04d0cf40ca61d2243"
+}

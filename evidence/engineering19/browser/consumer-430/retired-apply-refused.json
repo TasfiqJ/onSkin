@@ -1,0 +1,47 @@
+{
+  "bodyText": "< Routine records Review product names and order from your current Shelf and saved edits. Saving creates a dated local snapshot. It does not apply a plan, confirm use, or provide advice. Morning record 1. Mineral SPF 50 Evening record 1. Retinol 0.3% serum 2. Glycolic 7% toner My actual routine Only an explicit apply creates an actual routine version. Saved snapshots, generated suggestions and old check-offs are not apply intent. This does not confirm use or provide advice. Sequence records commit order; device dates are not a trusted clock. No actual routine has been applied on this device. Review current Shelf sequence as actual routine Review before applying Replace the current actual routine with the names and sequence below. Previous versions remain unchanged. Today starts a new version-specific check-off view; past taps are not copied into it. Changes from my applied sequence No previous owner-applied sequence is available for comparison. This will be the first applied version. Morning actual sequence 1. Mineral SPF 50 Evening actual sequence 1. Retinol 0.3% serum 2. Glycolic 7% toner Apply reviewed actual routine Cancel actual-routine review Reload actual routine and source Show actual routine and use history Saved plans Dated snapshots of your products and order, not current advice. Saved only on this device. Save this plan No saved plans yet.",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 76,
+      "hitOk": true,
+      "label": "Review current Shelf sequence as actual routine",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 428
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Apply reviewed actual routine",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 840
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Cancel actual-routine review",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 904
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8491/routine/records",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

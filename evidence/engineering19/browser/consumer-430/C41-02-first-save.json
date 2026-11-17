@@ -1,0 +1,135 @@
+{
+  "bodyText": "MONDAY, NOVEMBER 16 0 recorded Good morning. 1 step left in your morning routine. Actual routine version 2 · check-offs record this version and the current bottle observation, if recorded. Older entries stay unknown. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Factual notes you choose to record, separate from check-offs. These are your reports, not a diagnosis or an app observation. Show current observations All recorded history · 1 matching entries. Corrections and retractions retain the original record. 2026-11-15 · Used something different Current observation Owner reported · Entry 1 · Recorded 2026-11-16T21:55:20.134Z Synthetic41: I used a different cleanser. Event 15ea3fb8-2786-4d14-846b-e706cd52c1f8 Correct entry 1 Retract entry 1 Saved on this device and read back. Record a change (optional) Refresh changes Local to this device; notes are not sent with check-offs. Clearing local data removes this history. Uninstalling or losing the encryption key may lose it. Local exports may include it; exported copies cannot be revoked and cannot be imported here. ✦ A few honest suggestions 2 things we’d gently suggest › Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Find recorded changes",
+      "role": "input",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 51
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Show current observations",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 107
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Correct entry 1",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 392
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retract entry 1",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 456
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Record a change (optional)",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 564
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Refresh changes",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 632
+    },
+    {
+      "disabled": false,
+      "height": 86,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 833
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 95.36,
+      "x": 24.82,
+      "y": 848.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 120,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 215,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 310,
+      "y": 849
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8491/today?routine=AM",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

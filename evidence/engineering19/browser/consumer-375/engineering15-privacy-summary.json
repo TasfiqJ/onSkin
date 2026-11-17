@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  },
+  "actualScreens": true,
+  "destructiveReviewCancel": true,
+  "retiredDeleteRefused": true,
+  "retiredWithdrawalRefused": true,
+  "withdrawalPausedRecovery": true,
+  "unavailableExportTruthful": true,
+  "explicitCleanupRetry": true,
+  "keyboardDeleteCancel": true,
+  "native": "NOT_RUN",
+  "hostedDeletion": "NOT_RUN"
+}

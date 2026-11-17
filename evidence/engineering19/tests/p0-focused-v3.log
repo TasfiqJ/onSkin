@@ -1,0 +1,52 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/photos/encryptedStorage.test.ts src/features/photos/photoDeleteR3.integration.test.ts src/features/photos/store.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+ ❯ src/features/photos/encryptedStorage.test.ts (93 tests | 2 failed) 91ms
+     × restores or removes quarantined files according to committed metadata 9ms
+     × aborts and drains stale reconciliation before an account switch can publish 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/photos/encryptedStorage.test.ts > encrypted photo storage > restores or removes quarantined files according to committed metadata
+Error: PHOTO_STORAGE_CLEAR_FAILED:1
+ ❯ Module.clearEncryptedPhotoStorage src/features/photos/encryptedStorage.ts:1211:13
+    1209|     const failures = [...results, ...verification].filter((result) => …
+    1210|     if (failures.length > 0) {
+    1211|       throw new Error(`PHOTO_STORAGE_CLEAR_FAILED:${failures.length}`);
+       |             ^
+    1212|     }
+    1213|   } finally {
+ ❯ src/features/photos/encryptedStorage.test.ts:945:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/features/photos/encryptedStorage.test.ts > encrypted photo storage > aborts and drains stale reconciliation before an account switch can publish
+Error: PHOTO_STORAGE_CLEAR_FAILED:1
+ ❯ Module.clearEncryptedPhotoStorage src/features/photos/encryptedStorage.ts:1211:13
+    1209|     const failures = [...results, ...verification].filter((result) => …
+    1210|     if (failures.length > 0) {
+    1211|       throw new Error(`PHOTO_STORAGE_CLEAR_FAILED:${failures.length}`);
+       |             ^
+    1212|     }
+    1213|   } finally {
+ ❯ src/features/photos/encryptedStorage.test.ts:1010:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 171 passed (173)
+   Start at  16:35:48
+   Duration  1.44s (transform 1.11s, setup 0ms, import 1.64s, tests 558ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/photos/encryptedStorage.test.ts src/features/photos/photoDeleteR3.integration.test.ts src/features/photos/store.test.ts

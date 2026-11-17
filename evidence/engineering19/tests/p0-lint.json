@@ -1,0 +1,19 @@
+{
+  "label": "p0-lint",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "lint"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-16T21:42:20.304402+00:00",
+  "head": "77d929253ed283fff30cae6f8cc753c61c666320",
+  "tree": "85bbc84c9e0cd5366c921048a125af77f3d44685",
+  "status": "M apps/mobile/src/features/photos/encryptedStorage.test.ts\n M apps/mobile/src/features/photos/encryptedStorage.ts\n M apps/mobile/src/features/photos/photoDeleteJournal.ts\n M apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts\n M apps/mobile/src/features/photos/progressDetailStore.c08b2.test.ts\n M apps/mobile/src/features/photos/store.test.ts\n M apps/mobile/src/features/photos/store.ts\n M apps/mobile/src/lib/storage/privateKV.ts",
+  "exit": 1,
+  "seconds": 66.562,
+  "end": "2026-11-16T21:43:26.993541+00:00",
+  "logSha256": "3d27913c9ab7896b3409120f78da2605827943e508593145629337e4bc698b83"
+}

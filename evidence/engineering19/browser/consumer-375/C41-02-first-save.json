@@ -1,0 +1,102 @@
+{
+  "bodyText": "MONDAY, NOVEMBER 16 0 recorded Good morning. 1 step left in your morning routine. Actual routine version 2 · check-offs record this version and the current bottle observation, if recorded. Older entries stay unknown. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Factual notes you choose to record, separate from check-offs. These are your reports, not a diagnosis or an app observation. Show current observations All recorded history · 1 matching entries. Corrections and retractions retain the original record. 2026-11-15 · Used something different Current observation Owner reported · Entry 1 · Recorded 2026-11-16T21:52:28.982Z Synthetic41: I used a different cleanser. Event 60b51c22-b253-4d71-9d69-1c60b26c52bb Correct entry 1 Retract entry 1 Saved on this device and read back. Record a change (optional) Refresh changes Local to this device; notes are not sent with check-offs. Clearing local data removes this history. Uninstalling or losing the encryption key may lose it. Local exports may include it; exported copies cannot be revoked and cannot be imported here. ✦ A few honest suggestions 2 things we’d gently suggest › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Correct entry 1",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 153
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retract entry 1",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 217
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Record a change (optional)",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 325
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Refresh changes",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 393
+    },
+    {
+      "disabled": false,
+      "height": 61.89,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 81.1,
+      "x": 25.75,
+      "y": 585.98
+    },
+    {
+      "disabled": false,
+      "height": 61.66,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 80.8,
+      "x": 106.7,
+      "y": 586.4
+    },
+    {
+      "disabled": false,
+      "height": 61.66,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 80.8,
+      "x": 187.5,
+      "y": 586.4
+    },
+    {
+      "disabled": false,
+      "height": 61.66,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 80.8,
+      "x": 268.3,
+      "y": 586.4
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8491/today?routine=AM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

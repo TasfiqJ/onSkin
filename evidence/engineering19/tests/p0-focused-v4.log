@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/photos/encryptedStorage.test.ts src/features/photos/photoDeleteR3.integration.test.ts src/features/photos/store.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  3 passed (3)
+      Tests  173 passed (173)
+   Start at  16:36:37
+   Duration  1.54s (transform 1.27s, setup 0ms, import 1.80s, tests 560ms, environment 0ms)
+

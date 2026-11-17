@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  },
+  "recordUse": true,
+  "retractionUpdatesCurrentTotals": true,
+  "reload": true,
+  "keyboardHistory": true,
+  "missingNotLapse": true,
+  "native": "NOT_RUN"
+}

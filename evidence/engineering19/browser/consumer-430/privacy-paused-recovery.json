@@ -1,0 +1,80 @@
+{
+  "bodyText": "HEALTH DATA PAUSED Health features are paused on this device. Health-purpose data has been cleared from this device. Starting again requires a new explicit consent. This build cannot confirm remote deletion. App Store purchases, if any, are managed separately. PRIVACY REQUEST Status: withdrawn. Local cleanup complete. START FRESH Re-enable personalized skincare only with a new consent. The app will not restore the old profile into active use; create a new one. A new processing epoch starts with empty goals, quiz answers, shelf, routines, reminders, and Progress history. Review fresh consent ACCOUNT & BILLING Manage subscription Restore purchases Export my data Sign out Delete account HELP & POLICIES Consumer health data policy Privacy policy Support",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Review fresh consent",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 527
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Manage subscription",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 669
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Restore purchases",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 733
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Export my data",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 797
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Sign out",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 861
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Delete account",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 925
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8491/",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

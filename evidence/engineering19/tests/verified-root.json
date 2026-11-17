@@ -1,0 +1,19 @@
+{
+  "label": "verified-root",
+  "command": [
+    "npm.cmd",
+    "run",
+    "test",
+    "--",
+    "--force"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-16T21:55:16.098943+00:00",
+  "head": "f3398a5d97a1df8c4b0b964c05de5ccacdd91d69",
+  "tree": "96e97cefbc9f38837b73e5bc94270f66ec8e9222",
+  "status": "",
+  "exit": 0,
+  "seconds": 49.172,
+  "end": "2026-11-16T21:56:05.434707+00:00",
+  "logSha256": "d9a715e751a737ade392fd1236f886d618c90008b81f104383d7b36ab7076066"
+}

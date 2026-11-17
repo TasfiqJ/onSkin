@@ -1,0 +1,2387 @@
+[
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/shelf/BottleUseHistory.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/routine/records"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/routine/streak"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/routine/welcome-back"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/shelf/BottleUseHistory.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/routine/records"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/routine/records"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/routine/records"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/ActualRoutinePanel.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/today"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/settings/notifications"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/settings/timing"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/favicon.ico"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/you"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/assets/"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/node_modules/expo-router/entry.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+    },
+    "status": 200,
+    "error": null
+  },
+  {
+    "kind": "Network.responseReceived",
+    "location": {
+      "origin": "http://localhost:8491",
+      "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle"
+    },
+    "status": 200,
+    "error": null
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "label": "p0-focused-v2",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/photos/encryptedStorage.test.ts",
+    "src/features/photos/photoDeleteR3.integration.test.ts",
+    "src/features/photos/store.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-16T21:35:16.239304+00:00",
+  "head": "77d929253ed283fff30cae6f8cc753c61c666320",
+  "tree": "85bbc84c9e0cd5366c921048a125af77f3d44685",
+  "status": "M apps/mobile/src/features/photos/encryptedStorage.test.ts\n M apps/mobile/src/features/photos/encryptedStorage.ts\n M apps/mobile/src/features/photos/photoDeleteJournal.ts\n M apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts\n M apps/mobile/src/features/photos/store.test.ts\n M apps/mobile/src/features/photos/store.ts",
+  "exit": 1,
+  "seconds": 2.359,
+  "end": "2026-11-16T21:35:18.707690+00:00",
+  "logSha256": "b8706ce41d452b00d3d2eae5c573d68c9edd692086ee7b43347153438be39433"
+}

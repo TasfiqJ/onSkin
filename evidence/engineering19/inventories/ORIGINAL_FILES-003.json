@@ -1,0 +1,1143 @@
+{
+  "files": [
+    {
+      "path": "consumer-430/expo-web.log",
+      "bytes": 32428,
+      "sha256": "a5948922898bf15900e45250a9c4a4bed7e6b34e3ca5db7ae1f8cdaf1c89caa8",
+      "kind": "utf8",
+      "lines": 387,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/first-apply-comparison.json",
+      "bytes": 2284,
+      "sha256": "1290398d49617869bbc07cc663d4824f767157216af155e0b8242ad4edb559e6",
+      "kind": "utf8",
+      "lines": 47,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/first-apply-comparison.png",
+      "bytes": 212025,
+      "sha256": "1a9535000b94b42be4bb47c6c5082922efdbc41c3c7c510ec53fb92bf16486f2",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/formula-bottle-touch-before-scroll.json",
+      "bytes": 732559,
+      "sha256": "9545069c5769e1c17d004bafffaef35b0f6bd4285317c511cb027a50bf8a878e",
+      "kind": "utf8",
+      "lines": 4057,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/formula-bottle-touch-detail-arrived.json",
+      "bytes": 60,
+      "sha256": "c97883d784871a7761cccaf1d8a05e93e608e4dc063c50228955c2e901b078c8",
+      "kind": "utf8",
+      "lines": 3,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/formula-bottle-touch-dispatch-touchEnd.json",
+      "bytes": 82,
+      "sha256": "b78b31c4e595781ee64e93b7c9ce69125331fa10a9d64291ef569bff18ef6d99",
+      "kind": "utf8",
+      "lines": 5,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/formula-bottle-touch-dispatch-touchStart.json",
+      "bytes": 203,
+      "sha256": "ff164d4e8368cd6ad7597e1a325533cfc2e70ca98c83772298bd6f7459361dd2",
+      "kind": "utf8",
+      "lines": 14,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/formula-bottle-touch-pre-touch.json",
+      "bytes": 758455,
+      "sha256": "a0366a42318767c3c58daf132378e9e9198ba66a5cb73724de65cc8595fbf232",
+      "kind": "utf8",
+      "lines": 4345,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/formula-bottle-touch-scrolled.json",
+      "bytes": 758126,
+      "sha256": "4d2556025ace006aa856540b29ce9c1d5974c134730810367b57daf4fcebfcbf",
+      "kind": "utf8",
+      "lines": 4345,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/network-outcomes35.json",
+      "bytes": 50510,
+      "sha256": "4a9ae14c3bdaad23502ff34009c280ebf71061fb231d1af44d96f543bbfb20f1",
+      "kind": "utf8",
+      "lines": 2387,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/order-save-new-actual-version.json",
+      "bytes": 2142,
+      "sha256": "9b78dfa2c2787d328949d1eb6dd1f6f2dca16d7623eba3465cf288752e4a4daa",
+      "kind": "utf8",
+      "lines": 58,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/order-save-new-actual-version.png",
+      "bytes": 168835,
+      "sha256": "52b44122769a57f3bc0646061c0d1c4a0a305f33d31642abcb61e17b05bdda36",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/privacy-explicit-cleanup-retry.json",
+      "bytes": 2952,
+      "sha256": "96ec6b71a6f6cb951ad4fe6f54ea97e3ad9bc91d4f1ee142b20d60b2f1812446",
+      "kind": "utf8",
+      "lines": 113,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/privacy-explicit-cleanup-retry.png",
+      "bytes": 116441,
+      "sha256": "a9562c55bae68fee3d8da368773c5d2af1fdf9f3a5b2a00dffb520e5d1cd4578",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/privacy-export-unavailable-cleanup-pending.json",
+      "bytes": 3077,
+      "sha256": "9ef2e686929525ca32083cce417135bc8b09303ba8c453f8d130b05dda5594cb",
+      "kind": "utf8",
+      "lines": 113,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/privacy-export-unavailable-cleanup-pending.png",
+      "bytes": 139218,
+      "sha256": "3679d1552c4b9a56c91af76933ca1c8d245684446a9cccbf9c04da0feb271765",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/privacy-paused-keyboard-delete-cancel.json",
+      "bytes": 2951,
+      "sha256": "2dbb00d6a99bd0a53cd9fe041296bbb47e5a47750f188b446633c13189617404",
+      "kind": "utf8",
+      "lines": 113,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/privacy-paused-keyboard-delete-cancel.png",
+      "bytes": 115899,
+      "sha256": "eeb6ad000e7711f7cb6d6fefc839401e5646678bc22f269b751fce3e5914c712",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/privacy-paused-recovery.json",
+      "bytes": 2234,
+      "sha256": "b7472833c681b4a0bc55f673b6fd2c87b4723241e46df9e04ec97f04ef459ded",
+      "kind": "utf8",
+      "lines": 80,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/privacy-paused-recovery.png",
+      "bytes": 167522,
+      "sha256": "98946ae7a97daa0606501e236c155cac1ab953609d8562af96a73291bf8ae8f9",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/privacy-retired-delete-refused.json",
+      "bytes": 5101,
+      "sha256": "490d82dccf6dcadd1a00b527829257ad85bb67b4889a90a2700a49482571bbec",
+      "kind": "utf8",
+      "lines": 124,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/privacy-retired-delete-refused.png",
+      "bytes": 192053,
+      "sha256": "96555198925bcecbc92505dcf639e55f9d049f7ad569057ecf19fc89db31b9b3",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/privacy-retired-withdrawal-refused.json",
+      "bytes": 5650,
+      "sha256": "43e3adcd51306a801c78217fe8f7c157945ea6db34a4f30edad3971aa0a0d50f",
+      "kind": "utf8",
+      "lines": 135,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/privacy-retired-withdrawal-refused.png",
+      "bytes": 201904,
+      "sha256": "fd9e085996bc51e51731c045fce3d7fd84d1b8225126416594d08bdc29d0ffeb",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/retired-apply-refused.json",
+      "bytes": 2284,
+      "sha256": "1290398d49617869bbc07cc663d4824f767157216af155e0b8242ad4edb559e6",
+      "kind": "utf8",
+      "lines": 47,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/retired-apply-refused.png",
+      "bytes": 212025,
+      "sha256": "1a9535000b94b42be4bb47c6c5082922efdbc41c3c7c510ec53fb92bf16486f2",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/retired-bottle-confirmations-refused.json",
+      "bytes": 3323,
+      "sha256": "6b4861b51b0cf019a6a4f11a741ae379d0d9f9e71b3a360cf658e51a2042e738",
+      "kind": "utf8",
+      "lines": 80,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/retired-bottle-confirmations-refused.png",
+      "bytes": 147706,
+      "sha256": "a43bac8d47578b73e38b400dc3d3050216dd5fa825ab79bd6a6b8e5e97bafe4a",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/retired-retraction-refused.json",
+      "bytes": 3149,
+      "sha256": "ffbae71978292f831340be259a9dd2c3e478916f44d359d8dc74d708483078ac",
+      "kind": "utf8",
+      "lines": 69,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/retired-retraction-refused.png",
+      "bytes": 209741,
+      "sha256": "a64cb17a567fbc687d734e3f9794c83e9468d410627e763a7c810fbbccefd109",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430/same-sequence-review.json",
+      "bytes": 2056,
+      "sha256": "c496d7ef250eb5aef45d98605406d44c8d99f6fdc19b5f52ee13dd548aa90cb5",
+      "kind": "utf8",
+      "lines": 25,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430/same-sequence-review.png",
+      "bytes": 225866,
+      "sha256": "b2a063034381edbe81432137b35408238a4638cfd5cbd5cd114e2fde2bd703c7",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "consumer-430.json",
+      "bytes": 531,
+      "sha256": "ed3e7f319c8c72a50a91ac02e50dec31e72c0e49130a37c3d4e077d19c640eb7",
+      "kind": "utf8",
+      "lines": 16,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-430.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "utf8",
+      "lines": 0,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "consumer-flow.mjs",
+      "bytes": 146262,
+      "sha256": "3bac37582bb44ebf82df5c01bed862a2fede26d00a1985d605d0b2439bcf6ba3",
+      "kind": "utf8",
+      "lines": 2776,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "continuity17.mjs",
+      "bytes": 7780,
+      "sha256": "938fe4bd57b22577523335cc31c9fe02bb008d215144b6219444b0a47c47cc44",
+      "kind": "utf8",
+      "lines": 60,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "CUMULATIVE_PR48_TO_ENGINEERING19.patch",
+      "bytes": 2969696,
+      "sha256": "456cc6f166fd11a44345bb1f7978dc2555011daaeedf77ffa9ba029b21c10f60",
+      "kind": "utf8",
+      "lines": 34803,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "DELIVERY.json",
+      "bytes": 2413,
+      "sha256": "6716ddf8a3abd932c67ca961837bf92e2abaa623b624f2e4801faa166f7e70cd",
+      "kind": "utf8",
+      "lines": 49,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "DELIVERY.md",
+      "bytes": 576,
+      "sha256": "d6b8c0a1f52b02c5b1b384643a0575ada68fc981252361a85e867d8ffbf65edf",
+      "kind": "utf8",
+      "lines": 10,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "EVIDENCE_SHA256.json",
+      "bytes": 62220,
+      "sha256": "797f8cd69621582e77e8453fc7a6b2d70895066ed6d1da7b2fad2ab598186a87",
+      "kind": "utf8",
+      "lines": 543,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-lint.json",
+      "bytes": 536,
+      "sha256": "a23e08373671c819b1b6e138f21c33657e8dea073214742d4b3e1e7a1165feb8",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-lint.log",
+      "bytes": 1553,
+      "sha256": "d4482887c13033784d191dd1bfbd60f0aec3500beefb510993f32e55372464bb",
+      "kind": "utf8",
+      "lines": 36,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-mobile-build.json",
+      "bytes": 563,
+      "sha256": "c686d8ae0daa46e3192a2a0342a44430e1dfb5f83a50f35dcef7cc20142b6e48",
+      "kind": "utf8",
+      "lines": 18,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-mobile-build.log",
+      "bytes": 5994,
+      "sha256": "7c46d6745b2367038d8a5abbc56140ac8ae85ea0b6ae27a94921f46bebe4368b",
+      "kind": "utf8",
+      "lines": 133,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-professional-build.json",
+      "bytes": 575,
+      "sha256": "dbd6e3574b3c88a59ecbbe113573d81bf49154ea34f192eb946ab2132a9277d0",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-professional-build.log",
+      "bytes": 447,
+      "sha256": "ec160f16f3f64c40d40e8ac4cf894f66a3d428cdf5b593c0ae6963f55cc1e656",
+      "kind": "utf8",
+      "lines": 15,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-root.json",
+      "bytes": 538,
+      "sha256": "5f5d2d6bf213073307c5e46b6c8590802b38a16df4b4e5268e2ffa3697d15507",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-root.log",
+      "bytes": 607470,
+      "sha256": "8c90c4a0d76d73067167f015147be96b9f13385059af5afbf057bd0232ddf9b2",
+      "kind": "utf8",
+      "lines": 6204,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-typecheck.json",
+      "bytes": 548,
+      "sha256": "30282a6031286098f1a1c1f778dd467a065a0be9e1ff66e482fe4267aaba986c",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "final-typecheck.log",
+      "bytes": 1569,
+      "sha256": "fa8067f79ed6efddf31c4b39580014c772f5408adc53a05aa32f56080498a282",
+      "kind": "utf8",
+      "lines": 35,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "FINAL_REPORT.md",
+      "bytes": 14631,
+      "sha256": "651b08f17936b931a4dfa7a8db6fabe63ce85ab13cca87476062ff384acefa6b",
+      "kind": "utf8",
+      "lines": 87,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "NEXT_SESSION_PROMPT.md",
+      "bytes": 11513,
+      "sha256": "6afb1771124dc9fbcc0f1d250f7081cd827c1eb85b71954479c333093f24fb81",
+      "kind": "utf8",
+      "lines": 50,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-authenticated-final.json",
+      "bytes": 1343,
+      "sha256": "93ded33bab2f6a458f4c87654beae9a7c75a1c7a4c55db0aed7c3f2f3f87332e",
+      "kind": "utf8",
+      "lines": 26,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-authenticated-final.log",
+      "bytes": 2728,
+      "sha256": "51871e27736b9840922acd77cdaac6d8eb463a624340b9fa3145394b02a14c3b",
+      "kind": "utf8",
+      "lines": 43,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-authenticated-v2.json",
+      "bytes": 1340,
+      "sha256": "c24fefceb59db2fe9e6ac174ef9cda4538cdfe5d1ef38e54ccba66cc6081a4e7",
+      "kind": "utf8",
+      "lines": 26,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-authenticated-v2.log",
+      "bytes": 576,
+      "sha256": "458dfc364a9abcdcf69bb7a1ae0431baee40bfc3b2b2a5cf50ea9458df43d616",
+      "kind": "utf8",
+      "lines": 13,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-authenticated.json",
+      "bytes": 1337,
+      "sha256": "017b54f42a4428b2497593f887d1fa4bed1a72bd292032ae62d3614f9ce27b2a",
+      "kind": "utf8",
+      "lines": 26,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-authenticated.log",
+      "bytes": 2436,
+      "sha256": "5747ba417600f38aeb27ae8b070c59f4e7d91de744deae16a283dd27b236e41e",
+      "kind": "utf8",
+      "lines": 40,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-expanded.json",
+      "bytes": 1056,
+      "sha256": "bf36d8181fce10e1299253e0bec2614e2dcf56facc9743949fb7d07f22fbed2f",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-expanded.log",
+      "bytes": 439,
+      "sha256": "3363d15a1ca92956fecb69e304d2ab780ba1a3ef3fae8593708fac2650d25ced",
+      "kind": "utf8",
+      "lines": 13,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-initial.json",
+      "bytes": 943,
+      "sha256": "c71f48f51cc6e6315099481af7b788df75f18f09c580014c56e9506fcd448dce",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-initial.log",
+      "bytes": 15272,
+      "sha256": "c7f8da9d26d125ae8ff1f3ad0dddf71a2bf91a5cf09ad2ba4aff8d689575a898",
+      "kind": "utf8",
+      "lines": 277,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-v2.json",
+      "bytes": 1058,
+      "sha256": "7affd939c3ce67a8375c2336b8053777ce4231191c5adebefdb6ed39bd22d62f",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-v2.log",
+      "bytes": 4802,
+      "sha256": "b8706ce41d452b00d3d2eae5c573d68c9edd692086ee7b43347153438be39433",
+      "kind": "utf8",
+      "lines": 86,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-v3.json",
+      "bytes": 1058,
+      "sha256": "398ab813d4ae227d8f20b30fabd5217b33bfcb1b19b0af5133b1c47109d03c87",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-v3.log",
+      "bytes": 2656,
+      "sha256": "458ea7c41f1ea1fb57eabb5fc0c89e0bf4aa0a0e40dda8975022f158c637a90e",
+      "kind": "utf8",
+      "lines": 52,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-v4.json",
+      "bytes": 1058,
+      "sha256": "4da729bfd5fc8fa400ab073bfdbb245ea9bcec4521a24885e9a16bcf78e1805c",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-focused-v4.log",
+      "bytes": 439,
+      "sha256": "b8924cd94542e906b596d391f768cb6e1ef85f9dc6bab2d2b37295c38280f96e",
+      "kind": "utf8",
+      "lines": 13,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-green-initial.json",
+      "bytes": 860,
+      "sha256": "ae6b949ebf3df22bbf5973fb784b065c169835904c1a80fb8201af58277607ef",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-green-initial.log",
+      "bytes": 366,
+      "sha256": "c63d1330d42c812b2d6a0cedb37ec2a02a7d2482c066e15d89cb7e1615f683b6",
+      "kind": "utf8",
+      "lines": 13,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-lint.json",
+      "bytes": 1000,
+      "sha256": "a5faa9644087cdbdf219762e8b97518b05df94762dd4d22acf0f97fa5622084e",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-lint.log",
+      "bytes": 751,
+      "sha256": "3d27913c9ab7896b3409120f78da2605827943e508593145629337e4bc698b83",
+      "kind": "utf8",
+      "lines": 18,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-red.json",
+      "bytes": 691,
+      "sha256": "f7e4bde53fa2781a34d7c7412da6033c437f9256af85ece14f3ca17452fd9d30",
+      "kind": "utf8",
+      "lines": 23,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-red.log",
+      "bytes": 3234,
+      "sha256": "d8f58aa1d49ef6fb11bc5f8efda4b871985376ede5e3cbf04d0cf40ca61d2243",
+      "kind": "utf8",
+      "lines": 72,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-root-initial.json",
+      "bytes": 880,
+      "sha256": "e59ea2318beb058a350da0b2e1928954693a3b651778b6d2d63085ac8c2bd526",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-root-initial.log",
+      "bytes": 627044,
+      "sha256": "f22d38fedbfbc913fe9950f560f2f02bfeda63bb5afc77d5e5b69b53e2cb9814",
+      "kind": "utf8",
+      "lines": 6427,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-storage-final.json",
+      "bytes": 1237,
+      "sha256": "8bfea5f88ab97ee36983f965b9a7c32cb20f678f84917d85f131319032cc290f",
+      "kind": "utf8",
+      "lines": 24,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-storage-final.log",
+      "bytes": 493,
+      "sha256": "c569494802efc2e3acd16abdf39f73934d73a0a0a125e59658884748c5c7867b",
+      "kind": "utf8",
+      "lines": 13,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-types-initial.json",
+      "bytes": 898,
+      "sha256": "ee83602d2d0fd3c952daa5261fa2224853d8dda97b7d3b363ea4f2211cbd7ca1",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-types-initial.log",
+      "bytes": 53,
+      "sha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290",
+      "kind": "utf8",
+      "lines": 4,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-types-v2.json",
+      "bytes": 1009,
+      "sha256": "3f458a91d43f7c22004e2e7d5725b5891310ca787f1ae9e30230f359f8492a04",
+      "kind": "utf8",
+      "lines": 19,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "p0-types-v2.log",
+      "bytes": 53,
+      "sha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290",
+      "kind": "utf8",
+      "lines": 4,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "package_checkpoint.py",
+      "bytes": 6847,
+      "sha256": "1cfc95426228c9f7986c14c187c27cd611d6d3917ad69259c649ebd614cb9274",
+      "kind": "utf8",
+      "lines": 80,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "PATCH_VERIFICATION.json",
+      "bytes": 1533,
+      "sha256": "027b2b6eee7cd3d5d11330efaee90d422a7197b9017582b71ee99a5f5faf2d60",
+      "kind": "utf8",
+      "lines": 32,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "PRECONDITIONS.json",
+      "bytes": 1046,
+      "sha256": "fe1f82bfd7728f8ec66c8a3a69c02dca6bae766d15fcc5f4a5657b5434ca265a",
+      "kind": "utf8",
+      "lines": 22,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/professional-375/accept-recorded.png",
+      "bytes": 25713,
+      "sha256": "81eb9537d47cab2ec0236e1a955dfcbaf1c55d6e3a8c11574ee14cd442fbf130",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/accept-review.png",
+      "bytes": 27527,
+      "sha256": "665e7d1afc0362837001f79c11dd2b15b32a7fcab006fe69bdf9c00ad78aca06",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/accept-unknown.png",
+      "bytes": 27410,
+      "sha256": "362af063c79a8ac6d7ef08a15312011d32883cb5ceabf46e46b096e45ffa0ac6",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/changed-response-reloaded.png",
+      "bytes": 24737,
+      "sha256": "11a4411c1ba5e44d3409ebf8580c0b054526da6bd5640c7d2797e1059319e2cc",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/cleared.png",
+      "bytes": 24088,
+      "sha256": "2cbd42dade8fee9b147e1a8b2037917feebad67e7e36d0b23c8b72980bf9ffb2",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/decline-recorded.png",
+      "bytes": 23977,
+      "sha256": "7ab23586fdc3f0551fd8fe18690ff8d59baad28ca3b6948b05dc1dea7489e14f",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/decline-review.png",
+      "bytes": 26756,
+      "sha256": "fa044b8d4b346f16605f3f16c925b81e56c8f64b79f3efe66371ead40312a660",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/decline-unknown.png",
+      "bytes": 25878,
+      "sha256": "8ee4ca35c61ce1d8814f5758119ff6667bc7381bcc7795fd375462e226885534",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/latest-decline-history.png",
+      "bytes": 24366,
+      "sha256": "5d15b220c331a9af4a00f6ce5163e8f565141d805557a415b0f38716ea7f785c",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/onskin-received-plans.txt",
+      "bytes": 399,
+      "sha256": "b7c7b69e29cd817ff1b7d96d1efe5690fff2b7c4d19719c0c127f321ca396898",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/professional-375/owner-deadline.png",
+      "bytes": 24699,
+      "sha256": "06930a5bc243f4f6e97a4110129cf014b43e5b2dbdb393924eb22a5505f54a27",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/read-only-workspace.png",
+      "bytes": 25802,
+      "sha256": "5c0707312765e989081b56359f8bb5f23cfa9c8df9f3dfd2cba13009a5660a96",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/receipt-unknown.png",
+      "bytes": 25762,
+      "sha256": "53f79b16a2030ab5167380ded3e1fb8f92665515bbe01f220fd6767341c40854",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/receive-review.png",
+      "bytes": 25913,
+      "sha256": "dcd23fab9a7585846068989816c4da41ab964a79cf08a892203cf1f13d889313",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/refused-capacity.png",
+      "bytes": 27234,
+      "sha256": "956242855b5e8d2172684d3a81b2ed8f69156a308b3b6f1951df5544c40663a5",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/refused-coverage.png",
+      "bytes": 27649,
+      "sha256": "c81d68f81185940de786d5cd88f7609672d2dc592790eea86b487de363218934",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/retained-history.png",
+      "bytes": 24737,
+      "sha256": "11a4411c1ba5e44d3409ebf8580c0b054526da6bd5640c7d2797e1059319e2cc",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/review.png",
+      "bytes": 26142,
+      "sha256": "3519c449dc36bc1c5be23553e78f350045e1a1c3a25043bbbd27b663119b59d2",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/server.log",
+      "bytes": 72,
+      "sha256": "bae7242a422ed2eaf5d8e148e0b9506c86cd41741880c7303897b74fcff6be80",
+      "kind": "utf8",
+      "lines": 4,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/professional-375/summary.json",
+      "bytes": 5329,
+      "sha256": "5be92586dc2d4eab09f271e87d18d18dcb365b865069ebb693b5bf096851d6ca",
+      "kind": "utf8",
+      "lines": 290,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/professional-375/unavailable.png",
+      "bytes": 24699,
+      "sha256": "06930a5bc243f4f6e97a4110129cf014b43e5b2dbdb393924eb22a5505f54a27",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/unknown-outcome.png",
+      "bytes": 25108,
+      "sha256": "b6aa9f3543d00cc63a40482ffc9437a0f82f74e168365301a1c159ae78ac5377",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-375/workspace-deadline.png",
+      "bytes": 25416,
+      "sha256": "f8cd9749d15206686941a6887efd96cab20520ec6733178dd09f2f63f4c1b0d8",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/accept-recorded.png",
+      "bytes": 41239,
+      "sha256": "cb99bf9b474e36d919d0c2633cdb84d10244a0040df03aea6801cd02460b0c62",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/accept-review.png",
+      "bytes": 41323,
+      "sha256": "e3aa19bfe2ba0227e55b677c0d3d85f8f5599b3c58f5d132f167464923be3e98",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/accept-unknown.png",
+      "bytes": 40329,
+      "sha256": "10d373f78137c648ae972643d53ee075e57512fa2abdbc38ac436a131e1cfa45",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/changed-response-reloaded.png",
+      "bytes": 42048,
+      "sha256": "a9bdc2e87f21f9401a99868b227eb53a1a0dda9e0e816e472b047d15338237a3",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/cleared.png",
+      "bytes": 36320,
+      "sha256": "091f7bdbb440a86567a8007a05bd62a2f673a858eb0c8cd7d70b9fa12c139e15",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/decline-recorded.png",
+      "bytes": 39230,
+      "sha256": "0e29a0d9c2e4dc6e220cf9c49d22d92c7f5fde73d4fab1cbda0b1671aab430e9",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/decline-review.png",
+      "bytes": 41011,
+      "sha256": "b35a0575d6ff4528e86eb170ee8ddf45608e1f8d18449ada44be76f81aea6fec",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/decline-unknown.png",
+      "bytes": 41359,
+      "sha256": "b726dee802204ec001465898bfa168a3807bd08518748b9e774d7dc4556a20ea",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/latest-decline-history.png",
+      "bytes": 42849,
+      "sha256": "53cc769303c9749e0c01c8a66d0bc3dd4c8c71b8688213baa8db26d50de772d4",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/onskin-received-plans.txt",
+      "bytes": 399,
+      "sha256": "b7c7b69e29cd817ff1b7d96d1efe5690fff2b7c4d19719c0c127f321ca396898",
+      "kind": "utf8",
+      "lines": 8,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/professional-430/owner-deadline.png",
+      "bytes": 37463,
+      "sha256": "4c082beecb01a87987a7b4f9ce92e77017c95fb0984ff58c11757c6172998159",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/read-only-workspace.png",
+      "bytes": 41308,
+      "sha256": "b444494ada0a317d3205d1d28da0bff5fd787550f035202e0a8410d8d43571f0",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/receipt-unknown.png",
+      "bytes": 39419,
+      "sha256": "9cd420447d660a194ae41647d3f276a41f2cd279b90b25b1e30c6c66b41a19dc",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/receive-review.png",
+      "bytes": 43650,
+      "sha256": "69c54db98fd1d883f1d5dac980a1c434c76ce4e847b86a01225123a6515f3e5d",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/refused-capacity.png",
+      "bytes": 41426,
+      "sha256": "857e55c3e4e78dd416e8d536590f25e39e7b7ab67287e38d38b4a4e2a8d6cee1",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/refused-coverage.png",
+      "bytes": 40859,
+      "sha256": "75d9b3c4a729b7d971e762ba143831edfb6dfba7a884db7406df457d46187814",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/retained-history.png",
+      "bytes": 42048,
+      "sha256": "a9bdc2e87f21f9401a99868b227eb53a1a0dda9e0e816e472b047d15338237a3",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/review.png",
+      "bytes": 41226,
+      "sha256": "6158e5cef36fb805329ff1deb28df74be926f8eca81fabb8b30724b53d345dd8",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/server.log",
+      "bytes": 72,
+      "sha256": "dfe4be600b3b9e455124bc1d8839f8d2ed03c99d1c38bb26cebcf03edaf14ae4",
+      "kind": "utf8",
+      "lines": 4,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/professional-430/summary.json",
+      "bytes": 5056,
+      "sha256": "6fd110ae552933cd9d91c6041cce55516103d01586f2e23a6ea0e680516e4e0e",
+      "kind": "utf8",
+      "lines": 277,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/professional-430/unavailable.png",
+      "bytes": 37463,
+      "sha256": "4c082beecb01a87987a7b4f9ce92e77017c95fb0984ff58c11757c6172998159",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/unknown-outcome.png",
+      "bytes": 37280,
+      "sha256": "dbe33bcdd5dcc0115e7b745e709f2b214ba42e66b02391c008736733668a4b24",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/professional-430/workspace-deadline.png",
+      "bytes": 37332,
+      "sha256": "a23e6258cac5fea85b860c7d7d08bb0514b092d67ac4bcceb4456240124d5fdf",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/decision-review.png",
+      "bytes": 24136,
+      "sha256": "678270c495e0f4f8e696ccc5427ac801137ed98661ab6bb2dd70a5d2963d6027",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/domain/authority.mjs",
+      "bytes": 9043,
+      "sha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f",
+      "kind": "utf8",
+      "lines": 134,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-375/domain/grants.mjs",
+      "bytes": 6014,
+      "sha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab",
+      "kind": "utf8",
+      "lines": 93,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-375/domain/intendedPlans.mjs",
+      "bytes": 13893,
+      "sha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717",
+      "kind": "utf8",
+      "lines": 203,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-375/domain/reconciliation.mjs",
+      "bytes": 15898,
+      "sha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3",
+      "kind": "utf8",
+      "lines": 219,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-375/event-review.png",
+      "bytes": 23043,
+      "sha256": "9a28a416630790ee0b58b9a1755223f45f5714cd1ac93838de3ceec26ee8639c",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/filter-open-empty.png",
+      "bytes": 22378,
+      "sha256": "3b8a6718b7774ced9de07bb22d2de52aa55e5f04a47f753ce1240eedf0cfa2ee",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/filtered-history-return.png",
+      "bytes": 23860,
+      "sha256": "49b788ad1423da13b350862517bbce3e31fbf06bedef4950c2293ab5d4465a3b",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/final.png",
+      "bytes": 24122,
+      "sha256": "f9f25c44af819aba6efc41a1e4e2adfce54abb1548328d420e874f78c1d6cc8f",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/history.png",
+      "bytes": 24631,
+      "sha256": "fd2944025dbe6e74cdf21ea2ca525cfa4343fee052c7a7fd47755ab16481a306",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/real-unavailable.png",
+      "bytes": 25294,
+      "sha256": "87a8f8ffb105bc3976cd12006b3349b0fdcce29b4fc04f583354c2eedd804cd9",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-375/server.log",
+      "bytes": 72,
+      "sha256": "d01f6af82f52cd34d29ee8577e7b88b65221779676ad056df26362a3cf2530f5",
+      "kind": "utf8",
+      "lines": 4,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-375/summary.json",
+      "bytes": 5264,
+      "sha256": "5b136125faa8073fb52040ea1cffb37a9a3b8ac662cb654830ab8049d117283d",
+      "kind": "utf8",
+      "lines": 286,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-430/decision-review.png",
+      "bytes": 38659,
+      "sha256": "0c4c7a89b90b8e4fb3a5be4177862cc6e441098a7916ae84c0ae9232d4898fe5",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    },
+    {
+      "path": "professional-browser/queue-430/domain/authority.mjs",
+      "bytes": 9043,
+      "sha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f",
+      "kind": "utf8",
+      "lines": 134,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-430/domain/grants.mjs",
+      "bytes": 6014,
+      "sha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab",
+      "kind": "utf8",
+      "lines": 93,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-430/domain/intendedPlans.mjs",
+      "bytes": 13893,
+      "sha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717",
+      "kind": "utf8",
+      "lines": 203,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-430/domain/reconciliation.mjs",
+      "bytes": 15898,
+      "sha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3",
+      "kind": "utf8",
+      "lines": 219,
+      "readablePublication": "complete UTF-8 representation in file manifests"
+    },
+    {
+      "path": "professional-browser/queue-430/event-review.png",
+      "bytes": 39823,
+      "sha256": "21ff278c577bb6eb278a91e22b0c85cb2303e895e37d0986a422e0679aace51c",
+      "kind": "png-reviewed-separately",
+      "readablePublication": "reviewed binary omitted; captured DOM JSON remains published"
+    }
+  ]
+}

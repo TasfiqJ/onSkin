@@ -1,0 +1,30 @@
+{
+  "surface": "Actual Expo web; explicitly synthetic development refusal; no native proof",
+  "startedAt": "2026-11-16T21:52:01.180Z",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "explicitAgeConsent": true,
+      "persistentRefusal": true,
+      "keyboardRetryTwice": true,
+      "focusHitTarget": true,
+      "overflow": 0,
+      "reload": true,
+      "exit": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "explicitAgeConsent": true,
+      "persistentRefusal": true,
+      "keyboardRetryTwice": true,
+      "focusHitTarget": true,
+      "overflow": 0,
+      "reload": true,
+      "exit": true
+    }
+  ],
+  "pass": true,
+  "endedAt": "2026-11-16T21:53:03.861Z"
+}

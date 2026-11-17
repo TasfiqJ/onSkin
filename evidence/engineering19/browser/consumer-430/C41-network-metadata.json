@@ -1,0 +1,158 @@
+[
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/today",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/node_modules/expo-router/entry.bundle",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/favicon.ico",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/today",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/assets/",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/node_modules/expo-router/entry.bundle",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/favicon.ico",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle",
+    "hasBody": false
+  },
+  {
+    "method": "GET",
+    "origin": "http://localhost:8491",
+    "path": "/apps/mobile/src/features/routine/planSourceFence44.bundle",
+    "hasBody": false
+  }
+]

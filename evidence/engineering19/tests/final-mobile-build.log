@@ -1,0 +1,133 @@
+› [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+
+Static rendering is enabled. Learn more: https://docs.expo.dev/router/web/static-rendering/
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:68708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| › [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
+ WARN  Attempted to import the module "[LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\node_modules\@noble\hashes\crypto.js" which is not listed in the "exports" of "[LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\node_modules\@noble\hashes" under the requested subpath "./crypto.js". Falling back to file-based resolution. Consider updating the call site or asking the package maintainer(s) to expose this API.
+λ Bundled 49130ms node_modules\@expo\router-server\node\render.js (2591 modules)
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 50433ms node_modules\expo-router\entry.js (2561 modules)
+
+› web bundles (10):
+_expo/static/css/web-f5eb67fe5b9f2284a50711ea462a4632.css (26KB)
+_expo/static/js/web/ActualRoutinePanel-c1bec835612c6778dd504eb560148f19.js (14KB)
+_expo/static/js/web/BottleUseHistory-208bdcc3ec26ad764ead179efee8b306.js (5.4KB)
+_expo/static/js/web/diaryBriefPhoto-5ee544fad9ffbf8323341c70a970b642.js (4.8KB)
+_expo/static/js/web/DiaryBriefPhotoPreview-bd2241c9a1fb301cd237cd07ca9acc44.js (1.2KB)
+_expo/static/js/web/entry-bee332ad39bc04ff52e92bafaf5c8e82.js (6.2MB)
+_expo/static/js/web/index-121136a19c5be9cef292ceebe6434be4.js (46KB)
+_expo/static/js/web/index-28e6d6d9feb0392422f427734e86c872.js (897KB)
+_expo/static/js/web/NotificationPreferenceScheduleReconciler-e2d0f02135145e038cdcdbe34f09278d.js (1.6KB)
+_expo/static/js/web/planSourceFence44-a7d2342b3ba5fcfc911caf6644b845de.js (5.5KB)
+
+› Static routes (85):
+/you (21KB)
+/ (index) (21KB)
+/shelf (21KB)
+/today (21KB)
+/_sitemap (18KB)
+/progress (21KB)
+/ask (21KB)
+/shelf/add (21KB)
+/shelf/ocr (21KB)
+/+not-found (18KB)
+/(tabs)/you (21KB)
+/cycle/week (21KB)
+/shelf/[id] (21KB)
+/shelf/scan (21KB)
+/ask/consent (21KB)
+/photos/[id] (21KB)
+/s/[shareId] (21KB)
+/trend/optin (21KB)
+/(tabs)/shelf (21KB)
+/(tabs)/today (21KB)
+/routine/plan (21KB)
+/routine/ramp (21KB)
+/shelf/manual (21KB)
+/shelf/opened (21KB)
+/shelf/search (21KB)
+/community/ask (21KB)
+/photos/review (21KB)
+/progress/[id] (21KB)
+/shelf/archive (21KB)
+/cycle/recovery (21KB)
+/cycle/settings (21KB)
+/onboarding/age (21KB)
+/paywall/upsell (21KB)
+/photos/capture (21KB)
+/progress/about (21KB)
+/routine/streak (21KB)
+/shelf/no-match (21KB)
+/trend/fairness (21KB)
+/(tabs)/progress (21KB)
+/commerce/stacks (21KB)
+/community (21KB)
+/cycle/procedure (21KB)
+/onboarding/quiz (21KB)
+/paywall/reoffer (21KB)
+/paywall/success (21KB)
+/paywall/winback (21KB)
+/progress/review (21KB)
+/routine/records (21KB)
+/routine/reorder (21KB)
+/routine/widgets (21KB)
+/settings/timing (21KB)
+/shelf/replenish (21KB)
+/commerce/consent (21KB)
+/cycle/disruption (21KB)
+/onboarding/goals (21KB)
+/progress/capture (21KB)
+/settings/privacy (21KB)
+/conflict/[ruleId] (21KB)
+/cycle/why-tonight (21KB)
+/onboarding/reveal (21KB)
+/paywall/downgrade (21KB)
+/routine/tolerance (21KB)
+/cycle/phased-intro (21KB)
+/onboarding/account (21KB)
+/onboarding/consent (21KB)
+/onboarding/paywall (21KB)
+/routine/adaptation (21KB)
+/community/note/[id] (21KB)
+/onboarding/products (21KB)
+/onboarding/analyzing (21KB)
+/recommendations/[id] (21KB)
+/routine/welcome-back (21KB)
+/commerce/transparency (21KB)
+/commerce/stack/[slug] (21KB)
+/recommendations (21KB)
+/settings/skin-profile (21KB)
+/settings/subscription (21KB)
+/shelf/formula-history (21KB)
+/settings/beta-feedback (21KB)
+/settings/notifications (21KB)
+/shelf/catalog-recovery (21KB)
+/share/conflict/[ruleId] (21KB)
+/onboarding/notifications (21KB)
+/community/people-like-you (21KB)
+/recommendations/preferences (21KB)
+
+Exported: ../../.tmp/engineering19/mobile-web

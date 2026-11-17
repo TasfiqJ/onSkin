@@ -1,0 +1,21 @@
+{
+  "before": {
+    "apps/mobile/src/features/today/optionalChange41.ts": "92b5b4ed021bbb4e6452d6087ca78ba4dcbe2d09cdf4473fd204d4bf0243752e",
+    "apps/mobile/src/features/today/optionalChangeJournal41.ts": "7bfc842dd3a0024ad16c53fa5cffa04c5766ecb997e2df3e94cfe726f4bfdbf1",
+    "apps/mobile/src/features/today/OptionalChangePanel41.tsx": "024f102f5cb63a54bc8f57527036d15c7c6b3cac3def7e35ebd9c943d432acc1",
+    "apps/mobile/src/features/today/completionsStore.ts": "9e27596a46aedfc1e08c6422710e380ce5197fa6961f4d87c569feb0720990f6",
+    "apps/mobile/src/app/(tabs)/today.tsx": "a245de02ceec73a006089092338cfd50fc43e90cfdffb792600dce3cbc98ec4a",
+    "scripts/e2e/optional-change41.mjs": "0d2cdfc80f4fddf6bc55dbb2fcd66261a412062d921fe2c9a058130a6d353b7f",
+    "scripts/e2e/onboarding-first-session.mjs": "916e1b25049ab61163ee68fe18bd4a4b89107b72d44ae71a1cff1973fd0ce1ee"
+  },
+  "after": {
+    "apps/mobile/src/features/today/optionalChange41.ts": "92b5b4ed021bbb4e6452d6087ca78ba4dcbe2d09cdf4473fd204d4bf0243752e",
+    "apps/mobile/src/features/today/optionalChangeJournal41.ts": "7bfc842dd3a0024ad16c53fa5cffa04c5766ecb997e2df3e94cfe726f4bfdbf1",
+    "apps/mobile/src/features/today/OptionalChangePanel41.tsx": "024f102f5cb63a54bc8f57527036d15c7c6b3cac3def7e35ebd9c943d432acc1",
+    "apps/mobile/src/features/today/completionsStore.ts": "9e27596a46aedfc1e08c6422710e380ce5197fa6961f4d87c569feb0720990f6",
+    "apps/mobile/src/app/(tabs)/today.tsx": "a245de02ceec73a006089092338cfd50fc43e90cfdffb792600dce3cbc98ec4a",
+    "scripts/e2e/optional-change41.mjs": "0d2cdfc80f4fddf6bc55dbb2fcd66261a412062d921fe2c9a058130a6d353b7f",
+    "scripts/e2e/onboarding-first-session.mjs": "916e1b25049ab61163ee68fe18bd4a4b89107b72d44ae71a1cff1973fd0ce1ee"
+  },
+  "stable": true
+}

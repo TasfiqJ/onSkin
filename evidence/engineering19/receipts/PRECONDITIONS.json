@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-11-16T21:53:00.577948+00:00",
+  "initialObservation": "Observed in the first local repository tool call before source edits; this durable receipt is recorded later, not a pre-edit timestamp claim.",
+  "initialHead": "77d929253ed283fff30cae6f8cc753c61c666320",
+  "initialTree": "85bbc84c9e0cd5366c921048a125af77f3d44685",
+  "initialPorcelain": "",
+  "branch": "stage/m1-native-runtime47",
+  "published": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+  "publishedTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8",
+  "localAncestorCheckExit": 0,
+  "frozen": {
+    "docs/release/full-app-j01/contract.v2.json": {
+      "sha256": "0578cb851f28aa26c289793fad76edd862d4222073e0fcc5c3b5210849026495",
+      "unchangedFromStart": true
+    },
+    "docs/release/full-app-j01/matrix.v2.json": {
+      "sha256": "1daafaa86df15dc14af8250a395ab86a7534f2d2a7738c0c0ce1555c1a91a7f0",
+      "unchangedFromStart": true
+    }
+  },
+  "inputArchiveSha256": "4c72c3c47380ec7b4e246197ce947da3eaa7874b8611febab627e6b487d33573"
+}

@@ -1,0 +1,949 @@
+{
+  "files": [
+    {
+      "sourcePath": "professional-browser/queue-430/summary.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 5012,
+      "sourceSha256": "a4136d0f2fe6fe4a4af6aad2d53bae854b64f11eea593e431d19c6c3c43590ad",
+      "publishedBytes": 5012,
+      "publishedSha256": "a4136d0f2fe6fe4a4af6aad2d53bae854b64f11eea593e431d19c6c3c43590ad",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/professional-browser/queue-430/summary.json",
+          "bytes": 5012,
+          "sha256": "a4136d0f2fe6fe4a4af6aad2d53bae854b64f11eea593e431d19c6c3c43590ad"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-owner-375.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 562,
+      "sourceSha256": "5cb69bbe6ee0875129eea9f7b884464f02733a43db1b5dae8f1c19be8df4a38f",
+      "publishedBytes": 563,
+      "publishedSha256": "20acd5f2bfa27b6f6702655d4c394e6e70122c76161f43dd3eef977f3126a940",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 1,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-owner-375.json",
+          "bytes": 563,
+          "sha256": "20acd5f2bfa27b6f6702655d4c394e6e70122c76161f43dd3eef977f3126a940"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-owner-375.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 32,
+      "sourceSha256": "4a0a1c63f3487b9de2856ad4bc5c247b7fef7c41d4c10a7469016bb107c5ab0d",
+      "publishedBytes": 32,
+      "publishedSha256": "4a0a1c63f3487b9de2856ad4bc5c247b7fef7c41d4c10a7469016bb107c5ab0d",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-owner-375.log",
+          "bytes": 32,
+          "sha256": "4a0a1c63f3487b9de2856ad4bc5c247b7fef7c41d4c10a7469016bb107c5ab0d"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-owner-430.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 562,
+      "sourceSha256": "def1f801217f3909f6dcc54a47e603f33905eaf2d47157911f7895e8fbf823ec",
+      "publishedBytes": 563,
+      "publishedSha256": "6a9f5d4e11bf507df4f67f721afd49a8b2de7f19bf4c134938a752cc8d425ea6",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 1,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-owner-430.json",
+          "bytes": 563,
+          "sha256": "6a9f5d4e11bf507df4f67f721afd49a8b2de7f19bf4c134938a752cc8d425ea6"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-owner-430.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 32,
+      "sourceSha256": "9585eb04e882ba930f1ba022ff192bd4faec8f86f58b89686289dbe2b9f287fd",
+      "publishedBytes": 32,
+      "publishedSha256": "9585eb04e882ba930f1ba022ff192bd4faec8f86f58b89686289dbe2b9f287fd",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-owner-430.log",
+          "bytes": 32,
+          "sha256": "9585eb04e882ba930f1ba022ff192bd4faec8f86f58b89686289dbe2b9f287fd"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-queue-375-v2.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 573,
+      "sourceSha256": "fff3a9bd3e59b4a8502c254906ed3fbcc3bd32e6e820f62cbfd88197feb6622c",
+      "publishedBytes": 574,
+      "publishedSha256": "5899ef17281c3431842177507cc236c2c1dde79e0828f7d8a3b40c5f3e023e92",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 1,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-queue-375-v2.json",
+          "bytes": 574,
+          "sha256": "5899ef17281c3431842177507cc236c2c1dde79e0828f7d8a3b40c5f3e023e92"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-queue-375-v2.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 19,
+      "sourceSha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c",
+      "publishedBytes": 19,
+      "publishedSha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-queue-375-v2.log",
+          "bytes": 19,
+          "sha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-queue-375.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 570,
+      "sourceSha256": "bae4f101f731c2a07ce2acb10218eabeb7a50b416e28392e0b2d567866348473",
+      "publishedBytes": 571,
+      "publishedSha256": "292e7a5c4170e9d7ee1773279ae9e9afb75d3af1f69945bce4dd715cec0349a2",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 1,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-queue-375.json",
+          "bytes": 571,
+          "sha256": "292e7a5c4170e9d7ee1773279ae9e9afb75d3af1f69945bce4dd715cec0349a2"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-queue-375.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 960,
+      "sourceSha256": "f4262fda40105d19f8291bfac582e009ec030aa5d4cbbbe5b86ebd5079cb18a8",
+      "publishedBytes": 971,
+      "publishedSha256": "e684561cdacb65c24d83ca27ffd617c66bdb0d81e713c4c88dd9dd41e71fc519",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 5,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-queue-375.log",
+          "bytes": 971,
+          "sha256": "e684561cdacb65c24d83ca27ffd617c66bdb0d81e713c4c88dd9dd41e71fc519"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-queue-430.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 570,
+      "sourceSha256": "de8ab62ecb7479c73c72d44989ffac1b3f8f33b74ad9637e2dd301e72cccc8d6",
+      "publishedBytes": 571,
+      "publishedSha256": "095c14891394e4ee01586fcac4340bf64a12860e98ea56d0158e0798693b2285",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 1,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-queue-430.json",
+          "bytes": 571,
+          "sha256": "095c14891394e4ee01586fcac4340bf64a12860e98ea56d0158e0798693b2285"
+        }
+      ]
+    },
+    {
+      "sourcePath": "professional-queue-430.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 19,
+      "sourceSha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+      "publishedBytes": 19,
+      "publishedSha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "tests/professional-queue-430.log",
+          "bytes": 19,
+          "sha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/375x667-exit-progress.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 518,
+      "sourceSha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274",
+      "publishedBytes": 518,
+      "publishedSha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/375x667-exit-progress.json",
+          "bytes": 518,
+          "sha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/375x667-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "publishedBytes": 515,
+      "publishedSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/375x667-refusal.json",
+          "bytes": 515,
+          "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/375x667-reload-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "publishedBytes": 515,
+      "publishedSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/375x667-reload-refusal.json",
+          "bytes": 515,
+          "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/375x667-retry-0.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 82,
+      "sourceSha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e",
+      "publishedBytes": 82,
+      "publishedSha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/375x667-retry-0.json",
+          "bytes": 82,
+          "sha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/375x667-retry-1.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 82,
+      "sourceSha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae",
+      "publishedBytes": 82,
+      "publishedSha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/375x667-retry-1.json",
+          "bytes": 82,
+          "sha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/375x667-retry-controls.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 585,
+      "sourceSha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc",
+      "publishedBytes": 585,
+      "publishedSha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/375x667-retry-controls.json",
+          "bytes": 585,
+          "sha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/430x932-exit-progress.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 518,
+      "sourceSha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad",
+      "publishedBytes": 518,
+      "publishedSha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/430x932-exit-progress.json",
+          "bytes": 518,
+          "sha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/430x932-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "publishedBytes": 515,
+      "publishedSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/430x932-refusal.json",
+          "bytes": 515,
+          "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/430x932-reload-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "publishedBytes": 515,
+      "publishedSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/430x932-reload-refusal.json",
+          "bytes": 515,
+          "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/430x932-retry-0.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 80,
+      "sourceSha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072",
+      "publishedBytes": 80,
+      "publishedSha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/430x932-retry-0.json",
+          "bytes": 80,
+          "sha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/430x932-retry-1.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 80,
+      "sourceSha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0",
+      "publishedBytes": 80,
+      "publishedSha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/430x932-retry-1.json",
+          "bytes": 80,
+          "sha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/430x932-retry-controls.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 585,
+      "sourceSha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2",
+      "publishedBytes": 585,
+      "publishedSha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/430x932-retry-controls.json",
+          "bytes": 585,
+          "sha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/bootstrap-e19-provenance-375x667-failure.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2436,
+      "sourceSha256": "13a783675c94bf3c5cfd2829c0f2ca5ba0fb0af7ac8f2acde189aaa867748e96",
+      "publishedBytes": 2436,
+      "publishedSha256": "13a783675c94bf3c5cfd2829c0f2ca5ba0fb0af7ac8f2acde189aaa867748e96",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/bootstrap-e19-provenance-375x667-failure.json",
+          "bytes": 2436,
+          "sha256": "13a783675c94bf3c5cfd2829c0f2ca5ba0fb0af7ac8f2acde189aaa867748e96"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/bootstrap-e19-provenance-375x667-result.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 567,
+      "sourceSha256": "d505ce7e6f845f80f335011e78e02e24f81988cc5015a4ee7f61798783fe2b33",
+      "publishedBytes": 567,
+      "publishedSha256": "d505ce7e6f845f80f335011e78e02e24f81988cc5015a4ee7f61798783fe2b33",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/bootstrap-e19-provenance-375x667-result.json",
+          "bytes": 567,
+          "sha256": "d505ce7e6f845f80f335011e78e02e24f81988cc5015a4ee7f61798783fe2b33"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/bootstrap-e19-provenance-430x932-failure.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 2510,
+      "sourceSha256": "61fae6418ef394f0907156649898b9192ba18e53067fadf0ea1c8bf20f8cf99b",
+      "publishedBytes": 2510,
+      "publishedSha256": "61fae6418ef394f0907156649898b9192ba18e53067fadf0ea1c8bf20f8cf99b",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/bootstrap-e19-provenance-430x932-failure.json",
+          "bytes": 2510,
+          "sha256": "61fae6418ef394f0907156649898b9192ba18e53067fadf0ea1c8bf20f8cf99b"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/bootstrap-e19-provenance-430x932-result.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 567,
+      "sourceSha256": "2081169ac56b36a0c1bd789706458f3e5437f80bc4fea8a30074f8ca32c268a3",
+      "publishedBytes": 567,
+      "publishedSha256": "2081169ac56b36a0c1bd789706458f3e5437f80bc4fea8a30074f8ca32c268a3",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/bootstrap-e19-provenance-430x932-result.json",
+          "bytes": 567,
+          "sha256": "2081169ac56b36a0c1bd789706458f3e5437f80bc4fea8a30074f8ca32c268a3"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/expo-e19-provenance.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 54231,
+      "sourceSha256": "8627bcc444b9089f27a7271054960f11656524c23df5a3cf0a95852aa33e8cc5",
+      "publishedBytes": 54186,
+      "publishedSha256": "86bc84571f87d7a0883e1839d8749cb8e988ed4ac781b5b29c32d58565b54889",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 3,
+        "terminalEscapesRemoved": 12
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/expo-e19-provenance.log",
+          "bytes": 54186,
+          "sha256": "86bc84571f87d7a0883e1839d8749cb8e988ed4ac781b5b29c32d58565b54889"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/network.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 34308,
+      "sourceSha256": "95bac117c644bbd4810e51ff7092de8df6d87b69fb86430d5b2b1aeb316bed1a",
+      "publishedBytes": 34308,
+      "publishedSha256": "95bac117c644bbd4810e51ff7092de8df6d87b69fb86430d5b2b1aeb316bed1a",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/network.json",
+          "bytes": 34308,
+          "sha256": "95bac117c644bbd4810e51ff7092de8df6d87b69fb86430d5b2b1aeb316bed1a"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser/summary.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 708,
+      "sourceSha256": "665eb6c9ab0a6aac31658a1dc29559e6757c791579757e779e6dac42af160319",
+      "publishedBytes": 708,
+      "publishedSha256": "665eb6c9ab0a6aac31658a1dc29559e6757c791579757e779e6dac42af160319",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser/summary.json",
+          "bytes": 708,
+          "sha256": "665eb6c9ab0a6aac31658a1dc29559e6757c791579757e779e6dac42af160319"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/375x667-exit-progress.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 518,
+      "sourceSha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274",
+      "publishedBytes": 518,
+      "publishedSha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/375x667-exit-progress.json",
+          "bytes": 518,
+          "sha256": "f6947d0206b455fa25556115f81ba4da6c9caff52fcdbcf7849e0dad167c9274"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/375x667-explicit-consent-goals.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 452,
+      "sourceSha256": "dcd45f279d92018a46d90a2088f5360cb713bf790fde724cff3ca8c1079ba8af",
+      "publishedBytes": 452,
+      "publishedSha256": "dcd45f279d92018a46d90a2088f5360cb713bf790fde724cff3ca8c1079ba8af",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/375x667-explicit-consent-goals.json",
+          "bytes": 452,
+          "sha256": "dcd45f279d92018a46d90a2088f5360cb713bf790fde724cff3ca8c1079ba8af"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/375x667-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "publishedBytes": 515,
+      "publishedSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/375x667-refusal.json",
+          "bytes": 515,
+          "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/375x667-reload-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "publishedBytes": 515,
+      "publishedSha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/375x667-reload-refusal.json",
+          "bytes": 515,
+          "sha256": "f65767a6e7ee760ff61b535aa3b96d449eb0ef0f4385cf6690e66cbe6773ea67"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/375x667-retry-0.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 82,
+      "sourceSha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e",
+      "publishedBytes": 82,
+      "publishedSha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/375x667-retry-0.json",
+          "bytes": 82,
+          "sha256": "ba093dc91c33111fe170debb4cb2782d4f4616e65bfa7a8840b21843efa35e1e"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/375x667-retry-1.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 82,
+      "sourceSha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae",
+      "publishedBytes": 82,
+      "publishedSha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/375x667-retry-1.json",
+          "bytes": 82,
+          "sha256": "acbe0041f3f63c5edb76afedea3b0f0d833d222a259dcf0f0201d946eb9254ae"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/375x667-retry-controls.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 585,
+      "sourceSha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc",
+      "publishedBytes": 585,
+      "publishedSha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/375x667-retry-controls.json",
+          "bytes": 585,
+          "sha256": "7d84f0b0119447f0aa095f8fb8e962fb995aae9d21e06edfc385b456a91672fc"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/430x932-exit-progress.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 518,
+      "sourceSha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad",
+      "publishedBytes": 518,
+      "publishedSha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/430x932-exit-progress.json",
+          "bytes": 518,
+          "sha256": "c3d5aba748d1ae92311c0513492d877909621925c111da729f913797b99f16ad"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/430x932-explicit-consent-goals.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 452,
+      "sourceSha256": "c8c9235e41af10a5b70cd575b812e60bff405033bfff5eadfda75d86ca2bd457",
+      "publishedBytes": 452,
+      "publishedSha256": "c8c9235e41af10a5b70cd575b812e60bff405033bfff5eadfda75d86ca2bd457",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/430x932-explicit-consent-goals.json",
+          "bytes": 452,
+          "sha256": "c8c9235e41af10a5b70cd575b812e60bff405033bfff5eadfda75d86ca2bd457"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/430x932-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "publishedBytes": 515,
+      "publishedSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/430x932-refusal.json",
+          "bytes": 515,
+          "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/430x932-reload-refusal.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 515,
+      "sourceSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "publishedBytes": 515,
+      "publishedSha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/430x932-reload-refusal.json",
+          "bytes": 515,
+          "sha256": "95451dd52ad27d30fd9a6dbae4db490303f6fe978a231a20c8245b06c820e80f"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/430x932-retry-0.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 80,
+      "sourceSha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072",
+      "publishedBytes": 80,
+      "publishedSha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/430x932-retry-0.json",
+          "bytes": 80,
+          "sha256": "318cdab25a5fb4e57ae529cfac77713bf53ccc233b39a082ba720f6d82f49072"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/430x932-retry-1.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 80,
+      "sourceSha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0",
+      "publishedBytes": 80,
+      "publishedSha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/430x932-retry-1.json",
+          "bytes": 80,
+          "sha256": "f79a829ccef3f9132a1e403d61b932ea99a9f3323a67628160f5ccad012846a0"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/430x932-retry-controls.json",
+      "origin": "original-review-archive",
+      "sourceBytes": 585,
+      "sourceSha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2",
+      "publishedBytes": 585,
+      "publishedSha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2",
+      "byteExact": true,
+      "sanitization": {
+        "localHomePathsRedacted": 0,
+        "terminalEscapesRemoved": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/430x932-retry-controls.json",
+          "bytes": 585,
+          "sha256": "619a5da94318c655db09c3428505d13a79d56cd2b32193079972aa03b1a5d2f2"
+        }
+      ]
+    },
+    {
+      "sourcePath": "recovery-browser-v2/expo-e19-provenance.log",
+      "origin": "original-review-archive",
+      "sourceBytes": 12542,
+      "sourceSha256": "25f99a59705775153c174041679010d6608eee0db7635ee5368e31515d5932a0",
+      "publishedBytes": 12470,
+      "publishedSha256": "f15dc694079ead682b4a62eb234836a21b71f4e33104691891cfdaa431f4a658",
+      "byteExact": false,
+      "sanitization": {
+        "localHomePathsRedacted": 3,
+        "terminalEscapesRemoved": 18
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "browser/recovery-browser-v2/expo-e19-provenance.log",
+          "bytes": 12470,
+          "sha256": "f15dc694079ead682b4a62eb234836a21b71f4e33104691891cfdaa431f4a658"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "patches": [
+    {
+      "file": "CUMULATIVE_PR48_TO_ENGINEERING19.patch",
+      "base": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+      "baseTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8",
+      "target": "2f699f6157c1d6414b7e74661a4e11e89a77ed92",
+      "targetTree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5",
+      "bytes": 2969696,
+      "sha256": "456cc6f166fd11a44345bb1f7978dc2555011daaeedf77ffa9ba029b21c10f60",
+      "forwardExactTree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5",
+      "reverseExactTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8",
+      "method": "isolated temporary index, no checkout/branch/worktree/reset/history mutation"
+    },
+    {
+      "file": "SESSION_ENGINEERING18_TO_ENGINEERING19.patch",
+      "base": "77d929253ed283fff30cae6f8cc753c61c666320",
+      "baseTree": "85bbc84c9e0cd5366c921048a125af77f3d44685",
+      "target": "2f699f6157c1d6414b7e74661a4e11e89a77ed92",
+      "targetTree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5",
+      "bytes": 117642,
+      "sha256": "71cd5259dd2b4598ade02e848aab5408c2fb9898177c7578eb9ea845f5498d1c",
+      "forwardExactTree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5",
+      "reverseExactTree": "85bbc84c9e0cd5366c921048a125af77f3d44685",
+      "method": "isolated temporary index, no checkout/branch/worktree/reset/history mutation"
+    }
+  ],
+  "activeIndexUnchanged": true,
+  "cleanPorcelain": "",
+  "head": "2f699f6157c1d6414b7e74661a4e11e89a77ed92",
+  "tree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5"
+}

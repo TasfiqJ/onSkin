@@ -1,0 +1,18 @@
+{
+  "label": "final-mobile-build",
+  "command": [
+    "python",
+    "-X",
+    "utf8",
+    "..\\ENGINEERING19_EVIDENCE\\builds.py"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-16T21:49:41.257132+00:00",
+  "head": "6e5e0acb11e08e3bde29e5b0cb81eb07fb9b0a76",
+  "tree": "f06a7ee9f0f54616820cb5eabedc821aafe412ea",
+  "status": "",
+  "exit": 0,
+  "seconds": 62.281,
+  "end": "2026-11-16T21:50:43.873662+00:00",
+  "logSha256": "7c46d6745b2367038d8a5abbc56140ac8ae85ea0b6ae27a94921f46bebe4368b"
+}

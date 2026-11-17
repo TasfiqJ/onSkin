@@ -1,0 +1,157 @@
+{
+  "bodyText": "MONDAY, NOVEMBER 16 0 recorded Good morning. 1 step left in your morning routine. Actual routine version 2 · check-offs record this version and the current bottle observation, if recorded. Older entries stay unknown. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Factual notes you choose to record, separate from check-offs. These are your reports, not a diagnosis or an app observation. Nothing recorded Draft change Previous entries stay recorded. Nothing is saved until you confirm. Observed local date (YYYY-MM-DD) Skipped a step Used something different Irritation or uncertain reaction I noticed Other personal note No change to report Your factual note Up to 2,000 characters / 6,000 UTF-8 bytes. Record only what you noticed. Review this change Cancel draft Refresh changes Local to this device; notes are not sent with check-offs. Clearing local data removes this history. Uninstalling or losing the encryption key may lose it. Local exports may include it; exported copies cannot be revoked and cannot be imported here. ✦ A few honest suggestions 2 things we’d gently suggest › Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Skipped a step",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": -18
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Used something different",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 50
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Irritation or uncertain reaction I noticed",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 118
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Other personal note",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 186
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "No change to report",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 254
+    },
+    {
+      "disabled": false,
+      "height": 120,
+      "hitOk": true,
+      "label": "Your factual note",
+      "role": "textarea",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 358
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Review this change",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 542
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Cancel draft",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 610
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Refresh changes",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 678
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 95.36,
+      "x": 24.82,
+      "y": 848.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 120,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 215,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 310,
+      "y": 849
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8491/today?routine=AM",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

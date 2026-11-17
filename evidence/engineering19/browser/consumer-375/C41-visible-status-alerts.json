@@ -1,0 +1,68 @@
+[
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 285,
+      "width": 293,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 285,
+      "width": 293,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 285,
+      "width": 293,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 285,
+      "width": 293,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Storage did not confirm this save. It may already be recorded. Retry the same confirmation or refresh changes to check.",
+    "rect": {
+      "left": 41,
+      "top": 269,
+      "width": 293,
+      "height": 96
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 165,
+      "width": 293,
+      "height": 24
+    },
+    "visible": true
+  }
+]

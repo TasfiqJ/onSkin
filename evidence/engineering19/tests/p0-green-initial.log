@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/photos/encryptedStorage.test.ts -t E19
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 90 skipped (93)
+   Start at  16:33:54
+   Duration  558ms (transform 268ms, setup 0ms, import 352ms, tests 8ms, environment 0ms)
+
