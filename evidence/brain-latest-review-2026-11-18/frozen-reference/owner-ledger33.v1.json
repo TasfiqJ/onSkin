@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "authority": "BRAIN-M1X-MASTERV2-FULLAPP-J01-SCOPE-CUTOVER33-CANDIDATE-01",
+  "observed_source": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+  "observed_tree": "0745ad5f5595724a9b26de64324065dc3e53d2ea",
+  "gates": [
+    {
+      "id": "G97",
+      "status": "FAIL/NO_GO",
+      "owner": "Original Security custodian",
+      "acceptance": "Original rules/pins/tool/secret/OSV/source inventory and exact-source acceptance; expiry 2026-10-21T00:00:00Z unchanged",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "DB",
+      "status": "NOT_ACCEPTED",
+      "owner": "Canonical DB06/DB08/R2B custodian",
+      "acceptance": "DB06/DB08/R2B qualified owner exact-environment admission remains absent; hosted canonical technical success is separate evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "M1-03",
+      "status": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+      "owner": "Independent Brain and protected custodians",
+      "acceptance": "Whole M1-03 acceptance from authentic exact-source Security/DB evidence, not alternate PG rehearsal",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "M2-01",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Independent Brain",
+      "acceptance": "Accepted M1-03 then separate finite implementation authorization; ADR038 corrections remain due",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G1",
+      "status": "NOT_ACCEPTED",
+      "owner": "Physical iPhone imaging engineer",
+      "acceptance": "Real native pixels, resolving power, capture region/device/light/distance and repeatability evidence; no upscaling-as-detail",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G2",
+      "status": "NOT_ACCEPTED",
+      "owner": "Source-rights counsel, image scientist and statistician",
+      "acceptance": "Authenticated exact J01 dossier, target/rights/consent/annotation and frozen person-disjoint evaluation manifest",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G3",
+      "status": "NOT_ACCEPTED",
+      "owner": "Independent image scientist and statistician",
+      "acceptance": "Locked single-scan pipeline, independent supported-stratum errors, coverage and honest abstention at each claim granularity",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G4",
+      "status": "NOT_ACCEPTED",
+      "owner": "Independent longitudinal reviewer",
+      "acceptance": "Separate common-support repeatability/noise/change study; absent now, no pore change/trend",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G5",
+      "status": "NOT_ACCEPTED",
+      "owner": "Privacy/security, clinical/regulatory reviewers and native release operator",
+      "acceptance": "Exact signed build, image lifecycle/zero-egress if claimed, fairness, cosmetic copy, device and operations evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "RIGHTS",
+      "status": "GATED",
+      "owner": "IP/content/source-rights reviewer",
+      "acceptance": "Exact catalog/code/weights/data/image/text licences and permitted distribution; articles do not supply imaging labels",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "CLINICAL",
+      "status": "GATED",
+      "owner": "Dermatologist, cosmetic chemist and regulatory counsel",
+      "acceptance": "Exact corpus/claim/country/use review with credentials, conditions and source/build hash; no blanket approval",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "PROVIDER",
+      "status": "NOT_RUN",
+      "owner": "Provider/merchant operator",
+      "acceptance": "Actual supported service and terms, deployment, negative lifecycle, access/recovery and operational evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "PAYMENT",
+      "status": "NOT_RUN",
+      "owner": "StoreKit/RevenueCat and workspace billing owners",
+      "acceptance": "Real verified sandbox/native/provider lifecycle and commercial permission; no local paid flag or free quota authority",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "MODERATION",
+      "status": "NOT_RUN",
+      "owner": "Named moderation lead",
+      "acceptance": "Actual staffed report/escalation/appeal/deletion coverage and enforceable tooling; no placeholder policy",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "OPERATIONS",
+      "status": "NOT_RUN",
+      "owner": "Support/security/release operators",
+      "acceptance": "Named funded coverage, incident, backup/restore/tombstone and capacity evidence before real hosted promises",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "DEVICE",
+      "status": "NOT_RUN",
+      "owner": "Physical-device QA",
+      "acceptance": "Exact signed supported-iPhone flows, accessibility, photos/reminders/widgets/purchase and cancellation evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "APPLE",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Apple account/release owner and Apple",
+      "acceptance": "Actual agreements/identity/signing, privacy/offer classification, signed install, App Review; no account mutation authorized here",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "PUBLIC",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Founder after independent Brain review",
+      "acceptance": "All38 required contract rows and all applicable gates satisfied at one exact build, then separate explicit public availability authorization",
+      "admitted": false,
+      "evidence": []
+    }
+  ],
+  "qualified_admissions": {
+    "DB06": false,
+    "DB08": false,
+    "R2B": false,
+    "M103": false,
+    "M2": false,
+    "NATIVE": false,
+    "J01": false,
+    "CLINICAL": false,
+    "PROVIDER": false,
+    "PAID": false,
+    "APPLE": false,
+    "PUBLIC": false,
+    "G97": false
+  },
+  "technical_observations": [
+    {
+      "kind": "LIVE_GITHUB_JOB_METADATA",
+      "head": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+      "run_id": 41177675611,
+      "status": "SUCCESS_6_OF_6",
+      "meaning": "Credential-free canonical DB and PG15/17 technical rehearsal only",
+      "owner_admission": false
+    },
+    {
+      "kind": "LIVE_GITHUB_RUN_METADATA",
+      "head": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+      "run_id": 41177675604,
+      "status": "FAILURE",
+      "meaning": "Original Security remains failed; private findings not opened",
+      "owner_admission": false
+    }
+  ],
+  "gate_evidence_policy": "No supplied exact owner decisions; empty gate evidence arrays do not mean zero technical source work",
+  "acceptanceGranted": false,
+  "release": "NO_GO"
+}

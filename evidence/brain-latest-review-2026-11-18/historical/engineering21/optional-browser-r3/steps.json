@@ -1,0 +1,172 @@
+[
+  {
+    "at": "2026-11-17T17:58:41.496Z",
+    "action": "Start actual optional recovery journey",
+    "detail": "375x667"
+  },
+  {
+    "at": "2026-11-17T17:58:53.467Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-17T17:58:54.021Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-17T17:58:54.189Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-17T17:58:54.358Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-17T17:58:54.527Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:58:55.081Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-17T17:58:55.646Z",
+    "action": "Activate control containing",
+    "detail": "Clear skin"
+  },
+  {
+    "at": "2026-11-17T17:58:56.184Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:58:56.737Z",
+    "action": "Activate control",
+    "detail": "Shiny in places"
+  },
+  {
+    "at": "2026-11-17T17:58:57.273Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:58:57.812Z",
+    "action": "Activate control",
+    "detail": "Rarely"
+  },
+  {
+    "at": "2026-11-17T17:58:58.348Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:58:58.886Z",
+    "action": "Activate control",
+    "detail": "Often stings, burns, or reddens"
+  },
+  {
+    "at": "2026-11-17T17:58:59.422Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:58:59.960Z",
+    "action": "Activate control",
+    "detail": "Frequently"
+  },
+  {
+    "at": "2026-11-17T17:59:00.495Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:01.034Z",
+    "action": "Activate control",
+    "detail": "Yes, noticeably"
+  },
+  {
+    "at": "2026-11-17T17:59:01.568Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:02.105Z",
+    "action": "Activate control",
+    "detail": "Weeks or longer"
+  },
+  {
+    "at": "2026-11-17T17:59:02.641Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:03.178Z",
+    "action": "Activate control",
+    "detail": "Fine lines or firmness changes are visible"
+  },
+  {
+    "at": "2026-11-17T17:59:03.700Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:04.239Z",
+    "action": "Activate control",
+    "detail": "A lot over time"
+  },
+  {
+    "at": "2026-11-17T17:59:04.777Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:05.317Z",
+    "action": "Activate control",
+    "detail": "Sometimes burns"
+  },
+  {
+    "at": "2026-11-17T17:59:05.839Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:06.379Z",
+    "action": "Activate control",
+    "detail": "Tone 4"
+  },
+  {
+    "at": "2026-11-17T17:59:06.916Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:07.454Z",
+    "action": "Activate control",
+    "detail": "None that I know of"
+  },
+  {
+    "at": "2026-11-17T17:59:07.991Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-17T17:59:08.529Z",
+    "action": "Activate control",
+    "detail": "No"
+  },
+  {
+    "at": "2026-11-17T17:59:09.053Z",
+    "action": "Activate control",
+    "detail": "See my profile"
+  },
+  {
+    "at": "2026-11-17T17:59:09.607Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  }
+]

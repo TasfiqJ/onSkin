@@ -1,0 +1,37 @@
+{
+  "result": "PASS",
+  "originalCandidateHashesPreserved": {
+    "apps/mobile/src/features/today/OptionalChangePanel41.tsx": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+    "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3"
+  },
+  "mockChanges": [
+    {
+      "path": "apps/mobile/src/features/routine/planRecovery.test.ts",
+      "onlyExistingMockDeclarationChanged": true,
+      "routerMethodsPreserved": "push: mocks.push, replace: mocks.replace",
+      "allOtherBytesAfterGitLineEndingNormalizationUnchanged": true
+    },
+    {
+      "path": "apps/mobile/src/features/scheduler/cycleReadiness.plan.test.ts",
+      "onlyExistingMockDeclarationChanged": true,
+      "routerMethodsPreserved": "replace: mocks.replace, push: vi.fn()",
+      "allOtherBytesAfterGitLineEndingNormalizationUnchanged": true
+    }
+  ],
+  "callbackSemantics": "Real React useEffect invokes callback on mounted focused render; returned cleanup is registered for unmount/dependency change; dependency array is exactly [callback].",
+  "navigationBlur": "Not simulated by these two renderers; unchanged dedicated panel tests separately verify normal focus retirement.",
+  "unchanged": [
+    "All original assertions, fixtures, authority ports, test bodies and existing mounted focus-retirement coverage",
+    "Both retained E27 candidate files byte-for-byte",
+    "All source outside the two router mock declarations"
+  ],
+  "notIntroduced": [
+    "No-op focus callback",
+    "Fake navigation stack",
+    "Conditional hook",
+    "Global focus override",
+    "Production bypass",
+    "Test-only production path"
+  ],
+  "originalE27Failure": "ENGINEERING27_EVIDENCE/root-tests.log: 7932 mobile passed / 45 failed because both router-only mocks lacked useFocusEffect."
+}

@@ -1,0 +1,22 @@
+{
+  "label": "key-read-focused-r2",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/lib/storage/privateKVContentKey.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T00:00:43.124996+00:00",
+  "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+  "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+  "status": "M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+  "workingDiffSha256": "a14fb1998827d0f65425f8a4ed86c044d6cf5b2e9e4fd0ef2cb9046beac872d1",
+  "exit": 0,
+  "seconds": 1.609,
+  "end": "2026-11-18T00:00:44.978806+00:00",
+  "logSha256": "9cad6539b4197269b566ba7049f9ba7c349cb8d0b3701a36adad16d49beff6f4"
+}

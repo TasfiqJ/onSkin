@@ -1,0 +1,82 @@
+{
+  "authorization": "BRAIN-ONSKIN-OPTIONAL-DRAFT-SOURCE-PROOF-22",
+  "dispatch": "ENGINEERING22_DEFENSIVE_001",
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "da4f7e",
+        "wall_time_seconds": 0.482984912,
+        "exit_code": 0,
+        "original_token_count": 7,
+        "output": "stage/m1-native-runtime47\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "68466c",
+        "wall_time_seconds": 0.457076852,
+        "exit_code": 0,
+        "original_token_count": 11,
+        "output": "16fdc6101bd43a1a70dec51fc5a832fa580c8d4d\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "4f247d",
+        "wall_time_seconds": 0.495604704,
+        "exit_code": 0,
+        "original_token_count": 11,
+        "output": "fec3e97ca19de8dea6c6c513653c10419c5218fa\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "b2115d",
+        "wall_time_seconds": 0.482482337,
+        "exit_code": 0,
+        "original_token_count": 11,
+        "output": "4dce84e20a71f19c60c16c7682e683bb512363ed\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "45648c",
+        "wall_time_seconds": 0.5397106,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "6975ef",
+        "wall_time_seconds": 0.506196655,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "0bd59b",
+        "wall_time_seconds": 0.827781156,
+        "exit_code": 1,
+        "original_token_count": 83,
+        "output": "[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c46-final-source/.git/worktrees/c16-candidate\nGet-CimInstance: \r\nLine |\r\n  15 |  git rev-parse --git-dir; Get-CimInstance Win32_Process | Where-Object .\r\n     |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Access to a CIM resource was not available to the client.\r\n"
+      }
+    }
+  ],
+  "result": "EXACT_GIT_BASELINE_MATCH",
+  "writerCheck": {
+    "cim": "Unavailable; access failure retained above. No permission or access changes made.",
+    "fallback": "Get-Process found only pwsh PID83376 among git/node/python/pwsh/powershell/codex/Code; no index.lock; prior implementation agents finished; new E22 agent explicitly read-only.",
+    "competingWriterObserved": false
+  }
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "at": "2026-11-17T17:52:56.226Z",
+    "action": "Start actual optional recovery journey",
+    "detail": "375x667"
+  },
+  {
+    "at": "2026-11-17T17:53:31.515Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-17T17:53:32.109Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-17T17:53:32.275Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-17T17:53:32.449Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-17T17:53:32.618Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:53:33.220Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  }
+]

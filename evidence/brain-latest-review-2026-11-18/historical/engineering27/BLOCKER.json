@@ -1,0 +1,16 @@
+{
+  "status": "BLOCKED",
+  "code": "PROTECTED_ROOT_REGRESSION_SCOPE_LIMIT",
+  "failure": "45 protected tests fail because the existing expo-router mocks omit useFocusEffect required by the new collapsed-entry focus guard.",
+  "locations": [
+    "apps/mobile/src/features/routine/planRecovery.test.ts:51",
+    "apps/mobile/src/features/scheduler/cycleReadiness.plan.test.ts:53"
+  ],
+  "stack": "apps/mobile/src/features/today/OptionalChangePanel41.tsx:76",
+  "allowedFiles": [
+    "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+    "apps/mobile/src/features/today/OptionalChangePanel41.tsx"
+  ],
+  "decision": "Stop without commit. Do not change out-of-scope mocks, conditionally bypass focus protection or rerun unchanged source to hide failure.",
+  "review": "Independent read-only reviewer confirmed both router-only mocks and the retained failure. No reviewer edits/tests."
+}

@@ -1,0 +1,163 @@
+{
+  "path": "/you",
+  "width": 375,
+  "height": 667,
+  "overflow": 0,
+  "text": "Local recovery\nClose\nCheck what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls.\nShelf\nSaved on this device\nYour Shelf records can be read on this device.\nCheck again\nOpen Shelf\nToday check-offs\nNot configured\nNo check-offs are recorded for this local day.\nCheck again\nOpen Today\nReminder choices\nNot configured\nNo reminder purpose is enabled in the device preferences. Scheduling and permission are not checked here.\nCheck again\nReview reminder setup\nPhoto cleanup\nNo pending cleanup\nNo outstanding deletion was found in the current local journal. Photo content is checked only in Progress.\nCheck again\nReview photo cleanup in Progress\nManual intake drafts\nUnavailable\nDevice records could not be read. Nothing was reset. Try checking again or open the feature’s recovery controls.\nCheck again\nOpen saved manual intake drafts\nOptional change drafts\nSaved on this device\nSaved optional change drafts can be read on this device. In Today, open Saved change drafts in Your optional change notes.\nCheck again\nOpen Today for saved change drafts",
+  "domText": "Local recoveryCloseCheck what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls.ShelfSaved on this deviceYour Shelf records can be read on this device.Check againOpen ShelfToday check-offsNot configuredNo check-offs are recorded for this local day.Check againOpen TodayReminder choicesNot configuredNo reminder purpose is enabled in the device preferences. Scheduling and permission are not checked here.Check againReview reminder setupPhoto cleanupNo pending cleanupNo outstanding deletion was found in the current local journal. Photo content is checked only in Progress.Check againReview photo cleanup in ProgressManual intake draftsUnavailableDevice records could not be read. Nothing was reset. Try checking again or open the feature’s recovery controls.Check againOpen saved manual intake draftsOptional change draftsSaved on this deviceSaved optional change drafts can be read on this device. In Today, open Saved change drafts in Your optional change notes.Check againOpen Today for saved change drafts",
+  "accessibility": [
+    "Close local recovery",
+    "Check Shelf again",
+    "Open Shelf",
+    "Check Today check-offs again",
+    "Open Today",
+    "Check Reminder choices again",
+    "Review reminder setup",
+    "Check Photo cleanup again",
+    "Review photo cleanup in Progress",
+    "Check Manual intake drafts again",
+    "Open saved manual intake drafts",
+    "Check Optional change drafts again",
+    "Open Today for saved change drafts"
+  ],
+  "rows": [
+    {
+      "title": "Shelf",
+      "text": "Shelf\nSaved on this device\nYour Shelf records can be read on this device.\nCheck again\nOpen Shelf",
+      "live": [
+        {
+          "live": "polite",
+          "role": null,
+          "text": "Saved on this device\nYour Shelf records can be read on this device."
+        }
+      ],
+      "buttons": [
+        {
+          "name": "Check Shelf again",
+          "role": "button",
+          "height": 48
+        },
+        {
+          "name": "Open Shelf",
+          "role": "button",
+          "height": 48
+        }
+      ]
+    },
+    {
+      "title": "Today check-offs",
+      "text": "Today check-offs\nNot configured\nNo check-offs are recorded for this local day.\nCheck again\nOpen Today",
+      "live": [
+        {
+          "live": "polite",
+          "role": null,
+          "text": "Not configured\nNo check-offs are recorded for this local day."
+        }
+      ],
+      "buttons": [
+        {
+          "name": "Check Today check-offs again",
+          "role": "button",
+          "height": 48
+        },
+        {
+          "name": "Open Today",
+          "role": "button",
+          "height": 48
+        }
+      ]
+    },
+    {
+      "title": "Reminder choices",
+      "text": "Reminder choices\nNot configured\nNo reminder purpose is enabled in the device preferences. Scheduling and permission are not checked here.\nCheck again\nReview reminder setup",
+      "live": [
+        {
+          "live": "polite",
+          "role": null,
+          "text": "Not configured\nNo reminder purpose is enabled in the device preferences. Scheduling and permission are not checked here."
+        }
+      ],
+      "buttons": [
+        {
+          "name": "Check Reminder choices again",
+          "role": "button",
+          "height": 48
+        },
+        {
+          "name": "Review reminder setup",
+          "role": "button",
+          "height": 48
+        }
+      ]
+    },
+    {
+      "title": "Photo cleanup",
+      "text": "Photo cleanup\nNo pending cleanup\nNo outstanding deletion was found in the current local journal. Photo content is checked only in Progress.\nCheck again\nReview photo cleanup in Progress",
+      "live": [
+        {
+          "live": "polite",
+          "role": null,
+          "text": "No pending cleanup\nNo outstanding deletion was found in the current local journal. Photo content is checked only in Progress."
+        }
+      ],
+      "buttons": [
+        {
+          "name": "Check Photo cleanup again",
+          "role": "button",
+          "height": 48
+        },
+        {
+          "name": "Review photo cleanup in Progress",
+          "role": "button",
+          "height": 48
+        }
+      ]
+    },
+    {
+      "title": "Manual intake drafts",
+      "text": "Manual intake drafts\nUnavailable\nDevice records could not be read. Nothing was reset. Try checking again or open the feature’s recovery controls.\nCheck again\nOpen saved manual intake drafts",
+      "live": [
+        {
+          "live": "polite",
+          "role": "alert",
+          "text": "Unavailable\nDevice records could not be read. Nothing was reset. Try checking again or open the feature’s recovery controls."
+        }
+      ],
+      "buttons": [
+        {
+          "name": "Check Manual intake drafts again",
+          "role": "button",
+          "height": 48
+        },
+        {
+          "name": "Open saved manual intake drafts",
+          "role": "button",
+          "height": 48
+        }
+      ]
+    },
+    {
+      "title": "Optional change drafts",
+      "text": "Optional change drafts\nSaved on this device\nSaved optional change drafts can be read on this device. In Today, open Saved change drafts in Your optional change notes.\nCheck again\nOpen Today for saved change drafts",
+      "live": [
+        {
+          "live": "polite",
+          "role": null,
+          "text": "Saved on this device\nSaved optional change drafts can be read on this device. In Today, open Saved change drafts in Your optional change notes."
+        }
+      ],
+      "buttons": [
+        {
+          "name": "Check Optional change drafts again",
+          "role": "button",
+          "height": 48
+        },
+        {
+          "name": "Open Today for saved change drafts",
+          "role": "button",
+          "height": 48
+        }
+      ]
+    }
+  ]
+}

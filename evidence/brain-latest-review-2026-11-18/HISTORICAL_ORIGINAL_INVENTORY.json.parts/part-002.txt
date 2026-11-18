@@ -1,0 +1,712 @@
+    "bytes": 1342,
+    "sha256": "c855f756ccee09c0ab5d18545fc6285de8b6383e5edd95c78a408c26cb1fb6e4",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "PROTECTED_SOURCE_AND_CONTRACTS.json",
+    "bytes": 4648,
+    "sha256": "c1df83ec940d55eecd3ce6cd898a6962c09fabdcfec5c2c25176c0201f18a09a",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "recovery-focused-r1.json",
+    "bytes": 1334,
+    "sha256": "8ea480f20c32ac4dcf5947ad6093688415326f745d401ce9fb7350056bea44f0",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "recovery-focused-r1.log",
+    "bytes": 15495,
+    "sha256": "b63f96ea73dcbebb4c15833cb7099ca30712b72fb49d6b31c5ffca06ccc1fc9e",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "recovery-focused-r2.json",
+    "bytes": 1334,
+    "sha256": "3ae2dd560e73324391a4d3da6245b3e68f9bedc95ef222e41c53d102473d20d6",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "recovery-focused-r2.log",
+    "bytes": 427,
+    "sha256": "89f7320db1c9577f5b4d9ef5ec569986c80b4a94fceae25ad07fb31ec0ff05e6",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-lint-r1.json",
+    "bytes": 1195,
+    "sha256": "f1a1b9d06a15d42dae56da4fd6fab904e359b81bf8ac3cef165dabfdc6269df4",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-lint-r1.log",
+    "bytes": 1560,
+    "sha256": "7d486041d7c83c24ff60a2f51bac1df579e0ba89cc1a3d89429173e5bd1cc582",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-tests-r1.json",
+    "bytes": 1186,
+    "sha256": "2c5ccdb736bf9b9416d095f0b1f4d2605f27dbff9a7d80beb839a8687dd46edf",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-tests-r1.log",
+    "bytes": 640783,
+    "sha256": "ca749271ecb2336dd526a467ec926d57e71aee8c6f0698bd0b85ef976d931379",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-tests-r2.json",
+    "bytes": 1185,
+    "sha256": "1728fe11d108e67773b8334465a39570b9f04cbd7708b6df0eb701489669b9b9",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-tests-r2.log",
+    "bytes": 639107,
+    "sha256": "1e96c7ddbf356ecbe5ee8baf34291f1458960aa20988b3da3b48bd692ac4ef31",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-types-r1.json",
+    "bytes": 1203,
+    "sha256": "766b8020e54bf4f674157f8b84fc2ffdb63685f2c2666ca84e186df1e7666a65",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-types-r1.log",
+    "bytes": 3227,
+    "sha256": "883529e1034c89beb1db008ca3d3b6e035ba086ad0697d16e9456afc9ffc83b1",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-types-r2.json",
+    "bytes": 1203,
+    "sha256": "476a4f80bb885f06e734f5addcc6b7dd6a9712a7ddb832ed8a831a059b47be73",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "root-types-r2.log",
+    "bytes": 1576,
+    "sha256": "8724b62dce22020396b4396e33a2bd93437cfb3b6b4be047f4969fca8f712fca",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "run_check.py",
+    "bytes": 1737,
+    "sha256": "e17403a41cb1b7190c27a21ab9ea33bbba668778a1045331716da0c9223803b2",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "SHA256SUMS.txt",
+    "bytes": 26240,
+    "sha256": "6caee4d102c251ce540b5c120f3be3fef84347ee46fbe61ec11c44366d3f4fef",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "SOURCE.diff",
+    "bytes": 66130,
+    "sha256": "e531f50ad37dff698b305840f6fea8da3925c258514cfb76116fe108828426a0",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "storage-boundary-r1.json",
+    "bytes": 1139,
+    "sha256": "4af8250b0b053fc79cfc80baee59a8fbe25100ecaa17d28dc1464fddd6cbecc8",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "storage-boundary-r1.log",
+    "bytes": 2171,
+    "sha256": "bdb213f37a82c0452671179eaba92eb280d5007dfebe48fd7c315b5098a86d2b",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "storage-boundary-r2.json",
+    "bytes": 1139,
+    "sha256": "b20a5d88d12c8cbc8692e14043d10cc14285c2787be590ed03a19e612480c8c6",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "storage-boundary-r2.log",
+    "bytes": 526,
+    "sha256": "0ba5aa03a03ebefd8044d1e7687713934a49f4a10efa72570df8fcfd7e5d2b00",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "types-focused-r1.json",
+    "bytes": 1032,
+    "sha256": "1ecca9a31fc72d70f3a27cf850436635f96821352c6843c4f7ba050730d19f42",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "types-focused-r1.log",
+    "bytes": 53,
+    "sha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING25_EVIDENCE",
+    "path": "VALIDATION.json",
+    "bytes": 22938,
+    "sha256": "d4bdd2c9e20c27827e9dc402603c6ed28a46ed313b1a9bdd39742f1e9bcfb400",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "audit_scope.py",
+    "bytes": 2786,
+    "sha256": "2e311bb1b09f74e0499aba793f27b4cb162d749a1ee05293257333c2a0bd9bd4",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "BASELINE.json",
+    "bytes": 2605,
+    "sha256": "d225aeaa3900033eb7db129afb23afbe82cb2d5b10365feffa39f0808cbb46ef",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "CHANGED_FILES.json",
+    "bytes": 256,
+    "sha256": "1b457deeab3230689ce399a268602274b1afaa0802e3e7bb11c1bc0ff5794bec",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "COMMIT.log",
+    "bytes": 132,
+    "sha256": "81931b472b21124b6b539eb25c83e190ac36242d015072ebe338d53bbcaffb0b",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "FINAL_REPORT.md",
+    "bytes": 4998,
+    "sha256": "ad68bdaa7839209ace21ee0a8fd9bb98b6d19cee34d230c0eba8ccdb46923625",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "finalize_evidence.py",
+    "bytes": 11405,
+    "sha256": "b9e89cc2c1734f1d2eee32e2efea77a8814010a044941ca076210e4bd86cee0e",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "focused-1.json",
+    "bytes": 1325,
+    "sha256": "3a99f6d15f66685daff33bc31f7eb7ad166a6d20fbddee0aab1d9318f1d3b13a",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "focused-1.log",
+    "bytes": 353,
+    "sha256": "bbe1c293b50a48b33bba8a1ff439c2c1b9c614bbe382fddef50127ef53326fd0",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "focused-2.json",
+    "bytes": 1325,
+    "sha256": "89864de94d5a618362c9ee8abf6a3aba9ce6df1e056499f2e88a508fbcfdcb75",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "focused-2.log",
+    "bytes": 353,
+    "sha256": "1ca260ec3dd8e174dc309110b34843f248f5fd86faa13eeeb3fec2d3f076cc33",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "focused-3.json",
+    "bytes": 1325,
+    "sha256": "496fea803c51a6cad12cad449e3af4a326c17017064db5e5cadc4a57efbf0243",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "focused-3.log",
+    "bytes": 353,
+    "sha256": "5d479e3585e50698a75e9cf77766bf6f83652b1a2bb079db447becebfa4f720c",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "GIT_IDENTITY.json",
+    "bytes": 1345,
+    "sha256": "dec4f7db2f691b7bb3a1f81b4278bd6dc098e349ba86e423da3fb6e21a622659",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "PROHIBITED_OPERATIONS.json",
+    "bytes": 1459,
+    "sha256": "5de7fbe49bcffbcd3e16615c6dcd1b45f2cb097f407631fd24c730f6b206119f",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "root-lint.json",
+    "bytes": 1277,
+    "sha256": "997974126c6413dc528d057bfacfcad1f42515e6b2770dc9162e5a5b779c10b8",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "root-lint.log",
+    "bytes": 1560,
+    "sha256": "50fb44e1d4ea9e527f8fb3450fe6841c04ccb80c21d5182c578b2c13be37e5a4",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "root-tests.json",
+    "bytes": 1264,
+    "sha256": "7eee5ccd5d5c4be00de6b9c4c28717684f6fc9ad57beb24566e9aaf337f7c1d8",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "root-tests.log",
+    "bytes": 677286,
+    "sha256": "74c540013cc2570915aaba02f1378227b55147a1648b1f24a34a610848881023",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "root-typecheck.json",
+    "bytes": 1287,
+    "sha256": "24b9d6150fccf531d8a3f92fba084fc5dd49f020f1fc18dc3d65ecd1170eb68e",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "root-typecheck.log",
+    "bytes": 1575,
+    "sha256": "f4ff0649141e23e26c9cc23c437e08275fda82e7b95af718df7bb725d019f763",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "run_check.py",
+    "bytes": 2442,
+    "sha256": "538acaccde1d05a0253607a1bb9fb0cd8924680e452a874348b553d34357bf5c",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "SHA256SUMS.txt",
+    "bytes": 1999,
+    "sha256": "0286a3694907e6c16a5c25f67f494afb197b3916c8a2a5335c1d34a183b88fd9",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "SOURCE.diff",
+    "bytes": 1487,
+    "sha256": "16d2c7b970aae152d477deacb6bea481c9a7b666aa85b562615309d94d23dba4",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "SOURCE_INVARIANTS.json",
+    "bytes": 1030,
+    "sha256": "e51b57044fa5ed81712e48f60e993ad53a179acdf94a1ac23f65a4fa35dbe200",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING26_EVIDENCE",
+    "path": "VALIDATION.json",
+    "bytes": 9841,
+    "sha256": "999e80144ac28aa7f6fd7f4b2147d740bea4f5bf33dd4459473dfeca62c850e6",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "audit_scope.py",
+    "bytes": 3828,
+    "sha256": "973346a84d622a61ab9a8a63fbc5a6027c09355b28a77717e016b7fda1c3f1a6",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "BASELINE.json",
+    "bytes": 2535,
+    "sha256": "d9deb10436f8cc2cd34f64eea1d883caa618b7ee76b28ac6d4adad9f305cae80",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "BLOCKER.json",
+    "bytes": 913,
+    "sha256": "285e3a8ffa15c1cd6c2e9da19017547a608a56d8d9c75a023e38eac57ef4b21c",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "CHANGED_FILES.json",
+    "bytes": 388,
+    "sha256": "613936ff613443633474480a6fe388778a96bf741095c0098f49a2f8e54fcbdb",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "FINAL_REPORT.md",
+    "bytes": 7155,
+    "sha256": "e8a612bdcd3e9ad582869efdccfd765756f4c0ed496f12b0e098add024543571",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "finalize_evidence.py",
+    "bytes": 15519,
+    "sha256": "0588f9e8b730deb0762298278017bc915b1f6226ee5dd59aa434cb5a10ca6c52",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "focused-mounted-corrected.json",
+    "bytes": 1882,
+    "sha256": "b33e1977f2bae350ae62783fdaac6fb941c268631b7fdfccdaf61e5e31fef4d3",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "focused-mounted-corrected.log",
+    "bytes": 352,
+    "sha256": "1302a7534bde448f9a60ee792c61663d4d78e954ef3897560caeb07a55540cc3",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "focused-mounted.json",
+    "bytes": 1872,
+    "sha256": "20d03d5208aa829b4babe9e4957b51b1a1fa54900b3dfc141999c8c70d639083",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "focused-mounted.log",
+    "bytes": 2022,
+    "sha256": "2b0b42a541e2b0842808fc244b2d8d78b19b4e374cab177f40ca86b9f9c6ff9e",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "focused-required.json",
+    "bytes": 2120,
+    "sha256": "1832b4ddd365a87550d33c3c16d70b3d3412ede5f6e614286c1b12ffef20a7d8",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "focused-required.log",
+    "bytes": 566,
+    "sha256": "137498b32ccf4ef96ab1008e89dbfc3f817eab93534464eaeaa437dba225c29b",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "GIT_IDENTITY.json",
+    "bytes": 1991,
+    "sha256": "b71b5a6b20725cc3a52f389c35fe0c0f3f034b7e76c92c4d0461eb400b3d6523",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "PROHIBITED_OPERATIONS.json",
+    "bytes": 1561,
+    "sha256": "e9cd70a2f039c698046dbcda8418e96e66c49dfe6372c6334a01ce612088b757",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "root-lint.json",
+    "bytes": 294,
+    "sha256": "f966cdc92e8ce71ca7f27dd429ab0b49981140f5cf125ea5a3f34ccfa8214b51",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "root-tests.json",
+    "bytes": 1809,
+    "sha256": "b221ca72d9d01027c6f2f4ed784aa6d6de165561d93c4c1df065eadb0cdf30f9",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "root-tests.log",
+    "bytes": 696305,
+    "sha256": "c8e169d52572d38c46bb1ef71bab8e4919fb24ce69ce8eda357dfe760b439d86",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "root-typecheck.json",
+    "bytes": 304,
+    "sha256": "83951bb8d42013a4a24efc6a177ac0cb098f434337f4df4a022959042debd065",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "run_check.py",
+    "bytes": 2551,
+    "sha256": "4e8b44524f155ca4aaea78a533bb9afe327f3e45af353c85cfd384e790b3c452",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "SHA256SUMS.txt",
+    "bytes": 1892,
+    "sha256": "35f9a81f032cbaa229e374d52769c1ee7c726174004b1218f9157fa546f5f1db",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "SOURCE.diff",
+    "bytes": 11937,
+    "sha256": "e2e6c397825bcf2fdd9287200cc8fcf2460f4fe4629821d940d80fd30382f077",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "SOURCE_INVARIANTS.json",
+    "bytes": 1841,
+    "sha256": "ecbd5ab183e7e90bd2cac02aeaf4c971a8833e05c69f085bfc886efbcf48dd91",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27_EVIDENCE",
+    "path": "VALIDATION.json",
+    "bytes": 11980,
+    "sha256": "f99feb4165efd1294c0625c2a336ee344b9f89b540d6b1d3a05c46a3e104a1c8",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "A-focused-mocks.json",
+    "bytes": 3138,
+    "sha256": "45f0c770175a3c00140e8f8586e12b2ae0ade78e53e5f608e4b8dce529496197",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "A-focused-mocks.log",
+    "bytes": 401,
+    "sha256": "52662610e8889fd741273a92f570ed6f1d81a00dbde93b677e4ea36ec31de8d2",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "audit_scope.py",
+    "bytes": 3125,
+    "sha256": "52c6421763451d3fb12976fcedfbb89faccce19ae6ec62ae092e51b87f2f7c58",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "B-focused-mounted.json",
+    "bytes": 3086,
+    "sha256": "85b3b419112ddc51fb03ddd86a8ddd5c4a03b3aa6d8208e1785ecce54aa4c6a4",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "B-focused-mounted.log",
+    "bytes": 352,
+    "sha256": "78ead20a8b5d648be763f89300561e7d36f525e6e2da6ee4e49f2a83d6aafdb5",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "BASELINE.json",
+    "bytes": 4355,
+    "sha256": "379884176a7153cafe3ff31b967b1ff4c4f5a7ffc63c3ec47d2749c2a46b0963",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "C-focused-recovery.json",
+    "bytes": 3334,
+    "sha256": "3a6cc20b29318d8fc278e06ed3b1387218e629898406cbbc983faee073257d3f",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "C-focused-recovery.log",
+    "bytes": 566,
+    "sha256": "d3c6f0479ebd290fad371b9c217e809e9a5a5d6a97a6a40ab4b7c4dfe05c6f5d",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "CHANGED_FILES.json",
+    "bytes": 946,
+    "sha256": "9c7f00234c70716d77267272872f0e855a75f89f301471243c91a919e3fb9c66",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "COMMIT.log",
+    "bytes": 136,
+    "sha256": "394c6796a283d0e556fb7d83ba45154529d37e56ccddb41741f5a918f2050575",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "D-root-tests.json",
+    "bytes": 3023,
+    "sha256": "42454f4d246dd54d6f6bb66e0fd4dc071ec4cf00db840959c66dee10689287c9",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "D-root-tests.log",
+    "bytes": 681207,
+    "sha256": "e3ebd55721b01d3830ba4c24ca1d01681810130eead7fa762f77842085320bec",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "E-root-typecheck.json",
+    "bytes": 3044,
+    "sha256": "851fa580e1f7cd0ad6ebf1a7c8440afabaf46bac060fb8cb81b833eb7eb85d95",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "E-root-typecheck.log",
+    "bytes": 1576,
+    "sha256": "4724938f207121179a53fbe6d336e7d5b8ae4a11f36db2e0ed8811b3483f4f05",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "F-root-lint.json",
+    "bytes": 3034,
+    "sha256": "13b8f7f25462046954487aabedb7edc46f76ef52e26a7ec435812debdeca54b2",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "F-root-lint.log",
+    "bytes": 1560,
+    "sha256": "8e4b48b2517cc2e60894667ec421562b5e0824f7fb762ddecb875828ea5962c3",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "FINAL_REPORT.md",
+    "bytes": 6636,
+    "sha256": "c4d90500ad62a6d1868b0ddd9fd38a126be41e2ef9fd5d628d7c3ddf6be2efff",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "finalize_evidence.py",
+    "bytes": 14630,
+    "sha256": "15397215a01b0b86509faab8b0946750a23f54681728938cdacb0ea07efd8c07",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "GIT_IDENTITY.json",
+    "bytes": 3302,
+    "sha256": "4064fecf330fd15448f142af9207b121aff6bf91b7cac1224ac5203388e4bd0d",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "ORIGINAL_E27_FINAL.json",
+    "bytes": 2282,
+    "sha256": "e478dd6786712b3eea10216b0960d07100325cf1c8dec397994dd7780b08db69",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "ORIGINAL_E27_RECHECK.json",
+    "bytes": 2282,
+    "sha256": "e478dd6786712b3eea10216b0960d07100325cf1c8dec397994dd7780b08db69",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "PROHIBITED_OPERATIONS.json",
+    "bytes": 1511,
+    "sha256": "d323a0ce7efc7bb71cc69c26742ec83395fa0f33ccab2de883b4f86da6cfe1b3",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "run_check.py",
+    "bytes": 3119,
+    "sha256": "637550431adfe0693744fdd5f71eb74095587e73c7bc8a88e5f55ed2df2b3f99",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "SHA256SUMS.txt",
+    "bytes": 2336,
+    "sha256": "36f247195d29836b14f4450463e4500da4a26479ed37279c48878350564fbf90",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "SOURCE.diff",
+    "bytes": 14931,
+    "sha256": "935c8d65802719ac50d1ca8079a21bb5c0beec5519e49b1233176c6b9e0cbd9a",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "SOURCE_INVARIANTS.json",
+    "bytes": 1884,
+    "sha256": "b5dcc58eec53816e28a7834ef63a8113af0f77634eb0494fdbc37fe45c45e0e4",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "VALIDATION.json",
+    "bytes": 22409,
+    "sha256": "e4df6d2778738c6de9f500f27fdece5a248dc8060b4740197ddda7cf2ff9c732",
+    "publication": "full readable text, with declared safety sanitization"
+  },
+  {
+    "origin": "ENGINEERING27R_EVIDENCE",
+    "path": "verify_original_evidence.py",
+    "bytes": 1049,
+    "sha256": "e0d7ee14e48283125dd5754402a91f367e236ec38193813dd8601a7641e7faeb",
+    "publication": "full readable text, with declared safety sanitization"
+  }
+]

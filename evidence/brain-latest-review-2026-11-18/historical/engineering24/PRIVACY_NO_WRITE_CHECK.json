@@ -1,0 +1,30 @@
+{
+  "method": "Static source inspection only; no execution of draft loaders or native storage paths",
+  "result": "BLOCKED",
+  "destinationDraftBytes": "Both loader updaters return the original raw bytes, reaching the unchanged-value transaction return before destination mutation.",
+  "keySideEffects": [
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVContentKey.ts",
+      "line": 46,
+      "finding": "Existing secure key path invokes AsyncStorage.removeItem for the fallback key."
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVContentKey.ts",
+      "line": 54,
+      "finding": "Legacy fallback path invokes setPrivateSecureStoreItemAsync to migrate the existing key."
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVContentKey.ts",
+      "line": 61,
+      "finding": "Successful migration invokes AsyncStorage.removeItem for the fallback key."
+    }
+  ],
+  "authority": "Existing original lease, adult receipt, current consent and exact owner/epoch checks were inspected and not modified.",
+  "missingKey": "The unchanged transaction path refuses missing key and returns before key creation; this does not remove native fallback mutation behavior.",
+  "unreadableKey": "Native secure-store read failure can use an existing legacy fallback; no stronger unconditional refusal is claimed.",
+  "privateAppPayloadReadByAgent": false,
+  "draftsSavedDeletedResumedOrConfirmed": false,
+  "sourceEdits": false,
+  "nativeExecution": false,
+  "craftedPersistedRecords": false
+}

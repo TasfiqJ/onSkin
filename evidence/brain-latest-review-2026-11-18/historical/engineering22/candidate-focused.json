@@ -1,0 +1,27 @@
+{
+  "label": "candidate-focused",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/today/optionalChangeDraftProof22.test.ts",
+    "src/features/today/optionalChangeDrafts.test.ts",
+    "src/features/today/optionalChangeDraftUI21.test.ts",
+    "src/features/today/optionalChange41.test.ts",
+    "src/features/today/optionalChangeJournal41.test.ts",
+    "src/features/today/optionalHistoryRecovery15.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T20:51:51.579704+00:00",
+  "head": "16fdc6101bd43a1a70dec51fc5a832fa580c8d4d",
+  "tree": "fec3e97ca19de8dea6c6c513653c10419c5218fa",
+  "status": "M apps/mobile/src/features/today/optionalChangeDraftCodec.ts\n?? apps/mobile/src/features/today/optionalChangeDraftProof22.test.ts",
+  "workingDiffSha256": "4090751435f795f4f8148bc3c4af27ac92cde45566dd151ffb39009f06657d88",
+  "exit": 1,
+  "seconds": 8.25,
+  "end": "2026-11-17T20:52:00.059686+00:00",
+  "logSha256": "9405fa8671b9cef58e5a6a1ffb0c9618f70bb4322b978437213122e1da8691a9"
+}

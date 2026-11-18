@@ -1,0 +1,2159 @@
+[
+  {
+    "name": "375x667-initial",
+    "at": "2026-11-18T15:35:16.875Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": []
+  },
+  {
+    "name": "375x667-note-draft",
+    "at": "2026-11-18T15:35:19.118Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "revision": 1,
+        "contentHash": "e9ff8a0fae7012f887971f9b8e1c7cd9c5e3bb11deaab600d6d4a1eab7d9da3f",
+        "fields": {
+          "eventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+          "kind": "note",
+          "targetEventId": null,
+          "targetContentHash": null,
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+          "sourceRevision": 0,
+          "sourceProof": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-note-before-confirm",
+    "at": "2026-11-18T15:35:22.162Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "revision": 1,
+        "contentHash": "e9ff8a0fae7012f887971f9b8e1c7cd9c5e3bb11deaab600d6d4a1eab7d9da3f",
+        "fields": {
+          "eventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+          "kind": "note",
+          "targetEventId": null,
+          "targetContentHash": null,
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+          "sourceRevision": 0,
+          "sourceProof": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-note-recorded",
+    "at": "2026-11-18T15:35:22.989Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "375x667-note-reloaded-once",
+    "at": "2026-11-18T15:35:24.737Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "375x667-correction-draft",
+    "at": "2026-11-18T15:35:26.526Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": [
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "revision": 1,
+        "contentHash": "903478f6b04e4f27def817fff8b778c4da1251fd6f132e84c2aa63d79d91717d",
+        "fields": {
+          "eventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+          "kind": "correction",
+          "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+          "targetContentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "c759ed07b8b90d0350c4a04a12c9ab4774afabfcd1a217d08c23a583dd8a828f",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-intervening-note",
+    "at": "2026-11-18T15:35:29.109Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "revision": 1,
+        "contentHash": "903478f6b04e4f27def817fff8b778c4da1251fd6f132e84c2aa63d79d91717d",
+        "fields": {
+          "eventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+          "kind": "correction",
+          "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+          "targetContentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "c759ed07b8b90d0350c4a04a12c9ab4774afabfcd1a217d08c23a583dd8a828f",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-history-conflict",
+    "at": "2026-11-18T15:35:32.055Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "revision": 1,
+        "contentHash": "903478f6b04e4f27def817fff8b778c4da1251fd6f132e84c2aa63d79d91717d",
+        "fields": {
+          "eventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+          "kind": "correction",
+          "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+          "targetContentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "c759ed07b8b90d0350c4a04a12c9ab4774afabfcd1a217d08c23a583dd8a828f",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-explicit-refresh",
+    "at": "2026-11-18T15:35:32.342Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "revision": 2,
+        "contentHash": "dde04117666281bc41e451efcffdc083f3cfa8be1f9588348d726df5418361de",
+        "fields": {
+          "eventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+          "kind": "correction",
+          "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+          "targetContentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 2,
+          "sourceProof": "b0ce18b13bc42edd67707e970e7dc1b847c411a4f63e91a70ac02537c8857e61",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-correction-recorded",
+    "at": "2026-11-18T15:35:33.164Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "contentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "375x667-retraction-draft",
+    "at": "2026-11-18T15:35:34.416Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "contentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": [
+      {
+        "id": "c3964121-8998-4343-a433-bddf38ee10f3",
+        "revision": 1,
+        "contentHash": "852e9121fbb494528098f57992e793649ae81763bd568b7fde2eec437a9ad5cb",
+        "fields": {
+          "eventId": "c3964121-8998-4343-a433-bddf38ee10f3",
+          "kind": "retraction",
+          "targetEventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+          "targetContentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+          "sourceRevision": 3,
+          "sourceProof": "e9470b9d723f2bc7471fcde2e15ed0f8e8786a5c99ea289caa68e7b973a8f24a",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-retraction-before-confirm",
+    "at": "2026-11-18T15:35:37.239Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "contentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": [
+      {
+        "id": "c3964121-8998-4343-a433-bddf38ee10f3",
+        "revision": 1,
+        "contentHash": "852e9121fbb494528098f57992e793649ae81763bd568b7fde2eec437a9ad5cb",
+        "fields": {
+          "eventId": "c3964121-8998-4343-a433-bddf38ee10f3",
+          "kind": "retraction",
+          "targetEventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+          "targetContentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+          "sourceRevision": 3,
+          "sourceProof": "e9470b9d723f2bc7471fcde2e15ed0f8e8786a5c99ea289caa68e7b973a8f24a",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "375x667-retraction-recorded",
+    "at": "2026-11-18T15:35:38.079Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 4,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "contentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "c3964121-8998-4343-a433-bddf38ee10f3",
+        "contentHash": "3ef7a12c9748389e81a50bc7a8cc5f26128769172751166706a6012706dd4957",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "375x667-earlier-retained-correction",
+    "at": "2026-11-18T15:35:43.604Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "contentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "c3964121-8998-4343-a433-bddf38ee10f3",
+        "contentHash": "3ef7a12c9748389e81a50bc7a8cc5f26128769172751166706a6012706dd4957",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "770e0f01-5098-4f86-a0db-826625df310a",
+        "contentHash": "d325b4b52b1501913f7632b99492a3ae38ebf91c747fb3425b73f24ba346d3b0",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "375x667-after-discard",
+    "at": "2026-11-18T15:35:48.354Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "contentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "c3964121-8998-4343-a433-bddf38ee10f3",
+        "contentHash": "3ef7a12c9748389e81a50bc7a8cc5f26128769172751166706a6012706dd4957",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "770e0f01-5098-4f86-a0db-826625df310a",
+        "contentHash": "d325b4b52b1501913f7632b99492a3ae38ebf91c747fb3425b73f24ba346d3b0",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "375x667-final",
+    "at": "2026-11-18T15:35:50.282Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "contentHash": "b45a9c85bfd185a1b7db282b9f15637d83ef36f886cdc73bd67940059f35e802",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "bea3cf4d-2a7d-41cd-a277-729fa3c2b708",
+        "contentHash": "e04dc6aea6b390ed9101360735610024a568ea4bbf93de77721d7a22fac647f4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "contentHash": "3b5bcec042b9e01c3a98c65c1c4bceec8d69fbef879cf153014ba384c8688055",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "c3964121-8998-4343-a433-bddf38ee10f3",
+        "contentHash": "3ef7a12c9748389e81a50bc7a8cc5f26128769172751166706a6012706dd4957",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "18ca7f5d-e922-4efc-ac33-8fa425e02d51",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "770e0f01-5098-4f86-a0db-826625df310a",
+        "contentHash": "d325b4b52b1501913f7632b99492a3ae38ebf91c747fb3425b73f24ba346d3b0",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "71db8af7-360b-4b94-b93e-464151ff8cec",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "390x844-initial",
+    "at": "2026-11-18T15:36:19.428Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": []
+  },
+  {
+    "name": "390x844-note-draft",
+    "at": "2026-11-18T15:36:21.675Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "revision": 1,
+        "contentHash": "e105147227c414a6a71de7265d7e5617344c887970f5520c02b1bb5d82638be0",
+        "fields": {
+          "eventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+          "kind": "note",
+          "targetEventId": null,
+          "targetContentHash": null,
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+          "sourceRevision": 0,
+          "sourceProof": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-note-before-confirm",
+    "at": "2026-11-18T15:36:24.719Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "revision": 1,
+        "contentHash": "e105147227c414a6a71de7265d7e5617344c887970f5520c02b1bb5d82638be0",
+        "fields": {
+          "eventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+          "kind": "note",
+          "targetEventId": null,
+          "targetContentHash": null,
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+          "sourceRevision": 0,
+          "sourceProof": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-note-recorded",
+    "at": "2026-11-18T15:36:25.545Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "390x844-note-reloaded-once",
+    "at": "2026-11-18T15:36:27.291Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "390x844-correction-draft",
+    "at": "2026-11-18T15:36:29.074Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": [
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "revision": 1,
+        "contentHash": "a6fe0cbe4a9ca1482ff56ca8f050cdc4516ab3593bcbb64e1a64015831ef57fa",
+        "fields": {
+          "eventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+          "kind": "correction",
+          "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+          "targetContentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "ea0b97b1f5c758df9eb29072e9427f4efd7d146df4dbff22ad5bdfdae07c273b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-intervening-note",
+    "at": "2026-11-18T15:36:31.659Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "revision": 1,
+        "contentHash": "a6fe0cbe4a9ca1482ff56ca8f050cdc4516ab3593bcbb64e1a64015831ef57fa",
+        "fields": {
+          "eventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+          "kind": "correction",
+          "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+          "targetContentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "ea0b97b1f5c758df9eb29072e9427f4efd7d146df4dbff22ad5bdfdae07c273b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-history-conflict",
+    "at": "2026-11-18T15:36:34.601Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "revision": 1,
+        "contentHash": "a6fe0cbe4a9ca1482ff56ca8f050cdc4516ab3593bcbb64e1a64015831ef57fa",
+        "fields": {
+          "eventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+          "kind": "correction",
+          "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+          "targetContentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "ea0b97b1f5c758df9eb29072e9427f4efd7d146df4dbff22ad5bdfdae07c273b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-explicit-refresh",
+    "at": "2026-11-18T15:36:34.885Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "revision": 2,
+        "contentHash": "238dd74491944fbf7f5183ddc919be9f7d1108b0484d59d85405555776fe0146",
+        "fields": {
+          "eventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+          "kind": "correction",
+          "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+          "targetContentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 2,
+          "sourceProof": "aac9d727399d57a041168ab76e32f7fa1626aa9fedf84d0035beb46861930708",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-correction-recorded",
+    "at": "2026-11-18T15:36:35.704Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "contentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "390x844-retraction-draft",
+    "at": "2026-11-18T15:36:36.948Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "contentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": [
+      {
+        "id": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+        "revision": 1,
+        "contentHash": "7b1808ac22a88e1b7be3907942657d358e0706dc8f6fd52662ec1730fb4fa074",
+        "fields": {
+          "eventId": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+          "kind": "retraction",
+          "targetEventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+          "targetContentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+          "sourceRevision": 3,
+          "sourceProof": "9716043562880bc9250650e17a4aaa3d9317eddceca1cbc9ece78c2b5163d7d0",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-retraction-before-confirm",
+    "at": "2026-11-18T15:36:39.841Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "contentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": [
+      {
+        "id": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+        "revision": 1,
+        "contentHash": "7b1808ac22a88e1b7be3907942657d358e0706dc8f6fd52662ec1730fb4fa074",
+        "fields": {
+          "eventId": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+          "kind": "retraction",
+          "targetEventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+          "targetContentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+          "sourceRevision": 3,
+          "sourceProof": "9716043562880bc9250650e17a4aaa3d9317eddceca1cbc9ece78c2b5163d7d0",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "390x844-retraction-recorded",
+    "at": "2026-11-18T15:36:40.668Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 4,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "contentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+        "contentHash": "31e098fad9b89f8f202e5a34f6a97d20c931f60ab9153826f4d725e076b1786b",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "390x844-earlier-retained-correction",
+    "at": "2026-11-18T15:36:46.180Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "contentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+        "contentHash": "31e098fad9b89f8f202e5a34f6a97d20c931f60ab9153826f4d725e076b1786b",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "1e58f24e-b564-48a1-9494-6554821a3bf1",
+        "contentHash": "f1045810f84942c6f6e2708c71fb834ea695f744644a0ea2cc7c0b4731d90a69",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "390x844-after-discard",
+    "at": "2026-11-18T15:36:50.922Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "contentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+        "contentHash": "31e098fad9b89f8f202e5a34f6a97d20c931f60ab9153826f4d725e076b1786b",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "1e58f24e-b564-48a1-9494-6554821a3bf1",
+        "contentHash": "f1045810f84942c6f6e2708c71fb834ea695f744644a0ea2cc7c0b4731d90a69",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "390x844-final",
+    "at": "2026-11-18T15:36:52.868Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "contentHash": "c1792cf6133afc429009e8fe597e32cee08a1fb5010d57b4ac2bba6dd6c2049a",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "26d670e7-8b69-498f-92ae-69921b66ed2b",
+        "contentHash": "5fce74c3af76a1abe3fb2f080fbe5129d040583c2cb393fc2ed40f56ebdaec55",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "contentHash": "f27c704c94be5fc441fe22eb24ae83950d34bdb33cb13ab6629b94d313a4fea7",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "a37d53cf-be97-49b4-bc98-eae37390b2f2",
+        "contentHash": "31e098fad9b89f8f202e5a34f6a97d20c931f60ab9153826f4d725e076b1786b",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "2b4fe098-a8b7-4b65-8361-917718893a06",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "1e58f24e-b564-48a1-9494-6554821a3bf1",
+        "contentHash": "f1045810f84942c6f6e2708c71fb834ea695f744644a0ea2cc7c0b4731d90a69",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "193fefaa-6449-4136-b724-e8e1012e6979",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "430x932-initial",
+    "at": "2026-11-18T15:37:21.724Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": []
+  },
+  {
+    "name": "430x932-note-draft",
+    "at": "2026-11-18T15:37:23.978Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "revision": 1,
+        "contentHash": "493b5ee19ddcab4f3a3eb8cce32ee9c751701a30b316f5320a7d0366cd7544a2",
+        "fields": {
+          "eventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+          "kind": "note",
+          "targetEventId": null,
+          "targetContentHash": null,
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+          "sourceRevision": 0,
+          "sourceProof": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-note-before-confirm",
+    "at": "2026-11-18T15:37:27.049Z",
+    "version": null,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 0,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [],
+    "drafts": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "revision": 1,
+        "contentHash": "493b5ee19ddcab4f3a3eb8cce32ee9c751701a30b316f5320a7d0366cd7544a2",
+        "fields": {
+          "eventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+          "kind": "note",
+          "targetEventId": null,
+          "targetContentHash": null,
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+          "sourceRevision": 0,
+          "sourceProof": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-note-recorded",
+    "at": "2026-11-18T15:37:27.872Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "430x932-note-reloaded-once",
+    "at": "2026-11-18T15:37:29.638Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "430x932-correction-draft",
+    "at": "2026-11-18T15:37:31.424Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 1,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      }
+    ],
+    "drafts": [
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "revision": 1,
+        "contentHash": "6a57676c318fd38d21700e5c0786db696a96d0fad802dacbc573726ee7efa6cd",
+        "fields": {
+          "eventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+          "kind": "correction",
+          "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+          "targetContentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "773153abe4d51e7c6ffa498decb3f74b3ff1e20067ea4c406205be3a908d6419",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-intervening-note",
+    "at": "2026-11-18T15:37:33.979Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "revision": 1,
+        "contentHash": "6a57676c318fd38d21700e5c0786db696a96d0fad802dacbc573726ee7efa6cd",
+        "fields": {
+          "eventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+          "kind": "correction",
+          "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+          "targetContentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "773153abe4d51e7c6ffa498decb3f74b3ff1e20067ea4c406205be3a908d6419",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-history-conflict",
+    "at": "2026-11-18T15:37:36.965Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "revision": 1,
+        "contentHash": "6a57676c318fd38d21700e5c0786db696a96d0fad802dacbc573726ee7efa6cd",
+        "fields": {
+          "eventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+          "kind": "correction",
+          "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+          "targetContentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 1,
+          "sourceProof": "773153abe4d51e7c6ffa498decb3f74b3ff1e20067ea4c406205be3a908d6419",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-explicit-refresh",
+    "at": "2026-11-18T15:37:37.250Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 2,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      }
+    ],
+    "drafts": [
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "revision": 2,
+        "contentHash": "a779b953c0614c16cc5c12ee1673dcd6e178d7eb5937fa8f308983fa4f8b48ff",
+        "fields": {
+          "eventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+          "kind": "correction",
+          "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+          "targetContentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 correction: I used less cleanser that day.",
+          "sourceRevision": 2,
+          "sourceProof": "9acbc5f16d0303d239e88213cf0da1c66c3226fad4e7bb7e9a1137cec7bea254",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-correction-recorded",
+    "at": "2026-11-18T15:37:38.072Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "contentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "430x932-retraction-draft",
+    "at": "2026-11-18T15:37:39.325Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "contentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": [
+      {
+        "id": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+        "revision": 1,
+        "contentHash": "7e1ace9cba50692d8e890f107a745078079d84a627771b7c9a80358152d18250",
+        "fields": {
+          "eventId": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+          "kind": "retraction",
+          "targetEventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+          "targetContentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+          "sourceRevision": 3,
+          "sourceProof": "330e77c6a6ead28a0ea49dfb92b111c6e0632b274106be04d8bcd9552d9aa39a",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-retraction-before-confirm",
+    "at": "2026-11-18T15:37:42.142Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 3,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "contentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      }
+    ],
+    "drafts": [
+      {
+        "id": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+        "revision": 1,
+        "contentHash": "7e1ace9cba50692d8e890f107a745078079d84a627771b7c9a80358152d18250",
+        "fields": {
+          "eventId": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+          "kind": "retraction",
+          "targetEventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+          "targetContentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+          "observedOn": "2026-10-01",
+          "category": "personal_note",
+          "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+          "sourceRevision": 3,
+          "sourceProof": "330e77c6a6ead28a0ea49dfb92b111c6e0632b274106be04d8bcd9552d9aa39a",
+          "attempted": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "430x932-retraction-recorded",
+    "at": "2026-11-18T15:37:42.973Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 4,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "contentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+        "contentHash": "d88b44f27d1830e3c16e9b1ab1392dd14ed5527366373cfdf191159625674849",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "430x932-earlier-retained-correction",
+    "at": "2026-11-18T15:37:48.461Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "contentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+        "contentHash": "d88b44f27d1830e3c16e9b1ab1392dd14ed5527366373cfdf191159625674849",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "5bee3f0b-59ec-4780-a02f-3086f991ca8e",
+        "contentHash": "0bfb35aeaf0497a78ca27dfb6de00900a0205c31881ed8e2fb093ee26e47ecb5",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "430x932-after-discard",
+    "at": "2026-11-18T15:37:53.237Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "contentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+        "contentHash": "d88b44f27d1830e3c16e9b1ab1392dd14ed5527366373cfdf191159625674849",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "5bee3f0b-59ec-4780-a02f-3086f991ca8e",
+        "contentHash": "0bfb35aeaf0497a78ca27dfb6de00900a0205c31881ed8e2fb093ee26e47ecb5",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  },
+  {
+    "name": "430x932-final",
+    "at": "2026-11-18T15:37:55.177Z",
+    "version": 4,
+    "ownerSha256": "f1ff621c820e0d3edbac444d7d37d412773137e7b06149fbe7a3301ec653e01b",
+    "epoch": 1,
+    "revision": 5,
+    "originalCompletionBytesSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actualSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "events": [
+      {
+        "id": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "contentHash": "d8eb48e4bb25ea7da41b66c161798a870130da2996a7a3cb946903b32c1559f2",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ",
+        "targetEventId": null,
+        "observedOn": "2026-10-01",
+        "revision": 1
+      },
+      {
+        "id": "837575e4-a81d-4de8-836a-cb2b76461ffc",
+        "contentHash": "4a4d6963d8b7680f12369299e973b60b95e0057af7ec461f95af62d9454fa4e4",
+        "kind": "note",
+        "category": "personal_note",
+        "text": "Synthetic21 later factual note reviewed separately.",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "revision": 2
+      },
+      {
+        "id": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "contentHash": "fb9a45fe40c29f0db712b35f298703048c3e457466a04bc4b47ce156a631995e",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 correction: I used less cleanser that day.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 3
+      },
+      {
+        "id": "08633e3e-804a-4f64-82fc-4ffa82d4d3c2",
+        "contentHash": "d88b44f27d1830e3c16e9b1ab1392dd14ed5527366373cfdf191159625674849",
+        "kind": "retraction",
+        "category": "personal_note",
+        "text": "Synthetic21 retraction reason: I no longer stand by that correction.",
+        "targetEventId": "df3a4cce-ba5e-496c-b2e3-38638a32ca66",
+        "observedOn": "2026-10-01",
+        "revision": 4
+      },
+      {
+        "id": "5bee3f0b-59ec-4780-a02f-3086f991ca8e",
+        "contentHash": "0bfb35aeaf0497a78ca27dfb6de00900a0205c31881ed8e2fb093ee26e47ecb5",
+        "kind": "correction",
+        "category": "personal_note",
+        "text": "Synthetic21 deliberate correction of the earlier retained original.",
+        "targetEventId": "ec931c9d-4fbc-410f-b61f-01d9b4119fa9",
+        "observedOn": "2026-10-01",
+        "revision": 5
+      }
+    ],
+    "drafts": []
+  }
+]

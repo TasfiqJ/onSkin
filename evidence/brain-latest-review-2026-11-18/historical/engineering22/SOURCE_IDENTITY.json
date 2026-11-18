@@ -1,0 +1,35 @@
+{
+  "result": "BLOCKED",
+  "authorization": "BRAIN-ONSKIN-OPTIONAL-DRAFT-SOURCE-PROOF-22",
+  "collectedAt": "2026-11-17T20:56:47.808034+00:00",
+  "worktree": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "branch": "stage/m1-native-runtime47",
+  "startingHead": "16fdc6101bd43a1a70dec51fc5a832fa580c8d4d",
+  "startingTree": "fec3e97ca19de8dea6c6c513653c10419c5218fa",
+  "startingImmediateParent": "4dce84e20a71f19c60c16c7682e683bb512363ed",
+  "startingStatus": "clean",
+  "finalHead": "08da2f379c487f8b56d470c7093eb6045b700204",
+  "finalTree": "ad60f0499cef4e39f906bf451d2898307b08d46d",
+  "finalStatus": "clean",
+  "pr48Ancestor": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+  "pr48Preserved": true,
+  "unchangedGitSubtrees": {
+    "apps": "5c7d1d813cfd13ae74ec10e3be5abc847bf0b777",
+    "packages": "b84a3b92316ed30f505d971c45a63f985a98fc36",
+    "scripts": "7d9fd53908f7046287b0f33e46ca598eededfc7f"
+  },
+  "appendOnlyCommits": [
+    {
+      "head": "08da2f379c487f8b56d470c7093eb6045b700204",
+      "parent": "16fdc6101bd43a1a70dec51fc5a832fa580c8d4d",
+      "subject": "docs: record blocked optional draft source-proof hardening"
+    }
+  ],
+  "candidateRetainedInApplication": false,
+  "requestedHardeningCompleted": false,
+  "blocker": "Direct proof equality breaks protected v5 readback: draft outer proof versus canonical event inner predecessor proof. Scope forbids contract/schema/history changes.",
+  "requirements": "38 UNACCEPTED",
+  "gates": "18 UNACCEPTED",
+  "release": "NO_GO",
+  "independentAcceptance": false
+}

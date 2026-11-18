@@ -1,0 +1,136 @@
+› [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+
+Static rendering is enabled. Learn more: https://docs.expo.dev/router/web/static-rendering/
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| › [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:80192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+ WARN  Attempted to import the module "[LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\node_modules\@noble\hashes\crypto.js" which is not listed in the "exports" of "[LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\node_modules\@noble\hashes" under the requested subpath "./crypto.js". Falling back to file-based resolution. Consider updating the call site or asking the package maintainer(s) to expose this API.
+λ Bundled 59937ms node_modules\@expo\router-server\node\render.js (2603 modules)
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 60860ms node_modules\expo-router\entry.js (2573 modules)
+
+› web bundles (10):
+_expo/static/css/web-f5eb67fe5b9f2284a50711ea462a4632.css (26KB)
+_expo/static/js/web/ActualRoutinePanel-74f657ced27bfc20c8ee5187ff48b8ae.js (14KB)
+_expo/static/js/web/BottleUseHistory-9926b3218f3bb9497b81b0a582f253c5.js (5.4KB)
+_expo/static/js/web/diaryBriefPhoto-224b2a3848c50899b6fe1e6df1013945.js (4.8KB)
+_expo/static/js/web/DiaryBriefPhotoPreview-86435b9b13defeb7f9fe0eff37858e19.js (1.2KB)
+_expo/static/js/web/entry-c1838b910f664e9342f9d13d49f8e282.js (6.2MB)
+_expo/static/js/web/index-b4bc0b2f091409494ee005ed0d82b15c.js (46KB)
+_expo/static/js/web/index-da4d9ef8f53ac73ad67d0de367063829.js (897KB)
+_expo/static/js/web/NotificationPreferenceScheduleReconciler-38bf17c679eb1f4efe29f0bf45b05c99.js (1.6KB)
+_expo/static/js/web/planSourceFence44-9ee2edec45abe3811fa960875779e7a3.js (5.5KB)
+
+› Static routes (87):
+/you (22KB)
+/ (index) (22KB)
+/shelf (22KB)
+/today (22KB)
+/_sitemap (18KB)
+/progress (22KB)
+/ask (22KB)
+/shelf/add (22KB)
+/shelf/ocr (22KB)
+/+not-found (18KB)
+/(tabs)/you (22KB)
+/cycle/week (22KB)
+/shelf/[id] (22KB)
+/shelf/scan (22KB)
+/ask/consent (22KB)
+/photos/[id] (22KB)
+/s/[shareId] (22KB)
+/trend/optin (22KB)
+/(tabs)/shelf (22KB)
+/(tabs)/today (22KB)
+/routine/plan (22KB)
+/routine/ramp (22KB)
+/shelf/drafts (22KB)
+/shelf/manual (22KB)
+/shelf/opened (22KB)
+/shelf/search (22KB)
+/community/ask (22KB)
+/photos/review (22KB)
+/progress/[id] (22KB)
+/shelf/archive (22KB)
+/cycle/recovery (22KB)
+/cycle/settings (22KB)
+/onboarding/age (22KB)
+/paywall/upsell (22KB)
+/photos/capture (22KB)
+/progress/about (22KB)
+/routine/streak (22KB)
+/shelf/no-match (22KB)
+/trend/fairness (22KB)
+/(tabs)/progress (22KB)
+/commerce/stacks (22KB)
+/community (22KB)
+/cycle/procedure (22KB)
+/onboarding/quiz (22KB)
+/paywall/reoffer (22KB)
+/paywall/success (22KB)
+/paywall/winback (22KB)
+/progress/review (22KB)
+/routine/records (22KB)
+/routine/reorder (22KB)
+/routine/widgets (22KB)
+/settings/timing (22KB)
+/shelf/replenish (22KB)
+/commerce/consent (22KB)
+/cycle/disruption (22KB)
+/onboarding/goals (22KB)
+/progress/capture (22KB)
+/settings/privacy (22KB)
+/conflict/[ruleId] (22KB)
+/cycle/why-tonight (22KB)
+/onboarding/reveal (22KB)
+/paywall/downgrade (22KB)
+/routine/tolerance (22KB)
+/cycle/phased-intro (22KB)
+/onboarding/account (22KB)
+/onboarding/consent (22KB)
+/onboarding/paywall (22KB)
+/routine/adaptation (22KB)
+/community/note/[id] (22KB)
+/onboarding/products (22KB)
+/shelf/intake-drafts (22KB)
+/onboarding/analyzing (22KB)
+/recommendations/[id] (22KB)
+/routine/welcome-back (22KB)
+/commerce/transparency (22KB)
+/commerce/stack/[slug] (22KB)
+/recommendations (22KB)
+/settings/skin-profile (22KB)
+/settings/subscription (22KB)
+/shelf/formula-history (22KB)
+/settings/beta-feedback (22KB)
+/settings/notifications (22KB)
+/shelf/catalog-recovery (22KB)
+/share/conflict/[ruleId] (22KB)
+/onboarding/notifications (22KB)
+/community/people-like-you (22KB)
+/recommendations/preferences (22KB)
+
+Exported: ../../.tmp/engineering21/mobile-web
+Something prevented Expo from exiting, forcefully exiting now.

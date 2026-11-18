@@ -1,0 +1,8 @@
+{
+  "files": [
+    "apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts"
+  ],
+  "count": 1,
+  "numstat": "7\t1\tapps/mobile/src/features/shelf/formulaHistoryJourney.test.ts",
+  "productionFixturesAdaptersAndSharedHelpersUnchanged": true
+}

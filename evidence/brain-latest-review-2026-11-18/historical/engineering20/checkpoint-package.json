@@ -1,0 +1,17 @@
+{
+  "label": "checkpoint-package",
+  "command": [
+    "python",
+    "../ENGINEERING20_EVIDENCE/package_checkpoint.py"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T12:33:38.304348+00:00",
+  "head": "4dce84e20a71f19c60c16c7682e683bb512363ed",
+  "tree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+  "status": "",
+  "workingDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "exit": 0,
+  "seconds": 11.562,
+  "end": "2026-11-17T12:33:50.086633+00:00",
+  "logSha256": "4fe55acba2bc2af7f98b1c4045ce6a7055073df4da87e8d1e463ef3c46c81c64"
+}

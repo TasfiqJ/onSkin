@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/manualIntakeDraftUI21.test.ts src/features/shelf/detailActionSheet.campaign26.test.ts src/features/shelf/shelfRoutes.test.ts src/features/shelf/intakeRecovery.campaign25.test.ts src/features/shelf/manualDraftRecovery.campaign26.test.ts src/features/shelf/openingClock.campaign25.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  6 passed (6)
+      Tests  120 passed (120)
+   Start at  12:48:33
+   Duration  6.09s (transform 5.38s, setup 0ms, import 7.97s, tests 11.33s, environment 1ms)
+

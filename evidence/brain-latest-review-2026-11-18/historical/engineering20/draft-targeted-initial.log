@@ -1,0 +1,43 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/bottleDrafts.test.ts src/features/shelf/formulaHistoryJourney.test.ts src/features/settings/localDeviceExport.test.ts src/features/settings/localPrivateDataKeys.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/shelf/formulaHistoryJourney.test.ts > keeps discard usable when navigation interrupts an awaited source adoption
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ Γ¥» src/features/shelf/formulaHistoryJourney.test.ts (19 tests | 1 failed) 4403ms
+   ├ù keeps discard usable when navigation interrupts an awaited source adoption 279ms
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 1 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  src/features/shelf/formulaHistoryJourney.test.ts > keeps discard usable when navigation interrupts an awaited source adoption
+AssertionError: expected "vi.fn()" to be called once with arguments: [ { type: 'GO_BACK' } ]
+
+Number of calls: 0
+
+ Γ¥» src/features/shelf/formulaHistoryJourney.test.ts:169:74
+    167|   await act(async()=>ports26.preventRemove!({data:{action:{type:'GO_BAΓÇª
+    168|   await act(async()=>{ports26.release!();ports26.release=null;});awaitΓÇª
+    169|   await press('Discard bottle draft and leave');expect(ports26.dispatcΓÇª
+       |                                                                          ^
+    170|   expect((await loadOwnedBottleHistory38(ports26.params.id!))!.revisioΓÇª
+    171| });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/1]ΓÄ»
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 73 passed (74)
+   Start at  06:58:12
+   Duration  5.95s (transform 1.87s, setup 0ms, import 2.97s, tests 4.87s, environment 1ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/shelf/bottleDrafts.test.ts src/features/shelf/formulaHistoryJourney.test.ts src/features/settings/localDeviceExport.test.ts src/features/settings/localPrivateDataKeys.test.ts

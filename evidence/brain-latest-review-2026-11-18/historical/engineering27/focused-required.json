@@ -1,0 +1,54 @@
+{
+  "label": "focused-required",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/today/OptionalChangePanel41.test.tsx",
+    "src/features/today/optionalChangeDraftUI21.test.ts",
+    "src/features/today/todayRoute.test.ts",
+    "src/features/retainedRecovery/localRecoveryDrafts25.test.ts",
+    "src/features/retainedRecovery/localRecovery.campaign05.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T01:19:14.600384+00:00",
+  "head": "0998a353feee905bf9be5cd728dbb76be4fd23ee",
+  "tree": "e763a8061f04130aeeb1d16f29df3896bd329d61",
+  "sourceBefore": [
+    {
+      "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+      "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+      "bytes": 46199,
+      "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+    },
+    {
+      "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+      "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+      "bytes": 38754,
+      "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+    }
+  ],
+  "exit": 0,
+  "seconds": 6.172,
+  "end": "2026-11-18T01:19:20.847681+00:00",
+  "sourceAfter": [
+    {
+      "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+      "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+      "bytes": 46199,
+      "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+    },
+    {
+      "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+      "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+      "bytes": 38754,
+      "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+    }
+  ],
+  "sourceUnchanged": true,
+  "logSha256": "137498b32ccf4ef96ab1008e89dbfc3f817eab93534464eaeaa437dba225c29b",
+  "status": "M apps/mobile/src/features/today/OptionalChangePanel41.test.tsx\n M apps/mobile/src/features/today/OptionalChangePanel41.tsx"
+}

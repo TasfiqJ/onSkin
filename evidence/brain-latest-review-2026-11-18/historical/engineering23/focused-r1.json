@@ -1,0 +1,26 @@
+{
+  "label": "focused-r1",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/today/optionalChangeDrafts.test.ts",
+    "src/features/today/optionalChangeDraftUI21.test.ts",
+    "src/features/today/optionalChange41.test.ts",
+    "src/features/today/optionalChangeJournal41.test.ts",
+    "src/features/today/optionalHistoryRecovery15.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T21:20:57.383015+00:00",
+  "head": "08da2f379c487f8b56d470c7093eb6045b700204",
+  "tree": "ad60f0499cef4e39f906bf451d2898307b08d46d",
+  "status": "M apps/mobile/src/features/today/OptionalChangePanel41.tsx\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/features/today/optionalChangeDraftCodec.ts\n M apps/mobile/src/features/today/optionalChangeDraftStore.ts\n?? apps/mobile/src/features/today/optionalChangeDraftProof.ts",
+  "workingDiffSha256": "96294db03b819cbec0bf3a7cfec542fdda9c9c67ce11ff0fbe1374786473e0ac",
+  "exit": 0,
+  "seconds": 6.781,
+  "end": "2026-11-17T21:21:04.407043+00:00",
+  "logSha256": "ed0e279c65f2ad2d57e0109866dce7990efb5984b9d04e0449205a2664829254"
+}

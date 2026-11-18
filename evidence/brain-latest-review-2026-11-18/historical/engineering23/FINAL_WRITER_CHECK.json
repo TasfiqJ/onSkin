@@ -1,0 +1,12 @@
+{
+  "timestampUtc": "2026-11-17T21:29:18.1503256Z",
+  "processes": [
+    {
+      "Id": 72268,
+      "ProcessName": "pwsh",
+      "StartTime": "2026-11-17T16:29:17.8611964-05:00"
+    }
+  ],
+  "indexLockPresent": false,
+  "note": "Only the calling PowerShell process observed. All collaborating E23 agents finished; no competing source writer observed."
+}

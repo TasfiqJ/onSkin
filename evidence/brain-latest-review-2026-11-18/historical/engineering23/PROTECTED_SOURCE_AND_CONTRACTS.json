@@ -1,0 +1,97 @@
+[
+  {
+    "path": "apps/mobile/src/features/today/optionalChangeDrafts.test.ts",
+    "unchanged": true,
+    "gitBytesSha256": "1e06c0d17f8b8f4e21b50faf7cc5c19d05fbd1e5a5a563957d93dff568026900"
+  },
+  {
+    "path": "apps/mobile/src/features/today/optionalChangeDraftUI21.test.ts",
+    "unchanged": true,
+    "gitBytesSha256": "bfa80a3e62ff1eb6b58489ed8180ccd192ec6e11393ed0d27d2c2288430b74d1"
+  },
+  {
+    "path": "apps/mobile/src/features/today/optionalChange41.test.ts",
+    "unchanged": true,
+    "gitBytesSha256": "03842408673de8b5bda18587e836e72beaea3d165f2a131a095945b599d0b6de"
+  },
+  {
+    "path": "apps/mobile/src/features/today/optionalChangeJournal41.test.ts",
+    "unchanged": true,
+    "gitBytesSha256": "12ff2e2a6ef1f0b67600e7853b85d3ce961a5165fb55b969e5a5b3e5aacc55f6"
+  },
+  {
+    "path": "apps/mobile/src/features/today/optionalHistoryRecovery15.test.ts",
+    "unchanged": true,
+    "gitBytesSha256": "bbe31c4637f91e84c0fb88af4358177d0e0ff16b8a8b3970cae4fce4fb10f825"
+  },
+  {
+    "path": "apps/mobile/src/features/today/optionalChange41.ts",
+    "unchanged": true,
+    "gitBytesSha256": "92b5b4ed021bbb4e6452d6087ca78ba4dcbe2d09cdf4473fd204d4bf0243752e"
+  },
+  {
+    "path": "apps/mobile/src/features/today/optionalChangeJournal41.ts",
+    "unchanged": true,
+    "gitBytesSha256": "7bfc842dd3a0024ad16c53fa5cffa04c5766ecb997e2df3e94cfe726f4bfdbf1"
+  },
+  {
+    "path": "apps/mobile/src/features/today/completionLogCodec.ts",
+    "unchanged": true,
+    "gitBytesSha256": "3dbf0a7c675863645670e1b114f08929763a0050a9fdce6a9678c9643690e21d"
+  },
+  {
+    "path": "apps/mobile/src/features/routine/actualRoutine.ts",
+    "unchanged": true,
+    "gitBytesSha256": "4e3605ddfe725436c46825968a98b381b811df52c74362e4889c3033db961e22"
+  },
+  {
+    "path": "apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts",
+    "unchanged": true,
+    "gitBytesSha256": "9f03a1ac7fe9496a597d2815842a729e70cbfe0537870f3e941231a29b609bc8"
+  },
+  {
+    "path": "apps/mobile/src/features/shelf/firstValue26TestPorts.ts",
+    "unchanged": true,
+    "gitBytesSha256": "352b9eb4039f2bc8250a3612140df4e5bc6f6164006454577804e94d988f2cd2"
+  },
+  {
+    "path": "apps/mobile/src/app/shelf/formula-history.tsx",
+    "unchanged": true,
+    "gitBytesSha256": "855c930636720ac833f28966c5be65b68e066f35fee644dda0419cf087b7dd5e"
+  },
+  {
+    "path": "docs/hugeToDo/launch-contract.json",
+    "unchanged": true,
+    "gitBytesSha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f"
+  },
+  {
+    "path": "docs/release/full-app-j01/contract.v1.json",
+    "unchanged": true,
+    "gitBytesSha256": "017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996"
+  },
+  {
+    "path": "docs/release/full-app-j01/contract.v2.json",
+    "unchanged": true,
+    "gitBytesSha256": "0578cb851f28aa26c289793fad76edd862d4222073e0fcc5c3b5210849026495"
+  },
+  {
+    "path": "docs/release/full-app-j01/matrix.v1.json",
+    "unchanged": true,
+    "gitBytesSha256": "3b3fd0bba1c668358326658f8a4dedeab7239ba8d0221dc01f415f506c080fe3"
+  },
+  {
+    "path": "docs/release/full-app-j01/matrix.v2.json",
+    "unchanged": true,
+    "gitBytesSha256": "1daafaa86df15dc14af8250a395ab86a7534f2d2a7738c0c0ce1555c1a91a7f0"
+  },
+  {
+    "path": "docs/release/full-app-j01/precedence.v1.json",
+    "unchanged": true,
+    "gitBytesSha256": "330804dfc5d3e83c5f7da83aeb53a003b3d68c2cecc8935afc9edd1cbc7a5ec8"
+  },
+  {
+    "path": "docs/release/full-app-j01/precedence.v2.json",
+    "unchanged": true,
+    "gitBytesSha256": "d386e395fc42c716f85121e977393b185d2c75344bdd63c4a4b44a896c4efa39"
+  }
+]

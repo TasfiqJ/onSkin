@@ -1,0 +1,47 @@
+{
+  "preflight": "PASS; exact baseline, clean branch and ancestry verified",
+  "staticReview": "BLOCKED; required no-write property contradicted by native key-reader implementation",
+  "checks": [
+    {
+      "command": "npm.cmd --workspace apps/mobile run test -- src/features/retainedRecovery/localRecovery.campaign05.test.ts src/features/shelf/manualIntakeDrafts.test.ts src/features/shelf/manualIntakeDraftUI21.test.ts src/features/today/optionalChangeDrafts.test.ts src/features/today/optionalChangeDraftUI21.test.ts",
+      "status": "NOT_RUN",
+      "exitCode": null,
+      "reason": "Explicit stop condition reached before implementation; no source candidate exists."
+    },
+    {
+      "command": "npm.cmd test -- --cache=local:w --concurrency=1",
+      "status": "NOT_RUN",
+      "exitCode": null,
+      "reason": "Explicit stop condition reached before implementation; no source candidate exists."
+    },
+    {
+      "command": "npm.cmd run typecheck -- --cache=local:w --concurrency=1",
+      "status": "NOT_RUN",
+      "exitCode": null,
+      "reason": "Explicit stop condition reached before implementation; no source candidate exists."
+    },
+    {
+      "command": "npm.cmd run lint -- --cache=local:w --concurrency=1",
+      "status": "NOT_RUN",
+      "exitCode": null,
+      "reason": "Explicit stop condition reached before implementation; no source candidate exists."
+    }
+  ],
+  "newFocusedTests": "NOT_CREATED; test agent stopped before editing or running tests",
+  "browser": {
+    "status": "NOT_RUN",
+    "viewports": [
+      "375x667",
+      "390x844",
+      "430x932"
+    ],
+    "reason": "Stopped before implementation. Web-only key reads cannot establish the required native zero-write property.",
+    "screenshots": [],
+    "downloadAttempted": false
+  },
+  "native": "NOT_RUN and not authorized",
+  "testFailures": [],
+  "reruns": [],
+  "assertionsChanged": false,
+  "timeoutsChanged": false
+}

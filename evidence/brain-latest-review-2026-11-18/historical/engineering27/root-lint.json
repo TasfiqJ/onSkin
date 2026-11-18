@@ -1,0 +1,14 @@
+{
+  "label": "root-lint",
+  "command": [
+    "npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--cache=local:w",
+    "--concurrency=1"
+  ],
+  "status": "NOT_RUN",
+  "exit": null,
+  "reason": "Stopped at unresolved protected root regression under Engineering27 stop instruction."
+}

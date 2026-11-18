@@ -1,0 +1,45 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/today/optionalChangeDraftProof22.test.ts src/features/today/optionalChangeDrafts.test.ts src/features/today/optionalChangeDraftUI21.test.ts src/features/today/optionalChange41.test.ts src/features/today/optionalChangeJournal41.test.ts src/features/today/optionalHistoryRecovery15.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+ ❯ src/features/today/optionalChangeDrafts.test.ts (34 tests | 1 failed) 225ms
+   × preserves check-offs and actual-routine bytes while adding a durable optional record inside the v5 wrapper 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/today/optionalChangeDrafts.test.ts > preserves check-offs and actual-routine bytes while adding a durable optional record inside the v5 wrapper
+Error: OPTIONAL_CHANGE41_READBACK_UNCONFIRMED
+ ❯ src/features/today/completionsStore.ts:273:13
+    271|     readback = optionalChangeSnapshotFromBytes(raw, lease.ownerUserId);
+    272|     if (committed === undefined || raw !== committed || reconcileOptio…
+    273|       throw new Error(OPTIONAL_CHANGE41_READBACK_UNCONFIRMED);
+       |             ^
+    274|     }
+    275|     return raw;
+ ❯ src/lib/storage/privateKV.ts:1314:27
+ ❯ runSerializedPrivateMutation src/lib/storage/privateKV.ts:146:12
+ ❯ runSerializedPrivateMutation src/lib/storage/privateKV.ts:146:12
+ ❯ runSerializedPrivateMutation src/lib/storage/privateKV.ts:146:12
+ ❯ runSerializedPrivateMutation src/lib/storage/privateKV.ts:146:12
+ ❯ runSerializedPrivateMutation src/lib/storage/privateKV.ts:146:12
+ ❯ runAccountScopedPrivateOperation src/lib/storage/privateKV.ts:125:12
+ ❯ withOperationTiming src/lib/observability/operationTiming.ts:99:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 100 passed (101)
+   Start at  15:51:54
+   Duration  5.86s (transform 3.63s, setup 0ms, import 5.90s, tests 9.12s, environment 1ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/today/optionalChangeDraftProof22.test.ts src/features/today/optionalChangeDrafts.test.ts src/features/today/optionalChangeDraftUI21.test.ts src/features/today/optionalChange41.test.ts src/features/today/optionalChangeJournal41.test.ts src/features/today/optionalHistoryRecovery15.test.ts

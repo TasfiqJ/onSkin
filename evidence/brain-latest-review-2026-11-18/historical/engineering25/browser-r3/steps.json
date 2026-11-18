@@ -1,0 +1,287 @@
+[
+  {
+    "at": "2026-11-18T00:09:49.203Z",
+    "action": "Start recovery journey",
+    "detail": "375x667"
+  },
+  {
+    "at": "2026-11-18T00:10:01.772Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-18T00:10:02.326Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-18T00:10:02.495Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-18T00:10:02.650Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-18T00:10:02.818Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T00:10:03.388Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-18T00:10:03.929Z",
+    "action": "Activate control",
+    "detail": "Clear skin"
+  },
+  {
+    "at": "2026-11-18T00:10:04.465Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T00:10:05.022Z",
+    "action": "Activate control",
+    "detail": "Shiny in places"
+  },
+  {
+    "at": "2026-11-18T00:10:05.558Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:06.095Z",
+    "action": "Activate control",
+    "detail": "Rarely"
+  },
+  {
+    "at": "2026-11-18T00:10:06.632Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:07.171Z",
+    "action": "Activate control",
+    "detail": "Often stings, burns, or reddens"
+  },
+  {
+    "at": "2026-11-18T00:10:07.708Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:08.247Z",
+    "action": "Activate control",
+    "detail": "Frequently"
+  },
+  {
+    "at": "2026-11-18T00:10:08.786Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:09.326Z",
+    "action": "Activate control",
+    "detail": "Yes, noticeably"
+  },
+  {
+    "at": "2026-11-18T00:10:09.863Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:10.403Z",
+    "action": "Activate control",
+    "detail": "Weeks or longer"
+  },
+  {
+    "at": "2026-11-18T00:10:10.939Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:11.479Z",
+    "action": "Activate control",
+    "detail": "Fine lines or firmness changes are visible"
+  },
+  {
+    "at": "2026-11-18T00:10:12.013Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:12.552Z",
+    "action": "Activate control",
+    "detail": "A lot over time"
+  },
+  {
+    "at": "2026-11-18T00:10:13.089Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:13.627Z",
+    "action": "Activate control",
+    "detail": "Sometimes burns"
+  },
+  {
+    "at": "2026-11-18T00:10:14.164Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:14.704Z",
+    "action": "Activate control",
+    "detail": "Tone 4"
+  },
+  {
+    "at": "2026-11-18T00:10:15.244Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:15.784Z",
+    "action": "Activate control",
+    "detail": "None that I know of"
+  },
+  {
+    "at": "2026-11-18T00:10:16.322Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T00:10:16.861Z",
+    "action": "Activate control",
+    "detail": "No"
+  },
+  {
+    "at": "2026-11-18T00:10:17.398Z",
+    "action": "Activate control",
+    "detail": "See my profile"
+  },
+  {
+    "at": "2026-11-18T00:10:17.955Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-18T00:10:18.125Z",
+    "action": "Activate control",
+    "detail": "Choose product category"
+  },
+  {
+    "at": "2026-11-18T00:10:18.662Z",
+    "action": "Activate control",
+    "detail": "Cleanser"
+  },
+  {
+    "at": "2026-11-18T00:10:19.199Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T00:10:19.771Z",
+    "action": "Activate control",
+    "detail": "Just opened it"
+  },
+  {
+    "at": "2026-11-18T00:10:20.308Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T00:10:20.879Z",
+    "action": "Activate control",
+    "detail": "Continue with 1 product"
+  },
+  {
+    "at": "2026-11-18T00:10:23.802Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T00:10:24.358Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T00:10:24.898Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T00:10:25.437Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T00:10:26.007Z",
+    "action": "Activate control",
+    "detail": "Continue with the free plan"
+  },
+  {
+    "at": "2026-11-18T00:10:27.887Z",
+    "action": "Activate control",
+    "detail": "Local recovery"
+  },
+  {
+    "at": "2026-11-18T00:10:29.830Z",
+    "action": "Activate control",
+    "detail": "Add a product"
+  },
+  {
+    "at": "2026-11-18T00:10:30.410Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-18T00:10:30.577Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-18T00:10:30.746Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Ingredients"
+  },
+  {
+    "at": "2026-11-18T00:10:32.432Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T00:10:32.983Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T00:10:33.518Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T00:10:34.056Z",
+    "action": "Enter synthetic fixture",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T00:10:35.838Z",
+    "action": "Activate control",
+    "detail": "Local recovery"
+  },
+  {
+    "at": "2026-11-18T00:10:39.889Z",
+    "action": "Activate control",
+    "detail": "Back to Shelf"
+  },
+  {
+    "at": "2026-11-18T00:10:40.443Z",
+    "action": "Activate control",
+    "detail": "You"
+  }
+]

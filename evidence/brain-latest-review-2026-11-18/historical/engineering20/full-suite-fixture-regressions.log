@@ -1,0 +1,44 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/lib/supabase/client.test.ts src/features/shelf/shelfRoutes.test.ts src/features/settings/localPrivateDataKeys.test.ts src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts src/features/settings/localPrivateDataFence44.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/shelf/shelfRoutes.test.ts > real bottle-history screen privacy retirement > removes memory-only label drafts on owner generation and unit changes before another confirmation
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/shelf/shelfRoutes.test.ts (45 tests | 1 failed) 772ms
+     × removes memory-only label drafts on owner generation and unit changes before another confirmation 357ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/shelf/shelfRoutes.test.ts > real bottle-history screen privacy retirement > removes memory-only label drafts on owner generation and unit changes before another confirmation
+Error: No instances found with props: {"label":"I have the printed label"}
+ ❯ expectOne ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15161:13
+ ❯ ReactTestInstance.process.env.NODE_ENV._proto.findByProps ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:17219:18
+ ❯ src/features/shelf/shelfRoutes.test.ts:1353:44
+    1351|       for (const boundary of ['health-generation', 'owned-unit'] as co…
+    1352|         await act(async () => screen!.root.findByProps({ label: 'Recor…
+    1353|         await act(async () => screen!.root.findByProps({ label: 'I hav…
+       |                                            ^
+    1354|         await act(async () => screen!.root.findByProps({ accessibility…
+    1355|         expect(JSON.stringify(screen!.toJSON())).toContain('PRIVATE SY…
+ ❯ Proxy.process.env.NODE_ENV.exports.act ../../node_modules/react/cjs/react.development.js:814:22
+ ❯ src/features/shelf/shelfRoutes.test.ts:1353:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 166 passed (167)
+   Start at  07:24:12
+   Duration  2.79s (transform 2.81s, setup 0ms, import 2.95s, tests 2.72s, environment 1ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/lib/supabase/client.test.ts src/features/shelf/shelfRoutes.test.ts src/features/settings/localPrivateDataKeys.test.ts src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts src/features/settings/localPrivateDataFence44.test.ts

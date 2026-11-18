@@ -1,0 +1,53 @@
+Start actual optional recovery journey: 375x667
+Activate control: Begin
+Enter synthetic value: Day of birth
+Enter synthetic value: Month of birth
+Enter synthetic value: Year of birth
+Activate control: Continue
+Activate control: I agree. Continue
+Activate control containing: Clear skin
+Activate control: Continue
+Activate control: Shiny in places
+Activate control: Next
+Activate control: Rarely
+Activate control: Next
+Activate control: Often stings, burns, or reddens
+Activate control: Next
+Activate control: Frequently
+Activate control: Next
+Activate control: Yes, noticeably
+Activate control: Next
+Activate control: Weeks or longer
+Activate control: Next
+Activate control: Fine lines or firmness changes are visible
+Activate control: Next
+Activate control: A lot over time
+Activate control: Next
+Activate control: Sometimes burns
+Activate control: Next
+Activate control: Tone 4
+Activate control: Next
+Activate control: None that I know of
+Activate control: Next
+Activate control: No
+Activate control: See my profile
+Enter synthetic value: Product name
+Activate control containing: Choose product category
+Activate control: Cleanser
+Activate control: Add to shelf
+Activate control: Just opened it
+Activate control: Add to shelf
+Activate control: Continue with 1 product
+Activate control: Continue
+Activate control: Not now
+file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:967
+  throw new Error(`Timed out waiting for ${label}: ${lastError?.message ?? 'condition false'}`);
+        ^
+
+Error: Timed out waiting for path /onboarding/account: condition false
+    at waitForCondition (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:967:9)
+    at async Module.waitForPath (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:984:3)
+    at async finishFreeOnboarding (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/optional-change-drafts21.mjs:220:3)
+    at async file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/optional-change-drafts21.mjs:246:5
+
+Node.js v22.21.0

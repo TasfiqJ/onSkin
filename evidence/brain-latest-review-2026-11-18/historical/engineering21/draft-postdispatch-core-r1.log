@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/manualIntakeDrafts.test.ts src/features/today/optionalChangeDrafts.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  63 passed (63)
+   Start at  12:41:42
+   Duration  2.24s (transform 1.93s, setup 0ms, import 2.95s, tests 431ms, environment 0ms)
+

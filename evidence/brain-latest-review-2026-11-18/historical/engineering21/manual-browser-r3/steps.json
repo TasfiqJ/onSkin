@@ -1,0 +1,87 @@
+[
+  {
+    "at": "2026-11-17T17:44:28.354Z",
+    "action": "Start actual app journey",
+    "detail": "375x667"
+  },
+  {
+    "at": "2026-11-17T17:44:53.608Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-17T17:44:54.154Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-17T17:44:54.322Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-17T17:44:54.491Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-17T17:44:54.660Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:44:55.230Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-17T17:44:58.180Z",
+    "action": "Activate control",
+    "detail": "Add a product"
+  },
+  {
+    "at": "2026-11-17T17:44:58.757Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:44:58.925Z",
+    "action": "Enter synthetic value",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-17T17:44:59.094Z",
+    "action": "Enter synthetic value",
+    "detail": "Barcode, optional"
+  },
+  {
+    "at": "2026-11-17T17:44:59.263Z",
+    "action": "Activate control",
+    "detail": "Eight-digit barcode type, EAN-8"
+  },
+  {
+    "at": "2026-11-17T17:44:59.802Z",
+    "action": "Enter synthetic value",
+    "detail": "Ingredients"
+  },
+  {
+    "at": "2026-11-17T17:44:59.972Z",
+    "action": "Keyboard activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:45:00.280Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:45:01.696Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:45:02.294Z",
+    "action": "Activate control",
+    "detail": "Resume saved intake draft"
+  }
+]

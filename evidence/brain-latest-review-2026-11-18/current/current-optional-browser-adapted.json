@@ -1,0 +1,26 @@
+{
+  "label": "current-optional-browser-adapted",
+  "command": [
+    "node",
+    "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\BRAIN_LATEST_REVIEW_2026-11-18\\audit\\optional-current-navigation.mjs"
+  ],
+  "start": "2026-11-18T15:34:08.392745+00:00",
+  "end": "2026-11-18T15:38:02.834347+00:00",
+  "exit": 0,
+  "seconds": 234.437,
+  "sourceBefore": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "porcelain": ""
+  },
+  "sourceAfter": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "porcelain": ""
+  },
+  "sourceUnchanged": true,
+  "logSha256": "83ed45ea0090df7c729e1bf6c647561d9326f45f31aaceda5188286b48210d6b",
+  "scope": "existing local checks only; no installs, hosted CI, native attempt or source edits"
+}

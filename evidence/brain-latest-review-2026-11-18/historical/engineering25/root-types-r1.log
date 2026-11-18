@@ -1,0 +1,50 @@
+
+> layerwell@0.1.0 typecheck
+> turbo run typecheck --cache=local:w --concurrency=1
+
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/professional-web, @layerwell/types, @onskin/decode-uri-component-compat
+   • Running typecheck in 5 packages
+   • Remote caching disabled, using shared worktree cache
+
+@layerwell/types:typecheck: cache bypass, force executing 3cdc6c163f106f65
+@layerwell/types:typecheck: 
+@layerwell/types:typecheck: > @layerwell/types@0.1.0 typecheck
+@layerwell/types:typecheck: > tsc --noEmit
+@layerwell/types:typecheck: 
+@layerwell/professional-web:typecheck: cache bypass, force executing a8b14416a56c5aaa
+@layerwell/professional-web:typecheck: 
+@layerwell/professional-web:typecheck: > @layerwell/professional-web@0.1.0 typecheck
+@layerwell/professional-web:typecheck: > tsc --noEmit
+@layerwell/professional-web:typecheck: 
+@layerwell/catalog-operator-console:typecheck: cache bypass, force executing 7d1cdf48a2259b18
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/catalog-operator-console:typecheck: > @layerwell/catalog-operator-console@0.1.0 typecheck
+@layerwell/catalog-operator-console:typecheck: > tsc --noEmit
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/mobile:typecheck: cache bypass, force executing 2f2fcae5c9cf1907
+@layerwell/mobile:typecheck: 
+@layerwell/mobile:typecheck: > @layerwell/mobile@0.1.0 typecheck
+@layerwell/mobile:typecheck: > tsc --noEmit
+@layerwell/mobile:typecheck: 
+@layerwell/mobile:typecheck: src/features/retainedRecovery/localRecoveryDrafts25.test.ts(216,25): error TS2769: No overload matches this call.
+@layerwell/mobile:typecheck:   Overload 1 of 2, '(callback: () => Promise<VoidOrUndefinedOnly>): Promise<undefined>', gave the following error.
+@layerwell/mobile:typecheck:     Type 'Promise<boolean>' is not assignable to type 'Promise<VoidOrUndefinedOnly>'.
+@layerwell/mobile:typecheck:       Type 'boolean' is not assignable to type 'VoidOrUndefinedOnly'.
+@layerwell/mobile:typecheck:   Overload 2 of 2, '(callback: () => VoidOrUndefinedOnly): DebugPromiseLike', gave the following error.
+@layerwell/mobile:typecheck:     Type 'Promise<boolean>' is not assignable to type 'VoidOrUndefinedOnly'.
+@layerwell/mobile:typecheck: npm error Lifecycle script `typecheck` failed with error:
+@layerwell/mobile:typecheck: npm error code 2
+@layerwell/mobile:typecheck: npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+@layerwell/mobile:typecheck: npm error workspace @layerwell/mobile@0.1.0
+@layerwell/mobile:typecheck: npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+@layerwell/mobile:typecheck: npm error command failed
+@layerwell/mobile:typecheck: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit
+ ERROR  @layerwell/mobile#typecheck: command ([LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile) C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js run typecheck exited (2)
+
+ Tasks:    3 successful, 4 total
+Cached:    0 cached, 4 total
+  Time:    22.851s 
+Failed:    @layerwell/mobile#typecheck
+
+ ERROR  run failed: command  exited (2)

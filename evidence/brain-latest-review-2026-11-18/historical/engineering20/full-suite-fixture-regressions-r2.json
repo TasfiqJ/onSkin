@@ -1,0 +1,26 @@
+{
+  "label": "full-suite-fixture-regressions-r2",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/lib/supabase/client.test.ts",
+    "src/features/shelf/shelfRoutes.test.ts",
+    "src/features/settings/localPrivateDataKeys.test.ts",
+    "src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts",
+    "src/features/settings/localPrivateDataFence44.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T12:24:34.531845+00:00",
+  "head": "60cf68ef9385f718e2adcc3985e4c2504d81cc71",
+  "tree": "5d10556b4781e4ceb11053758c4b4eab9d165a10",
+  "status": "M apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/shelf/shelfRoutes.test.ts\n M apps/mobile/src/lib/supabase/client.test.ts",
+  "workingDiffSha256": "c10a27057ab6f485da36799b40a6f671b8db3eecf1900ca0a273e981fc83712f",
+  "exit": 0,
+  "seconds": 3.922,
+  "end": "2026-11-17T12:24:38.687202+00:00",
+  "logSha256": "046b1e9bce6229a2bdf62ab7ee2f3cf4a1b1fed7457dc2d516a2921c2b5eeecc"
+}

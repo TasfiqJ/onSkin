@@ -1,0 +1,34 @@
+{
+  "label": "root-lint",
+  "command": [
+    "npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--cache=local:w",
+    "--concurrency=1"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T00:39:39.954083+00:00",
+  "head": "ac026eea9e6860a19972bf5a6c78057f95eb9320",
+  "tree": "ed9d6b1cff7e46cca7f453e88f2a25118dedb756",
+  "sourceBefore": {
+    "path": "apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts",
+    "sha256": "4f97f0754cc30f0ce4d657e99824a3bb664544720c37e5ad7012fb198199d4f0",
+    "bytes": 17006,
+    "gitBlob": "34fe95b43ec97551a8e10f99a8cf112cd888dfed",
+    "status": "M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts"
+  },
+  "exit": 0,
+  "seconds": 76.765,
+  "end": "2026-11-18T00:40:56.784854+00:00",
+  "sourceAfter": {
+    "path": "apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts",
+    "sha256": "4f97f0754cc30f0ce4d657e99824a3bb664544720c37e5ad7012fb198199d4f0",
+    "bytes": 17006,
+    "gitBlob": "34fe95b43ec97551a8e10f99a8cf112cd888dfed",
+    "status": "M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts"
+  },
+  "sourceUnchanged": true,
+  "logSha256": "50fb44e1d4ea9e527f8fb3450fe6841c04ccb80c21d5182c578b2c13be37e5a4"
+}

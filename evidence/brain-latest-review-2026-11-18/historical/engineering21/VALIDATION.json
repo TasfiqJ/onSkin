@@ -1,0 +1,153 @@
+{
+  "checks": {
+    "manual-gate-r2": {
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/shelf/manualIntakeDrafts.test.ts",
+        "src/features/shelf/manualIntakeDraftUI21.test.ts",
+        "src/features/shelf/bottleDrafts.test.ts",
+        "src/features/shelf/ownedBottleVersion38.test.ts",
+        "src/features/shelf/store.test.ts",
+        "src/features/shelf/intakeRecovery.campaign25.test.ts",
+        "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+        "src/features/shelf/addSubmissionAttempt.test.ts",
+        "src/features/shelf/confirmedDestructive28.test.ts",
+        "src/features/shelf/postDispatchCommit28.test.ts",
+        "src/features/shelf/compactManual46.test.ts",
+        "src/features/shelf/openingClock.campaign25.test.ts",
+        "src/features/settings/localDeviceExport.test.ts",
+        "src/features/settings/localPrivateDataKeys.test.ts",
+        "src/features/settings/localPrivateData.test.ts",
+        "src/features/settings/localPrivateDataFence44.test.ts",
+        "src/features/healthConsent/selectiveCleanup.test.ts",
+        "src/lib/storage/privateKV.test.ts"
+      ],
+      "start": "2026-11-17T17:29:43.842904+00:00",
+      "end": "2026-11-17T17:30:03.165923+00:00",
+      "exit": 0,
+      "seconds": 18.953,
+      "logSha256": "cf74f29ac2927c0af06d868fb48989de8154e78ca3beb6b21a96f0c1729c78a6"
+    },
+    "optional-focused-final": {
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/optionalChangeDrafts.test.ts",
+        "src/features/today/optionalChangeDraftUI21.test.ts",
+        "src/features/today/optionalChange41.test.ts",
+        "src/features/today/optionalChangeJournal41.test.ts",
+        "src/features/today/optionalHistoryRecovery15.test.ts",
+        "src/features/today/todayOptionalConvergence15.test.ts",
+        "src/features/today/observationHistory.test.ts",
+        "src/features/today/completionsStore.test.ts",
+        "src/features/settings/localDeviceExport.test.ts",
+        "src/features/settings/localPrivateDataKeys.test.ts",
+        "src/features/settings/localPrivateData.test.ts",
+        "src/features/settings/localPrivateDataFence44.test.ts",
+        "src/features/healthConsent/selectiveCleanup.test.ts",
+        "src/lib/storage/privateKV.test.ts"
+      ],
+      "start": "2026-11-17T17:41:36.767299+00:00",
+      "end": "2026-11-17T17:41:57.251022+00:00",
+      "exit": 0,
+      "seconds": 20.125,
+      "logSha256": "1f6a972e91c99a17e51d9b5fc963392624116921c06f689d7d64308d913e97ef"
+    },
+    "draft-postdispatch-core-r1": {
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/shelf/manualIntakeDrafts.test.ts",
+        "src/features/today/optionalChangeDrafts.test.ts"
+      ],
+      "start": "2026-11-17T17:41:40.633188+00:00",
+      "end": "2026-11-17T17:41:45.256002+00:00",
+      "exit": 0,
+      "seconds": 4.078,
+      "logSha256": "71d5d6764d0d9487df549695af4f166ab7f435a76033f1499023e3013a320ca2"
+    },
+    "root-tests-final": {
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "start": "2026-11-17T17:55:07.574805+00:00",
+      "end": "2026-11-17T17:56:25.595265+00:00",
+      "exit": 0,
+      "seconds": 77.703,
+      "logSha256": "90c7ce1531133a366a4a278292fe8162abcddcb61f60631fb23235d1cdeb400e"
+    },
+    "root-types-r2": {
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "start": "2026-11-17T17:53:04.248946+00:00",
+      "end": "2026-11-17T17:54:00.150141+00:00",
+      "exit": 0,
+      "seconds": 53.266,
+      "logSha256": "1d34ee98a5b59ff071011f24398cc42b965721f40dbca5970772e7920f6cc324"
+    },
+    "root-lint-r2": {
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "start": "2026-11-17T17:53:04.330516+00:00",
+      "end": "2026-11-17T17:54:51.666248+00:00",
+      "exit": 0,
+      "seconds": 104.859,
+      "logSha256": "be08cd34f55020706a7bb448256ae3735e3bc55f9b0f810126f0011569e9f2e8"
+    },
+    "consumer-build-r3": {
+      "command": [
+        "python",
+        "..\\ENGINEERING21_EVIDENCE\\build_consumer.py"
+      ],
+      "start": "2026-11-17T17:52:39.190050+00:00",
+      "end": "2026-11-17T17:53:56.059286+00:00",
+      "exit": 0,
+      "seconds": 75.734,
+      "logSha256": "740253d79ba9baef4d80f559d9779bc8e18fcfedc9ec0eb5916fbbc42e217a3c"
+    }
+  },
+  "browser": {
+    "manual-browser-r4": {
+      "summary": "manual-browser-r4\\summary.json",
+      "sha256": "d7defa74e9cc541274b9b88441c6d963b167f43ae7c54dd41ef86cf04976a777",
+      "pass": true,
+      "sourceHashesMatchFinalWorktree": true
+    },
+    "optional-browser-r4": {
+      "summary": "optional-browser-r4\\summary.json",
+      "sha256": "a789aa10a545734fc72f43f658c6b76155dfc207b970cb1ca208eb556dcde82e",
+      "pass": true,
+      "sourceHashesMatchFinalWorktree": true
+    }
+  },
+  "note": "Ordinary local synthetic validation only; native/device/provider qualification excluded."
+}

@@ -1,0 +1,22 @@
+{
+  "label": "proof-invariants-r1",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/today/optionalChangeDraftProof23.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T21:23:14.195893+00:00",
+  "head": "08da2f379c487f8b56d470c7093eb6045b700204",
+  "tree": "ad60f0499cef4e39f906bf451d2898307b08d46d",
+  "status": "M apps/mobile/src/features/today/OptionalChangePanel41.test.tsx\n M apps/mobile/src/features/today/OptionalChangePanel41.tsx\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/features/today/optionalChangeDraftCodec.ts\n M apps/mobile/src/features/today/optionalChangeDraftStore.ts\n?? apps/mobile/src/features/today/optionalChangeDraftProof.ts\n?? apps/mobile/src/features/today/optionalChangeDraftProof23.test.ts",
+  "workingDiffSha256": "062f64906a91fb3abb52072c4dc5050e6c2f66a741a9ec695422dc2c66fbc802",
+  "exit": 0,
+  "seconds": 1.734,
+  "end": "2026-11-17T21:23:16.158832+00:00",
+  "logSha256": "a08d89947e43b8a7750650c760c5428891002511db36da22c559a655a33ad7e9"
+}

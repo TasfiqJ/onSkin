@@ -1,0 +1,12 @@
+Starting visible app journey 375x667
+file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:259
+  if (!condition) throw new Error(message);
+                        ^
+
+Error: Could not scroll control "Synthetic durable bottle" into view.
+    at assert (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:259:25)
+    at Module.scrollControlIntoView (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:1113:3)
+    at async tap (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/bottle-drafts20.mjs:25:44)
+    at async file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/bottle-drafts20.mjs:62:5
+
+Node.js v22.21.0

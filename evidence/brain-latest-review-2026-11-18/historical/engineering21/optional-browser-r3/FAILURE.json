@@ -1,0 +1,14 @@
+{
+  "path": "/onboarding/products",
+  "text": "What's on your shelf?\nAdd the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf.\n0 OF 3 PRODUCTS\nThree products gives your first routine enough context to spot useful gaps or timing notes.\nPRODUCT NAME\nCATEGORY · OPTIONAL\nChoose category\n>\nAdd to shelf\nSkip for now",
+  "width": 375,
+  "height": 667,
+  "overflow": 0,
+  "inputs": [
+    {
+      "label": "Product name",
+      "value": "Synthetic21 routine cleanser"
+    }
+  ],
+  "choices": []
+}

@@ -1,0 +1,28 @@
+{
+  "label": "current-professional-queue-375",
+  "command": [
+    "node",
+    "scripts/e2e/professional-reconciliation.mjs",
+    "375",
+    "667"
+  ],
+  "start": "2026-11-18T15:31:43.542874+00:00",
+  "end": "2026-11-18T15:31:47.614632+00:00",
+  "exit": 0,
+  "seconds": 4.078,
+  "sourceBefore": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "porcelain": ""
+  },
+  "sourceAfter": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "porcelain": ""
+  },
+  "sourceUnchanged": true,
+  "logSha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c",
+  "scope": "existing local checks only; no installs, hosted CI, native attempt or source edits"
+}

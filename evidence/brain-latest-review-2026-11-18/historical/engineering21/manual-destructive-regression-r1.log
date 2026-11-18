@@ -1,0 +1,390 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/confirmedDestructive28.test.ts src/features/shelf/postDispatchCommit28.test.ts src/features/shelf/manualIntakeDrafts.test.ts src/lib/storage/privateKV.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: valid explicit confirmation persists exactly one item/outbox change and confirms canonical readback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-replacement publication after native invocation (stored=false) without UI rollback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: preserves bytes across a real account-generation transition while private read is pending
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-ABA publication after native invocation (stored=false) without UI rollback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: refuses an expired current grant before native invocation
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale unmount publication after native invocation (stored=false) without UI rollback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-replacement during private-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-ABA during private-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-replacement publication after native invocation (stored=true) without UI rollback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies unmount during private-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-ABA publication after native invocation (stored=true) without UI rollback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies same-owner-regrant during private-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale unmount publication after native invocation (stored=true) without UI rollback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies owner-ABA during private-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale query-replacement publication during canonical refetch while preserving committed item/outbox
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies withdrawal during private-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale query-ABA publication during canonical refetch while preserving committed item/outbox
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-replacement during conflict-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale snapshot-replacement publication during canonical refetch while preserving committed item/outbox
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-ABA during conflict-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale refetch-restarted publication during canonical refetch while preserving committed item/outbox
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies unmount during conflict-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale unmount publication during canonical refetch while preserving committed item/outbox
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies same-owner-regrant during conflict-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: permits an idempotent reinvalidation that produces no Query transition while its canonical readback is pending
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies owner-ABA during conflict-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: joins duplicate taps while native write is unsettled and retains one outbox event
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies withdrawal during conflict-read before native write
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: permits one fresh confirmation after a previously confirmed private-read operation retires
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: retains original health compensation after same-owner-regrant while native storage is unsettled
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: retains original health compensation after owner-ABA while native storage is unsettled
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/postDispatchCommit28.test.ts > Remove completely: keeps committed bytes and truthful unconfirmed state when canonical readback fails
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/shelf/postDispatchCommit28.test.ts (36 tests | 18 failed) 13868ms
+   × Remove completely: valid explicit confirmation persists exactly one item/outbox change and confirms canonical readback 325ms
+   × Remove completely: suppresses stale query-replacement publication after native invocation (stored=false) without UI rollback 535ms
+   × Remove completely: suppresses stale query-ABA publication after native invocation (stored=false) without UI rollback 537ms
+   × Remove completely: suppresses stale unmount publication after native invocation (stored=false) without UI rollback 536ms
+   × Remove completely: suppresses stale query-replacement publication after native invocation (stored=true) without UI rollback 552ms
+   × Remove completely: suppresses stale query-ABA publication after native invocation (stored=true) without UI rollback 552ms
+   × Remove completely: suppresses stale unmount publication after native invocation (stored=true) without UI rollback 536ms
+   × Remove completely: refuses stale query-replacement publication during canonical refetch while preserving committed item/outbox 537ms
+   × Remove completely: refuses stale query-ABA publication during canonical refetch while preserving committed item/outbox 540ms
+   × Remove completely: refuses stale snapshot-replacement publication during canonical refetch while preserving committed item/outbox 537ms
+   × Remove completely: refuses stale refetch-restarted publication during canonical refetch while preserving committed item/outbox 538ms
+   × Remove completely: refuses stale unmount publication during canonical refetch while preserving committed item/outbox 539ms
+   × Remove completely: permits an idempotent reinvalidation that produces no Query transition while its canonical readback is pending 537ms
+   × Remove completely: joins duplicate taps while native write is unsettled and retains one outbox event 539ms
+   × Remove completely: permits one fresh confirmation after a previously confirmed private-read operation retires 539ms
+   × Remove completely: retains original health compensation after same-owner-regrant while native storage is unsettled 539ms
+   × Remove completely: retains original health compensation after owner-ABA while native storage is unsettled 538ms
+   × Remove completely: keeps committed bytes and truthful unconfirmed state when canonical readback fails 261ms
+ ❯ src/features/shelf/confirmedDestructive28.test.ts (52 tests | 14 failed) 16621ms
+   × Remove completely: preserves bytes across a real account-generation transition while private read is pending 535ms
+   × Remove completely: refuses an expired current grant before native invocation 537ms
+   × Remove completely: denies query-replacement during private-read before native write 536ms
+   × Remove completely: denies query-ABA during private-read before native write 536ms
+   × Remove completely: denies unmount during private-read before native write 537ms
+   × Remove completely: denies same-owner-regrant during private-read before native write 537ms
+   × Remove completely: denies owner-ABA during private-read before native write 537ms
+   × Remove completely: denies withdrawal during private-read before native write 540ms
+   × Remove completely: denies query-replacement during conflict-read before native write 537ms
+   × Remove completely: denies query-ABA during conflict-read before native write 538ms
+   × Remove completely: denies unmount during conflict-read before native write 539ms
+   × Remove completely: denies same-owner-regrant during conflict-read before native write 536ms
+   × Remove completely: denies owner-ABA during conflict-read before native write 538ms
+   × Remove completely: denies withdrawal during conflict-read before native write 539ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 32 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: preserves bytes across a real account-generation transition while private read is pending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/confirmedDestructive28.test.ts:62:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/32]⎯
+
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: refuses an expired current grant before native invocation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/confirmedDestructive28.test.ts:89:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/32]⎯
+
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-replacement during private-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-ABA during private-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies unmount during private-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies same-owner-regrant during private-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies owner-ABA during private-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies withdrawal during private-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-replacement during conflict-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies query-ABA during conflict-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies unmount during conflict-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies same-owner-regrant during conflict-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies owner-ABA during conflict-read before native write
+ FAIL  src/features/shelf/confirmedDestructive28.test.ts > Remove completely: denies withdrawal during conflict-read before native write
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/confirmedDestructive28.test.ts:121:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: valid explicit confirmation persists exactly one item/outbox change and confirms canonical readback
+AssertionError: expected [ { …(4) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ assertCommitted28 src/features/shelf/postDispatchCommit28.test.ts:32:30
+     30|   const state = await state28();
+     31|   expect(state.mirrorOutbox.slice(0, originalOutbox.length)).toEqual(o…
+     32|   expect(state.mirrorOutbox).toHaveLength(originalOutbox.length + 1);
+       |                              ^
+     33|   const operation = state.mirrorOutbox.at(-1)!;
+     34|   if (label === 'Remove completely') {
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:52:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-replacement publication after native invocation (stored=false) without UI rollback
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-ABA publication after native invocation (stored=false) without UI rollback
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale unmount publication after native invocation (stored=false) without UI rollback
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-replacement publication after native invocation (stored=true) without UI rollback
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale query-ABA publication after native invocation (stored=true) without UI rollback
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: suppresses stale unmount publication after native invocation (stored=true) without UI rollback
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:72:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale query-replacement publication during canonical refetch while preserving committed item/outbox
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale query-ABA publication during canonical refetch while preserving committed item/outbox
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale snapshot-replacement publication during canonical refetch while preserving committed item/outbox
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale refetch-restarted publication during canonical refetch while preserving committed item/outbox
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: refuses stale unmount publication during canonical refetch while preserving committed item/outbox
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:105:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: permits an idempotent reinvalidation that produces no Query transition while its canonical readback is pending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:125:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: joins duplicate taps while native write is unsettled and retains one outbox event
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:157:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: permits one fresh confirmation after a previously confirmed private-read operation retires
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:178:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: retains original health compensation after same-owner-regrant while native storage is unsettled
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: retains original health compensation after owner-ABA while native storage is unsettled
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ waitEntered28 src/features/shelf/destructiveCommit28TestPorts.ts:152:26
+    150| export async function waitEntered28(gate: { entered: () => boolean }) {
+    151|   for (let n = 0; n < 12 && !gate.entered(); n++) await flush26();
+    152|   expect(gate.entered()).toBe(true);
+       |                          ^
+    153| }
+    154| export async function retire28(mode: string) {
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:213:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/32]⎯
+
+ FAIL  src/features/shelf/postDispatchCommit28.test.ts > Remove completely: keeps committed bytes and truthful unconfirmed state when canonical readback fails
+AssertionError: expected 'success' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "success"
+
+ ❯ src/features/shelf/postDispatchCommit28.test.ts:253:55
+    251|     await press28(label);
+    252|     await settle28();
+    253|     expect(client28.getQueryState(['shelf'])?.status).toBe('error');
+       |                                                       ^
+    254|     expect(ports26.back).not.toHaveBeenCalled();
+    255|     if (screen28?.root.findAllByType('Modal' as never).length) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/32]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  32 failed | 154 passed (186)
+   Start at  12:28:14
+   Duration  18.49s (transform 3.09s, setup 0ms, import 4.75s, tests 30.73s, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/shelf/confirmedDestructive28.test.ts src/features/shelf/postDispatchCommit28.test.ts src/features/shelf/manualIntakeDrafts.test.ts src/lib/storage/privateKV.test.ts

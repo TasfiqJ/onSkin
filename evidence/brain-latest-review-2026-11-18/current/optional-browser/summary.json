@@ -1,0 +1,30 @@
+{
+  "startedAt": "2026-11-18T15:27:08.044Z",
+  "surface": "Actual local Expo web in Edge; synthetic local owner and storage only",
+  "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+  "tree": "83670a073910a840c69368f1760d5cb59d021054",
+  "status": "",
+  "sourceSha256": {
+    "scripts/e2e/optional-change-drafts21.mjs": "1abe0c4360d2a4a1718bfc918d7ed41d5f483cdebb331311b79b58684beeb81d",
+    "apps/mobile/src/features/today/OptionalChangePanel41.tsx": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+    "apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx": "116fd8043b497d279548ae677ffaddb82e321cf08344b43891468cf4981d540d",
+    "apps/mobile/src/features/today/optionalChangeDraftCodec.ts": "d774ce71b86ad83c0fa96a70a122da67226ed6ea157b2122664b9988e778731b",
+    "apps/mobile/src/features/today/optionalChangeDraftStore.ts": "d6f914316def002ba0d14e8b51b64ff1dd2b8e478216cde3082925f206a3ab0e",
+    "apps/mobile/src/features/today/completionsStore.ts": "4d39315b17a9c07a12cbe3e90ce65a3f6a2beea7cbc56acfba4a44ee8715817b",
+    "apps/mobile/src/features/today/optionalChange41.ts": "92b5b4ed021bbb4e6452d6087ca78ba4dcbe2d09cdf4473fd204d4bf0243752e",
+    "apps/mobile/src/features/today/optionalChangeJournal41.ts": "7bfc842dd3a0024ad16c53fa5cffa04c5766ecb997e2df3e94cfe726f4bfdbf1"
+  },
+  "userDataDir": "[LOCAL_USER_HOME]\\AppData\\Local\\Temp\\[TEMP_BROWSER_PROFILE]",
+  "viewports": [],
+  "blockedRemoteRequests": [],
+  "pass": false,
+  "excluded": [
+    "native builds and devices",
+    "real owners and provider services",
+    "hosted CI",
+    "paid operations",
+    "release acceptance"
+  ],
+  "error": "Timed out waiting for text \"Nothing recorded\": condition false",
+  "endedAt": "2026-11-18T15:28:45.173Z"
+}

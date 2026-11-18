@@ -1,0 +1,20 @@
+{
+  "label": "manual-types-r1",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "typecheck"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T17:21:02.818722+00:00",
+  "head": "4dce84e20a71f19c60c16c7682e683bb512363ed",
+  "tree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+  "status": "M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/IntakeContext.tsx\n M apps/mobile/src/features/shelf/store.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/shelf/manualIntakeDraftCodec.ts\n?? apps/mobile/src/features/shelf/manualIntakeDraftStore.ts\n?? apps/mobile/src/features/shelf/manualIntakeRecovery.ts\n?? apps/mobile/src/features/shelf/manualIntakeSubmission.ts",
+  "workingDiffSha256": "a080e7776bd72ccd8cc12cdd98a910341bceb93b7c8909e1d39553b2a9e3957e",
+  "exit": 0,
+  "seconds": 19.188,
+  "end": "2026-11-17T17:21:22.268477+00:00",
+  "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+}

@@ -1,0 +1,293 @@
+{
+  "result": "BLOCKED",
+  "runs": [
+    {
+      "label": "focused-mounted",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/observationHistory.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T01:18:05.075774+00:00",
+      "head": "0998a353feee905bf9be5cd728dbb76be4fd23ee",
+      "tree": "e763a8061f04130aeeb1d16f29df3896bd329d61",
+      "sourceBefore": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "b6de0ccd2d63aa4fc93d2c8ec022b69b50c06c43d32e3fc39131de7d4d7106ba",
+          "bytes": 46011,
+          "gitBlob": "119caf9c72870f6c6ae300bf52da5248cd3a4683"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "exit": 1,
+      "seconds": 21.469,
+      "end": "2026-11-18T01:18:26.610208+00:00",
+      "sourceAfter": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "b6de0ccd2d63aa4fc93d2c8ec022b69b50c06c43d32e3fc39131de7d4d7106ba",
+          "bytes": 46011,
+          "gitBlob": "119caf9c72870f6c6ae300bf52da5248cd3a4683"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "sourceUnchanged": true,
+      "logSha256": "2b0b42a541e2b0842808fc244b2d8d78b19b4e374cab177f40ca86b9f9c6ff9e",
+      "status": "M apps/mobile/src/features/today/OptionalChangePanel41.test.tsx\n M apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+      "log": "focused-mounted.log",
+      "receipt": "focused-mounted.json",
+      "passedTests": 47,
+      "failedTests": 1,
+      "passedFiles": 0,
+      "failedFiles": 1
+    },
+    {
+      "label": "focused-mounted-corrected",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/observationHistory.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T01:18:43.873343+00:00",
+      "head": "0998a353feee905bf9be5cd728dbb76be4fd23ee",
+      "tree": "e763a8061f04130aeeb1d16f29df3896bd329d61",
+      "sourceBefore": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+          "bytes": 46199,
+          "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "exit": 0,
+      "seconds": 21.453,
+      "end": "2026-11-18T01:19:05.392066+00:00",
+      "sourceAfter": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+          "bytes": 46199,
+          "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "sourceUnchanged": true,
+      "logSha256": "1302a7534bde448f9a60ee792c61663d4d78e954ef3897560caeb07a55540cc3",
+      "status": "M apps/mobile/src/features/today/OptionalChangePanel41.test.tsx\n M apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+      "log": "focused-mounted-corrected.log",
+      "receipt": "focused-mounted-corrected.json",
+      "passedTests": 48,
+      "failedTests": 0,
+      "passedFiles": 1,
+      "failedFiles": 0
+    },
+    {
+      "label": "focused-required",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/OptionalChangePanel41.test.tsx",
+        "src/features/today/optionalChangeDraftUI21.test.ts",
+        "src/features/today/todayRoute.test.ts",
+        "src/features/retainedRecovery/localRecoveryDrafts25.test.ts",
+        "src/features/retainedRecovery/localRecovery.campaign05.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T01:19:14.600384+00:00",
+      "head": "0998a353feee905bf9be5cd728dbb76be4fd23ee",
+      "tree": "e763a8061f04130aeeb1d16f29df3896bd329d61",
+      "sourceBefore": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+          "bytes": 46199,
+          "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "exit": 0,
+      "seconds": 6.172,
+      "end": "2026-11-18T01:19:20.847681+00:00",
+      "sourceAfter": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+          "bytes": 46199,
+          "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "sourceUnchanged": true,
+      "logSha256": "137498b32ccf4ef96ab1008e89dbfc3f817eab93534464eaeaa437dba225c29b",
+      "status": "M apps/mobile/src/features/today/OptionalChangePanel41.test.tsx\n M apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+      "log": "focused-required.log",
+      "receipt": "focused-required.json",
+      "passedTests": 60,
+      "failedTests": 0,
+      "passedFiles": 4,
+      "failedFiles": 0
+    },
+    {
+      "label": "root-tests",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T01:19:54.053650+00:00",
+      "head": "0998a353feee905bf9be5cd728dbb76be4fd23ee",
+      "tree": "e763a8061f04130aeeb1d16f29df3896bd329d61",
+      "sourceBefore": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+          "bytes": 46199,
+          "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "exit": 1,
+      "seconds": 49.218,
+      "end": "2026-11-18T01:20:43.338402+00:00",
+      "sourceAfter": [
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+          "sha256": "ab63c800285963bcc79275b880d3b68077f85b1605d82992b2714a469036e9a3",
+          "bytes": 46199,
+          "gitBlob": "2ac24006732bc775dcd74ce42792a4dcb3274e25"
+        },
+        {
+          "path": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+          "sha256": "c152a2813d7ffc949ae6ec81a691e3e76e77d2e22e4a64d0a3ded0f1b026562d",
+          "bytes": 38754,
+          "gitBlob": "213fa7396724702925abf6a4b064d39fb4dd36df"
+        }
+      ],
+      "sourceUnchanged": true,
+      "logSha256": "c8e169d52572d38c46bb1ef71bab8e4919fb24ce69ce8eda357dfe760b439d86",
+      "status": "M apps/mobile/src/features/today/OptionalChangePanel41.test.tsx\n M apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+      "log": "root-tests.log",
+      "receipt": "root-tests.json",
+      "passedTests": 7932,
+      "failedTests": 45,
+      "passedFiles": 552,
+      "failedFiles": 2,
+      "scope": "Completed mobile results; other root workspaces did not report completed results after Turbo failure."
+    }
+  ],
+  "notRun": [
+    {
+      "label": "root-typecheck",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "status": "NOT_RUN",
+      "exit": null,
+      "reason": "Stopped at unresolved protected root regression under Engineering27 stop instruction."
+    },
+    {
+      "label": "root-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "status": "NOT_RUN",
+      "exit": null,
+      "reason": "Stopped at unresolved protected root regression under Engineering27 stop instruction."
+    }
+  ],
+  "sequential": true,
+  "sourceUnchangedWithinEveryRun": true,
+  "postCorrectionRunsMatchRetainedCandidate": true,
+  "resolvedFailures": [
+    {
+      "receipt": "focused-mounted.json",
+      "passed": 47,
+      "failed": 1,
+      "resolution": "New primary-path test omitted existing category selection before the factual-text assertion. Added the missing explicit Other personal note press and an Observed local date assertion; retained the original assertion. No production fix, assertion reduction, timing change or blind retry."
+    }
+  ],
+  "unresolvedFailure": {
+    "status": "BLOCKED",
+    "code": "PROTECTED_ROOT_REGRESSION_SCOPE_LIMIT",
+    "failure": "45 protected tests fail because the existing expo-router mocks omit useFocusEffect required by the new collapsed-entry focus guard.",
+    "locations": [
+      "apps/mobile/src/features/routine/planRecovery.test.ts:51",
+      "apps/mobile/src/features/scheduler/cycleReadiness.plan.test.ts:53"
+    ],
+    "stack": "apps/mobile/src/features/today/OptionalChangePanel41.tsx:76",
+    "allowedFiles": [
+      "apps/mobile/src/features/today/OptionalChangePanel41.test.tsx",
+      "apps/mobile/src/features/today/OptionalChangePanel41.tsx"
+    ],
+    "decision": "Stop without commit. Do not change out-of-scope mocks, conditionally bypass focus protection or rerun unchanged source to hide failure.",
+    "review": "Independent read-only reviewer confirmed both router-only mocks and the retained failure. No reviewer edits/tests."
+  },
+  "rootReruns": [],
+  "discovery": ".tsx direct entries excluded by existing include. Existing observationHistory.test.ts bridge used separately and in root; required focused command ran unchanged.",
+  "browserNativeDeviceSimulator": "NOT_RUN; explicitly not authorized",
+  "commit": "NOT_CREATED; qualification failed"
+}

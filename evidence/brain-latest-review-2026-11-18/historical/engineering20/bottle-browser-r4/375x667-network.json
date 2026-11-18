@@ -1,0 +1,306 @@
+[
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/node_modules/expo-router/entry.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/favicon.ico"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/favicon.ico"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/shelf/manual"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/node_modules/expo-router/entry.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/shelf"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/node_modules/expo-router/entry.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/shelf/BottleUseHistory.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/shelf/formula-history"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/node_modules/expo-router/entry.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/favicon.ico"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/shelf/BottleUseHistory.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/shelf/formula-history"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/node_modules/expo-router/entry.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/favicon.ico"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/shelf/BottleUseHistory.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/shelf/formula-history"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/assets/"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/node_modules/expo-router/entry.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/favicon.ico"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/apps/mobile/src/features/shelf/BottleUseHistory.bundle"
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:8500/favicon.ico"
+  }
+]

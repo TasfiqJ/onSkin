@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/planRecovery.test.ts src/features/scheduler/cycleReadiness.plan.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  107 passed (107)
+   Start at  20:42:33
+   Duration  34.94s (transform 1.03s, setup 0ms, import 1.77s, tests 55.38s, environment 0ms)
+

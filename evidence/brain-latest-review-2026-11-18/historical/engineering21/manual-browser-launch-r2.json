@@ -1,0 +1,12 @@
+{
+  "run": "manual-browser-r2",
+  "status": "INTERRUPTED_BEFORE_APP_INTERACTION_SOURCE_IN_PROGRESS",
+  "reason": "Parent requested a hold while Workstream B edits were underway. Expo was compiling shared source; localDeviceExport imported optionalChangeDraftCodec before that new B module existed, so HTTP startup could not produce the app surface.",
+  "driverError": "Timed out waiting for http://localhost:8500: fetch failed",
+  "sourceDiagnostic": "Metro error: Unable to resolve module @/features/today/optionalChangeDraftCodec from apps/mobile/src/features/settings/localDeviceExport.ts",
+  "evidence": ["manual-browser-r2.log", "manual-browser-r2.json", "manual-browser-r2/expo-e21-manual-drafts.log", "manual-browser-r2/summary.json"],
+  "observedAppInteractions": 0,
+  "devToolsSuppression": "EXPO_UNSTABLE_HEADLESS=1 was applied; the r2 Metro log contains no DevTools download/fallback warning.",
+  "cleanup": "Stopped exactly the recorded browser PID 59320 and Expo cmd PID 81496 with their child trees. Driver exited with code 1 and preserved its receipt.",
+  "next": "Run the unchanged A recovery journey after parent confirms the final shared source is stable. This run is not feature pass/fail evidence."
+}

@@ -1,0 +1,682 @@
+[
+  {
+    "at": "2026-11-17T17:49:53.071Z",
+    "action": "Start actual app journey",
+    "detail": "375x667"
+  },
+  {
+    "at": "2026-11-17T17:50:06.872Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-17T17:50:07.426Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-17T17:50:07.595Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-17T17:50:07.764Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-17T17:50:07.933Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:08.486Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:11.371Z",
+    "action": "Activate control",
+    "detail": "Add a product"
+  },
+  {
+    "at": "2026-11-17T17:50:11.949Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:50:12.117Z",
+    "action": "Enter synthetic value",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-17T17:50:12.286Z",
+    "action": "Enter synthetic value",
+    "detail": "Barcode, optional"
+  },
+  {
+    "at": "2026-11-17T17:50:12.455Z",
+    "action": "Activate control",
+    "detail": "Eight-digit barcode type, EAN-8"
+  },
+  {
+    "at": "2026-11-17T17:50:12.991Z",
+    "action": "Enter synthetic value",
+    "detail": "Ingredients"
+  },
+  {
+    "at": "2026-11-17T17:50:13.160Z",
+    "action": "Keyboard activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:50:13.474Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:50:14.865Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:15.431Z",
+    "action": "Activate control",
+    "detail": "Resume saved intake draft"
+  },
+  {
+    "at": "2026-11-17T17:50:16.019Z",
+    "action": "Activate control",
+    "detail": "Category"
+  },
+  {
+    "at": "2026-11-17T17:50:16.560Z",
+    "action": "Activate control",
+    "detail": "Category, Cleanser"
+  },
+  {
+    "at": "2026-11-17T17:50:17.095Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:17.695Z",
+    "action": "Activate control",
+    "detail": "Pick a date"
+  },
+  {
+    "at": "2026-11-17T17:50:18.231Z",
+    "action": "Enter synthetic value",
+    "detail": "Exact opened date"
+  },
+  {
+    "at": "2026-11-17T17:50:18.401Z",
+    "action": "Activate control",
+    "detail": "Edit period after opening"
+  },
+  {
+    "at": "2026-11-17T17:50:18.937Z",
+    "action": "Enter synthetic value",
+    "detail": "PAO months printed on label"
+  },
+  {
+    "at": "2026-11-17T17:50:19.107Z",
+    "action": "Activate control",
+    "detail": "Confirm label PAO value"
+  },
+  {
+    "at": "2026-11-17T17:50:19.644Z",
+    "action": "Keyboard activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:50:22.335Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:22.890Z",
+    "action": "Activate control",
+    "detail": "Resume saved intake draft"
+  },
+  {
+    "at": "2026-11-17T17:50:23.443Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:24.013Z",
+    "action": "Activate control",
+    "detail": "Edit period after opening"
+  },
+  {
+    "at": "2026-11-17T17:50:24.574Z",
+    "action": "Keyboard activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-17T17:50:26.157Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:27.935Z",
+    "action": "Enter synthetic value",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-17T17:50:28.102Z",
+    "action": "Activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:50:28.641Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:29.179Z",
+    "action": "Activate control",
+    "detail": "Review intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:50:29.714Z",
+    "action": "Activate control",
+    "detail": "Keep intake draft"
+  },
+  {
+    "at": "2026-11-17T17:50:30.250Z",
+    "action": "Activate control",
+    "detail": "Review intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:50:30.788Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:50:31.087Z",
+    "action": "Refuse one synthetic storage source",
+    "detail": "layerwell.manualIntakeDrafts.v1"
+  },
+  {
+    "at": "2026-11-17T17:50:31.088Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:31.641Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:31.900Z",
+    "action": "Refuse unsupported synthetic encrypted envelope",
+    "detail": "layerwell.manualIntakeDrafts.v1"
+  },
+  {
+    "at": "2026-11-17T17:50:31.900Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:32.454Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:35.354Z",
+    "action": "Start actual app journey",
+    "detail": "390x844"
+  },
+  {
+    "at": "2026-11-17T17:50:37.408Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-17T17:50:37.962Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-17T17:50:38.116Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-17T17:50:38.271Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-17T17:50:38.425Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:38.979Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:41.730Z",
+    "action": "Activate control",
+    "detail": "Add a product"
+  },
+  {
+    "at": "2026-11-17T17:50:42.317Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:50:42.484Z",
+    "action": "Enter synthetic value",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-17T17:50:42.652Z",
+    "action": "Enter synthetic value",
+    "detail": "Barcode, optional"
+  },
+  {
+    "at": "2026-11-17T17:50:42.821Z",
+    "action": "Activate control",
+    "detail": "Eight-digit barcode type, EAN-8"
+  },
+  {
+    "at": "2026-11-17T17:50:43.358Z",
+    "action": "Enter synthetic value",
+    "detail": "Ingredients"
+  },
+  {
+    "at": "2026-11-17T17:50:43.526Z",
+    "action": "Keyboard activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:50:43.845Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:50:45.204Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:45.797Z",
+    "action": "Activate control",
+    "detail": "Resume saved intake draft"
+  },
+  {
+    "at": "2026-11-17T17:50:46.398Z",
+    "action": "Activate control",
+    "detail": "Category"
+  },
+  {
+    "at": "2026-11-17T17:50:46.939Z",
+    "action": "Activate control",
+    "detail": "Category, Cleanser"
+  },
+  {
+    "at": "2026-11-17T17:50:47.477Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:48.064Z",
+    "action": "Activate control",
+    "detail": "Pick a date"
+  },
+  {
+    "at": "2026-11-17T17:50:48.599Z",
+    "action": "Enter synthetic value",
+    "detail": "Exact opened date"
+  },
+  {
+    "at": "2026-11-17T17:50:48.768Z",
+    "action": "Activate control",
+    "detail": "Edit period after opening"
+  },
+  {
+    "at": "2026-11-17T17:50:49.307Z",
+    "action": "Enter synthetic value",
+    "detail": "PAO months printed on label"
+  },
+  {
+    "at": "2026-11-17T17:50:49.478Z",
+    "action": "Activate control",
+    "detail": "Confirm label PAO value"
+  },
+  {
+    "at": "2026-11-17T17:50:50.018Z",
+    "action": "Keyboard activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:50:54.349Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:50:54.920Z",
+    "action": "Activate control",
+    "detail": "Resume saved intake draft"
+  },
+  {
+    "at": "2026-11-17T17:50:55.490Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:50:56.063Z",
+    "action": "Activate control",
+    "detail": "Edit period after opening"
+  },
+  {
+    "at": "2026-11-17T17:50:56.633Z",
+    "action": "Keyboard activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-17T17:50:58.656Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:00.969Z",
+    "action": "Enter synthetic value",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-17T17:51:01.142Z",
+    "action": "Activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:51:01.700Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:02.257Z",
+    "action": "Activate control",
+    "detail": "Review intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:51:02.794Z",
+    "action": "Activate control",
+    "detail": "Keep intake draft"
+  },
+  {
+    "at": "2026-11-17T17:51:03.334Z",
+    "action": "Activate control",
+    "detail": "Review intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:51:03.873Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:51:04.185Z",
+    "action": "Refuse one synthetic storage source",
+    "detail": "layerwell.manualIntakeDrafts.v1"
+  },
+  {
+    "at": "2026-11-17T17:51:04.186Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:04.748Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:05.024Z",
+    "action": "Refuse unsupported synthetic encrypted envelope",
+    "detail": "layerwell.manualIntakeDrafts.v1"
+  },
+  {
+    "at": "2026-11-17T17:51:05.025Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:05.600Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:09.736Z",
+    "action": "Start actual app journey",
+    "detail": "430x932"
+  },
+  {
+    "at": "2026-11-17T17:51:13.185Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-17T17:51:13.762Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-17T17:51:13.932Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-17T17:51:14.102Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-17T17:51:14.274Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:51:14.876Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-17T17:51:18.854Z",
+    "action": "Activate control",
+    "detail": "Add a product"
+  },
+  {
+    "at": "2026-11-17T17:51:19.467Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:51:19.635Z",
+    "action": "Enter synthetic value",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-17T17:51:19.807Z",
+    "action": "Enter synthetic value",
+    "detail": "Barcode, optional"
+  },
+  {
+    "at": "2026-11-17T17:51:19.976Z",
+    "action": "Activate control",
+    "detail": "Eight-digit barcode type, EAN-8"
+  },
+  {
+    "at": "2026-11-17T17:51:20.531Z",
+    "action": "Enter synthetic value",
+    "detail": "Ingredients"
+  },
+  {
+    "at": "2026-11-17T17:51:20.717Z",
+    "action": "Keyboard activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:51:21.074Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-17T17:51:23.485Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:24.101Z",
+    "action": "Activate control",
+    "detail": "Resume saved intake draft"
+  },
+  {
+    "at": "2026-11-17T17:51:24.778Z",
+    "action": "Activate control",
+    "detail": "Category"
+  },
+  {
+    "at": "2026-11-17T17:51:25.366Z",
+    "action": "Activate control",
+    "detail": "Category, Cleanser"
+  },
+  {
+    "at": "2026-11-17T17:51:25.920Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:51:26.559Z",
+    "action": "Activate control",
+    "detail": "Pick a date"
+  },
+  {
+    "at": "2026-11-17T17:51:27.112Z",
+    "action": "Enter synthetic value",
+    "detail": "Exact opened date"
+  },
+  {
+    "at": "2026-11-17T17:51:27.282Z",
+    "action": "Activate control",
+    "detail": "Edit period after opening"
+  },
+  {
+    "at": "2026-11-17T17:51:27.838Z",
+    "action": "Enter synthetic value",
+    "detail": "PAO months printed on label"
+  },
+  {
+    "at": "2026-11-17T17:51:28.023Z",
+    "action": "Activate control",
+    "detail": "Confirm label PAO value"
+  },
+  {
+    "at": "2026-11-17T17:51:28.579Z",
+    "action": "Keyboard activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:51:33.384Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:33.982Z",
+    "action": "Activate control",
+    "detail": "Resume saved intake draft"
+  },
+  {
+    "at": "2026-11-17T17:51:34.583Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-17T17:51:35.232Z",
+    "action": "Activate control",
+    "detail": "Edit period after opening"
+  },
+  {
+    "at": "2026-11-17T17:51:35.834Z",
+    "action": "Keyboard activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-17T17:51:38.733Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:41.202Z",
+    "action": "Enter synthetic value",
+    "detail": "Brand"
+  },
+  {
+    "at": "2026-11-17T17:51:41.369Z",
+    "action": "Activate control",
+    "detail": "Save intake draft on this device"
+  },
+  {
+    "at": "2026-11-17T17:51:41.908Z",
+    "action": "Activate control",
+    "detail": "Saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:42.462Z",
+    "action": "Activate control",
+    "detail": "Review intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:51:42.999Z",
+    "action": "Activate control",
+    "detail": "Keep intake draft"
+  },
+  {
+    "at": "2026-11-17T17:51:43.538Z",
+    "action": "Activate control",
+    "detail": "Review intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:51:44.076Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm intake draft discard"
+  },
+  {
+    "at": "2026-11-17T17:51:44.383Z",
+    "action": "Refuse one synthetic storage source",
+    "detail": "layerwell.manualIntakeDrafts.v1"
+  },
+  {
+    "at": "2026-11-17T17:51:44.384Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:44.958Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:45.226Z",
+    "action": "Refuse unsupported synthetic encrypted envelope",
+    "detail": "layerwell.manualIntakeDrafts.v1"
+  },
+  {
+    "at": "2026-11-17T17:51:45.227Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:45.783Z",
+    "action": "Activate control",
+    "detail": "Refresh saved intake drafts"
+  },
+  {
+    "at": "2026-11-17T17:51:48.426Z",
+    "action": "PASS manual intake recovery journeys",
+    "detail": "375x667, 390x844, 430x932"
+  }
+]

@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/today/OptionalChangePanel41.test.tsx src/features/today/optionalChangeDraftUI21.test.ts src/features/today/todayRoute.test.ts src/features/retainedRecovery/localRecoveryDrafts25.test.ts src/features/retainedRecovery/localRecovery.campaign05.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  4 passed (4)
+      Tests  60 passed (60)
+   Start at  20:43:48
+   Duration  4.84s (transform 1.89s, setup 0ms, import 3.11s, tests 4.51s, environment 0ms)
+

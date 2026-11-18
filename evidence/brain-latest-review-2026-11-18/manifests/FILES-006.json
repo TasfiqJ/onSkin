@@ -1,0 +1,1809 @@
+{
+  "formatVersion": 1,
+  "files": [
+    {
+      "logicalPath": "historical/engineering20/professional-browser-430.log",
+      "sourceBytes": 19,
+      "sourceSha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+      "publishedBytes": 19,
+      "publishedSha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-430.log",
+          "bytes": 19,
+          "sha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-375/domain/authority.mjs",
+      "sourceBytes": 9043,
+      "sourceSha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f",
+      "publishedBytes": 9043,
+      "publishedSha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-375/domain/authority.mjs",
+          "bytes": 9043,
+          "sha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-375/domain/grants.mjs",
+      "sourceBytes": 6014,
+      "sourceSha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab",
+      "publishedBytes": 6014,
+      "publishedSha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-375/domain/grants.mjs",
+          "bytes": 6014,
+          "sha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-375/domain/intendedPlans.mjs",
+      "sourceBytes": 13893,
+      "sourceSha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717",
+      "publishedBytes": 13893,
+      "publishedSha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-375/domain/intendedPlans.mjs",
+          "bytes": 13893,
+          "sha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-375/domain/reconciliation.mjs",
+      "sourceBytes": 15898,
+      "sourceSha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3",
+      "publishedBytes": 15898,
+      "publishedSha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-375/domain/reconciliation.mjs",
+          "bytes": 15898,
+          "sha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-375/server.log",
+      "sourceBytes": 72,
+      "sourceSha256": "33c83dba043c687b546ef49db852b786e6655ed5ea1b670ccc1b7e1e2f4395d2",
+      "publishedBytes": 72,
+      "publishedSha256": "33c83dba043c687b546ef49db852b786e6655ed5ea1b670ccc1b7e1e2f4395d2",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-375/server.log",
+          "bytes": 72,
+          "sha256": "33c83dba043c687b546ef49db852b786e6655ed5ea1b670ccc1b7e1e2f4395d2"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-375/summary.json",
+      "sourceBytes": 5300,
+      "sourceSha256": "dd9f3184fe529bfb44ac1a50c1c0178d0ffcc79be783d06104d53bbd5dd990d2",
+      "publishedBytes": 5300,
+      "publishedSha256": "dd9f3184fe529bfb44ac1a50c1c0178d0ffcc79be783d06104d53bbd5dd990d2",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-375/summary.json",
+          "bytes": 5300,
+          "sha256": "dd9f3184fe529bfb44ac1a50c1c0178d0ffcc79be783d06104d53bbd5dd990d2"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-430/domain/authority.mjs",
+      "sourceBytes": 9043,
+      "sourceSha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f",
+      "publishedBytes": 9043,
+      "publishedSha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-430/domain/authority.mjs",
+          "bytes": 9043,
+          "sha256": "42fd980507b6fd86a4ab0b7895ce56967e65332d04e9ef6a830969c799e8480f"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-430/domain/grants.mjs",
+      "sourceBytes": 6014,
+      "sourceSha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab",
+      "publishedBytes": 6014,
+      "publishedSha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-430/domain/grants.mjs",
+          "bytes": 6014,
+          "sha256": "74c7c83c0dd4b6b8c3976683bf3b30b0666e893970e552f9ad04cfe3709e3eab"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-430/domain/intendedPlans.mjs",
+      "sourceBytes": 13893,
+      "sourceSha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717",
+      "publishedBytes": 13893,
+      "publishedSha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-430/domain/intendedPlans.mjs",
+          "bytes": 13893,
+          "sha256": "20493a1b669acfa6de4a536a8ccb46ea8ad00351e2c078c21964c8d0badf2717"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-430/domain/reconciliation.mjs",
+      "sourceBytes": 15898,
+      "sourceSha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3",
+      "publishedBytes": 15898,
+      "publishedSha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-430/domain/reconciliation.mjs",
+          "bytes": 15898,
+          "sha256": "8d3fe3762f37c0069a2462cabb1b949a18c62e3467af073134641f12f74854b3"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-430/server.log",
+      "sourceBytes": 72,
+      "sourceSha256": "09108b9d37522ae9724553e9269947bac6d366af32f8d6f90ef26e8c86fb932b",
+      "publishedBytes": 72,
+      "publishedSha256": "09108b9d37522ae9724553e9269947bac6d366af32f8d6f90ef26e8c86fb932b",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-430/server.log",
+          "bytes": 72,
+          "sha256": "09108b9d37522ae9724553e9269947bac6d366af32f8d6f90ef26e8c86fb932b"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final/queue-430/summary.json",
+      "sourceBytes": 5048,
+      "sourceSha256": "65cefb169062cda21fef5e1ab3177a0539ef5e020d148a7b99288560cefd14bc",
+      "publishedBytes": 5048,
+      "publishedSha256": "65cefb169062cda21fef5e1ab3177a0539ef5e020d148a7b99288560cefd14bc",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final/queue-430/summary.json",
+          "bytes": 5048,
+          "sha256": "65cefb169062cda21fef5e1ab3177a0539ef5e020d148a7b99288560cefd14bc"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final-375.json",
+      "sourceBytes": 670,
+      "sourceSha256": "d45caba6c89fd6245cce73c2f54a127935fe8a63dcffebec7b0e51fe0591cba2",
+      "publishedBytes": 671,
+      "publishedSha256": "35c82990031fa005ee09f36ad5ba12d9702b89e6c1ef6bcaf74e4c7ea1ccbd5b",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final-375.json",
+          "bytes": 671,
+          "sha256": "35c82990031fa005ee09f36ad5ba12d9702b89e6c1ef6bcaf74e4c7ea1ccbd5b"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final-375.log",
+      "sourceBytes": 19,
+      "sourceSha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c",
+      "publishedBytes": 19,
+      "publishedSha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final-375.log",
+          "bytes": 19,
+          "sha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final-430.json",
+      "sourceBytes": 669,
+      "sourceSha256": "664bf72be202bc167869bd4d2f9bbc504bbd8b368a56e18b03c23998dc7f4d3b",
+      "publishedBytes": 670,
+      "publishedSha256": "022758b67218b77c68514e84b7de259a2016aa70fbffdff3139c2397b12d9c00",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final-430.json",
+          "bytes": 670,
+          "sha256": "022758b67218b77c68514e84b7de259a2016aa70fbffdff3139c2397b12d9c00"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-browser-final-430.log",
+      "sourceBytes": 19,
+      "sourceSha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+      "publishedBytes": 19,
+      "publishedSha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-browser-final-430.log",
+          "bytes": 19,
+          "sha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-response-tests.json",
+      "sourceBytes": 2177,
+      "sourceSha256": "07e43b2583d07f839a0193120d74e6e5551866817c75cb5977c326440ed1a3ae",
+      "publishedBytes": 2178,
+      "publishedSha256": "2cb6f9454b2c71fc5423b6d8a58c3f4ef410f590cd2a43822b8ea684a97fad1c",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-response-tests.json",
+          "bytes": 2178,
+          "sha256": "2cb6f9454b2c71fc5423b6d8a58c3f4ef410f590cd2a43822b8ea684a97fad1c"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/professional-response-tests.log",
+      "sourceBytes": 392,
+      "sourceSha256": "97cf4510825bf45bc5194f38cf7dfb4a4c89f2b88df8da3484bec152240b4010",
+      "publishedBytes": 395,
+      "publishedSha256": "9764c43424084663f5c0e4388f8bfa4b68b89450a16dc884f622ffbdc1aa9478",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/professional-response-tests.log",
+          "bytes": 395,
+          "sha256": "9764c43424084663f5c0e4388f8bfa4b68b89450a16dc884f622ffbdc1aa9478"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/PUBLICATION_BLOCKER.md",
+      "sourceBytes": 2056,
+      "sourceSha256": "e451c9f1e15ebfa8f90674e058b717d59ec7365ccbc8cf3c5c71d563784e878f",
+      "publishedBytes": 2056,
+      "publishedSha256": "e451c9f1e15ebfa8f90674e058b717d59ec7365ccbc8cf3c5c71d563784e878f",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/PUBLICATION_BLOCKER.md",
+          "bytes": 2056,
+          "sha256": "e451c9f1e15ebfa8f90674e058b717d59ec7365ccbc8cf3c5c71d563784e878f"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/READABLE_STAGE_RECEIPT.json",
+      "sourceBytes": 453,
+      "sourceSha256": "0096d7abb09c83c96716b76d3d980a1efd2265988a298bee321e7234c0ef662d",
+      "publishedBytes": 454,
+      "publishedSha256": "2cb36d1941ba72878840cd3f19dac2f09fab107adee1ae6d7844928a8fd128f6",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/READABLE_STAGE_RECEIPT.json",
+          "bytes": 454,
+          "sha256": "2cb36d1941ba72878840cd3f19dac2f09fab107adee1ae6d7844928a8fd128f6"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/READABLE_VERIFICATION.json",
+      "sourceBytes": 302,
+      "sourceSha256": "333dcdfbd3b6892d90d6dacec3d14e29e4af4e28708e3d142b56baac0f7d630a",
+      "publishedBytes": 303,
+      "publishedSha256": "190f1d61353dfd4d451ecc8e5381c3d25f25f00661aa125ef9cd305c83df6313",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/READABLE_VERIFICATION.json",
+          "bytes": 303,
+          "sha256": "190f1d61353dfd4d451ecc8e5381c3d25f25f00661aa125ef9cd305c83df6313"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/root-lint.json",
+      "sourceBytes": 2136,
+      "sourceSha256": "689ce8ea6cea10a310f41f3e39676062ef32a6dddb68223d0d207eb10a0dabfa",
+      "publishedBytes": 2137,
+      "publishedSha256": "36b56ac2a3db40cd99d62cd674fa272252da7ae820a263470d3ec45012227d26",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/root-lint.json",
+          "bytes": 2137,
+          "sha256": "36b56ac2a3db40cd99d62cd674fa272252da7ae820a263470d3ec45012227d26"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/root-lint.log",
+      "sourceBytes": 224,
+      "sourceSha256": "e6d806c3862a1097949c392eeb51c379a6f3d80b9c3c759622cdab8a6e5797cd",
+      "publishedBytes": 224,
+      "publishedSha256": "e6d806c3862a1097949c392eeb51c379a6f3d80b9c3c759622cdab8a6e5797cd",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/root-lint.log",
+          "bytes": 224,
+          "sha256": "e6d806c3862a1097949c392eeb51c379a6f3d80b9c3c759622cdab8a6e5797cd"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/root-types.json",
+      "sourceBytes": 2142,
+      "sourceSha256": "16917d3a79b901b3610d1f4795750d8e5a17e40a1f2faa0252187695057462c0",
+      "publishedBytes": 2143,
+      "publishedSha256": "912e9606275c3973d60fbc818e937c8db26c49d31ef12363937e3e0504f2e728",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/root-types.json",
+          "bytes": 2143,
+          "sha256": "912e9606275c3973d60fbc818e937c8db26c49d31ef12363937e3e0504f2e728"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/root-types.log",
+      "sourceBytes": 234,
+      "sourceSha256": "20ed5d55053b6bbc27af70d3ef6b274a861db594cbfa94f64f1677f611d76efc",
+      "publishedBytes": 234,
+      "publishedSha256": "20ed5d55053b6bbc27af70d3ef6b274a861db594cbfa94f64f1677f611d76efc",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/root-types.log",
+          "bytes": 234,
+          "sha256": "20ed5d55053b6bbc27af70d3ef6b274a861db594cbfa94f64f1677f611d76efc"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/run_check.py",
+      "sourceBytes": 1696,
+      "sourceSha256": "9d9e6a79e4b687580d06c9a739457ca8705dc96289dc10065b84c10e84fa78dc",
+      "publishedBytes": 1696,
+      "publishedSha256": "9d9e6a79e4b687580d06c9a739457ca8705dc96289dc10065b84c10e84fa78dc",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/run_check.py",
+          "bytes": 1696,
+          "sha256": "9d9e6a79e4b687580d06c9a739457ca8705dc96289dc10065b84c10e84fa78dc"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/SESSION_ENGINEERING19_TO_ENGINEERING20.patch",
+      "sourceBytes": 148493,
+      "sourceSha256": "cffbc3aaf2b183b652cff399d98532aa8d7b02381c22e1967fbc6b74bcfe083d",
+      "publishedBytes": 148493,
+      "publishedSha256": "cffbc3aaf2b183b652cff399d98532aa8d7b02381c22e1967fbc6b74bcfe083d",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {},
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/SESSION_ENGINEERING19_TO_ENGINEERING20.patch",
+          "bytes": 148493,
+          "sha256": "cffbc3aaf2b183b652cff399d98532aa8d7b02381c22e1967fbc6b74bcfe083d"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/SOURCE_MANIFEST.json",
+      "sourceBytes": 3673826,
+      "sourceSha256": "d56c1778e8adf89ea783d9f2929ec44967efb3861a7ef209f028397032b61a9e",
+      "publishedBytes": 3673826,
+      "publishedSha256": "d56c1778e8adf89ea783d9f2929ec44967efb3861a7ef209f028397032b61a9e",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-001.txt",
+          "bytes": 245754,
+          "sha256": "559b385d4d7d84428875ea95c3b07a4ad9255a589698a04f67bae9a3f7e4f47b"
+        },
+        {
+          "order": 2,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-002.txt",
+          "bytes": 245724,
+          "sha256": "e704ccd6061b19471360d5f88ae41071a6538054e08078206eb14b4da1b6249f"
+        },
+        {
+          "order": 3,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-003.txt",
+          "bytes": 245751,
+          "sha256": "e53997166fca13fc0a882fd50a0b89517ba4649b7b93f4fad356b2cd73b1695e"
+        },
+        {
+          "order": 4,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-004.txt",
+          "bytes": 245758,
+          "sha256": "9c99a54350a9d68af9b2f679684598d16f7909a4f0293cf6467bd947a94d6961"
+        },
+        {
+          "order": 5,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-005.txt",
+          "bytes": 245759,
+          "sha256": "d305296889c7d2be772b2f556766239e33438373cc3d9b50460d8b7c3c66769c"
+        },
+        {
+          "order": 6,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-006.txt",
+          "bytes": 245668,
+          "sha256": "22989318ad4b560a894e4690851540bb55fd6ba47f38316d73c95ae5f7bfb5de"
+        },
+        {
+          "order": 7,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-007.txt",
+          "bytes": 245666,
+          "sha256": "8ff804106b1c2c4620c62f8f0380537cf7b92123d30f00e5d37e02ec9a6a37c9"
+        },
+        {
+          "order": 8,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-008.txt",
+          "bytes": 245664,
+          "sha256": "7a382a536b5624d3ad16e8aadd020e852205999ceb330912c55c36acfa3a0a52"
+        },
+        {
+          "order": 9,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-009.txt",
+          "bytes": 245697,
+          "sha256": "001e2d8383c51a388ff7e6481486ab9df94360a3311749686b78f31ce53ad19e"
+        },
+        {
+          "order": 10,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-010.txt",
+          "bytes": 245728,
+          "sha256": "f9410e30a0cf2aeddbd16243924b7782c7fd255c8710f3ff10ca4ba7dae4680d"
+        },
+        {
+          "order": 11,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-011.txt",
+          "bytes": 245715,
+          "sha256": "a94d71f728c8fbb4565ce7abd4bb8ef120fbf19345c4479bbc8c293c80b80bec"
+        },
+        {
+          "order": 12,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-012.txt",
+          "bytes": 245709,
+          "sha256": "aa5fc545a75fb56e4630e48ab2bcb3fd355d100b0f6dd5aedb0dff24d015b500"
+        },
+        {
+          "order": 13,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-013.txt",
+          "bytes": 245709,
+          "sha256": "4104968ac2b38e7211af5131a7bdca6c45b46f05fb4adf1a52c4e8050a11c063"
+        },
+        {
+          "order": 14,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-014.txt",
+          "bytes": 245690,
+          "sha256": "b9746bea1a8cc300f21b067d46880ef18c7a13e63ae9832cebf92ac538f8501a"
+        },
+        {
+          "order": 15,
+          "path": "historical/engineering20/SOURCE_MANIFEST.json.parts/part-015.txt",
+          "bytes": 233834,
+          "sha256": "e8e6412560feb6c759136d5b5ce091a3acf608fc1b5a4abcd8de58f78eaca921"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/typecheck-initial.log",
+      "sourceBytes": 57,
+      "sourceSha256": "56385566b6304c44796ba6e868fad516b5a987b089fe63a335b893ad457ea7b4",
+      "publishedBytes": 57,
+      "publishedSha256": "56385566b6304c44796ba6e868fad516b5a987b089fe63a335b893ad457ea7b4",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/typecheck-initial.log",
+          "bytes": 57,
+          "sha256": "56385566b6304c44796ba6e868fad516b5a987b089fe63a335b893ad457ea7b4"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/VERIFICATION_SUMMARY.json",
+      "sourceBytes": 12822,
+      "sourceSha256": "19616a561f7499b2fbe79bdad4bd9d1ec2f76c619825cff292860c7645af00d1",
+      "publishedBytes": 12833,
+      "publishedSha256": "44ee698a125f3410d7c52a3aaf5bbf1d69d5fc4323824a79e1650b26ea1253e0",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 11,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/VERIFICATION_SUMMARY.json",
+          "bytes": 12833,
+          "sha256": "44ee698a125f3410d7c52a3aaf5bbf1d69d5fc4323824a79e1650b26ea1253e0"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/verify_ancestry.py",
+      "sourceBytes": 1516,
+      "sourceSha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9",
+      "publishedBytes": 1516,
+      "publishedSha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/verify_ancestry.py",
+          "bytes": 1516,
+          "sha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/verify_evidence.py",
+      "sourceBytes": 2007,
+      "sourceSha256": "e8164797edaf4254d45bd64c079e1574b417ff53848b8404088dee15b020a37c",
+      "publishedBytes": 2007,
+      "publishedSha256": "e8164797edaf4254d45bd64c079e1574b417ff53848b8404088dee15b020a37c",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/verify_evidence.py",
+          "bytes": 2007,
+          "sha256": "e8164797edaf4254d45bd64c079e1574b417ff53848b8404088dee15b020a37c"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering20/verify_trees.py",
+      "sourceBytes": 1299,
+      "sourceSha256": "4bc83f85e0b674c9b1adfe8972244eeaa3574c5c90fc1ccef329eb4430257780",
+      "publishedBytes": 1299,
+      "publishedSha256": "4bc83f85e0b674c9b1adfe8972244eeaa3574c5c90fc1ccef329eb4430257780",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering20/verify_trees.py",
+          "bytes": 1299,
+          "sha256": "4bc83f85e0b674c9b1adfe8972244eeaa3574c5c90fc1ccef329eb4430257780"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/BASELINE.json",
+      "sourceBytes": 1586,
+      "sourceSha256": "6f840606ab413f45acc994cf034cb21c00325505a3a43b956a69e9750c43d01a",
+      "publishedBytes": 1591,
+      "publishedSha256": "aa1735bf70815863cc7352668edba54b994e5bbf0fb4f774162b2d2f3713fc16",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 5,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/BASELINE.json",
+          "bytes": 1591,
+          "sha256": "aa1735bf70815863cc7352668edba54b994e5bbf0fb4f774162b2d2f3713fc16"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/browser-source-and-cleanup.json",
+      "sourceBytes": 5931,
+      "sourceSha256": "72a8fe343b85a8bd259eb0d93fc78afa95988ccd104567a028d1a74d30cbbe91",
+      "publishedBytes": 5931,
+      "publishedSha256": "72a8fe343b85a8bd259eb0d93fc78afa95988ccd104567a028d1a74d30cbbe91",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/browser-source-and-cleanup.json",
+          "bytes": 5931,
+          "sha256": "72a8fe343b85a8bd259eb0d93fc78afa95988ccd104567a028d1a74d30cbbe91"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/BROWSER_E2E_CHECKLIST.md",
+      "sourceBytes": 8441,
+      "sourceSha256": "db7b529a3de50c53e966b51b0bd5facb6e1930440f77c56d7ec714a8f67f0580",
+      "publishedBytes": 8441,
+      "publishedSha256": "db7b529a3de50c53e966b51b0bd5facb6e1930440f77c56d7ec714a8f67f0580",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/BROWSER_E2E_CHECKLIST.md",
+          "bytes": 8441,
+          "sha256": "db7b529a3de50c53e966b51b0bd5facb6e1930440f77c56d7ec714a8f67f0580"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/build_consumer.py",
+      "sourceBytes": 459,
+      "sourceSha256": "10eeea59aa80057fc907864058e862e05d7e3e2e03afcd81fc5a9a54c679dc6b",
+      "publishedBytes": 459,
+      "publishedSha256": "10eeea59aa80057fc907864058e862e05d7e3e2e03afcd81fc5a9a54c679dc6b",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/build_consumer.py",
+          "bytes": 459,
+          "sha256": "10eeea59aa80057fc907864058e862e05d7e3e2e03afcd81fc5a9a54c679dc6b"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/CHANGED_FILES.json",
+      "sourceBytes": 17847,
+      "sourceSha256": "244c1d2cce68e2d76d735b922cc3dfcf23dbcfe98be1fa059f540e5477aa1504",
+      "publishedBytes": 17847,
+      "publishedSha256": "244c1d2cce68e2d76d735b922cc3dfcf23dbcfe98be1fa059f540e5477aa1504",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/CHANGED_FILES.json",
+          "bytes": 17847,
+          "sha256": "244c1d2cce68e2d76d735b922cc3dfcf23dbcfe98be1fa059f540e5477aa1504"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/collect_checkpoint.py",
+      "sourceBytes": 7107,
+      "sourceSha256": "eb6b98da5a227051080bfe72a1c6049203f8dfffbc9df15f1f70629bfa5fe7cc",
+      "publishedBytes": 7107,
+      "publishedSha256": "eb6b98da5a227051080bfe72a1c6049203f8dfffbc9df15f1f70629bfa5fe7cc",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/collect_checkpoint.py",
+          "bytes": 7107,
+          "sha256": "eb6b98da5a227051080bfe72a1c6049203f8dfffbc9df15f1f70629bfa5fe7cc"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/consumer-build-r1.json",
+      "sourceBytes": 2538,
+      "sourceSha256": "2c36fd87b4e261316b72589676d84ea846b2e0270af4d8c854d12a270c5c1e1d",
+      "publishedBytes": 2539,
+      "publishedSha256": "3da0e51dc27fd20468be550de6f4502863905dab7e47a9b298f525afa0730654",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/consumer-build-r1.json",
+          "bytes": 2539,
+          "sha256": "3da0e51dc27fd20468be550de6f4502863905dab7e47a9b298f525afa0730654"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/consumer-build-r1.log",
+      "sourceBytes": 6998,
+      "sourceSha256": "5e5b93da6c79271fdbbb1117b76f32dd981e8c7f1b07f3179bc43d4690a8866b",
+      "publishedBytes": 6968,
+      "publishedSha256": "1d82c84e7fd6f2153419e58885324be754bf6087fdfd318cd7975b825976e9e6",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 8,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 12
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/consumer-build-r1.log",
+          "bytes": 6968,
+          "sha256": "1d82c84e7fd6f2153419e58885324be754bf6087fdfd318cd7975b825976e9e6"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/consumer-build-r2.json",
+      "sourceBytes": 3090,
+      "sourceSha256": "27c735b24f14d73990033cb8a56d69fd4dd039a95b019c708bce7cca2f30a3a8",
+      "publishedBytes": 3091,
+      "publishedSha256": "5b4fddfebe1aa8dfad1a7d03bd37cc0dc66942f275d8f6d38e60f15e70bf4e1b",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/consumer-build-r2.json",
+          "bytes": 3091,
+          "sha256": "5b4fddfebe1aa8dfad1a7d03bd37cc0dc66942f275d8f6d38e60f15e70bf4e1b"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/consumer-build-r2.log",
+      "sourceBytes": 6273,
+      "sourceSha256": "2812cceea34fe45c43ac6039127e788de992d75c28886bc312c02ec784119067",
+      "publishedBytes": 6198,
+      "publishedSha256": "a58f1bc06d6f5d615763c19914f5d16d099a362466992657143feee67628aad5",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 2,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 18
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/consumer-build-r2.log",
+          "bytes": 6198,
+          "sha256": "a58f1bc06d6f5d615763c19914f5d16d099a362466992657143feee67628aad5"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/consumer-build-r3.json",
+      "sourceBytes": 3992,
+      "sourceSha256": "42bc98a3b8c83aeb6374dda88cea56b8cb5217a342970c4d6327fd14502f2671",
+      "publishedBytes": 3993,
+      "publishedSha256": "6ae70e2129960e6368e799aaac2d983eeacac88b372fa2c526525ed1f4d6d2ec",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/consumer-build-r3.json",
+          "bytes": 3993,
+          "sha256": "6ae70e2129960e6368e799aaac2d983eeacac88b372fa2c526525ed1f4d6d2ec"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/consumer-build-r3.log",
+      "sourceBytes": 6106,
+      "sourceSha256": "740253d79ba9baef4d80f559d9779bc8e18fcfedc9ec0eb5916fbbc42e217a3c",
+      "publishedBytes": 6058,
+      "publishedSha256": "e1044f2134dc51e1e2d29722eff3445bc4af1dd1597905d2618de52f51d3b764",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 2,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 12
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/consumer-build-r3.log",
+          "bytes": 6058,
+          "sha256": "e1044f2134dc51e1e2d29722eff3445bc4af1dd1597905d2618de52f51d3b764"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/draft-postdispatch-core-r1.json",
+      "sourceBytes": 3233,
+      "sourceSha256": "f5f3d23f9f216c24bc38b4670ea331909fc6cf44f0e9a8797d8622d8ca5d098b",
+      "publishedBytes": 3234,
+      "publishedSha256": "dbe740d16c8609b62686c280076811ce169884df75177265f541bf4cd4257412",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/draft-postdispatch-core-r1.json",
+          "bytes": 3234,
+          "sha256": "dbe740d16c8609b62686c280076811ce169884df75177265f541bf4cd4257412"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/draft-postdispatch-core-r1.log",
+      "sourceBytes": 398,
+      "sourceSha256": "71d5d6764d0d9487df549695af4f166ab7f435a76033f1499023e3013a320ca2",
+      "publishedBytes": 401,
+      "publishedSha256": "5ca8bcbbff2077b6a5d08c5fe49d1e6352666dc889bed82833cae8423b6add35",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/draft-postdispatch-core-r1.log",
+          "bytes": 401,
+          "sha256": "5ca8bcbbff2077b6a5d08c5fe49d1e6352666dc889bed82833cae8423b6add35"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/FINAL_REPORT.md",
+      "sourceBytes": 20259,
+      "sourceSha256": "65a9499c4ea99dc8c0cc43b6fc3ae6aaac9fe8a16fe2edcbbd08d0fed8f51895",
+      "publishedBytes": 20265,
+      "publishedSha256": "bb2775f76c61facc9dc2ba4e5419a189e8dd56fd6a09267d2e30bccb6de3073d",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 2,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/FINAL_REPORT.md",
+          "bytes": 20265,
+          "sha256": "bb2775f76c61facc9dc2ba4e5419a189e8dd56fd6a09267d2e30bccb6de3073d"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/finalize_docs.py",
+      "sourceBytes": 7166,
+      "sourceSha256": "2803a3f2d5e5aef206d8e9801dba5bda8c58cbe51e001896b1fd28de8b946a3a",
+      "publishedBytes": 7169,
+      "publishedSha256": "93b79bf2af0364c753803ffc2c5c016b7d429107052058551fa43ed86d3f73da",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/finalize_docs.py",
+          "bytes": 7169,
+          "sha256": "93b79bf2af0364c753803ffc2c5c016b7d429107052058551fa43ed86d3f73da"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/FROZEN_CONTRACTS.json",
+      "sourceBytes": 2027,
+      "sourceSha256": "f79106dd509566de45adb13aa183cf8972dc48ac4e807f5f0a7d9715424bfaad",
+      "publishedBytes": 2027,
+      "publishedSha256": "f79106dd509566de45adb13aa183cf8972dc48ac4e807f5f0a7d9715424bfaad",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/FROZEN_CONTRACTS.json",
+          "bytes": 2027,
+          "sha256": "f79106dd509566de45adb13aa183cf8972dc48ac4e807f5f0a7d9715424bfaad"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/journey-authority-fixtures-r1.json",
+      "sourceBytes": 4018,
+      "sourceSha256": "0f6f816d1e5ea4bbb593f87cc20bb18b54de46845a90c0903ce00e85bf7b8e79",
+      "publishedBytes": 4019,
+      "publishedSha256": "7d234b5d965b68195eba78343d2eddc874efc26654e9ac1ec5bb6d8a86bc8780",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/journey-authority-fixtures-r1.json",
+          "bytes": 4019,
+          "sha256": "7d234b5d965b68195eba78343d2eddc874efc26654e9ac1ec5bb6d8a86bc8780"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/journey-authority-fixtures-r1.log",
+      "sourceBytes": 511,
+      "sourceSha256": "d5d974d71009e32f3813cad8b982dfca56ef9cd3f640fc34a78e3b9443ed1db8",
+      "publishedBytes": 514,
+      "publishedSha256": "c51f7a3a44fbb9b828203c29af2a8ab4d01b6d2f79daa7ec339cdee5b0939ed4",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/journey-authority-fixtures-r1.log",
+          "bytes": 514,
+          "sha256": "c51f7a3a44fbb9b828203c29af2a8ab4d01b6d2f79daa7ec339cdee5b0939ed4"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser/expo-e21-manual-drafts.log",
+      "sourceBytes": 944,
+      "sourceSha256": "22f8c8da2403974e3a9de5b658719bfcebcd71c897fad4706c44e04dda539c16",
+      "publishedBytes": 920,
+      "publishedSha256": "f6c08f677b72e473d8be2c0c050c727db774068f30e26ee6bccf64d88a8e6eb3",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 6
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser/expo-e21-manual-drafts.log",
+          "bytes": 920,
+          "sha256": "f6c08f677b72e473d8be2c0c050c727db774068f30e26ee6bccf64d88a8e6eb3"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser/owned-processes.json",
+      "sourceBytes": 88,
+      "sourceSha256": "29da5a1820414cd52be796903e0b18a30d1858f074a080166784a5f61545ae18",
+      "publishedBytes": 88,
+      "publishedSha256": "29da5a1820414cd52be796903e0b18a30d1858f074a080166784a5f61545ae18",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser/owned-processes.json",
+          "bytes": 88,
+          "sha256": "29da5a1820414cd52be796903e0b18a30d1858f074a080166784a5f61545ae18"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser/steps.json",
+      "sourceBytes": 3,
+      "sourceSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "publishedBytes": 3,
+      "publishedSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser/steps.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser/summary.json",
+      "sourceBytes": 3791,
+      "sourceSha256": "89c4e8e4b940709b1f4488b0a13e5a18a2f00ec06e3b4fbd9d0b69abeb22eee0",
+      "publishedBytes": 3790,
+      "publishedSha256": "a957f62c54dbe95a602ce94818061102da2e8678c3519a0e6fefa110986e3296",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 1,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser/summary.json",
+          "bytes": 3790,
+          "sha256": "a957f62c54dbe95a602ce94818061102da2e8678c3519a0e6fefa110986e3296"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-fixes-focused-r1.log",
+      "sourceBytes": 626,
+      "sourceSha256": "00d06fd537b089b959b6b84bc841bb663eb48a8299a780a54c0b536d7127c681",
+      "publishedBytes": 629,
+      "publishedSha256": "ff9f70d4dd89d267a8b4101e5b90dab38658663bff861e7c69ff46bd92e0f8d0",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-fixes-focused-r1.log",
+          "bytes": 629,
+          "sha256": "ff9f70d4dd89d267a8b4101e5b90dab38658663bff861e7c69ff46bd92e0f8d0"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-fixes-typecheck.log",
+      "sourceBytes": 57,
+      "sourceSha256": "56385566b6304c44796ba6e868fad516b5a987b089fe63a335b893ad457ea7b4",
+      "publishedBytes": 57,
+      "publishedSha256": "56385566b6304c44796ba6e868fad516b5a987b089fe63a335b893ad457ea7b4",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-fixes-typecheck.log",
+          "bytes": 57,
+          "sha256": "56385566b6304c44796ba6e868fad516b5a987b089fe63a335b893ad457ea7b4"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-launch-r1.json",
+      "sourceBytes": 1801,
+      "sourceSha256": "41269e2ef322886739b8378fd3e2c50e7c33ba3c5a55c14618ef790e0b849ac6",
+      "publishedBytes": 1801,
+      "publishedSha256": "41269e2ef322886739b8378fd3e2c50e7c33ba3c5a55c14618ef790e0b849ac6",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-launch-r1.json",
+          "bytes": 1801,
+          "sha256": "41269e2ef322886739b8378fd3e2c50e7c33ba3c5a55c14618ef790e0b849ac6"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-launch-r2.json",
+      "sourceBytes": 1221,
+      "sourceSha256": "a6d4692663ee37b845c49f652f8e4ae5f1e370ebf309e028efdb1dfb68ba39aa",
+      "publishedBytes": 1221,
+      "publishedSha256": "a6d4692663ee37b845c49f652f8e4ae5f1e370ebf309e028efdb1dfb68ba39aa",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-launch-r2.json",
+          "bytes": 1221,
+          "sha256": "a6d4692663ee37b845c49f652f8e4ae5f1e370ebf309e028efdb1dfb68ba39aa"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r1.json",
+      "sourceBytes": 2532,
+      "sourceSha256": "ba4e15c3f7dc4701d65698a3dcd4ec6882187cd948074d9d05bc834d03582e74",
+      "publishedBytes": 2533,
+      "publishedSha256": "69c426886bcb275da05db2583186be86b7b02e9fccf7bf8887410cffb53433c3",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r1.json",
+          "bytes": 2533,
+          "sha256": "69c426886bcb275da05db2583186be86b7b02e9fccf7bf8887410cffb53433c3"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r1.log",
+      "sourceBytes": 583,
+      "sourceSha256": "a9cb0a1ddc17daebf7b5b4bea65f3e2c45f89bea0dc39024eb69f770baf7d656",
+      "publishedBytes": 592,
+      "publishedSha256": "154808c758177c3fec8a820e6ca6f9792595b1a5248f042cc1b34e83fbb4ae12",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 3,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r1.log",
+          "bytes": 592,
+          "sha256": "154808c758177c3fec8a820e6ca6f9792595b1a5248f042cc1b34e83fbb4ae12"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r2/expo-e21-manual-drafts.log",
+      "sourceBytes": 73609,
+      "sourceSha256": "9abb2dee2b13293fad9cf908fb003f96d3482978a971ab8a7a237cedf2baa18e",
+      "publishedBytes": 61584,
+      "publishedSha256": "53afdbadace73baf8fca13d734b3d18f0bfaa8cac3d93e241bc7bce698d8cfa3",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 31,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 2448
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r2/expo-e21-manual-drafts.log",
+          "bytes": 61584,
+          "sha256": "53afdbadace73baf8fca13d734b3d18f0bfaa8cac3d93e241bc7bce698d8cfa3"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r2/owned-processes.json",
+      "sourceBytes": 88,
+      "sourceSha256": "cb5b133b9741e3b29bcb76f52d222b47bf1e44b1c66b44ed2c217d9376470360",
+      "publishedBytes": 88,
+      "publishedSha256": "cb5b133b9741e3b29bcb76f52d222b47bf1e44b1c66b44ed2c217d9376470360",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r2/owned-processes.json",
+          "bytes": 88,
+          "sha256": "cb5b133b9741e3b29bcb76f52d222b47bf1e44b1c66b44ed2c217d9376470360"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r2/steps.json",
+      "sourceBytes": 3,
+      "sourceSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "publishedBytes": 3,
+      "publishedSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r2/steps.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r2/summary.json",
+      "sourceBytes": 3699,
+      "sourceSha256": "e26b27957139aeba6a6113362df6e4b0852f8feaffffb550a6c5a35c110efac6",
+      "publishedBytes": 3698,
+      "publishedSha256": "adc941f60bd25f901ff7f7f9f0f11a6e3f4341470e3b52d287d3c442b16c2bac",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 1,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r2/summary.json",
+          "bytes": 3698,
+          "sha256": "adc941f60bd25f901ff7f7f9f0f11a6e3f4341470e3b52d287d3c442b16c2bac"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r2.json",
+      "sourceBytes": 2532,
+      "sourceSha256": "a1d01a6f34ff317302a43f55505b65142720102c3a188299586186ab826b84a4",
+      "publishedBytes": 2533,
+      "publishedSha256": "863ad92c476195435e06cbc819958d63d98b46ce80438b9cec01633f6cbafb29",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 1,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r2.json",
+          "bytes": 2533,
+          "sha256": "863ad92c476195435e06cbc819958d63d98b46ce80438b9cec01633f6cbafb29"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r2.log",
+      "sourceBytes": 583,
+      "sourceSha256": "199f8090b8d77b4495d32b16e8432ba28f7c91d9b87145e52e8e1cf95992152f",
+      "publishedBytes": 592,
+      "publishedSha256": "c6485a2b15413ea3054c19b4781901ee79d2c454faff1f7784ed68f70c6163f7",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 3,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r2.log",
+          "bytes": 592,
+          "sha256": "c6485a2b15413ea3054c19b4781901ee79d2c454faff1f7784ed68f70c6163f7"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r3/375x667-adult-consent.json",
+      "sourceBytes": 469,
+      "sourceSha256": "1a1aa13e3ce83c3132deda7637ae74eecbdba656f7067ff5f9d337de30febd19",
+      "publishedBytes": 469,
+      "publishedSha256": "1a1aa13e3ce83c3132deda7637ae74eecbdba656f7067ff5f9d337de30febd19",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r3/375x667-adult-consent.json",
+          "bytes": 469,
+          "sha256": "1a1aa13e3ce83c3132deda7637ae74eecbdba656f7067ff5f9d337de30febd19"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r3/375x667-inventory-after-reload.json",
+      "sourceBytes": 865,
+      "sourceSha256": "964d12b390ab523add91b29450178e50b396bb14ad0ce0708ef2114ea497c841",
+      "publishedBytes": 865,
+      "publishedSha256": "964d12b390ab523add91b29450178e50b396bb14ad0ce0708ef2114ea497c841",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r3/375x667-inventory-after-reload.json",
+          "bytes": 865,
+          "sha256": "964d12b390ab523add91b29450178e50b396bb14ad0ce0708ef2114ea497c841"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r3/375x667-manual-saved.json",
+      "sourceBytes": 1119,
+      "sourceSha256": "6bddb5f3bcb08e8a68be3014dcfd5d6c8a0b0d14ff917311ef8748aa452f6514",
+      "publishedBytes": 1119,
+      "publishedSha256": "6bddb5f3bcb08e8a68be3014dcfd5d6c8a0b0d14ff917311ef8748aa452f6514",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r3/375x667-manual-saved.json",
+          "bytes": 1119,
+          "sha256": "6bddb5f3bcb08e8a68be3014dcfd5d6c8a0b0d14ff917311ef8748aa452f6514"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r3/375x667-unsaved-edits.json",
+      "sourceBytes": 1052,
+      "sourceSha256": "28ab2453c790fff8e947b4425a25c2d0ee8f84f699c2f26a496c7becf6b45ead",
+      "publishedBytes": 1052,
+      "publishedSha256": "28ab2453c790fff8e947b4425a25c2d0ee8f84f699c2f26a496c7becf6b45ead",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r3/375x667-unsaved-edits.json",
+          "bytes": 1052,
+          "sha256": "28ab2453c790fff8e947b4425a25c2d0ee8f84f699c2f26a496c7becf6b45ead"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r3/E2E_BUG_REPORT.md",
+      "sourceBytes": 3279,
+      "sourceSha256": "6cb4c3368f8d7ebea22e1b527d2111f4739d8a9dadad469737d928988a54bd18",
+      "publishedBytes": 3279,
+      "publishedSha256": "6cb4c3368f8d7ebea22e1b527d2111f4739d8a9dadad469737d928988a54bd18",
+      "byteExact": true,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 0,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 0
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r3/E2E_BUG_REPORT.md",
+          "bytes": 3279,
+          "sha256": "6cb4c3368f8d7ebea22e1b527d2111f4739d8a9dadad469737d928988a54bd18"
+        }
+      ]
+    },
+    {
+      "logicalPath": "historical/engineering21/manual-browser-r3/expo-e21-manual-drafts.log",
+      "sourceBytes": 7991,
+      "sourceSha256": "3445e10992e67cca0c9c798351d49328ffec67243bd117e7f626753d240cb96a",
+      "publishedBytes": 7943,
+      "publishedSha256": "0311564a7f4ad16215cc29d8671ade0cf69d97299dfa5df39fb72b508c1c2cea",
+      "byteExact": false,
+      "origin": "complete original local evidence/source",
+      "sanitization": {
+        "localHomePaths": 2,
+        "localHostName": 0,
+        "temporaryBrowserProfiles": 0,
+        "terminalEscapes": 12
+      },
+      "parts": [
+        {
+          "order": 1,
+          "path": "historical/engineering21/manual-browser-r3/expo-e21-manual-drafts.log",
+          "bytes": 7943,
+          "sha256": "0311564a7f4ad16215cc29d8671ade0cf69d97299dfa5df39fb72b508c1c2cea"
+        }
+      ]
+    }
+  ]
+}

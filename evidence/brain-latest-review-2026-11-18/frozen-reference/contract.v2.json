@@ -1,0 +1,326 @@
+{
+  "schema_version": 2,
+  "contract_id": "onskin-full-app-j01-campaign33-v2",
+  "proposal_status": "SOURCE_CANDIDATE_REVIEW_REQUIRED",
+  "authorization": "BRAIN-M1X-MASTERV2-FULLAPP-J01-SCOPE-CUTOVER33-CANDIDATE-01",
+  "decision_id": "BRAIN-RELEASE-SCOPE-FULL-APP-J01-2026-10-24-01",
+  "source_base": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+  "source_base_tree": "0745ad5f5595724a9b26de64324065dc3e53d2ea",
+  "required_f": [
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "F05",
+    "F06",
+    "F07",
+    "F08",
+    "F09",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "F16",
+    "F17",
+    "F19",
+    "F20"
+  ],
+  "required_c": [
+    "V2-C01",
+    "V2-C02",
+    "V2-C03",
+    "V2-C04",
+    "V2-C05",
+    "V2-C06",
+    "V2-C07",
+    "V2-C08",
+    "V2-C09",
+    "V2-C10",
+    "V2-C11",
+    "V2-C12"
+  ],
+  "required_p": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06"
+  ],
+  "korean_candidates": [
+    "J01"
+  ],
+  "deferred_f": [
+    "F18"
+  ],
+  "deferred_j": [
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11",
+    "J12",
+    "J13",
+    "J14",
+    "J15",
+    "J16",
+    "J17",
+    "J18",
+    "J19",
+    "J20",
+    "J21",
+    "J22",
+    "J23",
+    "J24",
+    "J25",
+    "J26",
+    "J27"
+  ],
+  "release": {
+    "platforms": [
+      "ios"
+    ],
+    "minimum_ios": "17.0",
+    "ipad": false,
+    "android_release": false,
+    "adult_minimum_age": 18,
+    "storefront_candidate": "US",
+    "closed_cohort_candidate": "California resident adults and qualified California nonmedical professionals",
+    "public_territory_status": "NOT_CLEARED",
+    "measurement_device_profiles": [],
+    "version": "NOT_ASSIGNED",
+    "public_date": null
+  },
+  "gates": [
+    {
+      "id": "G97",
+      "status": "FAIL/NO_GO",
+      "owner": "Original Security custodian",
+      "acceptance": "Original rules/pins/tool/secret/OSV/source inventory and exact-source acceptance; expiry 2026-10-21T00:00:00Z unchanged",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "DB",
+      "status": "NOT_ACCEPTED",
+      "owner": "Canonical DB06/DB08/R2B custodian",
+      "acceptance": "DB06/DB08/R2B qualified owner exact-environment admission remains absent; hosted canonical technical success is separate evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "M1-03",
+      "status": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+      "owner": "Independent Brain and protected custodians",
+      "acceptance": "Whole M1-03 acceptance from authentic exact-source Security/DB evidence, not alternate PG rehearsal",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "M2-01",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Independent Brain",
+      "acceptance": "Accepted M1-03 then separate finite implementation authorization; ADR038 corrections remain due",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G1",
+      "status": "NOT_ACCEPTED",
+      "owner": "Physical iPhone imaging engineer",
+      "acceptance": "Real native pixels, resolving power, capture region/device/light/distance and repeatability evidence; no upscaling-as-detail",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G2",
+      "status": "NOT_ACCEPTED",
+      "owner": "Source-rights counsel, image scientist and statistician",
+      "acceptance": "Authenticated exact J01 dossier, target/rights/consent/annotation and frozen person-disjoint evaluation manifest",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G3",
+      "status": "NOT_ACCEPTED",
+      "owner": "Independent image scientist and statistician",
+      "acceptance": "Locked single-scan pipeline, independent supported-stratum errors, coverage and honest abstention at each claim granularity",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G4",
+      "status": "NOT_ACCEPTED",
+      "owner": "Independent longitudinal reviewer",
+      "acceptance": "Separate common-support repeatability/noise/change study; absent now, no pore change/trend",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "G5",
+      "status": "NOT_ACCEPTED",
+      "owner": "Privacy/security, clinical/regulatory reviewers and native release operator",
+      "acceptance": "Exact signed build, image lifecycle/zero-egress if claimed, fairness, cosmetic copy, device and operations evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "RIGHTS",
+      "status": "GATED",
+      "owner": "IP/content/source-rights reviewer",
+      "acceptance": "Exact catalog/code/weights/data/image/text licences and permitted distribution; articles do not supply imaging labels",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "CLINICAL",
+      "status": "GATED",
+      "owner": "Dermatologist, cosmetic chemist and regulatory counsel",
+      "acceptance": "Exact corpus/claim/country/use review with credentials, conditions and source/build hash; no blanket approval",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "PROVIDER",
+      "status": "NOT_RUN",
+      "owner": "Provider/merchant operator",
+      "acceptance": "Actual supported service and terms, deployment, negative lifecycle, access/recovery and operational evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "PAYMENT",
+      "status": "NOT_RUN",
+      "owner": "StoreKit/RevenueCat and workspace billing owners",
+      "acceptance": "Real verified sandbox/native/provider lifecycle and commercial permission; no local paid flag or free quota authority",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "MODERATION",
+      "status": "NOT_RUN",
+      "owner": "Named moderation lead",
+      "acceptance": "Actual staffed report/escalation/appeal/deletion coverage and enforceable tooling; no placeholder policy",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "OPERATIONS",
+      "status": "NOT_RUN",
+      "owner": "Support/security/release operators",
+      "acceptance": "Named funded coverage, incident, backup/restore/tombstone and capacity evidence before real hosted promises",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "DEVICE",
+      "status": "NOT_RUN",
+      "owner": "Physical-device QA",
+      "acceptance": "Exact signed supported-iPhone flows, accessibility, photos/reminders/widgets/purchase and cancellation evidence",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "APPLE",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Apple account/release owner and Apple",
+      "acceptance": "Actual agreements/identity/signing, privacy/offer classification, signed install, App Review; no account mutation authorized here",
+      "admitted": false,
+      "evidence": []
+    },
+    {
+      "id": "PUBLIC",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Founder after independent Brain review",
+      "acceptance": "All38 required contract rows and all applicable gates satisfied at one exact build, then separate explicit public availability authorization",
+      "admitted": false,
+      "evidence": []
+    }
+  ],
+  "admissions": {
+    "source_accepted": false,
+    "main_promotion": false,
+    "security": false,
+    "database": false,
+    "m2": false,
+    "native": false,
+    "paid": false,
+    "provider": false,
+    "clinical": false,
+    "apple_submission": false,
+    "public_release": false
+  },
+  "j01": {
+    "implementation": "NOT_IMPLEMENTED_OR_VALIDATED",
+    "intake": "MISSING_IN_AUTHENTICATED_INTAKE",
+    "requested_packet": "J01_Important_Documents.zip",
+    "founder_reports_research": true,
+    "authenticated_research": [],
+    "single_scan_requires": [
+      "G1",
+      "G2",
+      "G3",
+      "G5"
+    ],
+    "change_requires": [
+      "G1",
+      "G2",
+      "G3",
+      "G4",
+      "G5"
+    ],
+    "fallback": [
+      "unavailable",
+      "retake"
+    ],
+    "on_device_only": true,
+    "claims": {
+      "positive_report": false,
+      "count": false,
+      "physical_diameter": false,
+      "skin_score": false,
+      "pore_reduction": false,
+      "diagnosis": false,
+      "accuracy": false,
+      "percentage": false,
+      "simulated_report": false,
+      "trend": false,
+      "change": false
+    }
+  },
+  "diary": {
+    "required": true,
+    "history": true,
+    "manual_comparison": true,
+    "automated_trend": false,
+    "encrypted": true,
+    "capture": true,
+    "timeline": true,
+    "notes": true,
+    "deletion": true
+  },
+  "offer": {
+    "strategy": "APPROVED_APPLE_MANAGED_OFFER",
+    "unsafe_custom_reverse_grant": false,
+    "current_subscriber_terms_preserved": true
+  },
+  "completion_rule": "All38 required rows plus applicable gates at one exact build; source/fixture flags never admit functionality",
+  "spend_usd": 0,
+  "acceptanceGranted": false,
+  "release_status": "NO_GO",
+  "candidateReady": false,
+  "productReady": false,
+  "providerReady": false,
+  "paidReady": false,
+  "professionalReady": false,
+  "j01Qualified": false,
+  "plan_commit": "4e9c20e7502e51750ac85a1227f7151c7334e2bb",
+  "source_scope": "CURRENT_PR35_SOURCE_OBLIGATIONS_ONLY_NOT_RUNTIME_ADMISSION"
+}

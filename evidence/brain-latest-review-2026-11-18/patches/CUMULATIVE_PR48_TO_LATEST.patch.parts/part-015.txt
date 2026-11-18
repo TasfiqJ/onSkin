@@ -1,0 +1,699 @@
++      else { current = { id: input.command.invitationId, workspaceId: input.command.invitationId === first ? 'practice-b' : 'practice-c', revision: input.command.expectedGrantRevision + 1, selection: input.command.selection };
++        output = { kind: 'recorded', context }; if (mode === 'lost') { status = 503; mode = 'normal'; output = { status: 'unavailable' }; } }
++    } else throw new Error('Unexpected synthetic contract');
++    await cdp.send('Fetch.fulfillRequest', { requestId, responseCode: status, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify(output)).toString('base64') });
++  };
++  await code(first); await text('Choose practice permission'); await choose(); await check(); await screenshot('accept-review');
++  assert(await cdp.value(`document.activeElement.tagName==='H2' && !!document.activeElement.closest('#grant-invitation')`), 'Review heading focus');
++  await cdp.value(`globalThis.__oldGrant=[...document.querySelectorAll('#grant-invitation button')].find(n=>n.textContent==='Confirm this practice permission')`);
++  await click('Keep permission unchanged'); assert(!current, 'Cancel wrote permission'); await choose();
++  await cdp.value('globalThis.__oldGrant.click()'); await delay(100); assert(!current, 'Retired confirmation applied successor');
++  mode = 'lost'; await click('Confirm this practice permission'); await text('Permission outcome unknown'); await screenshot('unknown');
++  await click('Retry identical permission request'); await text('Permission request recorded');
++  const attempts = sent.filter(input => input.kind === 'accept'); assert(attempts.length === 2 && JSON.stringify(attempts[0]) === JSON.stringify(attempts[1]), 'Unknown retry identity changed');
++  await click('Reload current practice permission'); await text('Current practice permission'); await text('Saved products'); await screenshot('current');
++  await code(second); await text('Choose practice permission'); await choose(); await text('replaces your current practice permission'); await screenshot('switch-review'); await check();
++  await click('Confirm switch to this practice'); await text('Permission request recorded'); assert(current.id === second, 'Switch fixture not recorded');
++  await click('Reload current practice permission'); await text('Current practice permission'); await code(third); await text('Choose practice permission'); await choose(); mode = 'denied';
++  await click('Confirm switch to this practice'); await text('Invitation unavailable'); assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Error body leaked'); await screenshot('denied');
++  mode = 'forged'; await code(first); await text('Invitation unavailable'); assert(!(await scopeText()).includes('SYNTHETIC practice'), 'Mismatched invitation displayed');
++  await click('Clear invitation screen'); mode = 'hold'; await code(first); await text('Checking practice permission'); await poll(() => held, 'Held request missing'); await click('Clear invitation screen');
++  await text('Review a practice invitation'); await cdp.send('Fetch.fulfillRequest', { requestId: held, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }],
++    body: Buffer.from(JSON.stringify({ kind: 'review', context: 'old', review: { private: 'SYNTHETIC-PRIVATE-ERROR' } })).toString('base64') }).catch(() => {});
++  await delay(100); assert(!(await scopeText()).includes('SYNTHETIC'), 'Cleared late response displayed'); await screenshot('cleared'); await check();
++  assert(!cdp.events.some(event => event.method === 'Runtime.exceptionThrown'), 'Browser exception');
++  writeFileSync(path.join(evidence, 'summary.json'), JSON.stringify({ surface: 'Actual Vite UI; real API503; synthetic invitation/owner HTTP positives only', width, height,
++    explicitPermissionSelection: true, accept: true, switch: true, cancel: true, retiredConfirm: true, identicalUnknownRetry: true, currentReadback: true,
++    deniedPrivateBody: true, wrongInvitationRefused: true, clearLateRead: true, keyboard: true, focus: true, overflow, commands: sent.map(input => input.kind) }, null, 2));
++  console.log(`PASS professional grant ${width}x${height}`);
++} catch (error) { if (cdp) await screenshot('failure').catch(() => {}); throw error; }
++finally { writeFileSync(path.join(evidence, 'server.log'), serverLog); cdp?.ws.close();
++  for (const child of [browser, server]) if (child?.pid) { if (process.platform === 'win32') await new Promise(resolve => spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).once('exit', resolve)); else child.kill(); }
++}
+diff --git a/scripts/e2e/professional-history.mjs b/scripts/e2e/professional-history.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..72479915d8ad8a16108c160a92b658cc4c758568
+--- /dev/null
++++ b/scripts/e2e/professional-history.mjs
+@@ -0,0 +1,128 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering11/browser', `history-${width}`); mkdirSync(evidence, { recursive: true });
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4332; const debugPort = 9462; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual, ...(key === 'Enter' ? {text:'\r'} : {})});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++const plans = [1, 2].map(sequence => ({ planId: `${sequence}${String(sequence).repeat(7)}-${String(sequence).repeat(4)}-4${String(sequence).repeat(3)}-8${String(sequence).repeat(3)}-${String(sequence).repeat(12)}`,
++  planHash: String(sequence).repeat(64), sequence, issuedAt: 1800000000000 + sequence }));
++let mode = 'normal'; let held = null; const sent = []; const overflow = [];
++const scopeText = () => cdp.value(`document.querySelector('#practitioner-history').innerText`);
++const oldLabel = `Review issued version 1 · ${new Date(plans[0].issuedAt).toISOString()}`;
++const checkOverflow = async () => { const ok = await cdp.value('document.documentElement.scrollWidth <= innerWidth'); overflow.push(ok); assert(ok, 'horizontal overflow'); };
++const fixtureText = input => `SYNTHETIC original intended version ${input.planId === plans[0].planId ? '1\nMorning: SYNTHETIC older cleanser' : '2\nMorning: SYNTHETIC newer cream'}\n\nOriginal intended sequence only; no actual routine, use or owner acknowledgement. Downloaded copies cannot be recalled.`;
++async function reviewOld() { await click(oldLabel); await text('SYNTHETIC older cleanser'); }
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/practitioner-plan`, { method: 'POST' })).status === 503, 'Unconfigured real API must refuse');
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`,
++    `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-history-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(tab => tab.type === 'page'), 'Chrome unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl);
++  await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: evidence });
++  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Network.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
++  await cdp.send('Page.navigate', { url: origin }); await text('Practice connection');
++  await poll(() => cdp.value(`!!document.querySelector('#practitioner-history button')`), 'History panel unavailable');
++  assert(await cdp.value('scrollY === 0'), 'Initial panel mount changed scroll');
++  await click('Load issued history'); await text('Intended history unavailable'); await screenshot('real-unavailable');
++  await cdp.send('Fetch.enable', { patterns: [{ urlPattern: `${origin}/api/professional/practitioner-plan`, requestStage: 'Request' }] });
++  cdp.onEvent = async event => {
++    if (event.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = event.params; const input = JSON.parse(request.postData); sent.push(input);
++    if (mode === 'hold') { held = requestId; return; }
++    const context = 'synthetic-history-assignment'; let status = 200; let output;
++    if (mode === 'denied' || mode === 'changed') { status = mode === 'denied' ? 403 : 409; output = { private: 'SYNTHETIC-PRIVATE-NEVER-DISPLAY' }; }
++    else if (mode === 'forged') output = { kind: 'history', context, plans: [{ private: 'SYNTHETIC-PRIVATE-NEVER-DISPLAY' }], grantVersion: 1, grantEpoch: 1 };
++    else if (input.kind === 'history') output = { kind: 'history', context, plans: mode === 'empty' ? [] : [...plans].reverse(), grantVersion: 1, grantEpoch: 1 };
++    else output = { kind: input.kind, context, text: fixtureText(input) };
++    await cdp.send('Fetch.fulfillRequest', { requestId, responseCode: status,
++      responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify(output)).toString('base64') });
++  };
++  await click('Load issued history'); await text('Issued intended versions');
++  assert(await cdp.value(`document.activeElement.tagName === 'H2' && document.activeElement.closest('#practitioner-history') !== null`), 'Index heading focus');
++  await keyboard('Tab'); await keyboard('Tab'); await keyboard('Enter'); await text('SYNTHETIC older cleanser');
++  assert(!(await scopeText()).includes('SYNTHETIC newer cream'), 'Unselected text included');
++  assert(sent.filter(input => input.kind === 'history-export').length === 0, 'Review initiated export');
++  await screenshot('older-review'); await checkOverflow();
++  await cdp.value(`globalThis.__oldHistoryDownload = [...document.querySelectorAll('#practitioner-history button')].find(node => node.textContent === 'Download this intended version')`);
++  await click('Back to issued versions'); await text('Issued intended versions');
++  await reviewOld(); await cdp.value('globalThis.__oldHistoryDownload.click()'); await delay(100);
++  assert(sent.filter(input => input.kind === 'history-export').length === 0, 'Retired review exported successor');
++  await click('Download this intended version'); await text('Intended version downloaded');
++  await poll(() => existsSync(path.join(evidence, 'onskin-intended-version.txt')), 'Selected historical download absent');
++  const downloaded = readFileSync(path.join(evidence, 'onskin-intended-version.txt'), 'utf8');
++  assert(downloaded.includes('SYNTHETIC older cleanser') && !downloaded.includes('SYNTHETIC newer cream'), 'Downloaded different version');
++  assert(sent.at(-1).planId === plans[0].planId && sent.at(-1).planHash === plans[0].planHash, 'Export identity changed');
++  await screenshot('downloaded');
++  for (const refusal of ['changed', 'denied']) {
++    await click('Load issued history'); await text('Issued intended versions'); await reviewOld(); mode = refusal;
++    await click('Download this intended version'); await text('Intended history unavailable');
++    assert(!(await scopeText()).includes('SYNTHETIC older') && !(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Refusal retained private text or error body');
++    await screenshot(`${refusal}-export`); mode = 'normal';
++  }
++  mode = 'forged'; await click('Load issued history'); await text('Intended history unavailable');
++  assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Malformed success exposed private text');
++  mode = 'empty'; await click('Load issued history'); await text('No issued versions are visible'); await screenshot('empty');
++  mode = 'hold'; await click('Load issued history'); await text('Checking intended history');
++  await poll(() => held !== null, 'Held history missing'); await click('Cancel intended history loading'); await text('Load versions under the current');
++  await cdp.send('Fetch.fulfillRequest', { requestId: held, responseCode: 200,
++    responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }],
++    body: Buffer.from(JSON.stringify({ kind: 'history', context: 'retired-context', plans, grantVersion: 1, grantEpoch: 1 })).toString('base64') }).catch(() => {});
++  await delay(100); assert(!(await scopeText()).includes('Review issued version'), 'Canceled history republished');
++  await screenshot('cancelled'); await checkOverflow();
++  assert(!cdp.events.some(event => event.method === 'Runtime.exceptionThrown'), 'Browser exception');
++  const ax = await cdp.send('Accessibility.getFullAXTree');
++  writeFileSync(path.join(evidence, 'summary.json'), JSON.stringify({ surface: 'Actual Vite UI; real API503; positive HTTP responses explicitly synthetic', width, height,
++    twoVersionIndex: true, exactOlderReview: true, backAndCancel: true, staleDownloadRefused: true, selectedDownload: true,
++    changedSourceRefused: true, deniedExport: true, forgedResponseRefused: true, empty: true, lateCancelledIndexRefused: true,
++    keyboard: true, focus: true, startupTop: true, overflow, commands: sent.map(input => input.kind),
++    axRoles: ax.nodes.filter(node => !node.ignored).map(node => node.role?.value) }, null, 2));
++  console.log(`PASS professional history ${width}x${height}`);
++} catch (error) { if (cdp) await screenshot('failure').catch(() => {}); throw error; }
++finally {
++  writeFileSync(path.join(evidence, 'server.log'), serverLog); cdp?.ws.close();
++  for (const child of [browser, server]) if (child?.pid) {
++    if (process.platform === 'win32') await new Promise(resolve => spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).once('exit', resolve));
++    else child.kill();
++  }
++}
+diff --git a/scripts/e2e/professional-owner.mjs b/scripts/e2e/professional-owner.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c14c6cd7c25d8220d779ba9f39821944bcd1b9ea
+--- /dev/null
++++ b/scripts/e2e/professional-owner.mjs
+@@ -0,0 +1,214 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync, unlinkSync } from 'node:fs';
++import { createHash } from 'node:crypto';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/continuation07', `professional-${width}`); mkdirSync(evidence, { recursive: true });
++const downloadFile = path.join(evidence, 'onskin-received-plans.txt'); if (existsSync(downloadFile)) unlinkSync(downloadFile);
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4326; const debugPort = 9456; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1'], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++const plan = { planId:'11111111-1111-4111-8111-111111111111', planHash:'a'.repeat(64), sequence:1, issuedAt:1800000000000 };
++let fixtureMode = 'index'; let ended = false; let declined = false; let receivedNew = false; const sent = []; const overflow = [];
++let latestResponse = { kind: 'received', recordedAt: plan.issuedAt }; let responseHash = null; const responseCommands = new Map();
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/owner`, { method:'POST' })).status === 503, 'Actual unconfigured API must refuse');
++  assert((await fetch(`${origin}/api/professional/workspace-status`, {method:'POST'})).status===503,'No default workspace adapter');
++  browser = spawn(browserPath, ['--headless=new','--disable-gpu','--no-first-run',`--remote-debugging-port=${debugPort}`,`--user-data-dir=${mkdtempSync(path.join(tmpdir(),'onskin-owner-'))}`,'about:blank'], {windowsHide:true, stdio:'ignore'});
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(t=>t.type==='page'), 'Chrome unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl);
++  await cdp.send('Browser.setDownloadBehavior', {behavior:'allow', downloadPath:evidence});
++  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Network.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width,height,deviceScaleFactor:1,mobile:false });
++  await cdp.send('Page.navigate',{url:origin}); await text('Your practice records');
++  await click('Check connection'); await text('Records unavailable'); await screenshot('unavailable');
++  await click('Clear this screen'); await text('Your practice records');
++  // A second tab/device is never fabricated. Interception only supplies a
++  // labeled synthetic HTTP contract to exercise the real browser screens.
++  await cdp.send('Fetch.enable',{patterns:[{urlPattern:`${origin}/api/professional/*`, requestStage:'Request'}]});
++  let hold = null;
++  cdp.onEvent = async m => {
++    if(m.method !== 'Fetch.requestPaused') return;
++    const {requestId,request} = m.params; const input = JSON.parse(request.postData); sent.push(input);
++    if(fixtureMode === 'hold') { hold = requestId; return; }
++    const context = 'synthetic-session-1'; let status = 200; let output; let refusal;
++    if(fixtureMode === 'denied') {status=401; output={private:'SYNTHETIC-ERROR-DO-NOT-DISPLAY'};}
++    else if(fixtureMode === 'forged') output={status:'approved', paid:true};
++    else if(input.kind==='accept' && ['capacity','coverage'].includes(fixtureMode)) {status=422;refusal=fixtureMode;output={private:'SYNTHETIC-ERROR-DO-NOT-DISPLAY'};}
++    else if(['accept','decline'].includes(input.kind) && fixtureMode==='response-changed') {status=409;output={private:'SYNTHETIC-ERROR-DO-NOT-DISPLAY'};}
++    else if(input.kind==='status') output={kind:'workspace-status',summary:{status:'active',access:'unknown',tier:'solo',acceptedPlans:21,planLimit:20,overLimit:true,selectedPlans:null,paidThrough:1800000100000,verifiedUntil:1800000100000}};
++    else if(input.kind==='index') output={kind:'index',context,plans:fixtureMode==='empty'?[]:[{...plan,latestResponse}]};
++    else if(input.kind==='incoming') output={kind:'incoming',context,workspaceId:'practice-a',plans:receivedNew?[]:[{...plan,sequence:2,latestResponse:null}]};
++    else if(input.kind==='incoming-review') output={kind:'incoming-review',context,workspaceId:'practice-a',text:'SYNTHETIC new intended version 2 — not yet received\nMorning: Recorded cleanser\nReview is not receipt, acknowledgement or apply.'};
++    else if(input.kind==='receive') {
++      receivedNew=true;
++      if(fixtureMode==='lost') {fixtureMode='index';status=503;output={status:'unavailable'};} else output={kind:'received',context};
++    }
++    else if(input.kind==='accept-review') output={kind:'accept-review',context,workspaceId:'practice-a',expectedCapacityRevision:0,expectedResponseHash:responseHash,text:'SYNTHETIC exact intended version 1\nMorning: Recorded cleanser\nReceipt is not apply intent.'};
++    else if(input.kind==='decline-review') output={kind:'decline-review',context,expectedResponseHash:responseHash,text:'SYNTHETIC exact intended version 1\nMorning: Recorded cleanser\nEarlier responses remain historical; a later response requires a fresh review.'};
++    else if(input.kind==='accept' || input.kind==='decline') {
++      const saved = responseCommands.get(input.command.receiptId); const exact = JSON.stringify(input.command);
++      assert(saved ? saved === exact : input.command.expectedResponseHash === responseHash, 'Synthetic response predecessor/command changed');
++      if(!saved) {
++        responseCommands.set(input.command.receiptId,exact); responseHash=createHash('sha256').update(exact).digest('hex');
++        latestResponse={kind:input.kind==='accept'?'acknowledged':'declined',recordedAt:plan.issuedAt+responseCommands.size};
++      }
++      if(input.kind==='decline') declined=true;
++      if(fixtureMode==='lost') {fixtureMode='index';status=503;output={status:'unavailable'};}
++      else output={kind:input.kind==='accept'?'accepted':'declined',context};
++    }
++    else if(input.kind==='connection') output={kind:'connection',context,connection:ended?null:{ workspaceId:'practice-a',grantId:'grant-a',expectedGrantRevision:1,expectedCapacityRevision:1,expiresAt:1800000100000,expired:true,fields:['intended_plans'],purposes:['routine_review'],permissions:['read','plan_write'] }};
++    else if(input.kind==='end') { ended=true; if(fixtureMode==='lost') {fixtureMode='index'; status=503; output={status:'unavailable'};} else output={kind:'ended',context}; }
++    else output={kind:'report',context,text:'SYNTHETIC selected historical suggestion\nMorning: Recorded cleanser\nRecorded owner response: Received · 2027-01-15T08:00:00.000Z\nRecorded owner response: Acknowledged · 2027-01-15T08:01:00.000Z\n'+(declined?'Recorded owner response: Declined · 2027-01-15T08:02:00.000Z\n':'')+'Receipt entries are historical facts, not current acceptance.\nReceiving does not apply it or prove use.\nDownloaded copies cannot be recalled.'};
++    await cdp.send('Fetch.fulfillRequest',{requestId,responseCode:status,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'},...(refusal?[{name:'X-OnSkin-Refusal',value:refusal}]:[])],body:Buffer.from(JSON.stringify(output)).toString('base64')});
++  };
++  await click('Check connection'); await text('Your received plans');
++  assert(await cdp.value(`document.activeElement.textContent === 'Your received plans'`),'index heading focus');
++  await click('Review new practice suggestions'); await text('New practice suggestions');
++  const incomingLabel='Review new intended version 2 · '+new Date(plan.issuedAt).toISOString();
++  await click(incomingLabel); await text('Receive intended version 2?'); await screenshot('receive-review');
++  overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth'));
++  assert(await cdp.value(`document.activeElement.tagName==='H2'`),'receipt review focus');
++  await cdp.value(`globalThis.__oldReceive=[...document.querySelectorAll('button')].find(n=>n.textContent==='Confirm receipt of this version')`);
++  await click('Keep received history unchanged'); await text('Your received plans'); assert(!receivedNew,'review cancellation received the plan');
++  await click('Review new practice suggestions'); await text('New practice suggestions'); await click(incomingLabel); await text('Receive intended version 2?');
++  await cdp.value('globalThis.__oldReceive.click()'); await delay(100); assert(!receivedNew,'retired receipt callback confirmed a successor');
++  fixtureMode='lost'; await click('Confirm receipt of this version'); await text('Receipt outcome unknown'); await screenshot('receipt-unknown');
++  await click('Retry receipt request'); await text('Version received');
++  const receiveAttempts=sent.filter(s=>s.kind==='receive'); assert(receiveAttempts.length===2&&JSON.stringify(receiveAttempts[0])===JSON.stringify(receiveAttempts[1]),'receipt retry changed identity');
++  await click('Back to received plans'); await text('Your received plans'); await click('Review new practice suggestions'); await text('No new versions are available');
++  await click('Back to received plans'); await text('Your received plans');
++  assert(await cdp.value(`document.querySelector('input[type=checkbox]').checked === false`),'selection must start empty');
++  await keyboard('Tab'); await keyboard(' ', 'Space');
++  assert(await cdp.value(`document.querySelector('input[type=checkbox]').checked`),'keyboard checkbox');
++  await click('Review selected plans'); await text('SYNTHETIC selected historical suggestion'); await text('Recorded owner response: Acknowledged'); await screenshot('review');
++  overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth'));
++  await click('Back to received plans'); await text('Your received plans');
++  for (const [review, confirm, success, retry, command] of [
++    ['Review one version to acknowledge…','Confirm acknowledgement of this version','Acknowledgement recorded','Retry acknowledgement request','accept'],
++    ['Review one version to decline…','Confirm decline of this version','Decline recorded','Retry decline request','decline'],
++  ]) {
++    await keyboard('Tab'); await keyboard(' ', 'Space'); await click(review);
++    await text(command==='accept'?'Acknowledge intended version 1?':'Decline intended version 1?');
++    overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth')); await screenshot(`${command}-review`);
++    assert(await cdp.value(`document.activeElement.tagName==='H2'`),'response review heading focus');
++    await cdp.value(`globalThis.__oldResponse=[...document.querySelectorAll('button')].find(n=>n.textContent===${JSON.stringify(confirm)})`);
++    await click('Keep response unchanged'); await text('Your received plans');
++    await keyboard('Tab'); await keyboard(' ', 'Space'); await click(review);
++    const before=sent.filter(s=>s.kind===command).length;
++    await cdp.value('globalThis.__oldResponse.click()'); await delay(100);
++    assert(sent.filter(s=>s.kind===command).length===before,'retired response confirmed a successor');
++    fixtureMode='lost'; await click(confirm); await text(command==='accept'?'Acknowledgement outcome unknown':'Response outcome unknown');
++    await screenshot(`${command}-unknown`); await click(retry); await text(success);
++    const attempts=sent.filter(s=>s.kind===command); assert(attempts.length===2&&JSON.stringify(attempts[0])===JSON.stringify(attempts[1]),'response retry changed identity');
++    assert(Object.hasOwn(attempts[0].command,'expectedResponseHash'),'reviewed response predecessor missing');
++    await screenshot(`${command}-recorded`); await click('Back to received plans'); await text('Your received plans');
++  }
++  await text('Latest recorded response: Declined'); await screenshot('latest-decline-history');
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review selected plans'); await text('Recorded owner response: Declined');
++  await click('Back to received plans'); await text('Your received plans');
++  for (const [mode,heading] of [['capacity','Practice plan capacity reached'],['coverage','Practice activation is paused']]) {
++    await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review one version to acknowledge…');
++    await text('Acknowledge intended version 1?'); fixtureMode=mode;
++    await click('Confirm acknowledgement of this version'); await text(heading);
++    assert(await cdp.value(`document.activeElement.tagName==='H2'`),'refusal heading focus');
++    assert(!(await cdp.value(`document.body.innerText.includes('SYNTHETIC-ERROR')`)),'refusal leaked private body');
++    overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth')); await screenshot(`refused-${mode}`);
++    fixtureMode='index'; await click('Retry acknowledgement request'); await text('Acknowledgement recorded');
++    const attempts=sent.filter(s=>s.kind==='accept').slice(-2); assert(JSON.stringify(attempts[0])===JSON.stringify(attempts[1]),'refusal retry changed identity');
++    await click('Back to received plans'); await text('Your received plans');
++  }
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review one version to acknowledge…');
++  await text('Acknowledge intended version 1?'); fixtureMode='response-changed';
++  await click('Confirm acknowledgement of this version'); await text('Records unavailable');
++  assert(!(await cdp.value(`document.body.innerText.includes('SYNTHETIC-ERROR')`)),'changed response leaked private body');
++  fixtureMode='index'; declined=true; responseHash='d'.repeat(64); latestResponse={kind:'declined',recordedAt:plan.issuedAt+100};
++  await click('Check connection'); await text('Latest recorded response: Declined'); await screenshot('changed-response-reloaded');
++  await keyboard('Tab'); await keyboard(' ', 'Space');
++  await click('Download selected plans'); await text('SYNTHETIC selected historical suggestion');
++  await poll(() => existsSync(path.join(evidence,'onskin-received-plans.txt')), 'Explicit download missing');
++  assert(readFileSync(path.join(evidence,'onskin-received-plans.txt'),'utf8').includes('SYNTHETIC selected'), 'download contents');
++  await click('Back to received plans'); await text('Your received plans');
++  await click('Review practice permission'); await text('Expired permission'); await click('End relationship…'); await text('End this practice relationship?');
++  await cdp.value(`globalThis.__oldConfirm = [...document.querySelectorAll('button')].find(n=>n.textContent==='Confirm end relationship')`);
++  await click('Keep relationship'); assert(!ended,'cancel must not end relationship'); await click('End relationship…');
++  await cdp.value(`globalThis.__oldConfirm.click()`); await delay(100);
++  assert(!ended,'A stale confirmation callback advanced a successor review');
++  fixtureMode='lost'; await click('Confirm end relationship'); await text('The outcome is unknown'); await screenshot('unknown-outcome');
++  await click('Retry end-relationship request'); await text('Practice relationship ended');
++  const attempts=sent.filter(s=>s.kind==='end'); assert(JSON.stringify(attempts[0])===JSON.stringify(attempts[1]),'retry must preserve exact command');
++  await click('Back to received plans'); await text('Your received plans'); await screenshot('retained-history');
++  await click('Review practice permission'); await text('No practice permission is recorded');
++  await click('Back to received plans'); await text('Your received plans');
++  fixtureMode='denied'; await click('Review practice permission'); await text('Records unavailable');
++  assert(!(await cdp.value(`document.body.innerText.includes('SYNTHETIC-ERROR')`)),'error body leaked');
++  fixtureMode='forged'; await click('Check connection'); await text('Records unavailable');
++  fixtureMode='empty'; await click('Check connection'); await text('No received plans are recorded');
++  fixtureMode='hold'; await click('Clear this screen');
++  // Explicit clear retires a late response even if the transport ignores abort.
++  await click('Check connection'); await text('Checking your records'); await click('Clear this screen');
++  await text('Your practice records');
++  if(hold) await cdp.send('Fetch.fulfillRequest',{requestId:hold,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'}],body:Buffer.from(JSON.stringify({kind:'index',context:'old-session',plans:[{...plan,latestResponse}]})).toString('base64')}).catch(()=>{});
++  await delay(100); assert(!(await cdp.value(`document.body.innerText.includes('Intended version')`)),'late owner content leaked');
++  overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth'));
++  await screenshot('cleared');
++  // Real browser deadline recovery: a stalled response never strands either panel.
++  fixtureMode='hold'; hold=null; await click('Check connection'); await text('Checking your records');
++  await poll(()=>cdp.value(`document.body.innerText.includes('Records unavailable')`),'Owner deadline did not recover',18000);
++  await screenshot('owner-deadline'); fixtureMode='empty'; await click('Check connection'); await text('No received plans are recorded');
++  if(hold) await cdp.send('Fetch.fulfillRequest',{requestId:hold,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'}],body:Buffer.from(JSON.stringify({kind:'index',context:'old-session',plans:[plan]})).toString('base64')}).catch(()=>{});
++  await delay(100); assert(!(await cdp.value(`document.body.innerText.includes('Intended version')`)),'Timed-out owner result republished');
++  fixtureMode='hold'; hold=null; await click('Check workspace billing status'); await text('Checking current workspace evidence');
++  await poll(()=>cdp.value(`document.body.innerText.includes('Workspace status unavailable')`),'Workspace deadline did not recover',18000);
++  await screenshot('workspace-deadline');
++  fixtureMode='index'; await click('Check workspace billing status'); await text('Over the recorded limit.'); await text('Unavailable or expired');
++  assert(!(await cdp.value(`document.querySelector('#workspace-status').innerText.includes('practice-a')`)),'workspace internal identity leaked');
++  await screenshot('read-only-workspace'); await click('Clear workspace status'); await text('No workspace status has been loaded.');
++  assert(!cdp.events.some(e=>e.method==='Runtime.exceptionThrown'),'browser exception');
++  const ax = await cdp.send('Accessibility.getFullAXTree');
++  writeFileSync(path.join(evidence,'summary.json'),JSON.stringify({surface:'Actual professional Vite browser; synthetic positive HTTP fixtures only; real API remains503',width,height,overflow,commands:sent.map(s=>s.kind),keyboard:true,focus:true,incomingReceiptReviewCancelRetry:true,exactResponseReview:true,latestRecordedDecline:true,changedResponseRefusedAndReloaded:true,reviewedResponsePredecessor:true,responseCancelAndStaleCallback:true,responseUnknownOutcomeRetry:true,capacityCoverageRefusalExactRetry:true,explicitDownload:true,unknownOutcomeRetry:true,deadlineRecovery:true,cleared:true,axRoles:ax.nodes.filter(n=>!n.ignored).map(n=>n.role?.value)},null,2));
++  assert(overflow.every(Boolean),'horizontal overflow'); console.log(`PASS professional owner ${width}x${height}`);
++} catch(error) { if(cdp) await screenshot('failure').catch(()=>{}); throw error; }
++finally {
++  writeFileSync(path.join(evidence,'server.log'),serverLog);
++  cdp?.ws.close();
++  for(const child of [browser,server]) if(child?.pid) { if(process.platform==='win32') await new Promise(resolve=>spawn('taskkill',['/pid',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'}).once('exit',resolve)); else child.kill(); }
++}
+diff --git a/scripts/e2e/professional-previsit.mjs b/scripts/e2e/professional-previsit.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..46c1f59e6524d87bc1b769251ba029dced13bc7c
+--- /dev/null
++++ b/scripts/e2e/professional-previsit.mjs
+@@ -0,0 +1,177 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync, unlinkSync } from 'node:fs';
++import { createHash } from 'node:crypto';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering09/browser', `previsit-${width}`); mkdirSync(evidence, { recursive: true });
++// Require this run's observed download; an old evidence file cannot satisfy it.
++const downloadFile = path.join(evidence, 'onskin-selected-previsit.txt'); if (existsSync(downloadFile)) unlinkSync(downloadFile);
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4330; const debugPort = 9460; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++const product = { productId: 'bottle-a', name: 'SYNTHETIC recorded cleanser' };
++const plans = [1, 2].map(sequence => ({ planId: `plan-${sequence}`, planHash: String(sequence).repeat(64), sequence, issuedAt: 1800000000000 + sequence }));
++const canonical = value => value === null || typeof value !== 'object' ? JSON.stringify(value) : Array.isArray(value) ? `[${value.map(canonical).join(',')}]` : `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`;
++const digest = value => createHash('sha256').update(canonical(value)).digest('hex');
++const fact = body => ({ ...body, contentHash: digest(body) });
++const common = { sourceHash: 'a'.repeat(64), recordedAt: '2026-11-15T12:00:00.000Z' };
++const records = [
++  fact({ ...common, field: 'actual_routine', id: 'synthetic-actual-1', sequence: 1, am: [product], pm: [] }),
++  fact({ ...common, field: 'use_events', id: 'synthetic-use-1', observedOn: '2026-11-15', productId: product.productId, name: product.name,
++    phase: 'am', routineVersion: 1, kind: 'use', targetId: null }),
++  fact({ ...common, field: 'use_events', id: 'synthetic-retraction-1', observedOn: '2026-11-15', productId: product.productId, name: product.name,
++    phase: 'am', routineVersion: 1, kind: 'retraction', targetId: 'synthetic-use-1' }),
++  fact({ ...common, field: 'formulas', id: 'synthetic-formula-1', productId: product.productId, name: product.name, labelStatus: 'user_confirmed_label',
++    labelText: 'SYNTHETIC UNSELECTED PRIVATE LABEL', market: null, variant: null, observedOn: '2026-11-15', atUse: true }),
++];
++let mode = 'normal'; let held = null; const sent = []; const overflow = [];
++const scopeText = () => cdp.value(`document.querySelector('#previsit-panel').innerText`);
++const checkOverflow = async () => { const ok = await cdp.value('document.documentElement.scrollWidth <= innerWidth'); overflow.push(ok); assert(ok, 'horizontal overflow'); };
++async function choose() {
++  // Source heading has focus. Keyboard selects the product and first version.
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await keyboard('Tab'); await keyboard(' ', 'Space');
++}
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/previsit`, { method: 'POST' })).status === 503, 'Unconfigured real API must refuse');
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`,
++    `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-previsit-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(tab => tab.type === 'page'), 'Chrome unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl);
++  await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: evidence });
++  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Network.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
++  await cdp.send('Page.navigate', { url: origin }); await text('Practice connection');
++  await poll(() => cdp.value(`!!document.querySelector('#previsit-panel button')`), 'Previsit panel unavailable');
++  assert(await cdp.value('scrollY === 0'), 'Initial panel mount must not jump to pre-visit panel');
++  await click('Load products and plans for pre-visit'); await text('Pre-visit records unavailable'); await screenshot('real-unavailable');
++  assert(await cdp.value(`document.activeElement.closest('#previsit-panel')?.id === 'previsit-panel' && document.activeElement.tagName === 'H2'`), 'Unavailable focus');
++  await cdp.send('Fetch.enable', { patterns: [{ urlPattern: `${origin}/api/professional/previsit`, requestStage: 'Request' }] });
++  cdp.onEvent = async event => {
++    if (event.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = event.params; const input = JSON.parse(request.postData); sent.push(input);
++    if (mode === 'hold') { held = requestId; return; }
++    const context = 'synthetic-assignment-epoch'; let status = 200; let output;
++    if (mode === 'denied') { status = 403; output = { private: 'SYNTHETIC-PRIVATE-DO-NOT-DISPLAY' }; }
++    else if (mode === 'forged') output = { kind: 'source', context, source: { private: 'SYNTHETIC-PRIVATE-DO-NOT-DISPLAY' } };
++    else if (input.kind === 'source') output = { kind: 'source', context, source: { fields: input.fields,
++      products: mode === 'empty' || !input.fields.includes('products') ? [] : [product],
++      plans: mode === 'empty' || !input.fields.includes('intended_plans') ? [] : plans,
++      records: mode === 'empty' ? [] : records.filter(row => input.fields.includes(row.field)),
++      recordSourceHash: input.fields.some(field => ['actual_routine', 'use_events', 'formulas'].includes(field)) ? digest(records) : null,
++      grantVersion: 1, grantEpoch: 1 } };
++    else if (mode === 'renamed') { status = 409; output = { private: 'SYNTHETIC-PRIVATE-DO-NOT-DISPLAY' }; }
++    else output = { kind: input.kind, context, text: ['SYNTHETIC selected factual pre-visit report',
++      ...input.products.map(item => `Selected saved product: ${item.name}`), ...input.plans.map(item => `Intended version ${item.planId.slice(-1)}`),
++      ...(input.records ?? []).map(item => { const row = records.find(row => row.id === item.id && row.contentHash === item.contentHash);
++        assert(row, 'Synthetic selected record identity changed'); return row.field === 'actual_routine' ? `Actual routine version ${row.sequence}` :
++          row.field === 'use_events' ? `Earlier recorded use (retracted): ${row.name}` : `Formula observation: ${row.labelText ?? 'unknown label'}`; }),
++      input.records?.length ? 'Only selected owner record facts are included. Device recorded dates are not independently trusted server times.' :
++        'Saved product names are not formula identification. Actual routine, recorded use and formula-at-use evidence are not included.',
++      'Intended plans are suggestions, not proof of use, treatment effect or a clinical assessment. No photos are included.',
++      'Previously downloaded copies cannot be recalled.'].join('\n\n') };
++    await cdp.send('Fetch.fulfillRequest', { requestId, responseCode: status,
++      responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify(output)).toString('base64') });
++  };
++  await click('Load products and plans for pre-visit'); await text('Choose individual facts');
++  assert(await cdp.value(`document.activeElement.tagName === 'H2' && document.activeElement.closest('#previsit-panel') !== null`), 'Source heading focus');
++  await choose(); await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  assert(!(await scopeText()).includes('Intended version 2'), 'Unselected intended version included');
++  assert(sent.filter(input => input.kind === 'export').length === 0, 'Review triggered export');
++  await checkOverflow(); await screenshot('review');
++  await cdp.value(`globalThis.__oldPrevisitDownload = [...document.querySelectorAll('#previsit-panel button')].find(node => node.textContent === 'Download reviewed pre-visit report')`);
++  await click('Cancel pre-visit review'); await text('Choose the text fields');
++  await click('Load products and plans for pre-visit'); await text('Choose individual facts'); await choose();
++  await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  await cdp.value('globalThis.__oldPrevisitDownload.click()'); await delay(100);
++  assert(sent.filter(input => input.kind === 'export').length === 0, 'Retired review initiated successor export');
++  await click('Download reviewed pre-visit report');
++  await poll(() => existsSync(path.join(evidence, 'onskin-selected-previsit.txt')), 'Explicit selected download missing');
++  const downloaded = readFileSync(path.join(evidence, 'onskin-selected-previsit.txt'), 'utf8');
++  assert(downloaded.includes(product.name) && downloaded.includes('Intended version 1') && !downloaded.includes('Intended version 2'), 'Download selection mismatch');
++  await screenshot('downloaded'); await checkOverflow();
++  // Fresh review followed by a changed source/denied export is unavailable.
++  await click('Load products and plans for pre-visit'); await text('Choose individual facts'); await choose();
++  await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report'); mode = 'renamed';
++  await click('Download reviewed pre-visit report'); await text('Pre-visit records unavailable'); await screenshot('source-changed');
++  assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Changed-source body exposed');
++  mode = 'normal'; await click('Load saved products for pre-visit'); await text('Choose individual facts');
++  assert(!(await scopeText()).includes('Intended version'), 'Products-only chooser leaked plan projection');
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  mode = 'denied'; await click('Download reviewed pre-visit report'); await text('Pre-visit records unavailable');
++  assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Denied export body exposed');
++  mode = 'forged'; await click('Load saved products for pre-visit'); await text('Pre-visit records unavailable');
++  mode = 'empty'; await click('Load intended plans for pre-visit'); await text('No records are available'); await screenshot('empty');
++  await click('Clear pre-visit screen'); mode = 'normal';
++  await click('Load all five pre-visit fields'); await text('Earlier recorded use (retracted)');
++  // One review can combine explicitly chosen products, intended and actual
++  // versions and use, while skipping another intended version and the formula.
++  await choose(); await keyboard('Tab'); await keyboard('Tab'); await keyboard(' ', 'Space'); await keyboard('Tab'); await keyboard(' ', 'Space');
++  await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  assert((await scopeText()).includes('Actual routine version 1') && (await scopeText()).includes('Earlier recorded use (retracted)'), 'Selected actual/use facts missing');
++  assert((await scopeText()).includes('Selected saved product') && (await scopeText()).includes('Intended version 1') && !(await scopeText()).includes('Intended version 2'), 'Mixed selected product/intended facts mismatch');
++  assert(!(await scopeText()).includes('SYNTHETIC UNSELECTED PRIVATE LABEL'), 'Unselected formula disclosed');
++  await checkOverflow(); await screenshot('actual-use-review');
++  const recordReview = sent.at(-1); assert(recordReview.products.length === 1 && recordReview.plans.length === 1 && recordReview.records.length === 2 && recordReview.records.every(row => !Object.hasOwn(row, 'labelText')) && recordReview.recordSourceHash, 'Exact selected original identities missing');
++  unlinkSync(path.join(evidence, 'onskin-selected-previsit.txt'));
++  await click('Download reviewed pre-visit report'); await poll(() => existsSync(path.join(evidence, 'onskin-selected-previsit.txt')), 'Selected record download missing');
++  const recordDownload = readFileSync(path.join(evidence, 'onskin-selected-previsit.txt'), 'utf8');
++  assert(recordDownload.includes('Earlier recorded use (retracted)') && !recordDownload.includes('SYNTHETIC UNSELECTED PRIVATE LABEL'), 'Record export omitted retraction or disclosed unselected formula');
++  await click('Clear pre-visit screen'); mode = 'hold'; await click('Load saved products for pre-visit'); await text('Checking selected records');
++  await poll(() => held !== null, 'Held request missing'); await click('Cancel pre-visit loading'); await text('Choose the text fields');
++  if (held) await cdp.send('Fetch.fulfillRequest', { requestId: held, responseCode: 200,
++    responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }],
++    body: Buffer.from(JSON.stringify({ kind: 'source', context: 'old-session', source: { fields: ['products'], products: [product], plans: [], records: [], recordSourceHash: null, grantVersion: 1, grantEpoch: 1 } })).toString('base64') }).catch(() => {});
++  await delay(100); assert(!(await scopeText()).includes(product.name), 'Cancelled late source exposed'); await screenshot('cancelled'); await checkOverflow();
++  assert(!cdp.events.some(event => event.method === 'Runtime.exceptionThrown'), 'Browser exception');
++  const ax = await cdp.send('Accessibility.getFullAXTree');
++  writeFileSync(path.join(evidence, 'summary.json'), JSON.stringify({ surface: 'Actual Vite UI; real API503; positive HTTP responses explicitly synthetic', width, height,
++    explicitSelection: true, reviewCancel: true, staleReviewRefused: true, download: true, changedSourceRefused: true, deniedExport: true,
++    fieldIsolation: true, allFiveFields: true, mixedExplicitSelection: true, selectedActualUse: true, retractionContext: true, unselectedFormulaExcluded: true, empty: true, lateCancelledReadRefused: true, keyboard: true, focus: true, startupTop: true, overflow,
++    commands: sent.map(input => input.kind), axRoles: ax.nodes.filter(node => !node.ignored).map(node => node.role?.value) }, null, 2));
++  console.log(`PASS professional pre-visit ${width}x${height}`);
++} catch (error) { if (cdp) await screenshot('failure').catch(() => {}); throw error; }
++finally {
++  writeFileSync(path.join(evidence, 'server.log'), serverLog); cdp?.ws.close();
++  for (const child of [browser, server]) if (child?.pid) {
++    if (process.platform === 'win32') await new Promise(resolve => spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).once('exit', resolve));
++    else child.kill();
++  }
++}
+diff --git a/scripts/e2e/professional-reconciliation.mjs b/scripts/e2e/professional-reconciliation.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..df33a9354b6c9f8b837e5db1e562091cefd8375c
+--- /dev/null
++++ b/scripts/e2e/professional-reconciliation.mjs
+@@ -0,0 +1,124 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath, pathToFileURL } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering12/browser', `queue-${width}`); mkdirSync(evidence, { recursive: true });
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4334; const debugPort = 9464; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual, ...(key === 'Enter' ? {text:'\r'} : {})});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++
++// Compile only pure domain modules into ignored local evidence. No service,
++// production identity/driver or external event source is installed in Vite.
++const ts = require('typescript'); const modules = path.join(evidence, 'domain'); mkdirSync(modules, { recursive:true });
++for (const name of ['authority','grants','intendedPlans','reconciliation']) {
++  const output = ts.transpileModule(readFileSync(path.join(root, 'apps/professional-web/src', `${name}.ts`),'utf8'),
++    { compilerOptions: { target: ts.ScriptTarget.ES2022, module:ts.ModuleKind.ESNext } }).outputText.replace(/from '\.\/([^']+)'/g, "from './$1.mjs'");
++  writeFileSync(path.join(modules,`${name}.mjs`),output);
++}
++const { enqueueMaterial, transitionCase } = await import(pathToFileURL(path.join(modules,'reconciliation.mjs')));
++const { recordHash } = await import(pathToFileURL(path.join(modules,'grants.mjs')));
++const now=1800000000000;
++const authority={session:{subjectId:'synthetic-staff',ownerId:null,workspaceId:'practice-a',epoch:1,startedAt:now,lastActivityAt:now,stepUpAt:now,aal:2,totp:true,adult:true,revoked:false},
++ membership:{subjectId:'synthetic-staff',workspaceId:'practice-a',roles:['assigned_practitioner'],revision:1,active:true},
++ assignment:{subjectId:'synthetic-staff',workspaceId:'practice-a',ownerId:'client-a',active:true},
++ licence:{subjectId:'synthetic-staff',jurisdiction:'CA',verifiedAt:now,expiresAt:now+100000},
++ grant:{id:'grant-a',ownerId:'client-a',workspaceId:'practice-a',version:1,epoch:1,healthEpoch:1,expiresAt:now+100000,consentReceiptId:'health-a',fields:['exceptions','intended_plans'],purposes:['routine_review'],permissions:['read','plan_write'],status:'active'},
++ health:{ownerId:'client-a',epoch:1,consentReceiptId:'health-a',active:true,deletionPending:false},billing:'write_allowed'};
++const eventBody={id:'11111111-1111-4111-8111-111111111111',version:1,ownerId:'client-a',workspaceId:'practice-a',grantVersion:1,planHash:'b'.repeat(64),kind:'product_started',detail:'SYNTHETIC selected owner report; no actual person or care.'};
++const event={...eventBody,contentHash:await recordHash(eventBody)};let log=[];let mode='normal';let held=null;const sent=[];const overflow=[];
++let ownerResponses=[];
++const model=()=>({sourceHash:'a'.repeat(64),writeAvailable:mode!=='readonly',grantVersion:1,grantEpoch:1,events:mode==='empty'?[]:[event],
++ plans:mode==='empty'?[]:[{planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,sequence:1}],acknowledgements:[],responses:mode==='empty'?[]:ownerResponses,rows:mode==='empty'?[]:log});
++const scopeText=()=>cdp.value(`document.querySelector('#reconciliation').innerText`);
++const checkOverflow=async()=>{const ok=await cdp.value('document.documentElement.scrollWidth <= innerWidth');overflow.push(ok);assert(ok,'horizontal overflow');};
++async function fill(label,value){const point=await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label='+${JSON.stringify(JSON.stringify(label))}+']');if(!n)return null;n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);assert(point,`Missing ${label}`);await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await cdp.send('Input.insertText',{text:value});}
++async function choose(value){await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label="Next review state"]');n.scrollIntoView({block:'center'});n.focus();})()`);await keyboard('Home','Home',36);const options=await cdp.value(`Array.from(document.querySelector('#reconciliation [aria-label="Next review state"]').options).map(o=>o.value)`);for(let i=0;i<options.indexOf(value);i++)await keyboard('ArrowDown','ArrowDown',40);await keyboard('Enter');assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Next review state"]').value`)===value,'Select keyboard state');}
++async function filter(label,value){
++ await cdp.value(`(()=>{const n=[...document.querySelectorAll('#reconciliation select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();})()`);
++ const options=await cdp.value(`Array.from([...document.querySelectorAll('#reconciliation select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}).options).map(o=>o.value)`);
++ assert(options.includes(value),'Filter option exists');await keyboard('Home','Home',36);for(let i=0;i<options.indexOf(value);i++)await keyboard('ArrowDown','ArrowDown',40);await keyboard('Enter');
++ assert(await cdp.value(`document.activeElement.getAttribute('aria-label')===${JSON.stringify(label)}&&document.activeElement.value===${JSON.stringify(value)}`),'Filter keyboard selection and focus');
++}
++try{
++ await poll(async()=>(await fetch(origin)).ok,'Vite unavailable',20000);
++ assert((await fetch(`${origin}/api/professional/reconciliation`,{method:'POST'})).status===503,'Real queue must refuse');
++ browser=spawn(browserPath,['--headless=new','--disable-gpu','--no-first-run',`--remote-debugging-port=${debugPort}`,`--user-data-dir=${mkdtempSync(path.join(tmpdir(),'onskin-queue-'))}`,'about:blank'],{windowsHide:true,stdio:'ignore'});
++ const tabs=await poll(async()=>(await(await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(t=>t.type==='page'),'Chrome unavailable');cdp=new Client(tabs[0].webSocketDebuggerUrl);
++ await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});await cdp.send('Page.navigate',{url:origin});await text('Practice connection');await poll(()=>cdp.value(`!!document.querySelector('#reconciliation button')`),'Queue mount');assert(await cdp.value('scrollY===0'),'Mount stole scroll');
++ await click('Load current review records');await text('Review queue unavailable');await screenshot('real-unavailable');
++ await cdp.send('Fetch.enable',{patterns:[{urlPattern:`${origin}/api/professional/reconciliation`,requestStage:'Request'}]});
++ cdp.onEvent=async e=>{if(e.method!=='Fetch.requestPaused')return;const {requestId,request}=e.params;const input=JSON.parse(request.postData);sent.push(input);if(mode==='hold'){held=requestId;return;}
++  let status=200;let response={kind:input.kind,context:'synthetic-queue-context',model:model()};
++  try{if(input.kind==='save'){const c=input.command;log=c.kind==='enqueue'?await enqueueMaterial(log,authority,event,c.caseId,now):await transitionCase(log,authority,{caseId:c.caseId,expectedHash:c.expectedHash,next:c.next,reason:c.reason,communication:c.communication,changedPlanHash:c.changedPlanHash,acknowledgement:null,nonAcknowledgementReason:c.nonAcknowledgementReason},now);response.model=model();}
++   if(mode==='unknown'&&input.kind==='save'){status=503;response={status:'unavailable',private:'NEVER_RENDER_PRIVATE_BODY'};mode='normal';}
++   if(mode==='changed'){status=409;response={private:'NEVER_RENDER_PRIVATE_BODY'};}if(mode==='denied'){status=403;response={private:'NEVER_RENDER_PRIVATE_BODY'};}
++   if(mode==='forged')response.model={...model(),unexpected:'NEVER_RENDER_PRIVATE_BODY'};
++  }catch{status=409;response={status:'changed'};}
++  await cdp.send('Fetch.fulfillRequest',{requestId,responseCode:status,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:mode==='cacheable'?'public,max-age=3600':'no-store'}],body:Buffer.from(JSON.stringify(response)).toString('base64')}).catch(()=>{});
++ };
++ await click('Load current review records');await text('Review owner record 1');assert(await cdp.value(`document.activeElement===document.querySelector('#reconciliation h2')`),'Load focus');
++ await click('Review owner record 1');await text(event.detail);await text('Exact intended version: 1');await screenshot('event-review');await checkOverflow();
++ await cdp.value(`globalThis.__retiredQueueConfirm=[...document.querySelectorAll('#reconciliation button')].find(b=>b.textContent==='Confirm review record').onclick`);await click('Cancel review');const count=sent.length;await cdp.value('__retiredQueueConfirm()');await delay(100);assert(sent.length===count,'Canceled callback submitted');
++ await click('Review owner record 1');mode='unknown';await click('Confirm review record');await text('Review save outcome unknown');const original=JSON.stringify(sent.at(-1));await click('Retry identical review save');await text('Review revision saved');assert(JSON.stringify(sent.at(-1))===original&&log.length===1,'Unknown retry duplicated');
++ await click('Open case 1 history');await text(event.detail);await fill('Reason for this decision','SYNTHETIC exact event reviewed');await choose('in_review');await click('Review decision before saving');await screenshot('decision-review');await click('Confirm review record');await text('Review revision saved');assert(log.length===2,'Decision append');
++ await click('Open case 1 history');await choose('awaiting_client_ack');await fill('Reason for this decision','SYNTHETIC intended version needs owner response');await filter('Changed intended version',event.planHash);
++ await click('Review decision before saving');await text('No explicit response recorded');await click('Confirm review record');await text('Review revision saved');
++ ownerResponses=[{id:'33333333-3333-4333-8333-333333333333',contentHash:'c'.repeat(64),planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,kind:'declined',recordedAt:now}];
++ await click('Load current review records');await text('Open case 1 history');await click('Open case 1 history');await text('Latest recorded owner response to intended version 1: Declined');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Recorded owner acknowledgement"]').options.length`)===1,'Decline offered as acknowledgement');await screenshot('owner-declined');await checkOverflow();
++ await choose('resolved');await fill('Reason for this decision','SYNTHETIC factual resolution');await fill('Communication already provided (record only)','SYNTHETIC prior contact recorded; no message sent');await fill('Reason for closing without exact acknowledgement','SYNTHETIC exact version declined; no actual use inferred');
++ await click('Review decision before saving');await text('Latest recorded owner response to intended version 1: Declined');await click('Confirm review record');await text('Review revision saved');assert(log.length===4&&log.at(-1).state==='resolved','Closure');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await screenshot('history');await checkOverflow();await click('Back to queue; discard draft');
++ const beforeFilters=sent.length;await filter('Filter cases by recorded state','open');await text('No current cases match these filters.');
++ assert(!(await scopeText()).includes('Open case 1 history'),'Closed history misclassified as open');await screenshot('filter-open-empty');
++ await filter('Filter cases by recorded state','resolved');await text('Open case 1 history');
++ await filter('Filter material records by kind','concern_reported');await text('No shared material records match this filter.');await text('No current cases match these filters.');
++ await filter('Filter material records by kind','product_started');await text('Open case 1 history');assert(sent.length===beforeFilters,'Display filter read or wrote private records');
++ await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await click('Back to queue; discard draft');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Filter cases by recorded state"]').value==='resolved'&&document.querySelector('#reconciliation [aria-label="Filter material records by kind"]').value==='product_started'`),'History return lost filters');
++ await checkOverflow();await screenshot('filtered-history-return');
++ await cdp.value(`new BroadcastChannel('onskin-professional-session').postMessage('retired')`);await poll(async()=>(await scopeText()).includes('Current assigned practitioner'),'Session retirement');assert(!(await scopeText()).includes(event.detail),'Session retained text');
++ mode='readonly';await click('Load current review records');await text('Read-only:');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await click('Back to queue; discard draft');
++ for(const branch of ['changed','denied','forged','cacheable']){mode=branch;await click('Load current review records');await text(branch==='changed'?'Review records changed':'Review queue unavailable');assert(!(await scopeText()).includes('NEVER_RENDER_PRIVATE_BODY'),'Private error rendered');}
++ mode='empty';await click('Load current review records');await text('No current shared material events');await text('No current cases.');
++ mode='hold';await click('Load current review records');await poll(()=>held,'Held read');await click('Clear review screen');await cdp.send('Fetch.fulfillRequest',{requestId:held,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'}],body:Buffer.from(JSON.stringify({kind:'source',context:'retired',model:model()})).toString('base64')}).catch(()=>{});await delay(100);assert(!(await scopeText()).includes(event.detail),'Late read republished');
++ mode='normal';await click('Load current review records');await text('Open case 1 history');await keyboard('Tab');assert(await cdp.value('document.activeElement?.tagName')==='SELECT','Keyboard navigation');await checkOverflow();await screenshot('final');assert(!cdp.events.some(e=>e.method==='Runtime.exceptionThrown'),'Browser exception');const ax=await cdp.send('Accessibility.getFullAXTree');
++ writeFileSync(path.join(evidence,'summary.json'),JSON.stringify({surface:'Actual Vite UI; real API503; domain-generated HTTP positives explicitly synthetic',width,height,eventReviewCancel:true,retiredCallback:true,unknownExactRetry:true,encryptedIntegration:'separate source tests',decisionAndClosure:true,historyReadback:true,stateAndKindFilters:true,filterEmptyAndHistoryReturn:true,filterKeyboardFocus:true,readOnly:true,sessionRetirement:true,changedDeniedForgedCacheable:true,empty:true,lateClear:true,keyboard:true,focus:true,startupTop:true,overflow,commands:sent.map(i=>i.kind),axRoles:ax.nodes.filter(n=>!n.ignored).map(n=>n.role?.value)},null,2));console.log(`PASS queue ${width}x${height}`);
++}catch(error){if(cdp)await screenshot('failure').catch(()=>{});throw error;}
++finally{writeFileSync(path.join(evidence,'server.log'),serverLog);cdp?.ws.close();for(const child of[browser,server])if(child?.pid){if(process.platform==='win32')await new Promise(resolve=>spawn('taskkill',['/pid',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'}).once('exit',resolve));else child.kill();}}

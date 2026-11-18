@@ -1,0 +1,24 @@
+{
+  "label": "draft-rights-tests",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/bottleDrafts.test.ts",
+    "src/features/settings/localPrivateDataFence44.test.ts",
+    "src/lib/storage/webRuntimeAdmission.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T12:18:23.055827+00:00",
+  "head": "2f699f6157c1d6414b7e74661a4e11e89a77ed92",
+  "tree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5",
+  "status": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/app/_layout.tsx\n M apps/mobile/src/app/shelf/_layout.tsx\n M apps/mobile/src/app/shelf/formula-history.tsx\n M apps/mobile/src/features/onboarding/healthConsentStore.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/mutations.ts\n M apps/mobile/src/features/shelf/store.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/supabase/client.ts\n M apps/professional-web/src/encryptedWorkspaceRepository.test.ts\n M apps/professional-web/src/reconciliation.test.ts\n M apps/professional-web/src/reconciliationService.ts\n M apps/professional-web/src/reconciliationView.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/professional-reconciliation.mjs\n?? apps/mobile/src/app/shelf/drafts.tsx\n?? apps/mobile/src/features/shelf/bottleDraftCodec.ts\n?? apps/mobile/src/features/shelf/bottleDraftStore.ts\n?? apps/mobile/src/features/shelf/bottleDrafts.test.ts\n?? apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts\n?? apps/mobile/src/lib/storage/webRuntimeAdmission.ts\n?? docs/ENGINEERING20_DRAFT_DESIGN.md\n?? scripts/e2e/bottle-drafts20.mjs",
+  "workingDiffSha256": "5fce290b196e04ff307a5946809484d464ea00cdcdea0047601dfb87a3c4a0f2",
+  "exit": 0,
+  "seconds": 4.141,
+  "end": "2026-11-17T12:18:27.497467+00:00",
+  "logSha256": "8fb1aa85af4349e48bb5fac37850d8a7acfcec27d264a08c5d473c80dbcfc666"
+}

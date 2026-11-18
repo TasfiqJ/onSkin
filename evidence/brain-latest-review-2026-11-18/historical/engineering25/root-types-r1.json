@@ -1,0 +1,21 @@
+{
+  "label": "root-types-r1",
+  "command": [
+    "npm.cmd",
+    "run",
+    "typecheck",
+    "--",
+    "--cache=local:w",
+    "--concurrency=1"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T00:05:24.308328+00:00",
+  "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+  "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+  "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+  "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+  "exit": 2,
+  "seconds": 23.531,
+  "end": "2026-11-18T00:05:48.099762+00:00",
+  "logSha256": "883529e1034c89beb1db008ca3d3b6e035ba086ad0697d16e9456afc9ffc83b1"
+}

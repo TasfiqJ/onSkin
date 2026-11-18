@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/today/optionalChangeDrafts.test.ts src/features/today/optionalChangeDraftUI21.test.ts src/features/today/optionalChange41.test.ts src/features/today/optionalChangeJournal41.test.ts src/features/today/optionalHistoryRecovery15.test.ts src/features/today/todayOptionalConvergence15.test.ts src/features/today/observationHistory.test.ts src/features/today/completionsStore.test.ts src/features/settings/localDeviceExport.test.ts src/features/settings/localPrivateDataKeys.test.ts src/features/settings/localPrivateData.test.ts src/features/settings/localPrivateDataFence44.test.ts src/features/healthConsent/selectiveCleanup.test.ts src/lib/storage/privateKV.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  14 passed (14)
+      Tests  430 passed (430)
+   Start at  12:41:38
+   Duration  18.57s (transform 17.28s, setup 0ms, import 25.63s, tests 32.05s, environment 3ms)
+

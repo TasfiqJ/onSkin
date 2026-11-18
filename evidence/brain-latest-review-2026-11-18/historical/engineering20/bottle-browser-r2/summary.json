@@ -1,0 +1,9 @@
+{
+  "startedAt": "2026-11-17T12:10:56.428Z",
+  "surface": "Actual local Expo web in Edge; synthetic local owner, no providers",
+  "userDataDir": "[LOCAL_USER_HOME]\\AppData\\Local\\Temp\\[TEMP_BROWSER_PROFILE]",
+  "viewports": [],
+  "pass": false,
+  "error": "Could not scroll control \"Cleanser\" into view.",
+  "endedAt": "2026-11-17T12:12:13.559Z"
+}

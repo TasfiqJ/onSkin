@@ -1,0 +1,19 @@
+{
+  "onlyChangedPath": "apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts",
+  "exactSingleSetupReplacement": true,
+  "allTestBodiesAndAssertionsByteIdenticalAfterGitLineEndingNormalization": true,
+  "controlPressAndLabelHelpersUnchanged": true,
+  "setupAuthorityAndFixturesUnchanged": true,
+  "allLaterFlush26CallsUnchanged": true,
+  "activationOutsideReadinessWait": true,
+  "waitUsesUnmodifiedVitestDefaults": {
+    "timeoutMs": 1000,
+    "intervalMs": 50,
+    "source": "node_modules/vitest/dist/chunks/test.DNmyFkvJ.js"
+  },
+  "noNewSleepTimeoutOverrideRetryConfigSkipOrConcurrencyChange": true,
+  "testBodySha256": "2dd79c828f5009e25ff846c20b6a9b33dd87bd02289a71ac226847cba5fc406e",
+  "sourceRawSha256": "4f97f0754cc30f0ce4d657e99824a3bb664544720c37e5ad7012fb198199d4f0",
+  "sourceGitBlob": "34fe95b43ec97551a8e10f99a8cf112cd888dfed",
+  "readOnlyPeerReview": "PASS: exact mounted enabled control; unchanged press, test cases and later waits; no blocker. Reviewer performed no edits or tests."
+}

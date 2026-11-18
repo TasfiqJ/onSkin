@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/formulaHistoryJourney.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  23 passed (23)
+   Start at  19:36:31
+   Duration  7.25s (transform 867ms, setup 0ms, import 1.08s, tests 5.91s, environment 0ms)
+

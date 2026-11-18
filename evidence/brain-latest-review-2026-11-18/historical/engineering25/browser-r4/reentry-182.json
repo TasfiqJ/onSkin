@@ -1,0 +1,16 @@
+{
+  "path": "/you",
+  "activeOpen": true,
+  "sections": [
+    {
+      "hidden": true,
+      "hasLayout": false,
+      "text": "Local recoveryCloseCheck what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls.Local recovery is unavailable until your age, consent, and account checks are current."
+    },
+    {
+      "hidden": false,
+      "hasLayout": true,
+      "text": "Local recovery\nClose\nCheck what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls.\nShelf\nSaved on this device\nYour Shelf records can be read on this device.\nCheck again\nOpen Shelf\nToday check-offs\nNot configured\nNo check-offs are recorded for this local day.\nCheck again\nOpen Today\nReminder choices\nNot configured\nNo reminder purpose is enabled in the device preferences. Scheduling and permission are not checked here.\nCheck again\nReview reminder setup\nPhoto cleanup\nNo pending cleanup\nNo outstanding deletion was found in the current local journal. Photo content is checked only in Progress.\nCheck again\nReview photo cleanup in Progress\nManual intake drafts\nSaved on this device\nSaved manual intake drafts can be read on this device. Open saved drafts to choose one to review.\nCheck again\nOpen saved manual intake drafts\nOptional change drafts\nSaved on this device\nSaved optional change drafts can be read on this device. In Today, open Saved change drafts in Your optional change notes.\nCheck again\nOpen Today for saved change drafts"
+    }
+  ]
+}

@@ -1,0 +1,1536 @@
++  r = await runtime(); ports.fallbackRemoved = false; clearMutationReceipts();
++});
++afterEach(async () => { ports.onKeyRead = null; await r.kv.waitForPrivateKVWritesToSettle(); r.epoch.clearActiveHealthProcessingEpoch(); });
++
++const reads = {
++  single: async () => expect(await r.kv.getPrivateItem(DESTINATION)).toBe('synthetic destination'),
++  batch: async () => expect(await r.kv.getPrivateItems([DESTINATION, SOURCE])).toEqual(new Map([
++    [DESTINATION, 'synthetic destination'], [SOURCE, 'synthetic source'],
++  ])),
++  whenReady: async () => expect(await r.kv.getPrivateItemWhenReady(DESTINATION, r.lease)).toBe('synthetic destination'),
++  validate: async () => r.kv.assertPrivateKVReadable(),
++  validateWhenReady: async () => r.kv.verifyPrivateKVWhenReady(),
++  guardedNoOp: async () => r.kv.updatePrivateItem(DESTINATION, raw => raw),
++  sourceNoOp: async () => r.kv.updatePrivateItemWithSources(DESTINATION, [SOURCE], values => values.get(DESTINATION)!, r.assertCurrent,
++    async values => { expect(values.get(SOURCE)).toBe('synthetic source'); }),
++};
++
++it.each(['normal', 'legacy', 'identical', 'unavailableFallback', 'readFailureFallback', 'web'] as const)(
++  'keeps every read, recheck and no-op transaction free of adapter mutations with %s key returns', async mode => {
++    ports.mode = mode === 'web' ? 'legacy' : mode;
++    if (mode === 'web') ports.os = 'web';
++    const before = new Map(ports.bytes), secureBefore = new Map(ports.secure);
++    for (const read of Object.values(reads)) { await read(); expectNoMutation(); }
++    expect(ports.bytes).toEqual(before); expect(ports.secure).toEqual(secureBefore);
++    expect(ports.fallbackRemoved).toBe(false);
++  },
++);
++
++it.each((['conflict', 'missing', 'unavailable'] as const).flatMap(mode =>
++  (Object.keys(reads) as (keyof typeof reads)[]).map(operation => ({ mode, operation })),
++))('refuses $mode key returns during $operation without replacement or cleanup', async ({ mode, operation }) => {
++  ports.mode = mode;
++  const before = new Map(ports.bytes), secureBefore = new Map(ports.secure);
++  await expect(reads[operation]()).rejects.toThrow(mode === 'missing'
++    ? 'PRIVATE_KV_CONTENT_KEY_MISSING' : 'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
++  expectNoMutation(); expect(ports.bytes).toEqual(before); expect(ports.secure).toEqual(secureBefore);
++});
++
++it.each(['guarded', 'source'] as const)('keeps original key continuity and migrates legacy material only for a genuine %s write', async lane => {
++  ports.mode = 'legacy';
++  const before = ports.bytes.get(DESTINATION), sourceBefore = ports.bytes.get(SOURCE), keyBefore = ports.fixtureKey;
++  if (lane === 'guarded') await r.kv.updatePrivateItem(DESTINATION, () => 'explicit changed destination');
++  else await r.kv.updatePrivateItemWithSources(DESTINATION, [SOURCE], () => 'explicit changed destination', r.assertCurrent);
++  expect(SecureStore.setItemAsync).toHaveBeenCalledWith(KEY, keyBefore, { keychainAccessible: 7 });
++  expect(AsyncStorage.removeItem).toHaveBeenCalledWith(KEY);
++  expect(ports.secure.get(KEY)).toBe(keyBefore);
++  expect(ports.bytes.get(DESTINATION)).not.toBe(before); expect(ports.bytes.get(SOURCE)).toBe(sourceBefore);
++  expect(await r.kv.getPrivateItem(DESTINATION)).toBe('explicit changed destination');
++  const migration = ports.mutations.indexOf(`secure:set:${KEY}`);
++  const intent = ports.mutations.indexOf('async:set:layerwell.localDataCleanupRequired.v1');
++  const dataWrite = ports.mutations.indexOf(`async:set:${DESTINATION}`);
++  expect(migration).toBeGreaterThanOrEqual(0); expect(intent).toBeGreaterThan(migration); expect(dataWrite).toBeGreaterThan(intent);
++});
++
++it.each(['guarded', 'source'] as const)('cleans only an identical fallback during a genuine %s write', async lane => {
++  ports.mode = 'identical';
++  if (lane === 'guarded') await r.kv.updatePrivateItem(DESTINATION, () => 'explicit changed destination');
++  else await r.kv.updatePrivateItemWithSources(DESTINATION, [SOURCE], () => 'explicit changed destination', r.assertCurrent);
++  expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
++  expect(AsyncStorage.removeItem).toHaveBeenCalledWith(KEY);
++  expect(ports.secure.get(KEY)).toBe(ports.fixtureKey);
++  expect(await r.kv.getPrivateItem(DESTINATION)).toBe('explicit changed destination');
++});
++
++it.each(['guarded', 'source'] as const)('retires the original authority before key maintenance in the %s write lane', async lane => {
++  ports.mode = 'legacy';
++  const before = new Map(ports.bytes), secureBefore = new Map(ports.secure);
++  const transform = () => {
++    ports.onKeyRead = () => r.epoch.clearActiveHealthProcessingEpoch();
++    return 'uncommitted destination';
++  };
++  const operation = lane === 'guarded'
++    ? r.kv.updatePrivateItem(DESTINATION, transform)
++    : r.kv.updatePrivateItemWithSources(DESTINATION, [SOURCE], transform, r.assertCurrent);
++  await expect(operation).rejects.toThrow();
++  expectNoMutation(); expect(ports.bytes).toEqual(before); expect(ports.secure).toEqual(secureBefore);
++});
+diff --git a/apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts b/apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a3322d55bc7385b4629d654abd725433990ce3e
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts
+@@ -0,0 +1,48 @@
++import { expect, it, vi } from 'vitest';
++import { createWebRuntimeAdmission, gateWebRuntimeStorage, PRIVATE_WEB_RUNTIME_LOCK, type RuntimeLockPort } from './webRuntimeAdmission';
++
++it('holds one exclusive origin lock for the document lifetime without steal or unmount release', async () => {
++  let held = false;
++  const request = vi.fn<RuntimeLockPort['request']>(async (_name, _options, callback) => {
++    if (held) return callback(null);
++    held = true;
++    return callback({ name: PRIVATE_WEB_RUNTIME_LOCK }).finally(() => { held = false; });
++  });
++  const first = createWebRuntimeAdmission({ request }), second = createWebRuntimeAdmission({ request });
++  const changed = vi.fn(); const unsubscribe = first.subscribe(changed);
++  first.subscribe(() => { throw new Error('Synthetic notification failure'); });
++  first.retry(); await Promise.resolve();
++  expect(first.snapshot()).toBe('admitted');
++  unsubscribe(); first.retry(); second.retry(); await Promise.resolve();
++  expect(second.snapshot()).toBe('occupied'); expect(held).toBe(true);
++  expect(request).toHaveBeenCalledTimes(2);
++  expect(request.mock.calls.every(([name, options]) => name === PRIVATE_WEB_RUNTIME_LOCK &&
++    JSON.stringify(options) === JSON.stringify({ mode: 'exclusive', ifAvailable: true }))).toBe(true);
++});
++it('holds import-time auth reads, writes and removal until the document is admitted', async () => {
++  let occupied = true;
++  const admission = createWebRuntimeAdmission({ request: async (_name, _options, callback) => callback(occupied ? null : {}) });
++  const storage = { getItem: vi.fn(async () => 'retained synthetic session'), setItem: vi.fn(async () => {}), removeItem: vi.fn(async () => {}) };
++  const gated = gateWebRuntimeStorage(storage, admission);
++  const read = gated.getItem('session'), write = gated.setItem('session', 'synthetic'), remove = gated.removeItem('session');
++  admission.retry(); await new Promise(resolve => setTimeout(resolve, 0));
++  expect(storage.getItem).not.toHaveBeenCalled(); expect(storage.setItem).not.toHaveBeenCalled(); expect(storage.removeItem).not.toHaveBeenCalled();
++  occupied = false; admission.retry();
++  expect(await read).toBe('retained synthetic session'); await write; await remove;
++  expect(storage.getItem).toHaveBeenCalledOnce(); expect(storage.setItem).toHaveBeenCalledOnce(); expect(storage.removeItem).toHaveBeenCalledOnce();
++});
++it('permits explicit retry after the other context has closed', async () => {
++  let occupied = true;
++  const request: RuntimeLockPort['request'] = async (_name, _options, callback) => callback(occupied ? null : {});
++  const admission = createWebRuntimeAdmission({ request });
++  admission.retry(); await new Promise(resolve => setTimeout(resolve, 0));
++  expect(admission.snapshot()).toBe('occupied');
++  occupied = false; admission.retry(); expect(admission.snapshot()).toBe('admitted');
++});
++it('refuses unsupported and denied browser coordination without storage access', async () => {
++  const unavailable = createWebRuntimeAdmission(undefined); unavailable.retry();
++  expect(unavailable.snapshot()).toBe('unavailable');
++  const denied = createWebRuntimeAdmission({ request: async () => { throw new Error('Unavailable'); } });
++  denied.retry(); await Promise.resolve(); await Promise.resolve();
++  expect(denied.snapshot()).toBe('unavailable');
++});
+diff --git a/apps/mobile/src/lib/storage/webRuntimeAdmission.ts b/apps/mobile/src/lib/storage/webRuntimeAdmission.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f652d09ac25744760bf9db660e9ce3db66f82b6
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/webRuntimeAdmission.ts
+@@ -0,0 +1,69 @@
++export type WebRuntimeStatus = 'checking' | 'admitted' | 'occupied' | 'unavailable';
++export type RuntimeLockPort = {
++  request(name: string, options: { mode: 'exclusive'; ifAvailable: true },
++    callback: (lock: unknown | null) => Promise<void>): Promise<unknown>;
++};
++export const PRIVATE_WEB_RUNTIME_LOCK = 'layerwell.private-runtime.v1';
++
++/** One application runtime per browser origin. Holding the lock for the
++ * document lifetime also covers direct cleanup/key/control-record operations
++ * which do not participate in privateKV's per-key mutation queues.
++ * Never steal or release on blur/navigation/component unmount. The browser
++ * releases the lock when this context ends, including a crash or reload. */
++export function createWebRuntimeAdmission(port: RuntimeLockPort | undefined) {
++  let status: WebRuntimeStatus = 'checking';
++  let pending = false;
++  const listeners = new Set<() => void>();
++  const publish = (next: WebRuntimeStatus) => {
++    status = next;
++    for (const listener of [...listeners]) {
++      try { listener(); } catch { /* A listener cannot release runtime ownership. */ }
++    }
++  };
++  const retry = () => {
++    if (pending || status === 'admitted') return;
++    if (!port) { publish('unavailable'); return; }
++    pending = true; publish('checking');
++    try {
++      void port.request(PRIVATE_WEB_RUNTIME_LOCK, { mode: 'exclusive', ifAvailable: true }, async lock => {
++        if (lock === null) { publish('occupied'); return; }
++        publish('admitted');
++        await new Promise<void>(() => { /* Deliberately retained until context destruction. */ });
++      }).then(() => { pending = false; if (status === 'admitted') publish('unavailable'); }, () => {
++        pending = false; publish('unavailable');
++      });
++    } catch { pending = false; publish('unavailable'); }
++  };
++  return { snapshot: () => status, retry, subscribe: (listener: () => void) => {
++    listeners.add(listener); return () => { listeners.delete(listener); };
++  } };
++}
++
++type Admission = ReturnType<typeof createWebRuntimeAdmission>;
++const runtimeGlobal = globalThis as typeof globalThis & { __layerwellPrivateWebRuntime?: Admission };
++// Preserve ownership during development Fast Refresh. No storage or private
++// content is placed on this singleton; it is only browser lock admission.
++export const webRuntimeAdmission = runtimeGlobal.__layerwellPrivateWebRuntime ??= createWebRuntimeAdmission(
++  (globalThis as unknown as { navigator?: { locks?: RuntimeLockPort } }).navigator?.locks,
++);
++
++/** auth-js initializes at module construction, before React mounts the root.
++ * Keep that initialization dormant until this document owns private storage.
++ * Refusal is never translated into an absent session or permission to erase. */
++export function gateWebRuntimeStorage(storage: {
++  getItem(key: string): Promise<string | null>;
++  setItem(key: string, value: string): Promise<void>;
++  removeItem(key: string): Promise<void>;
++}, admission = webRuntimeAdmission) {
++  const ready = () => new Promise<void>(resolve => {
++    if (admission.snapshot() === 'admitted') { resolve(); return; }
++    const unsubscribe = admission.subscribe(() => {
++      if (admission.snapshot() === 'admitted') { unsubscribe(); resolve(); }
++    });
++  });
++  return {
++    async getItem(key: string) { await ready(); return storage.getItem(key); },
++    async setItem(key: string, value: string) { await ready(); return storage.setItem(key, value); },
++    async removeItem(key: string) { await ready(); return storage.removeItem(key); },
++  };
++}
+diff --git a/apps/mobile/src/lib/supabase/client.test.ts b/apps/mobile/src/lib/supabase/client.test.ts
+index 43fa11458e643780f20c463202cde3101f6cfc87..b8f9604d2efa9fd7d04b012c55ad0440f0b3fbc5 100644
+--- a/apps/mobile/src/lib/supabase/client.test.ts
++++ b/apps/mobile/src/lib/supabase/client.test.ts
+@@ -1,4 +1,5 @@
+ import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { webRuntimeAdmission } from '../storage/webRuntimeAdmission';
+ 
+ import {
+   isSupabaseControlledRefreshTerminalError,
+@@ -11,6 +12,9 @@ const h = vi.hoisted(() => {
+     configurable: true,
+     value: {},
+   });
++  Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { locks: {
++    request: async (_name: string, _options: unknown, callback: (lock: object) => Promise<void>) => callback({}),
++  } } });
+   return {
+     fetch: vi.fn(),
+     getUser: vi.fn(),
+@@ -19,6 +23,7 @@ const h = vi.hoisted(() => {
+ });
+ 
+ vi.mock('react-native-url-polyfill/auto', () => ({}));
++vi.mock('react-native', () => ({ Platform: { OS: 'web' } }));
+ 
+ vi.mock('../env', () => ({
+   env: {
+@@ -81,6 +86,7 @@ function sessionPayload() {
+ 
+ describe('controlled Supabase session storage', () => {
+   beforeEach(() => {
++    webRuntimeAdmission.retry();
+     h.fetch.mockReset();
+     h.getUser.mockReset();
+     h.values.clear();
+diff --git a/apps/mobile/src/lib/supabase/client.ts b/apps/mobile/src/lib/supabase/client.ts
+index f6dace345280e12336f6c016bcb15fd07d19e763..3f1fb8a15768b8806439eb13dbe4b473cc90f0cd 100644
+--- a/apps/mobile/src/lib/supabase/client.ts
++++ b/apps/mobile/src/lib/supabase/client.ts
+@@ -2,6 +2,8 @@ import 'react-native-url-polyfill/auto'; // supabase-js needs a WHATWG URL on RN
+ import type { ClientDatabase } from '@layerwell/types/database';
+ import type { Session } from '@supabase/supabase-js';
+ import { createClient } from '@supabase/supabase-js';
++import { Platform } from 'react-native';
++import { gateWebRuntimeStorage } from '../storage/webRuntimeAdmission';
+ 
+ import { env } from '../env';
+ import { createHealthEpochFetch } from '../consent/healthProcessingEpoch';
+@@ -23,7 +25,9 @@ const serverAuthStorage = {
+   async setItem(): Promise<void> {},
+   async removeItem(): Promise<void> {},
+ };
+-const authStorage = isServerRender ? serverAuthStorage : new LargeSecureStore();
++const deviceAuthStorage = new LargeSecureStore();
++const authStorage = isServerRender ? serverAuthStorage : Platform.OS === 'web'
++  ? gateWebRuntimeStorage(deviceAuthStorage) : deviceAuthStorage;
+ const authStorageKey = `sb-${new URL(env.supabaseUrl).hostname.split('.')[0]}-auth-token`;
+ const authRefreshProtectiveFetch = createSupabaseAuthRefreshProtectiveFetch({
+   fetchImplementation: (input, init) => fetch(input, init),
+diff --git a/apps/professional-web/src/encryptedWorkspaceRepository.test.ts b/apps/professional-web/src/encryptedWorkspaceRepository.test.ts
+index bf05213196ef57ff20fb8976778b8590a8e49c6b..574fcc021d3b288602d10b92601d64b18481dc3b 100644
+--- a/apps/professional-web/src/encryptedWorkspaceRepository.test.ts
++++ b/apps/professional-web/src/encryptedWorkspaceRepository.test.ts
+@@ -637,6 +637,8 @@ it('resolves closure acknowledgement only from the retained exact owner receipt'
+   const afterDecline = await f.load();
+   expect(afterDecline.rows.at(-1)).toEqual(closed);
+   expect(afterDecline.acknowledgements).toEqual([]);
++  expect(afterDecline.responses).toEqual([expect.objectContaining({ kind: 'declined', planId: f.plan.id, planHash: f.plan.contentHash,
++    id: receipts.at(-1)!.id, contentHash: receipts.at(-1)!.contentHash, recordedAt: receipts.at(-1)!.recordedAt })]);
+   expect(afterDecline.sourceHash).not.toBe(model.sourceHash);
+ });
+ 
+@@ -664,8 +666,10 @@ it('retires acknowledgement choices and reviewed queue commands after owner resp
+   const oldAck = await respond('acknowledged');
+   await respond('declined'); await respond('received');
+   model = await f.load(); expect(model.acknowledgements).toEqual([]);
++  expect(model.responses).toHaveLength(1); expect(model.responses[0]!.kind).toBe('declined');
+   const newest = await respond('acknowledged'); await respond('received');
+   model = await f.load(); expect(model.acknowledgements.map(row => row.id)).toEqual([newest.id]);
++  expect(model.responses).toEqual([expect.objectContaining({ id: newest.id, kind: 'acknowledged' })]);
+   const current = transition('resolved');
+   const beforeStaleAck = canonical([...f.records()]);
+   await expect(reconciliationWorkspace(f.repository(), f.staff.token, f.request, { ...current,
+diff --git a/apps/professional-web/src/reconciliation.test.ts b/apps/professional-web/src/reconciliation.test.ts
+index a708312283c7c2587cf947d904d48a2f18647c23..70c4095089b7e9619f80462ae83eb000743f3bd4 100644
+--- a/apps/professional-web/src/reconciliation.test.ts
++++ b/apps/professional-web/src/reconciliation.test.ts
+@@ -4,7 +4,30 @@ import { decodeReconciliation, enqueueMaterial, transitionCase, type MaterialEve
+ import { recordHash } from './grants';
+ import type { Authority } from './authority';
+ import { createReconciliationController, filterCurrentCases, type QueueViewState } from './reconciliationView';
++import type { ReconciliationModel } from './reconciliationService';
+ const now = 1_800_000_000_000;
++it('links each current owner response to one exact intended version and refuses inconsistent projections', async () => {
++  const plan = { planId: randomUUID(), planHash: 'b'.repeat(64), sequence: 1 };
++  const response = { id: randomUUID(), contentHash: 'c'.repeat(64), planId: plan.planId, planHash: plan.planHash, kind: 'declined' as const, recordedAt: now };
++  const model: ReconciliationModel = { sourceHash: 'a'.repeat(64), writeAvailable: true, grantEpoch: 1, grantVersion: 1,
++    plans: [plan], responses: [response], acknowledgements: [], events: [], rows: [] };
++  let supplied: unknown = model;
++  const controller = createReconciliationController(async () => new Response(JSON.stringify({ kind: 'source', context: 'synthetic-current-response', model: supplied }),
++    { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }), () => {});
++  await controller.load(controller.generation); expect(controller.state.kind).toBe('source');
++  for (const recordedAt of [0, 0.5, 8.64e15]) {
++    supplied = { ...model, responses: [{ ...response, recordedAt }] };
++    await controller.load(controller.generation); expect(controller.state.kind).toBe('source');
++  }
++  for (const patch of [{ responses: [response, response] }, { responses: [{ ...response, planId: 'different' }] },
++    { responses: [{ ...response, recordedAt: -1 }] }, { responses: [{ ...response, kind: 'received' }] },
++    { acknowledgements: [{ id: response.id, contentHash: response.contentHash, planHash: response.planHash }] },
++    { responses: [{ ...response, kind: 'acknowledged' }] }]) {
++    supplied = { ...model, ...patch }; await controller.load(controller.generation); expect(controller.state.kind).toBe('unavailable');
++  }
++  supplied = { ...model, responses: [{ ...response, kind: 'acknowledged' }], acknowledgements: [{ id: response.id, contentHash: response.contentHash, planHash: response.planHash }] };
++  await controller.load(controller.generation); expect(controller.state.kind).toBe('source');
++});
+ function authority(): Authority {
+   return { session: { subjectId: 'staff-a', ownerId: null, workspaceId: 'practice-a', epoch: 1, startedAt: now - 1000, lastActivityAt: now, stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
+     membership: { subjectId: 'staff-a', workspaceId: 'practice-a', roles: ['assigned_practitioner'], revision: 1, active: true },
+@@ -140,7 +163,7 @@ it('keeps queue filters memory-only across read/edit/back and retires hidden or
+   const change = await event(); const concern = await event({ kind: 'concern_reported' });
+   const log = await enqueueMaterial(await enqueueMaterial([], authority(), change, randomUUID(), now), authority(), concern, randomUUID(), now);
+   const model = { sourceHash: 'a'.repeat(64), writeAvailable: true, grantVersion: 1, grantEpoch: 4, rows: log,
+-    events: [change, concern], plans: [{ planId: randomUUID(), planHash: change.planHash, sequence: 1 }], acknowledgements: [] };
++    events: [change, concern], plans: [{ planId: randomUUID(), planHash: change.planHash, sequence: 1 }], acknowledgements: [], responses: [] };
+   const request = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ kind: 'source', context: 'synthetic-filter-context', model }),
+     { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }));
+   let state: QueueViewState = { kind: 'idle' }; const c = createReconciliationController(request, next => { state = next; }); await c.load(c.generation);
+@@ -156,7 +179,7 @@ it('keeps queue filters memory-only across read/edit/back and retires hidden or
+ });
+ it('a filter change cannot modify a pending review command or admit unknown states and material kinds', async () => {
+   const source = await event(); const model = { sourceHash: 'a'.repeat(64), writeAvailable: true, grantVersion: 1, grantEpoch: 4,
+-    rows: [], events: [source], plans: [{ planId: randomUUID(), planHash: source.planHash, sequence: 1 }], acknowledgements: [] };
++    rows: [], events: [source], plans: [{ planId: randomUUID(), planHash: source.planHash, sequence: 1 }], acknowledgements: [], responses: [] };
+   const request = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ kind: 'source', context: 'synthetic-filter-context', model }),
+     { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }));
+   const c = createReconciliationController(request, () => {}); await c.load(c.generation); const state = c.state; const generation = c.generation;
+diff --git a/apps/professional-web/src/reconciliationService.ts b/apps/professional-web/src/reconciliationService.ts
+index 3a864573a1342fddef3091cb79de23da36d4caa3..cef834e42428c3d9a078f218a47603eb094eda06 100644
+--- a/apps/professional-web/src/reconciliationService.ts
++++ b/apps/professional-web/src/reconciliationService.ts
+@@ -123,6 +123,8 @@ export async function reconciliationWorkspace(repository: WorkspaceRepository |
+     const rows = next.filter(row => row.grantVersion === a.grant!.version && plans.some(plan => plan.contentHash === row.planHash));
+     return { sourceHash, writeAvailable: a.billing === 'write_allowed', events: source.events,
+       plans: plans.map(plan => ({ planId: plan.id, planHash: plan.contentHash, sequence: plan.sequence })),
++      responses: [...responses.values()].map(receipt => ({ id: receipt.id, contentHash: receipt.contentHash,
++        planId: receipt.planId, planHash: receipt.planHash, kind: receipt.kind as 'acknowledged' | 'declined', recordedAt: receipt.recordedAt })),
+       acknowledgements: acknowledgements.map(receipt => ({ id: receipt.id, contentHash: receipt.contentHash, planHash: receipt.planHash })),
+       rows, grantVersion: a.grant!.version, grantEpoch: a.grant!.epoch };
+   });
+diff --git a/apps/professional-web/src/reconciliationView.ts b/apps/professional-web/src/reconciliationView.ts
+index 9a51a0b047134b933eb10b75b13147cea8908bb2..233351493d54f7b092d3fb12bb4c67c369d307a2 100644
+--- a/apps/professional-web/src/reconciliationView.ts
++++ b/apps/professional-web/src/reconciliationView.ts
+@@ -21,10 +21,10 @@ const hash = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64
+ const safe = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0 && v.length <= 2000 && !/[\p{Cf}\p{Cs}\u0000-\u001f\u007f-\u009f]/u.test(v);
+ async function decodeModel(value: unknown): Promise<ReconciliationModel> {
+   if (!value || typeof value !== 'object' || Array.isArray(value)) return fail(); const m = value as ReconciliationModel;
+-  if (Object.keys(m).sort().join(',') !== 'acknowledgements,events,grantEpoch,grantVersion,plans,rows,sourceHash,writeAvailable' ||
++  if (Object.keys(m).sort().join(',') !== 'acknowledgements,events,grantEpoch,grantVersion,plans,responses,rows,sourceHash,writeAvailable' ||
+       !hash(m.sourceHash) || typeof m.writeAvailable !== 'boolean' || ![m.grantVersion, m.grantEpoch].every(v => Number.isSafeInteger(v) && v > 0) ||
+       !Array.isArray(m.events) || m.events.length > 1000 || !Array.isArray(m.plans) || m.plans.length > 100 || !Array.isArray(m.rows) || m.rows.length > 5000 ||
+-      !Array.isArray(m.acknowledgements) || m.acknowledgements.length > 1000) return fail();
++      !Array.isArray(m.acknowledgements) || m.acknowledgements.length > 1000 || !Array.isArray(m.responses) || m.responses.length > 100) return fail();
+   for (const p of m.plans) if (!p || Object.keys(p).sort().join(',') !== 'planHash,planId,sequence' || !hash(p.planHash) || !safe(p.planId) || !Number.isSafeInteger(p.sequence) || p.sequence < 1) return fail();
+   if (new Set(m.plans.map(p => p.planId)).size !== m.plans.length) return fail();
+   for (const e of m.events) if (!e || Object.keys(e).sort().join(',') !== 'contentHash,detail,grantVersion,id,kind,ownerId,planHash,version,workspaceId' ||
+@@ -32,6 +32,13 @@ async function decodeModel(value: unknown): Promise<ReconciliationModel> {
+       !MATERIAL_EVENTS.includes(e.kind) || !m.plans.some(p => p.planHash === e.planHash)) return fail();
+   if (new Set(m.events.map(e => `${e.id}:${e.version}`)).size !== m.events.length) return fail();
+   for (const a of m.acknowledgements) if (!a || Object.keys(a).sort().join(',') !== 'contentHash,id,planHash' || !safe(a.id) || !hash(a.contentHash) || !m.plans.some(p => p.planHash === a.planHash)) return fail();
++  for (const r of m.responses) if (!r || Object.keys(r).sort().join(',') !== 'contentHash,id,kind,planHash,planId,recordedAt' ||
++      !safe(r.id) || !hash(r.contentHash) || !['acknowledged', 'declined'].includes(r.kind) || !Number.isFinite(r.recordedAt) || r.recordedAt < 0 || r.recordedAt > 8.64e15 ||
++      !m.plans.some(p => p.planId === r.planId && p.planHash === r.planHash)) return fail();
++  if (new Set(m.responses.map(r => r.planId)).size !== m.responses.length || new Set(m.responses.map(r => r.id)).size !== m.responses.length ||
++      m.acknowledgements.length !== m.responses.filter(r => r.kind === 'acknowledged').length ||
++      new Set(m.acknowledgements.map(a => a.id)).size !== m.acknowledgements.length ||
++      m.acknowledgements.some(a => !m.responses.some(r => r.kind === 'acknowledged' && r.id === a.id && r.contentHash === a.contentHash && r.planHash === a.planHash))) return fail();
+   const first = m.rows[0]; await decodeReconciliation(m.rows, first?.ownerId ?? '', first?.workspaceId ?? '');
+   if (m.rows.some(row => row.grantVersion !== m.grantVersion || !m.plans.some(p => p.planHash === row.planHash))) return fail();
+   return structuredClone(m);
+@@ -131,6 +138,12 @@ export function mountReconciliationView(root: HTMLElement, request: typeof fetch
+     if (state.kind === 'saved') p('The exact stored queue revision was read back. Recording communication does not prove message delivery.', true);
+     if ('scope' in state) {
+       const model = state.scope.model;
++      const ownerResponse = (planHash: string) => {
++        const plan = model.plans.find(plan => plan.planHash === planHash);
++        const response = model.responses.find(response => response.planHash === planHash && response.planId === plan?.planId);
++        p(`Latest recorded owner response to intended version ${plan?.sequence ?? 'unavailable'}: ${response ? `${response.kind === 'acknowledged' ? 'Acknowledged' : 'Declined'} (${new Date(response.recordedAt).toISOString()})` : 'No explicit response recorded'}.`);
++        p('An owner response does not establish application of the plan, product use, message delivery or a clinical outcome.');
++      };
+       if (!model.writeAvailable) p('Read-only: verified workspace write authority is unavailable. History remains readable.');
+       if (state.kind === 'source' || state.kind === 'saved') {
+         const filter = state.scope.filter ?? allRecords;
+@@ -162,6 +175,7 @@ export function mountReconciliationView(root: HTMLElement, request: typeof fetch
+           p(`Case ${number}: ${row.category}, ${row.state.replaceAll('_', ' ')}, revision ${row.revision}.`); button(`Open case ${number} history`, () => controller.edit(admitted, row.caseId)); });
+       }
+       if (state.kind === 'editing') {
++        if (state.row.changedPlanHash) ownerResponse(state.row.changedPlanHash);
+         for (const row of model.rows.filter(row => row.caseId === state.row.caseId)) {
+           p(`Revision ${row.revision} · ${new Date(row.recordedAt).toISOString()} · ${row.state.replaceAll('_', ' ')}. ${row.reason}`);
+           row.events.forEach(e => p(`${e.kind.replaceAll('_', ' ')}: ${e.detail}`));
+@@ -194,7 +208,8 @@ export function mountReconciliationView(root: HTMLElement, request: typeof fetch
+         else { p(`Next state: ${command.next.replaceAll('_', ' ')}. Reason: ${command.reason}`); p(`Recorded communication: ${command.communication ?? 'None'}`); p(`Nonacknowledgement reason: ${command.nonAcknowledgementReason ?? 'None'}`);
+           const current = [...model.rows].reverse().find(row => row.caseId === command.caseId);
+           const selectedPlan = command.changedPlanHash ?? current?.changedPlanHash;
+-          p(`Changed intended version: ${selectedPlan ? model.plans.find(p => p.planHash === selectedPlan)?.sequence ?? 'unavailable' : 'None'}. Owner acknowledgement: ${command.acknowledgementId ? 'Selected exact stored receipt' : 'None selected'}.`); }
++          p(`Changed intended version: ${selectedPlan ? model.plans.find(p => p.planHash === selectedPlan)?.sequence ?? 'unavailable' : 'None'}. Owner acknowledgement: ${command.acknowledgementId ? 'Selected exact stored receipt' : 'None selected'}.`);
++          if (selectedPlan) ownerResponse(selectedPlan); }
+         if (state.kind === 'review' || state.kind === 'unknown') button(state.kind === 'unknown' ? 'Retry identical review save' : 'Confirm review record', () => { void controller.confirm(admitted); });
+         if (state.kind === 'review') button('Cancel review', () => controller.back(admitted));
+       }
+diff --git a/docs/ENGINEERING20_DRAFT_DESIGN.md b/docs/ENGINEERING20_DRAFT_DESIGN.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..90865fa8a11cef7fa7922318ce3100eada1370b9
+--- /dev/null
++++ b/docs/ENGINEERING20_DRAFT_DESIGN.md
+@@ -0,0 +1,15 @@
++# Engineering20 durable transcription design
++
++Local implementation only. Frozen contract/matrix bytes and every formal acceptance state remain unchanged. J01 stays closed; no additional assessment is implemented.
++
++The first durable journey is an explicitly saved bottle transcription. It uses a bounded collection (20 drafts, 600,000 UTF-8 bytes) under a new purpose-bound encrypted private key, `layerwell.bottleDrafts.v1`. Each draft has a random UUID, revision, timestamps, exact bottle source identity/revision, unconfirmed fields and deterministic content hash. The envelope owns the stable owner and persisted health-processing epoch. Runtime generations are only cancellation capabilities. Incomplete text is allowed in drafts and remains subject to existing observation validation at explicit confirmation.
++
++The existing privateKV source transaction reserves authority, Shelf and draft keys in canonical order. A new optional authorization phase authenticates and validates the adult receipt, current consent hash/version and active owner/lifecycle epoch before reading private payload keys. It then retains existing exact-byte source checks, mutation intents, native readback, rollback and retained-key continuity. Drafts have no plaintext or unbound-encryption migration. Unknown bytes and keys remain preserved, never empty defaults or rekey permission.
++
++Save/discard compare the exact prior record. Source changes require explicit review. Confirmation reserves the exact durable draft as a source for the existing Shelf transaction. Its later exact-revision draft retirement is deliberately separate: an interruption may leave a saved observation and a reviewable unconfirmed draft. The UI does not infer command success from matching content. No draft enters the product mirror, analytics or a provider.
++
++Single-runtime mutation queues cannot coordinate another browser tab's direct cleanup/control/key operations. A per-key browser lock would therefore be incomplete. The web root instead holds one exclusive Web Lock for the complete document lifetime and gates private startup/providers. Secondary/unsupported contexts refuse access before recovery starts; visibility/navigation do not release ownership. Native retains its existing single-JavaScript-runtime boundary. This coordinates cooperating builds on one origin; it is not protection against an older build that lacks the gate, external storage alteration, multiple native processes, key loss, or hostile host code. Those are separate qualification/custody limitations.
++
++Explicit saves avoid per-keystroke persistence and make the durability boundary visible: later unsaved edits can be lost on restart. Resume is explicit and requires saved-source review. The recovery inventory remains reachable for removed bottles so the owner can discard their drafts. Privacy withdrawal/full reset remove the registered health-purpose key. The established rights-export lane strictly decodes the collection for its verified owner independently of processing permission and strips private owner fields using existing redaction.
++
++Web Locks semantics were checked against [MDN LockManager.request](https://developer.mozilla.org/en-US/docs/Web/API/LockManager/request). Local source tests and browser results qualify only their exercised synthetic/local behavior, never native, security-gate, professional/provider, clinical or release acceptance.
+diff --git a/docs/ENGINEERING20_LOCAL_VERIFICATION.md b/docs/ENGINEERING20_LOCAL_VERIFICATION.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..a3b0c338f12bb53a0056e4dd1f293a0a3ec3815c
+--- /dev/null
++++ b/docs/ENGINEERING20_LOCAL_VERIFICATION.md
+@@ -0,0 +1,17 @@
++# Engineering20 local verification scope
++
++Authorization: BRAIN-ONSKIN-AUTONOMOUS-PRODUCT-COMPLETION-20 / ENGINEERING20_DEFENSIVE_001. Source work stays on the existing Windows worktree and branch. All 38 requirements and 18 gates remain formally UNACCEPTED; release NO_GO.
++
++The phase-specific evidence directory is the sibling `../ENGINEERING20_EVIDENCE/`. Final receipts, exact source identities, diagnostic failures and packaging hashes are recorded there; this document does not substitute for those receipts.
++
++Consumer human-simulated E2E ran against actual local Expo web in isolated Edge with providers blocked, offline Metro and an explicitly synthetic owner. At both 375x667 and 430x932 it entered adult DOB and consent through the UI, created a manual bottle, explicitly saved an encrypted unconfirmed transcription, reloaded, resumed and reviewed the saved source, confirmed the observation, reloaded again, and reviewed/canceled/confirmed draft discard. A second same-origin tab refused access before private app storage reads; after closing the first tab it explicitly retried and resumed. Screenshots and DOM/geometry/network receipts are retained in `bottle-browser-r4/`. Keyboard activation and 44px minimum targets were checked for principal save/confirm/retry/discard controls; captured screens had no horizontal overflow.
++
++Professional E2E ran the actual local Vite UI at both viewports. The real API returned 503. Explicitly synthetic HTTP responses exercised current source review, cancellation, exact retry, queue transition, no owner response then decline linked to an exact intended version, closure with recorded nonacknowledgement reason, history, filters, keyboard/focus, read-only and unavailable states. These fixtures are not authentication, licensing, delivery, custody, payment or production authority. Receipts and screenshots are in `professional-browser/`.
++
++The initial consumer browser attempts exposed harness/environment issues: restricted localhost access, an obsolete category control name, and an incomplete Shelf accessibility label. The harness was corrected to use observed controls. No app acceptance was claimed from failed attempts. An initial mounted-flow regression in navigation discard during source review was fixed by permitting the explicit leaving decision, while retaining stale-decision fences; the original test then passed. Type errors and unsupported Turbo flag combinations are retained as engineering diagnostics. The first concurrent full-suite attempt hit an existing 5-second professional history test timeout under simultaneous build/check load; the complete suite is rerun without that competing load, with no timeout or assertion weakened.
++
++Additional ordinary source tests exercise actual encryption/readback, stable identity and exact CAS, source changes, current adult/owner/consent/epoch authority, omitted writes, missing keys, unknown formats, delayed callbacks, paused-processing rights export, foreign-owner refusal, authorized withdrawal failure/retry, and drain-before-erasure. Existing photo/recovery tests remain intact.
++
++The complete suite also caught older fixtures that assumed one bottle-history query, no native platform import in auth storage, an exact React import list, and that every `layerwell.*` literal named persisted storage. Fixtures now admit the real Web Lock, represent the separate draft query, and classify the lock name as non-storage; all prior behavioral assertions remain. The professional projection accepts the existing receipt domain's finite nonnegative timestamps, including zero/fractional values, with the JavaScript date upper bound enforced.
++
++Uncovered qualifications remain open: native/physical device persistence and accessibility, genuine OCR/camera providers, process or OS crash durability, multiple native processes, older ungated browser builds, real accounts/backend custody, professional staff/licence/payment authority, clinical/scientific/device evidence, independent security and release acceptance. Manual intake and optional correction drafts still have their prior memory-only behavior. Explicit bottle saves retain only the latest successful save; later unsaved edits can be lost on restart. No external service or native attempt was run.
+diff --git a/docs/ENGINEERING21_REPORT.md b/docs/ENGINEERING21_REPORT.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..6e4009b691c141311721f17eef19088eaec27491
+--- /dev/null
++++ b/docs/ENGINEERING21_REPORT.md
+@@ -0,0 +1,115 @@
++# Engineering21 durable consumer draft recovery
++
++Authorization: **ENGINEERING21_DEFENSIVE_SCOPE_001**. Execution is **LOCAL_ONLY / DEFENSIVE / ZERO_NEW_PAID_OPERATIONS**. Result: **COMPLETE_LOCAL_CHECKPOINT** for the two assigned consumer workstreams. It does not claim independent acceptance. The independent ChatGPT Brain remains the source-code reviewer and acceptance decision-maker.
++
++All **38 requirements remain UNACCEPTED**. All **18 gates remain UNACCEPTED**. Release remains **NO_GO**. Frozen J01 contracts, acceptance matrices and professional production boundaries are unchanged. Additional professional workflow implementation is deferred.
++
++## Source identity and finalization
++
++| Item | Recorded value |
++|---|---|
++| Existing worktree | `C:\Users\jasim\Documents\ChatGPT\MasterV2Code\c16-candidate` |
++| Branch | `stage/m1-native-runtime47` |
++| Starting HEAD | `4dce84e20a71f19c60c16c7682e683bb512363ed` |
++| Starting Git tree | `9d61cabdc11cff36577e4e7aa94b00ca4a95f393` |
++| Starting status | Clean; all five required checks passed |
++| Preserved PR48 ancestor | `d292743c99c1fb98f5714789f4fd60fb1e7d5a5d`; ancestor check exit 0 |
++| Final HEAD/tree, branch/status | Exact post-commit values in [SOURCE_IDENTITY.json](../../ENGINEERING21_EVIDENCE/SOURCE_IDENTITY.json) and [FINAL_REPORT.md](../../ENGINEERING21_EVIDENCE/FINAL_REPORT.md); same branch, clean final Git status |
++| Append-only commit list | One local commit directly after the starting HEAD; full commit/parent/tree list in the final identity and report; no remote publication |
++| Changed-file inventory and evidence manifest | [CHANGED_FILES.json](../../ENGINEERING21_EVIDENCE/CHANGED_FILES.json), [SOURCE.diff](../../ENGINEERING21_EVIDENCE/SOURCE.diff), [SHA256SUMS.txt](../../ENGINEERING21_EVIDENCE/SHA256SUMS.txt) |
++| Final delivery result | **COMPLETE_LOCAL_CHECKPOINT**; no remaining local implementation blocker |
++
++The five starting checks are preserved in [BASELINE.json](../../ENGINEERING21_EVIDENCE/BASELINE.json). Local evidence is held separately in `C:\Users\jasim\Documents\ChatGPT\MasterV2Code\ENGINEERING21_EVIDENCE`. Test receipts record the command, source HEAD/tree, working status/tracked-diff hash, exit code, elapsed time and log SHA-256. Checks ran before the local commit, on the recorded working changes. Final source inventory hashes include every committed new file; browser source hashes are checked against the final worktree. The post-commit identity is stored outside the repository to avoid a self-referential commit hash.
++
++## Workstream A: manual product intake
++
++Manual intake has its own collection, `layerwell.manualIntakeDrafts.v1`, separate from Engineering20 bottle-transcription drafts. Shelf and Add by hand expose a separate saved-intake inventory at `/shelf/intake-drafts`. Explicit save can retain incomplete raw product name, brand, barcode, EAN-8/UPC-E choice, category and ingredient text together with normalized intake, existing provenance, phase, opening mode/date, PAO value/source and custom PAO text. Draft and operation IDs, revisions and timestamps are durable. Camera state, captured images, photo URIs, callbacks, focus identities and runtime lease objects are excluded; nonmanual origins are refused rather than relabeled.
++
++The sequence is explicit Save Draft, leave/reload, open inventory, select Resume, review the restored values, continue to opening/PAO review, and explicitly Add to Shelf. Resuming establishes a fresh in-memory intake session and current admitted runtime capability. The UI distinguishes the last saved revision from later unsaved edits. Neither typing nor navigation silently saves a draft. Recovered uncertain opening choices show the original attempted date rather than substituting today's date.
++
++Every manual Add first journals the exact attempted product payload under the existing stable operation ID. The Shelf transaction validates the exact saved revision and original authority. An existing product must match the complete canonical payload, including lifecycle fields; a matching ID alone is insufficient. A missing product with a retained outbox/terminal operation fails closed. A separate canonical Shelf readback and another locked draft/Shelf comparison precede retirement of that exact draft. Failed or uncertain readback retains recovery instead of claiming success or allocating another operation identity.
++
++Product removal now reserves both Shelf and intake drafts and refuses removal while an attempted draft references that operation. Verified submission retirement or explicit exact-revision draft discard resolves this ambiguity. This prevents removal followed by replay from recreating an uncertain earlier product. Stale save/discard callbacks cannot replace or clear a successor revision.
++
++Primary implementation: `manualIntakeDraftCodec.ts`, `manualIntakeDraftStore.ts`, `manualIntakeRecovery.ts`, `manualIntakeSubmission.ts`, `IntakeContext.tsx`, Shelf `store.ts`, `manual.tsx`, `opened.tsx`, `intake-drafts.tsx` and their navigation entry points. The collection permits at most 20 records and 1,000,000 UTF-8 bytes; exact schemas, field bounds, integrity hashes and duplicate identity refusal apply.
++
++## Workstream B: optional factual change drafts
++
++The optional editor provides explicit Save Draft and a separate Saved change drafts inventory for notes, corrections and retractions. `layerwell.optionalChangeDrafts.v1` preserves the event ID/kind, exact target ID/content hash, observed date, category, original factual text, source proof/revision, attempted state and draft metadata. Its maximum is 20 records and 200,000 UTF-8 bytes. It never stores the full `completions.v1` source bytes; those remain in the current runtime after fresh canonical reads.
++
++Resume verifies current authority, reads current optional history and reconciles the exact saved target. A changed source requires explicit refresh and another review; a missing or changed target closes confirmation while preserving the text. A correction may still deliberately address an earlier retained event after review of current history. No recovery automatically appends an event or changes earlier history.
++
++Saved/recovered confirmation journals attempted state before calling the canonical submission helper. Exact source bytes reviewed in this runtime must still match. An existing event ID is checked against its complete factual content and target proof; an exact event is verified without appending twice, while a conflict is refused. Canonical readback precedes exact draft retirement. Already-recorded drafts are frozen for review even if the saved attempted flag was false. If later unsaved editor text differs from that recorded saved event, the text is retained, confirmation closes and the UI directs the owner to resume the saved original; it cannot announce that the different text was saved.
++
++The never-explicitly-saved editor keeps its established in-memory append and refresh behavior, including its existing fresh-ID refresh semantics. Durable recovery applies to explicitly saved/recovered optional drafts. The original 27 rendered editor tests and assertions were preserved exactly; eight additional adapter cases exercise the new delegation. Separate real encrypted storage and mounted UI tests cover persistence and canonical history guarantees.
++
++Primary implementation: `optionalChangeDraftCodec.ts`, `optionalChangeDraftStore.ts`, `OptionalChangeDraftInventory.tsx`, `OptionalChangePanel41.tsx` and `completionsStore.ts`. These are owner-reported factual records, not diagnoses, app observations or clinical conclusions. Drafts do not enter history, routine/check-off records, appointment briefs, provider records, synchronization or analytics automatically.
++
++## Authority, storage, cleanup and export
++
++Both stores use the established source-reserved private transaction. Current adult eligibility, the exact health-consent contract and the active persisted lifecycle owner/processing epoch are verified before draft payload reads. Operations retain the original admitted health-write capability across awaits; regrant or owner A-to-B-to-A cannot lend new authority to an older callback. Record IDs and full revision/CAS proofs prevent older callbacks from replacing or discarding successors.
++
++Both keys are registered in private-key ownership/classification, purpose-bound authenticated encryption, health-purpose cleanup, full local deletion and export inventories. Unsupported schemas, malformed records, plaintext/unbound envelopes, unreadable storage and missing recovery keys are refused. They are not interpreted as empty collections or migrated into admitted drafts. Current purpose-bound ciphertext and its existing key are required; the draft recovery path does not recreate a missing key.
++
++Cleanup uses the existing withdrawal/deletion drain and verified removal path. Tests include failed removal remaining pending and retryable; a retired processing epoch cannot admit a retained draft. Rights export uses its established verified-owner account authority even while health processing is paused, strictly decodes each collection and redacts owner identity fields. The sections are `shelf_and_routine.unconfirmed_manual_intake_drafts` and `activity_and_app_state.unconfirmed_optional_change_drafts`. Exports are factual rights records, not importable recovery backups.
++
++The private source transaction now has a distinct synchronous check immediately before native dispatch. Submission keeps original account/health authority through native readback, while a later retired editor cannot announce success or retire the saved draft. A focus/query change after dispatch does not roll back an already committed product or optional event; the attempted draft remains available for exact reconciliation. Authority withdrawal remains enforced through the existing guarded mutation and cleanup mechanisms.
++
++## Completed local validation
++
++Focused counts below overlap and are not a combined total. The final uncached root total is 8,527 passing tests across 576 files.
++
++| Receipt/check | Recorded result |
++|---|---|
++| `manual-storage-privacy-r1` | 8 files, 285 tests passed |
++| `manual-gate-r2` | 18 files, 532 tests passed before Workstream B began |
++| `manual-focused-final` | 14 files, 427 tests passed at its recorded working source |
++| `optional-core-r2` | 6 files, 265 tests passed |
++| `optional-draft-core-r2` | 1 file, 33 tests passed |
++| `optional-source-regression-r1` | 3 files, 78 tests passed |
++| `optional-focused-final` | 14 files, 430 tests passed at its recorded working source |
++| `draft-postdispatch-core-r1` | 2 files, 63 tests passed |
++| `journey-authority-fixtures-r1` | 4 files, 64 tests passed; existing assertions retained |
++| `plan-native-import-fixtures-r1` | 2 files, 107 tests passed after adding Node `randomUUID` to the existing Expo crypto test adapters; actual plan/Today assertions unchanged |
++| `manual-inventory-expiry-focused-r1` | 2 files, 36 tests passed: passive expiry masks the inventory and stale resume/discard performs no payload read, write or navigation |
++| `root-types-r2` | Exit 0; 4 successful configured tasks, 0 cache hits; 53.266 seconds |
++| `root-lint-r2` | Exit 0; 4 successful configured tasks, 0 cache hits; 104.859 seconds |
++| `root-tests-r1` | Failed: mobile 29 failed / 7,715 passed, 15 failed / 536 passed files; root stopped before a complete successful suite |
++| `root-tests-r2` | 8,526 tests passed: 7,851 mobile / 551 files, 24 operator / 7 files, 651 professional / 18 files; 3 successful tasks, 0 cache hits |
++| `root-tests-final` | 8,527 tests passed: 7,852 mobile / 551 files, 24 operator / 7 files, 651 professional / 18 files; 3 successful tasks, 0 cache hits; 77.703 seconds |
++| `consumer-build-r3` | Final local consumer web export exit 0; 75.734 seconds; native qualification excluded |
++| `manual-browser-r4` | Manual intake journeys passed 375×667, 390×844 and 430×932; receipt 153.86 seconds, zero blocked external requests; owned browser/server processes stopped |
++| Final source/typecheck/lint/build reconciliation | Final expiry regression included in the passing uncached suite; configured typecheck/lint and consumer export passed |
++| `optional-browser-r4` | Optional note/correction/retraction journeys passed 375x667, 390x844 and 430x932; 231.86 seconds, zero blocked external requests; owned browser/server processes stopped |
++
++The root suite command is `npm.cmd test -- --cache=local:w --concurrency=1`. The evidence wrapper disables dotenv/telemetry, removes credential environment variables and uses blocked development provider placeholders. Local browser drivers restrict requests to loopback and use isolated synthetic owners/storage. Both journeys passed at 375x667, 390x844 and 430x932 with keyboard controls, reload/resume, explicit confirmation/discard, read refusal and unsupported-data branches. Screenshots were inspected. Optional browser runs verify five unique canonical events, exact targets, changed-history refusal and explicit refresh/re-review, including a later correction of an earlier retained event. Completion bytes and the actual-routine journal began absent and stayed absent in this browser fixture; real encrypted store tests separately prove preservation of nonempty retained completion and actual-routine data.
++
++## Retained failures and repairs
++
++- Early Shelf regression fixtures lacked authentic persisted adult/lifecycle authority or the new source-transaction adapter. Fixtures were extended through real consent/lifecycle storage and the existing transaction contract. Assertions were retained. Removal's UI cancellation check was separated from continuing native authority; the destructive/post-dispatch regressions were rerun.
++- The initial optional core failures were new test fixture/expectation errors: a January check-off correctly fell outside the current backfill window, and applying an actual routine changed the established completion projection. Fixtures now use the current local check-off day and compare the immediate pre-submit projection plus exact retained completion/actual-routine bytes. Existing protected assertions were not weakened.
++- Review identified the uncertain-product removal/replay ambiguity, committed-event rollback on editor retirement, and misleading review of changed text against an already-recorded saved event. Source fixes and focused regression cases address each boundary.
++- `root-tests-r1` remains preserved. Authentic authority fixture repairs cover affected retained-history/routine/Shelf cases. Original source-contract assertions remained unchanged: production guards were spelled separately and the local opening mode retains its `null` initial value with a restored-value fallback. Two native-module import failures were repaired by adding Node `randomUUID` to existing Expo crypto test adapters; the unchanged actual plan/Today tests then passed 107 cases. The unchanged `firstValueSources.campaign25` test had an unexplained initial readiness failure, then passed both its scoped rerun and `root-tests-r2`; the original failure is retained without claiming an established cause. The uncached r2 suite passed all 8,526 tests. No skipped failures or raised timeouts are claimed as repairs.
++- `consumer-build-r1` failed with `EPERM` creating `assets/__node_modules`. The approved local build retry passed without installing dependencies; the report does not infer a broader cause from that error.
++- Early browser attempts failed before completing the UI journey because of loopback/startup and transient source-import issues. Legacy Expo tooling also attempted an automatic background download despite offline configuration and reported failure. No provider or dependency was acquired. This failed warning is disclosed; no intentional external/provider operation was authorized. Subsequent launch controls suppress that behavior and restrict browser requests to loopback.
++- The third manual browser run found a real false Unsaved indicator caused by JSON object-key ordering and missing DOM `aria-checked` for barcode options. Semantic field comparison and explicit radio accessibility attributes were added; focused UI/typecheck/lint checks were run. Both repaired browser journeys passed all three widths in their r4 runs.
++- Optional browser r1 reached the existing unavailable-routine state because the fresh owner had not completed onboarding. R2 followed onboarding but stopped at the notifications screen, where saving reminders off requires a separate Continue. R3 used an unexported harness helper during category setup; this was corrected and all used helper exports were checked before r4. These failures occurred before the optional editor; their UI snapshots and logs remain recorded. The final driver follows existing explicit setup steps without injecting a profile, routine or successful history result.
++
++Original failed logs remain in the evidence directory alongside reruns. No frozen acceptance contract, requirement/gate status or protected security/release failure was waived.
++
++## Limits and excluded operations
++
++These checks use ordinary synthetic local fixtures and the consumer web surface. Browser reload exercises a fresh page/runtime; lease retirement and component refresh are additionally covered by local tests. This evidence is not a native OS process-death or physical-device durability qualification. It does not establish native key custody, native accessibility, camera/OCR provider behavior, App Store qualification, genuine professional identity/licensing/staff/delivery/payment authority or independent acceptance. Engineering20 professional reconciliation and its regression contracts remain in scope only for preservation; professional expansion is deferred.
++
++Operations not performed or authorized in this assignment:
++
++- No push, upload, publication, remote evidence commit, merge, production deployment or release.
++- No hosted CI/GitHub Actions; no GitHub access, permissions, secrets, webhooks or ruleset changes.
++- No new paid operation, dependency installation or external service integration.
++- No native build/device attempt, physical-device test or App Store operation.
++- No genuine OCR, camera, professional, clinical or external provider contact initiated for feature verification; the failed automatic tooling warning above is retained separately.
++- No exploit development/reproduction, penetration testing or destructive security experiment.
++- No reset, checkout, rebase, stash, clean, force operation or replacement worktree to change the starting baseline.
++- No change to the frozen J01 contract, 38 requirements, 18 gates or their acceptance decisions.
++
++The local evidence manifest covers the retained failed and successful receipts, screenshots, canonical readbacks, source diff, changed-file inventory and exact final Git identity. [FROZEN_CONTRACTS.json](../../ENGINEERING21_EVIDENCE/FROZEN_CONTRACTS.json) verifies the seven frozen contract/matrix/precedence files against the baseline. No local implementation blocker remains. Native, genuine provider and release qualification remain outside this authorization, with **UNACCEPTED / NO_GO** and independent Brain review unchanged.
+diff --git a/docs/ENGINEERING22_REPORT.md b/docs/ENGINEERING22_REPORT.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..a12c1797eb46606834f87ac2ed2b87ee19fdff75
+--- /dev/null
++++ b/docs/ENGINEERING22_REPORT.md
+@@ -0,0 +1,58 @@
++# Engineering22 optional draft source-proof hardening
++
++Authorization: `BRAIN-ONSKIN-OPTIONAL-DRAFT-SOURCE-PROOF-22`; dispatch `ENGINEERING22_DEFENSIVE_001`. Mode: LOCAL_ONLY / DEFENSIVE / ZERO_NEW_PAID_OPERATIONS. Result: **BLOCKED**. The requested strict predicate is not retained in application source because it fails an existing protected v5 regression. This is a documented stop, not an accepted repair or an expansion of scope.
++
++## Exact starting identity
++
++- Worktree: `C:\Users\jasim\Documents\ChatGPT\MasterV2Code\c16-candidate`.
++- Branch: `stage/m1-native-runtime47`, clean at start.
++- HEAD: `16fdc6101bd43a1a70dec51fc5a832fa580c8d4d`.
++- Tree: `fec3e97ca19de8dea6c6c513653c10419c5218fa`.
++- Immediate parent: `4dce84e20a71f19c60c16c7682e683bb512363ed`.
++- Preserved PR48 ancestor: `d292743c99c1fb98f5714789f4fd60fb1e7d5a5d`; ancestor check passed.
++- No competing writer was observed. Git status was clean before edits and no index lock existed. CIM process enumeration was unavailable; ordinary process enumeration found only the calling PowerShell among the relevant writer processes. Prior implementation agents were finished and the new review agent was read-only. No permission changes were made.
++
++Final identity, clean verification and the single append-only documentation commit are recorded in [SOURCE_IDENTITY.json](../../ENGINEERING22_EVIDENCE/SOURCE_IDENTITY.json) and [FINAL_REPORT.md](../../ENGINEERING22_EVIDENCE/FINAL_REPORT.md). Application, package and test source are unchanged from the starting commit.
++
++## Static finding and protected regression
++
++`optionalChangeDraftEventMatches` currently compares event identity, kind, target identity, observed date, category, text and predecessor revision. The proposed one-line change additionally required `event.sourceProof === fields.sourceProof`, matching the exact-proof requirement in `sameOptionalChangeInput41`. No existing identity, factual-content, revision, actor, basis, owner, target or integrity validation was removed or changed.
++
++The current representations are incompatible for an actual-routine v5 wrapper:
++
++1. `completionsStore.ts:151` returns `snapshotOptionalChange41(raw, extension)`. Its source proof hashes the full outer canonical record. The panel's saved fields and the draft store's refresh retain this proof.
++2. `completionsStore.ts:185` passes `hashOptionalChange41(predecessor.completionBytes)` to the canonical optional-change append. The retained event therefore records the inner predecessor proof.
++3. `optionalChange41.ts:129` correctly requires exact event/input predecessor proof equality. Its frozen event semantics were left unchanged.
++4. Durable confirmation, readback and retirement all use `reconcileOptionalChangeDraft`. The requested direct equality rejects the valid v5 event during canonical readback at `completionsStore.ts:273`.
++
++After applying only that predicate change, three new pure in-memory invariants passed for note, correction and retraction with equal/unequal proof values. They used no store, serialization, history append or persisted-record injection. No pre-fix reproduction was run.
++
++The required existing synthetic suites then produced **100 passing tests and one failure across six files**, including those three new invariants. The unchanged failing test is `optionalChangeDrafts.test.ts:239`: **preserves check-offs and actual-routine bytes while adding a durable optional record inside the v5 wrapper**. It failed with `OPTIONAL_CHANGE41_READBACK_UNCONFIRMED`. This is the stop condition; it was not skipped, weakened, converted to success or hidden by a timeout change.
++
++The original outer predecessor cannot generally be recovered from its saved hash after subsequent completion or actual-routine changes. Comparing against an event's own proof would make the added check meaningless. Changing stored proof semantics, adding a new draft field, rewriting retained events or reconstructing only a subset of histories would exceed this narrow authorization or lose exact retry guarantees. No such workaround was implemented. Brain must resolve the representation/compatibility scope before a repair can proceed.
++
++## Preserved source and evidence
++
++The rejected candidate and its in-memory tests are preserved in [REJECTED_CANDIDATE.diff](../../ENGINEERING22_EVIDENCE/REJECTED_CANDIDATE.diff), `candidate-proof-invariants.ts` and `CANDIDATE_SOURCE.json`. The original failed command receipt/log remain intact as `candidate-focused.json` and `candidate-focused.log`.
++
++Only the agent's one-line candidate edit and its new test file were then removed using a scoped patch. Git status returned to clean before documentation changes. No reset, checkout, rebase, stash, clean, force operation, branch switch or replacement worktree was used. The final commit changes only this report and `PROGRESS.md`; it does not silently claim that the source-proof issue is fixed.
++
++Required existing focused suites were rerun against the preserved application. Full uncached root tests, configured root typecheck and lint validate that preserved source, not the rejected hardening candidate. Exact commands, counts, exits, durations and hashes are recorded in [VALIDATION.json](../../ENGINEERING22_EVIDENCE/VALIDATION.json) and the final report. A passing preserved-source suite does not waive the candidate failure.
++
++| Validation | Result |
++|---|---|
++| Rejected candidate focused suite | 100 passed, 1 protected v5 failure; includes 3 passing new in-memory invariants; exit 1 |
++| Preserved application focused suites | 98 passed across 5 files; exit 0 |
++| Preserved application uncached root tests | 8,527 passed across 576 files; 3 tasks, 0 cache hits; exit 0 |
++| Configured root typecheck | 4 tasks passed, 0 cache hits; exit 0 |
++| Configured root lint | 4 tasks passed, 0 cache hits; exit 0 |
++
++## Limits and prohibited-operation confirmation
++
++- No schema, canonical event/history contract, historical data, owner/consent authority, actual routine, appointment brief, analytics, manual-intake or professional feature change was retained.
++- No additional persisted-record fixture, pre-fix vulnerability reproduction, exploit development/test, penetration test or destructive experiment was created or run. Only the new in-memory post-change invariants and authorized existing synthetic suites were executed.
++- No browser journey, native build, native/physical-device attempt, App Store action or external provider contact occurred.
++- No dependency install/download, unexpected external download, cloud execution, hosted CI, access/permission change, account/production change, spending, push, upload, publication, merge, deployment or release occurred.
++- All work and evidence stayed in the existing local worktree and `C:\Users\jasim\Documents\ChatGPT\MasterV2Code\ENGINEERING22_EVIDENCE`.
++
++All **38 requirements and 18 gates remain UNACCEPTED**. J01 Visible Pores remains the only Korean assessment and remains inactive/refusing positive results. Release remains **NO_GO**. Engineering21 remains accepted for continuity only. Independent review and acceptance remain with Brain.
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 734906fc1901e59b7f13b8d2df5e09cd8549c2a4..903eb34391f56956636973040eb2f5e82a02073f 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -1,5 +1,35 @@
+ # User Flow Tree
+ 
++## Engineering21 durable optional change drafts (local implementation, unaccepted)
++
++Critical, repeatable synthetic Expo-web branches: current adult/owner/health-consent access -> Today -> Record a change (optional) -> new factual note / exact retained event correction / retraction reason -> Save change draft on this device -> verified encrypted saved revision -> make later unsaved edits -> reload -> reopen optional changes -> Saved change drafts -> Resume saved change draft -> review restored original text, observed date, kind and exact target -> Review this change -> fresh Confirm and save this change -> canonical exact-event readback -> retire only that saved revision. Notes, corrections and retractions remain owner reports and do not alter actual routine/check-offs or automatically enter a brief. No provider, sync or analytics emission is introduced.
++
++The separate Saved change drafts inventory distinguishes confirmed empty, available rows, unreadable/unavailable storage, unsupported/invalid data and retired authority. Refresh saved change drafts retries; Review change draft discard -> Keep change draft / Confirm change draft discard uses exact revision protection. Cancel draft closes working text while keeping the last explicit durable revision. Unsaved editors retain their existing in-memory behavior and make no restart-recovery promise.
++
++Resume compares fresh canonical history against saved proof/revision and exact target identity/hash. Changed history, missing/changed targets and same-text ABA retain the draft and require Refresh changes, exact reconciliation, another Review and explicit confirmation; no target is silently replaced. Owners can still deliberately correct an earlier retained event after reviewing current history. Attempted durable drafts retain their stable event ID and complete factual payload across interruption; an exact retained event is recognized without append, while a conflicting ID closes confirmation. Focus/unmount/owner/consent retirement revokes old callbacks; only a fresh explicit resume obtains current runtime authority.
++
++Keyboard/scroll and mobile branches: Tab/Enter through inventory, save, resume, refresh, review, confirm and discard at 375x667/430x932; original long text and reason remain readable, focus and controls reachable; storage failures never display a false empty collection. Withdrawal/full deletion remove the purpose-bound key; strict paused owner-bound rights export includes saved drafts without making them importable recovery backups. Native durability/VoiceOver and all external qualifications remain unproven. All 38 requirements and 18 gates remain UNACCEPTED; NO_GO.
++
++## Engineering21 durable manual intake (local implementation, unaccepted)
++
++Critical, repeatable synthetic Expo-web branches at 375x667 and 430x932: current adult/owner/health-consent access -> Shelf -> Add by hand -> enter incomplete name, brand, raw barcode and EAN-8/UPC-E choice, category and original ingredient text -> explicit Save intake draft on this device -> verified encrypted saved revision -> leave/reload -> Shelf -> Saved intake drafts -> explicit Resume saved intake draft -> review original raw values -> Continue -> review restored opening mode, selected date, PAO source/months and custom text -> explicit Add to shelf -> canonical Shelf readback -> exact saved revision retirement. Continue, resume and draft saves create no confirmed product. OCR/camera drafts are outside this collection.
++
++Unsaved edits after an explicit save are marked unsaved and must not reappear after a fresh runtime. An incomplete draft remains resumable. Invalid barcode choices block Continue but not an incomplete draft save. The inventory separates verified empty, valid saved drafts, unreadable/unavailable storage, unsupported/invalid records and retired owner/consent authority. Refresh retries the actual private source without reset. Review intake draft discard -> Keep intake draft / Confirm intake draft discard protects the exact revision. A concurrent successor requires refresh rather than overwriting/removing it.
++
++Opening Save persists incomplete choices explicitly. Add saves a stable attempted operation and frozen choices before mutating Shelf; reload/retry preserves that exact identity. Uncertain attempts show their original values and require explicit confirmation; exact existing canonical products are verified and never duplicated. Failed readback stays unconfirmed. Stale blur/unmount, owner ABA/regrant, saved revision and session callbacks cannot act on a successor. Withdrawal removes the purpose-bound collection; paused rights export remains account-owner bound and is not a recovery backup.
++
++Important keyboard/navigation branches: Tab/Enter through save, inventory, resume and discard; visible focus; scroll to every original input, summary and confirmation; category dialog containment; Back/cancel retains only the last explicitly saved revision, reload and independent inventory reentry; loading/read refusal and recovery; 375x667 and 430x932 controls stay reachable. Synthetic browser evidence is separate from native durability/VoiceOver, which remain unqualified. All 38 requirements and 18 gates remain UNACCEPTED; release NO_GO.
++
++## Engineering20 durable bottle transcription (local implementation, unaccepted)
++
++Critical, repeatable Expo-web branches at 375x667 and 430x932: explicit adult/health-consent entry -> manual bottle -> Bottle & formula history -> Record label observation -> type unconfirmed text -> Save bottle draft on this device -> confirmed encrypted readback -> navigation/reload -> explicit Resume saved bottle draft -> Review current saved bottle -> Keep draft with reviewed source -> explicit Confirm this bottle observation. Unsaved later edits are not claimed durable. Resume/review alone creates no observation, use or inferred formula.
++
++Back during editing offers Keep editing, Save bottle draft and leave, or exact-revision discard. Failed save/removal shows a content-free refusal and retains uncertainty. A replaced source requires another explicit review; missing products cannot receive an observation. Shelf -> Saved bottle drafts lists retained unconfirmed drafts, including removed bottles, and offers review/cancel/confirm discard. Empty inventory is distinct from unreadable/unsupported/key/authority failure. Full export includes strictly decoded owner-bound drafts; withdrawal and full deletion own their registered key.
++
++Current adult receipt, health-consent contract and persisted owner/lifecycle epoch are authenticated before private draft reads and rechecked inside reserved mutations. Fresh runtime leases may resume the same persisted epoch; actual regrant epochs do not inherit older drafts. Stale save, review, discard and cleanup callbacks cannot mutate successor revisions. Confirmation reserves the exact saved draft while appending Shelf history; draft retirement is separate and may remain unconfirmed after interruption. Matching facts never automatically accept transcription.
++
++Web startup admits one application runtime per origin with a document-lifetime exclusive Web Lock before private providers and recovery startup. A second tab shows refusal/retry; closing the first permits explicit retry. Missing lock support refuses private startup. Visibility and navigation do not release ownership. Browser verification includes second-tab refusal, takeover, reload, keyboard/focus, 48px controls, and zero horizontal overflow. Native single-runtime durability, physical keys/crashes and VoiceOver remain unqualified. All38/all18 UNACCEPTED; release NO_GO.
++
+ ## Engineering17 explicit applied-routine clearing and original-record consistency
+ 
+ Appointment brief selection → Review starts at the top with a semantic review heading and opening text visible → Edit returns to selection with chosen records/questions intact → reopen starts at the top again. The scroller alone remounts; authority, reviewed content, photo readiness and cleanup state retain their existing parent lifecycle. Keyboard stays in the existing modal.
+@@ -3009,6 +3039,8 @@ source tests, or fixture-only screenshots.
+ 
+ ### M1-02 Major retained campaign 05 — local recovery
+ 
++- Engineering25: the same overview independently checks Manual intake drafts and Optional change drafts through their production loaders under the original health lease. Only generic Saved on this device / Not configured / Unavailable status is shown. Manual drafts link to `/shelf/intake-drafts`; optional drafts link to Today, then Your optional change notes > Saved change drafts. Inspection does not resume, save, discard, confirm or retry a draft. Unavailable means nothing was reset. Check again, foreground and return to You refresh the six independent domains without a new cache or notification. Read-only key resolution and no-op transactions perform no adapter key/data writes; key maintenance belongs only to an explicitly admitted mutation. Verify empty/saved/unavailable, private-content exclusion, keyboard activation, 48px targets and no horizontal overflow at 375x667, 390x844 and 430x932 using fresh synthetic Expo web fixtures. Native/device behavior remains unqualified.
++
+ - You → Help → expand Local recovery; Close collapses the section without adding a route. Existing adult, owner, consent, private-storage and App Lock gates remain required. Recheck local age/consent before reading each domain. Show only generic status descriptors; no product names, photo content, notes, paths, owner IDs or health counts. No provider, permission prompt, scheduling, automatic cleanup or new persistent cache occurs on entry.
+ - Independently read Shelf, this local day's check-offs, strict reminder preferences and the existing photo-deletion journal. Distinguish saved-device evidence, no local setup, unreadable records and outstanding cleanup/confirmation. Cloud status is not verified. A reminder failure cannot hide confirmed check-offs; a corrupt journal cannot claim deletion finished. “No pending cleanup” describes only the readable current journal.
+ - Each “Check again” reuses its current read, with duplicate presses coalesced. Feature-specific links open existing Shelf/Today/reminder/Progress controls; Progress entitlement/lock protections still apply. Returning from another screen remounts the local checks. Retry/late reads across A→B→A, withdrawal/regrant, expiry, blur and local-day rollover cannot publish old status.
+@@ -3208,3 +3240,10 @@ You -> Delete account / Withdraw health-data consent -> exact rendered confirmat
+ - Unbound nonempty legacy journals remain unavailable and preserved. An authenticated old empty journal supplies no operation authority and may be read as empty without rewriting. No key is minted to repair recovery.
+ - Diary/capture/detail storage refusal → content-free conflict/provenance/key-loss/cleanup explanation → Try again / existing Back to Progress or tab navigation. Retry does not select ciphertext or erase ambiguous evidence. Reload preserves refusal while uncertainty remains; unknown exceptions never display private text. Retired owner/consent cannot publish photo content.
+ - Verify actual Expo web at375×667 and430×932 with keyboard/focus, scroll and overflow, repeated retry, exit and reload. Browser development refusals and synthetic filesystem tests do not qualify physical keys, camera, native move/crash behavior, external authority or release.
++# Engineering20 professional response linkage
++
++- Current authorized material-change queue -> case history -> changed intended version -> latest explicit owner response (acknowledged, declined, or no response recorded).
++- Historical closure keeps its exact prior acknowledgement; a later decline remains visible and removes current acknowledgement eligibility.
++- Decision review -> exact response displayed -> cancel or explicit save -> stored revision readback. Source changes require reload; exact retry and current authority checks remain required.
++- Local browser coverage: 375x667 and 430x932, keyboard selection/focus, no overflow, no-response then synthetic decline, closure with explicit nonacknowledgement reason, retained history, current API refusal.
++- Responses do not establish application, use, delivery or clinical outcome. Synthetic fixtures establish no professional/provider authority. All 38 requirements and 18 gates remain UNACCEPTED; release NO_GO.
+diff --git a/scripts/e2e/bottle-drafts20.mjs b/scripts/e2e/bottle-drafts20.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..d6c5092dc2a1022491e80dce520d0712a0f86d06
+--- /dev/null
++++ b/scripts/e2e/bottle-drafts20.mjs
+@@ -0,0 +1,117 @@
++import assert from 'node:assert/strict';
++import { spawn } from 'node:child_process';
++import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const out = path.resolve(process.env.ONSKIN_DRAFT_EVIDENCE ?? '../ENGINEERING20_EVIDENCE/bottle-browser');
++mkdirSync(out, { recursive: false });
++const browserPath = process.env.BROWSER_PATH ?? 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
++assert(existsSync(browserPath), 'The existing authorized Edge browser is required.');
++const appPort = await b.findAvailablePort(8500), debugPort = await b.findAvailablePort(9500);
++const baseUrl = `http://localhost:${appPort}`;
++const userDataDir = mkdtempSync(path.join(tmpdir(), 'onskin-e20-drafts-'));
++const receipt = { startedAt: new Date().toISOString(), surface: 'Actual local Expo web in Edge; synthetic local owner, no providers', userDataDir, viewports: [], pass: false };
++let server, browser, client, secondary;
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2));
++async function capture(name, page = client) {
++  const state = await b.evaluate(page, `({path:location.pathname,text:document.body.innerText,width:innerWidth,height:innerHeight,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth)})`);
++  assert.equal(state.overflow, 0, 'Horizontal overflow'); json(name + '.json', state);
++  const shot = await page.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
++  writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++}
++async function tap(label, page = client) { await b.scrollControlIntoView(page, label); await b.clickByText(page, label); }
++async function keyboard(label, height, page = client) {
++  await b.scrollControlIntoView(page, label);
++  const geometry = await b.evaluate(page, `(()=>{const n=[...document.querySelectorAll('[role="button"],button')].find(n=>n.textContent.trim()===${JSON.stringify(label)}||n.getAttribute('aria-label')===${JSON.stringify(label)});if(!n)throw new Error('Missing visible control');n.focus();const r=n.getBoundingClientRect();return {focus:document.activeElement===n,w:r.width,h:r.height,y:r.y,hit:n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}})()`);
++  assert(geometry.focus && geometry.hit && geometry.h >= 44 && geometry.y >= 0 && geometry.y + geometry.h <= height);
++  await page.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
++  await page.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
++  return geometry;
++}
++try {
++  server = b.startExpoServer({ appPort, evidenceDir: out, group: { id: 'e20-drafts', env: {
++    EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner', EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'false',
++  } } });
++  browser = spawn(browserPath, ['--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${userDataDir}`,
++    '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--disable-sync', 'about:blank'], { stdio: 'ignore', windowsHide: true });
++  json('owned-processes.json', { serverPid: server.pid, browserPid: browser.pid, appPort, debugPort });
++  await b.waitForUrl(baseUrl);
++  for (const [width, height] of [[375, 667], [430, 932]]) {
++    client = await b.connectToPage(debugPort, baseUrl);
++    for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable']) await client.send(method);
++    await b.setViewport(client, { width, height });
++    const id = `${width}x${height}`;
++    console.log(`Starting visible app journey ${id}`);
++    await client.send('Page.navigate', { url: baseUrl + '/?e2eReset=local' });
++    await b.waitForText(client, 'Begin', 60_000); await tap('Begin');
++    await b.waitForPath(client, '/onboarding/age');
++    await b.fillByLabel(client, 'Day of birth', '01'); await b.fillByLabel(client, 'Month of birth', '01'); await b.fillByLabel(client, 'Year of birth', '1990');
++    await tap('Continue'); await b.waitForPath(client, '/onboarding/consent');
++    await tap('I agree. Continue'); await b.waitForPath(client, '/onboarding/goals');
++    await b.waitForText(client, 'What brings you here?'); await delay(2000);
++    await capture(id + '-adult-consent');
++    await client.send('Page.navigate', { url: baseUrl + '/shelf/manual' });
++    await b.waitForText(client, 'Add by hand'); await b.fillByLabel(client, 'Product name', 'Synthetic durable bottle');
++    await tap('Category'); await b.waitForText(client, 'Product category');
++    await tap('Category, Cleanser'); await tap('Continue'); await b.waitForText(client, 'When did you open it?');
++    await tap('Just opened it'); await tap('Add to shelf'); await b.waitForText(client, 'Synthetic durable bottle');
++    await client.send('Page.navigate', { url: baseUrl + '/shelf' }); await b.waitForText(client, 'Synthetic durable bottle');
++    await tap('Synthetic durable bottle, Date unknown'); await b.waitForText(client, 'Bottle & formula history');
++    await tap('Bottle & formula history'); await b.waitForText(client, 'Record label observation');
++    await tap('Record label observation'); await tap('I have the printed label');
++    await b.fillByLabel(client, 'Ingredient label as printed', 'Aqua, synthetic draft ingredient');
++    const saveGeometry = await keyboard('Save bottle draft on this device', height);
++    await b.waitForText(client, 'Draft encrypted, saved and read back'); await capture(id + '-saved');
++    const formulaUrl = await b.evaluate(client, 'location.href');
++    const raw = await b.evaluate(client, `localStorage.getItem('layerwell.bottleDrafts.v1')`);
++    assert(raw && raw.includes('purpose-bound:v2') && !raw.includes('synthetic draft ingredient'));
++    await b.fillByLabel(client, 'Ingredient label as printed', 'Unsaved later synthetic edit');
++    await client.send('Page.reload'); await b.waitForText(client, 'Resume saved bottle draft'); await capture(id + '-reload');
++    assert(!await b.evaluate(client, `document.body.innerText.includes('Unsaved later synthetic edit')`));
++    await tap('Resume saved bottle draft'); await b.waitForInputValue(client, 'Ingredient label as printed', 'Aqua, synthetic draft ingredient');
++    await tap('Review current saved bottle'); await b.waitForText(client, 'Current saved revision 0');
++    await tap('Keep draft with reviewed source'); await keyboard('Confirm this bottle observation', height);
++    await b.waitForText(client, 'Saved on this device and read back.'); await capture(id + '-confirmed');
++    await client.send('Page.reload'); await b.waitForText(client, 'User confirmed label');
++    await tap('Record label observation'); await tap('I have the printed label');
++    await b.fillByLabel(client, 'Ingredient label as printed', 'Second unconfirmed synthetic draft');
++    await tap('Save bottle draft on this device'); await b.waitForText(client, 'Draft encrypted, saved and read back');
++    await client.send('Page.reload'); await b.waitForText(client, 'Resume saved bottle draft');
++    secondary = await b.connectToPage(debugPort, formulaUrl);
++    for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable']) await secondary.send(method);
++    await b.setViewport(secondary, { width, height });
++    await secondary.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__draftStorageReads=[];const original=Storage.prototype.getItem;Storage.prototype.getItem=function(key){globalThis.__draftStorageReads.push(key);return original.call(this,key)};` });
++    await secondary.send('Page.reload'); await b.waitForText(secondary, 'already open in another tab');
++    await capture(id + '-second-tab-refusal', secondary);
++    const deniedReads = await b.evaluate(secondary, `globalThis.__draftStorageReads.filter(key=>String(key).startsWith('layerwell.'))`);
++    assert.deepEqual(deniedReads, [], 'Denied tab read private app storage');
++    const originalTarget = (await client.send('Target.getTargetInfo')).targetInfo.targetId;
++    const network = client.events.filter(event => event.method === 'Network.requestWillBeSent').map(event => ({ method: event.params.request.method, url: event.params.request.url.split('?')[0] }));
++    json(id + '-network.json', network);
++    assert(network.every(request => ['localhost', '127.0.0.1'].includes(new URL(request.url).hostname)));
++    await secondary.send('Target.closeTarget', { targetId: originalTarget }); client.close(); client = secondary; secondary = undefined;
++    await keyboard('Retry private app access', height); await b.waitForText(client, 'Resume saved bottle draft');
++    await capture(id + '-takeover');
++    await tap('Review all saved bottle drafts'); await b.waitForText(client, 'Saved bottle drafts');
++    await tap('Review draft discard'); await tap('Keep saved draft'); await tap('Review draft discard');
++    await keyboard('Confirm saved draft discard', height); await b.waitForText(client, 'No saved bottle drafts.');
++    await capture(id + '-discarded');
++    const target = (await client.send('Target.getTargetInfo')).targetInfo.targetId;
++    await client.send('Target.closeTarget', { targetId: target }).catch(() => {}); client.close(); client = undefined;
++    receipt.viewports.push({ width, height, explicitAgeConsent: true, encryptedDraftReadback: true, unsavedEditNotRestored: true,
++      explicitResumeReviewConfirm: true, secondTabRefusedBeforePrivateReads: true, takeoverAfterOriginalClosed: true,
++      discardReviewCancelConfirm: true, saveGeometry });
++  }
++  receipt.pass = true; console.log('PASS durable bottle draft journeys at both requested viewports');
++} catch (error) {
++  receipt.error = error.message;
++  if (client) await capture('FAILURE').catch(() => {});
++  throw error;
++} finally {
++  receipt.endedAt = new Date().toISOString(); json('summary.json', receipt);
++  client?.close(); secondary?.close();
++  await b.stopProcessBestEffort(browser); await b.stopProcessBestEffort(server);
++}
+diff --git a/scripts/e2e/manual-intake-drafts21.mjs b/scripts/e2e/manual-intake-drafts21.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..b14d8c4c409b5773beb3be2e7bcb723dcd482e2c
+--- /dev/null
++++ b/scripts/e2e/manual-intake-drafts21.mjs
+@@ -0,0 +1,256 @@
++// Local synthetic Expo-web evidence driver. No native or release qualification.
++import assert from 'node:assert/strict';
++import { spawn, execFileSync } from 'node:child_process';
++import { createHash } from 'node:crypto';
++import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
++const out = path.resolve(process.env.ONSKIN_INTAKE_EVIDENCE ?? path.join(repo, '../ENGINEERING21_EVIDENCE/manual-browser'));
++mkdirSync(path.dirname(out), { recursive: true });
++mkdirSync(out, { recursive: false }); // Preserve every prior run, including failures.
++const browserPath = process.env.BROWSER_PATH ?? 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
++assert(existsSync(browserPath), 'The existing local Edge browser is required.');
++const draftKey = 'layerwell.manualIntakeDrafts.v1';
++const sourceFiles = [
++  'scripts/e2e/manual-intake-drafts21.mjs',
++  'apps/mobile/src/app/shelf/manual.tsx',
++  'apps/mobile/src/app/shelf/opened.tsx',
++  'apps/mobile/src/app/shelf/intake-drafts.tsx',
++  'apps/mobile/src/features/shelf/IntakeContext.tsx',
++  'apps/mobile/src/features/shelf/manualIntakeDraftCodec.ts',
++  'apps/mobile/src/features/shelf/manualIntakeDraftStore.ts',
++  'apps/mobile/src/features/shelf/manualIntakeSubmission.ts',
++  'apps/mobile/src/features/shelf/store.ts',
++];
++const git = (...args) => execFileSync('git', args, { cwd: repo, encoding: 'utf8', windowsHide: true }).trim();
++const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
++const appPort = await b.findAvailablePort(8500);
++const debugPort = await b.findAvailablePort(9500);
++const baseUrl = `http://localhost:${appPort}`;
++const userDataDir = mkdtempSync(path.join(tmpdir(), 'onskin-e21-intake-'));
++const receipt = {
++  startedAt: new Date().toISOString(),
++  surface: 'Actual local Expo web in Edge; synthetic local owner and storage only',
++  head: git('rev-parse', 'HEAD'), tree: git('rev-parse', 'HEAD^{tree}'),
++  status: git('status', '--porcelain=v1'),
++  sourceSha256: Object.fromEntries(sourceFiles.map(file => [file, sha256(readFileSync(path.join(repo, file)))])),
++  userDataDir, viewports: [], blockedRemoteRequests: [], pass: false,
++  excluded: ['native builds and devices', 'real owners and provider services', 'hosted CI', 'paid operations', 'release acceptance'],
++};
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
++const steps = [];
++let server, browser, client, secondary;
++const labels = {
++  save: 'Save intake draft on this device', inventory: 'Saved intake drafts',
++  saved: 'Saved on this device. Only this saved revision survives a reload.',
++  resume: 'Resume saved intake draft', empty: 'No saved intake drafts.',
++  refresh: 'Refresh saved intake drafts',
++  discard: 'Review intake draft discard', keep: 'Keep intake draft', confirmDiscard: 'Confirm intake draft discard',
++};
++function step(action, detail = '') {
++  steps.push({ at: new Date().toISOString(), action, detail });
++  console.log(action + (detail ? `: ${detail}` : ''));
++}
++async function capture(name, page = client) {
++  const state = await b.evaluate(page, `({path:location.pathname,text:document.body.innerText,width:innerWidth,height:innerHeight,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),inputs:[...document.querySelectorAll('input,textarea')].map(n=>({label:n.getAttribute('aria-label'),value:n.value})),choices:[...document.querySelectorAll('[role="radio"]')].map(n=>({label:n.getAttribute('aria-label'),checked:n.getAttribute('aria-checked')}))})`);
++  json(name + '.json', state);
++  const shot = await page.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
++  writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++  assert.equal(state.overflow, 0, 'Horizontal overflow');
++  return state;
++}
++async function tap(label, page = client) {
++  step('Activate control', label);
++  await b.scrollControlIntoView(page, label);
++  await b.clickByText(page, label);
++}
++async function fill(label, value) {
++  step('Enter synthetic value', label);
++  await b.fillByLabel(client, label, value);
++}
++async function keyboard(label, height, page = client) {
++  step('Keyboard activate control', label);
++  await b.scrollControlIntoView(page, label);
++  const geometry = await b.evaluate(page, `(()=>{const n=[...document.querySelectorAll('[role="button"],button')].filter(n=>n.getClientRects().length&&!n.closest('[aria-hidden="true"],[inert]')).find(n=>n.textContent.trim()===${JSON.stringify(label)}||n.getAttribute('aria-label')===${JSON.stringify(label)});if(!n)throw new Error('Missing visible control');n.focus();const r=n.getBoundingClientRect();return {focus:document.activeElement===n,w:r.width,h:r.height,y:r.y,hit:n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}})()`);
++  assert(geometry.focus && geometry.hit && geometry.h >= 44 && geometry.y >= 0 && geometry.y + geometry.h <= height, `${label} keyboard target must be visible and at least 44px high`);
++  await page.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
++  await page.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
++  return geometry;
++}
++async function connect(width, height, url = baseUrl) {
++  const page = await b.connectToPage(debugPort, url);
++  for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable', 'Log.enable']) await page.send(method);
++  page.ws.addEventListener('message', event => {
++    const message = JSON.parse(event.data);
++    if (message.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = message.params;
++    const target = new URL(request.url);
++    if (target.origin === baseUrl) {
++      void page.send('Fetch.continueRequest', { requestId }).catch(() => {});
++    } else {
++      receipt.blockedRemoteRequests.push({ method: request.method, origin: target.origin });
++      void page.send('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' }).catch(() => {});
++    }
++  });
++  await page.send('Fetch.enable', { patterns: [{ urlPattern: 'http://*' }, { urlPattern: 'https://*' }] });
++  await b.setViewport(page, { width, height });
++  return page;
++}
++async function inventory() {
++  await tap(labels.inventory);
++  await b.waitForPath(client, '/shelf/intake-drafts');
++  await b.waitForText(client, labels.inventory);
++}
++async function inspectEncryptedDraft() {
++  const raw = await b.evaluate(client, `localStorage.getItem(${JSON.stringify(draftKey)})`);
++  assert(raw && raw.includes('purpose-bound:v2'), 'Draft must use purpose-bound ciphertext');
++  assert(!raw.includes('Synthetic') && !raw.includes('Glycerin'), 'Draft text must not be plaintext');
++  return { bytes: Buffer.byteLength(raw), sha256: sha256(raw) };
++}
++async function closePage(page) {
++  const id = (await page.send('Target.getTargetInfo')).targetInfo.targetId;
++  await page.send('Target.closeTarget', { targetId: id }).catch(() => {});
++  page.close();
++}
++
++// Keep the launcher incapable of inheriting configured external credentials.
++for (const key of Object.keys(process.env)) {
++  if (key.startsWith('EXPO_PUBLIC_') || /(TOKEN|SECRET|PASSWORD|CREDENTIAL|API_KEY|PRIVATE_KEY|ACCESS_KEY)/i.test(key)) delete process.env[key];
++}
++// Expo 57 does not derive this flag from CI/EXPO_OFFLINE. It disables the
++// debugger-shell background dotslash fetch before middleware is constructed.
++Object.assign(process.env, { EXPO_OFFLINE: '1', EXPO_UNSTABLE_HEADLESS: '1', EXPO_NO_DOTENV: '1', EXPO_NO_TELEMETRY: '1', TURBO_TELEMETRY_DISABLED: '1', CI: '1' });
++
++try {
++  server = b.startExpoServer({ appPort, evidenceDir: out, group: { id: 'e21-manual-drafts', env: {
++    EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner', EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'false',
++  } } });
++  browser = spawn(browserPath, ['--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${userDataDir}`,
++    '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--disable-sync',
++    '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1', 'about:blank'], { stdio: 'ignore', windowsHide: true });
++  json('owned-processes.json', { serverPid: server.pid, browserPid: browser.pid, appPort, debugPort });
++  await b.waitForUrl(baseUrl);
++  for (const [width, height] of [[375, 667], [390, 844], [430, 932]]) {
++    client = await connect(width, height);
++    const id = `${width}x${height}`;
++    step('Start actual app journey', id);
++    await client.send('Page.navigate', { url: baseUrl + '/?e2eReset=local' });
++    await b.waitForText(client, 'Begin', 60_000); await tap('Begin');
++    await b.waitForPath(client, '/onboarding/age');
++    await fill('Day of birth', '01'); await fill('Month of birth', '01'); await fill('Year of birth', '1990');
++    await tap('Continue'); await b.waitForPath(client, '/onboarding/consent');
++    await tap('I agree. Continue'); await b.waitForPath(client, '/onboarding/goals');
++    await b.waitForText(client, 'What brings you here?'); await delay(1000);
++    await capture(id + '-adult-consent');
++    await client.send('Page.navigate', { url: baseUrl + '/shelf' });
++    await b.waitForText(client, 'Add a product'); await tap('Add a product');
++    await b.waitForText(client, 'Add by hand');
++    await fill('Product name', '  Synthetic durable intake  ');
++    await fill('Brand', '  Synthetic original brand  ');
++    await fill('Barcode, optional', '96385074');
++    await tap('Eight-digit barcode type, EAN-8');
++    await fill('Ingredients', 'Aqua,\n  Glycerin; synthetic intake ');
++    const saveGeometry = await keyboard(labels.save, height);
++    await b.waitForText(client, labels.saved);
++    await b.waitForText(client, 'Saved draft revision 1.');
++    assert(!await b.evaluate(client, `document.body.innerText.includes('Unsaved changes')`), 'A verified save must not mislabel unchanged values as unsaved');
++    await capture(id + '-manual-saved');
++    const firstCiphertext = await inspectEncryptedDraft();
++    await fill('Product name', 'Unsaved later synthetic edit');
++    await b.waitForText(client, 'Unsaved changes'); await capture(id + '-unsaved-edits');
++    await client.send('Page.reload'); await b.waitForText(client, 'Add by hand');
++    await inventory(); await capture(id + '-inventory-after-reload');
++    await tap(labels.resume); await b.waitForText(client, 'Add by hand');
++    await b.waitForInputValue(client, 'Product name', '  Synthetic durable intake  ');
++    await b.waitForInputValue(client, 'Brand', '  Synthetic original brand  ');
++    await b.waitForInputValue(client, 'Barcode, optional', '96385074');
++    await b.waitForInputValue(client, 'Ingredients', 'Aqua,\n  Glycerin; synthetic intake ');
++    assert(await b.evaluate(client, `[...document.querySelectorAll('[aria-label="Eight-digit barcode type, EAN-8"]')].filter(n=>n.getClientRects().length&&!n.closest('[aria-hidden="true"],[inert]')).some(n=>n.getAttribute('aria-checked')==='true')`));
++    await capture(id + '-restored-original-values');
++    await tap('Category'); await b.waitForText(client, 'Product category'); await tap('Category, Cleanser');
++    await tap('Continue'); await b.waitForText(client, 'When did you open it?');
++    await tap('Pick a date'); await fill('Exact opened date', '2026-10-01');
++    await tap('Edit period after opening'); await fill('PAO months printed on label', '17'); await tap('Confirm label PAO value');
++    await keyboard(labels.save, height); await b.waitForText(client, 'Product details and opening choices saved on this device.'); await capture(id + '-opening-saved');
++    const openingCiphertext = await inspectEncryptedDraft();
++    assert.notEqual(firstCiphertext.sha256, openingCiphertext.sha256, 'Opening save must create a new encrypted revision');
++    await client.send('Page.reload');
++    await b.waitForText(client, 'Add product details first.');
++    await client.send('Page.navigate', { url: baseUrl + '/shelf' }); await b.waitForText(client, labels.inventory);
++    await inventory(); await tap(labels.resume); await b.waitForText(client, 'Add by hand');
++    await b.waitForInputValue(client, 'Product name', '  Synthetic durable intake  ');
++    await tap('Continue'); await b.waitForText(client, 'When did you open it?');
++    await b.waitForInputValue(client, 'Exact opened date', '2026-10-01');
++    await b.waitForText(client, 'PAO: 17 months');
++    await tap('Edit period after opening');
++    await b.waitForInputValue(client, 'PAO months printed on label', '17');
++    await capture(id + '-opening-restored-review');
++    await keyboard('Add to shelf', height);
++    await b.waitForCondition(client, `location.pathname === '/shelf'`, 30_000, 'canonical Shelf route after Add');
++    await b.waitForText(client, 'Synthetic durable intake');
++    await client.send('Page.reload'); await b.waitForText(client, 'Synthetic durable intake');
++    const matchingProducts = await b.evaluate(client, `[...document.querySelectorAll('[role="button"]')].filter(n=>n.getAttribute('aria-label')?.startsWith('Synthetic durable intake,')).length`);
++    assert.equal(matchingProducts, 1, 'One canonical Shelf product after reload');
++    await capture(id + '-canonical-shelf');
++    await inventory(); await b.waitForText(client, labels.empty); await capture(id + '-completed-draft-retired');
++    // The remaining inventory and refusal branches use only this isolated synthetic profile.
++    await client.send('Page.navigate', { url: baseUrl + '/shelf/manual' }); await b.waitForText(client, 'Add by hand');
++    await fill('Brand', 'Synthetic incomplete draft with no product name');
++    await tap(labels.save); await b.waitForText(client, labels.saved);
++    await inventory(); await tap(labels.discard); await tap(labels.keep);
++    await tap(labels.discard); const discardGeometry = await keyboard(labels.confirmDiscard, height);
++    await b.waitForText(client, labels.empty); await capture(id + '-incomplete-discarded');
++    step('Refuse one synthetic storage source', draftKey);
++    await b.evaluate(client, `(()=>{globalThis.__intakeOriginalGet=Storage.prototype.getItem;Storage.prototype.getItem=function(key){if(key===${JSON.stringify(draftKey)})throw new Error('SYNTHETIC_SOURCE_UNAVAILABLE');return globalThis.__intakeOriginalGet.call(this,key)}})()`);
++    await tap(labels.refresh); await b.waitForText(client, 'Saved intake storage is unavailable or unreadable.');
++    assert(!await b.evaluate(client, `document.body.innerText.includes(${JSON.stringify(labels.empty)})`), 'Unavailable storage must not appear empty');
++    await capture(id + '-unavailable-storage');
++    await b.evaluate(client, `Storage.prototype.getItem=globalThis.__intakeOriginalGet;delete globalThis.__intakeOriginalGet`);
++    await keyboard(labels.refresh, height); await b.waitForText(client, labels.empty);
++    step('Refuse unsupported synthetic encrypted envelope', draftKey);
++    const unsupportedFixture = await b.evaluate(client, `(()=>{const key=${JSON.stringify(draftKey)};const original=localStorage.getItem(key);globalThis.__intakeOriginalBytes=original;const value=JSON.parse(original);value.version='xchacha20poly1305:purpose-bound:v999';const unsupported=JSON.stringify(value);localStorage.setItem(key,unsupported);return unsupported})()`);
++    await tap(labels.refresh); await b.waitForText(client, 'Saved intake data is unsupported or invalid.');
++    assert.equal(await b.evaluate(client, `localStorage.getItem(${JSON.stringify(draftKey)})`), unsupportedFixture, 'Refused source must remain intact');
++    assert(!await b.evaluate(client, `document.body.innerText.includes(${JSON.stringify(labels.empty)})`), 'Unsupported storage must not appear empty');
++    await capture(id + '-unsupported-storage');
++    await b.evaluate(client, `localStorage.setItem(${JSON.stringify(draftKey)},globalThis.__intakeOriginalBytes);delete globalThis.__intakeOriginalBytes`);
++    await tap(labels.refresh); await b.waitForText(client, labels.empty); await capture(id + '-storage-recovered');
++    secondary = await connect(width, height, baseUrl + '/shelf/intake-drafts');
++    await secondary.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__intakeStorageReads=[];const original=Storage.prototype.getItem;Storage.prototype.getItem=function(key){globalThis.__intakeStorageReads.push(key);return original.call(this,key)};` });
++    await secondary.send('Page.reload'); await b.waitForText(secondary, 'already open in another tab');
++    await capture(id + '-second-tab-refusal', secondary);
++    const deniedReads = await b.evaluate(secondary, `globalThis.__intakeStorageReads.filter(key=>String(key).startsWith('layerwell.'))`);
++    assert.deepEqual(deniedReads, [], 'Denied tab must not read private app storage');
++    json(id + '-second-tab-network.json', secondary.events.filter(event => event.method === 'Network.requestWillBeSent').map(event => ({ method: event.params.request.method, url: event.params.request.url.split('?')[0] })));
++    await closePage(secondary); secondary = undefined;
++    const network = client.events.filter(event => event.method === 'Network.requestWillBeSent').map(event => ({ method: event.params.request.method, url: event.params.request.url.split('?')[0] }));
++    json(id + '-network.json', network);
++    assert(network.every(request => new URL(request.url).origin === baseUrl));
++    const consoleEvents = client.events.filter(event => ['Runtime.consoleAPICalled', 'Runtime.exceptionThrown', 'Log.entryAdded'].includes(event.method));
++    json(id + '-console.json', consoleEvents);
++    assert.equal(receipt.blockedRemoteRequests.length, 0, 'No provider or external request may be attempted');
++    receipt.viewports.push({ width, height, explicitAgeConsent: true, firstCiphertext, openingCiphertext,
++      originalRawValuesRecovered: true, unsavedEditNotRestored: true, openingChoicesRecovered: true,
++      explicitResumeAndReview: true, oneCanonicalShelfProductAfterReload: true, exactDraftRetired: true,
++      incompleteDraftSaved: true, discardReviewCancelConfirm: true, unavailableIsNotEmpty: true,
++      unsupportedIsNotEmpty: true, sourcePreservedAndExplicitlyRefreshed: true, secondTabRefusedBeforePrivateReads: true,
++      saveGeometry, discardGeometry });
++    await closePage(client); client = undefined;
++  }
++  receipt.pass = true;
++  step('PASS manual intake recovery journeys', '375x667, 390x844, 430x932');
++} catch (error) {
++  receipt.error = error instanceof Error ? error.message : String(error);
++  if (client) await capture('FAILURE').catch(() => {});
++  throw error;
++} finally {
++  receipt.endedAt = new Date().toISOString();
++  json('summary.json', receipt); json('steps.json', steps);
++  client?.close(); secondary?.close();
++  await b.stopProcessBestEffort(browser); await b.stopProcessBestEffort(server);
++}
+diff --git a/scripts/e2e/optional-change-drafts21.mjs b/scripts/e2e/optional-change-drafts21.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..8ee7aec065aff0c895401c14a340ece10c9bee88
+--- /dev/null
++++ b/scripts/e2e/optional-change-drafts21.mjs
+@@ -0,0 +1,408 @@
++// Local synthetic Expo-web evidence driver. No native or release qualification.
++import assert from 'node:assert/strict';
++import { spawn, execFileSync } from 'node:child_process';
++import { createHash } from 'node:crypto';
++import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
++const out = path.resolve(process.env.ONSKIN_CHANGE_EVIDENCE ?? path.join(repo, '../ENGINEERING21_EVIDENCE/optional-browser'));
++mkdirSync(path.dirname(out), { recursive: true });
++mkdirSync(out, { recursive: false }); // Preserve every prior run, including failures.
++const browserPath = process.env.BROWSER_PATH ?? 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
++assert(existsSync(browserPath), 'The existing local Edge browser is required.');
++const draftKey = 'layerwell.optionalChangeDrafts.v1';
++const sourceFiles = [
++  'scripts/e2e/optional-change-drafts21.mjs',
++  'apps/mobile/src/features/today/OptionalChangePanel41.tsx',
++  'apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx',
++  'apps/mobile/src/features/today/optionalChangeDraftCodec.ts',
++  'apps/mobile/src/features/today/optionalChangeDraftStore.ts',
++  'apps/mobile/src/features/today/completionsStore.ts',
++  'apps/mobile/src/features/today/optionalChange41.ts',
++  'apps/mobile/src/features/today/optionalChangeJournal41.ts',
++];
++const git = (...args) => execFileSync('git', args, { cwd: repo, encoding: 'utf8', windowsHide: true }).trim();
++const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
++const appPort = await b.findAvailablePort(8500);
++const debugPort = await b.findAvailablePort(9500);
++const baseUrl = `http://localhost:${appPort}`;
++const userDataDir = mkdtempSync(path.join(tmpdir(), 'onskin-e21-change-'));
++const receipt = {
++  startedAt: new Date().toISOString(),
++  surface: 'Actual local Expo web in Edge; synthetic local owner and storage only',
++  head: git('rev-parse', 'HEAD'), tree: git('rev-parse', 'HEAD^{tree}'),
++  status: git('status', '--porcelain=v1'),
++  sourceSha256: Object.fromEntries(sourceFiles.map(file => [file, sha256(readFileSync(path.join(repo, file)))])),
++  userDataDir, viewports: [], blockedRemoteRequests: [], pass: false,
++  excluded: ['native builds and devices', 'real owners and provider services', 'hosted CI', 'paid operations', 'release acceptance'],
++};
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
++const steps = [];
++let server, browser, client, secondary;
++const labels = {
++  save: 'Save change draft on this device', inventory: 'Saved change drafts',
++  saved: 'Draft saved on this device. Only this saved revision survives reload; no history event was recorded.',
++  resume: 'Resume saved change draft', empty: 'No saved change drafts.',
++  refresh: 'Refresh saved change drafts', back: 'Back to optional changes',
++  discard: 'Review change draft discard', keep: 'Keep change draft', confirmDiscard: 'Confirm change draft discard',
++};
++function step(action, detail = '') {
++  steps.push({ at: new Date().toISOString(), action, detail });
++  console.log(action + (detail ? `: ${detail}` : ''));
++}
++async function capture(name, page = client) {
++  const state = await b.evaluate(page, `({path:location.pathname,text:document.body.innerText,width:innerWidth,height:innerHeight,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),inputs:[...document.querySelectorAll('input,textarea')].map(n=>({label:n.getAttribute('aria-label'),value:n.value})),choices:[...document.querySelectorAll('[role="radio"]')].map(n=>({label:n.getAttribute('aria-label'),checked:n.getAttribute('aria-checked')}))})`);
++  json(name + '.json', state);
++  const shot = await page.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
++  writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++  assert.equal(state.overflow, 0, 'Horizontal overflow');
++  return state;
++}
++async function tap(label, page = client) {
++  step('Activate control', label);
++  await b.scrollControlIntoView(page, label);
++  await b.clickByText(page, label);
++}
++async function tapContains(label) {
++  step('Activate control containing', label);
++  await b.scrollControlIntoView(client, label, { exact: false });
++  await b.clickByText(client, label, { exact: false });
++}
++async function fill(label, value) {
++  step('Enter synthetic value', label);
++  await b.fillByLabel(client, label, value);
++}
++async function keyboard(label, height, page = client) {
++  step('Keyboard activate control', label);
++  await b.scrollControlIntoView(page, label);
++  const geometry = await b.evaluate(page, `(()=>{const n=[...document.querySelectorAll('[role="button"],button')].filter(n=>n.getClientRects().length&&!n.closest('[aria-hidden="true"],[inert]')).find(n=>n.textContent.trim()===${JSON.stringify(label)}||n.getAttribute('aria-label')===${JSON.stringify(label)});if(!n)throw new Error('Missing visible control');n.focus();const r=n.getBoundingClientRect();return {focus:document.activeElement===n,w:r.width,h:r.height,y:r.y,hit:n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}})()`);
++  assert(geometry.focus && geometry.hit && geometry.h >= 44 && geometry.y >= 0 && geometry.y + geometry.h <= height, `${label} keyboard target must be visible and at least 44px high`);
++  await page.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
++  await page.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
++  return geometry;
++}
++async function connect(width, height, url = baseUrl) {
++  const page = await b.connectToPage(debugPort, url);
++  for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable', 'Log.enable']) await page.send(method);
++  page.ws.addEventListener('message', event => {
++    const message = JSON.parse(event.data);
++    if (message.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = message.params;
++    const target = new URL(request.url);
++    if (target.origin === baseUrl) {
++      void page.send('Fetch.continueRequest', { requestId }).catch(() => {});
++    } else {
++      receipt.blockedRemoteRequests.push({ method: request.method, origin: target.origin });
++      void page.send('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' }).catch(() => {});
++    }
++  });
++  await page.send('Fetch.enable', { patterns: [{ urlPattern: 'http://*' }, { urlPattern: 'https://*' }] });
++  await b.setViewport(page, { width, height });
++  return page;
++}
++async function inventory() {
++  await tap(labels.inventory);
++  await b.waitForText(client, 'Unconfirmed factual notes, corrections and retractions saved on this device.');
++}
++async function inspectEncryptedDraft() {
++  const raw = await b.evaluate(client, `localStorage.getItem(${JSON.stringify(draftKey)})`);
++  assert(raw && raw.includes('purpose-bound:v2'), 'Draft must use purpose-bound ciphertext');
++  assert(!raw.includes('Synthetic') && !raw.includes('correction'), 'Draft text must not be plaintext');
++  return { bytes: Buffer.byteLength(raw), sha256: sha256(raw) };
++}
++async function closePage(page) {
++  const id = (await page.send('Target.getTargetInfo')).targetInfo.targetId;
++  await page.send('Target.closeTarget', { targetId: id }).catch(() => {});
++  page.close();
++}
++
++// Keep the launcher incapable of inheriting configured external credentials.
++for (const key of Object.keys(process.env)) {
++  if (key.startsWith('EXPO_PUBLIC_') || /(TOKEN|SECRET|PASSWORD|CREDENTIAL|API_KEY|PRIVATE_KEY|ACCESS_KEY)/i.test(key)) delete process.env[key];
++}
++// Expo 57 does not derive this flag from CI/EXPO_OFFLINE. It disables the
++// debugger-shell background dotslash fetch before middleware is constructed.
++Object.assign(process.env, { EXPO_OFFLINE: '1', EXPO_UNSTABLE_HEADLESS: '1', EXPO_NO_DOTENV: '1', EXPO_NO_TELEMETRY: '1', TURBO_TELEMETRY_DISABLED: '1', CI: '1' });
++
++// Read-only canonical inspection follows the existing optional-change41 driver.
++// No UI action is replaced with an internal append, grant, seed, or correction.
++const moduleExpression = `const mod = (suffix) => {
++  const entry = [...__r.getModules().values()].find(m => (m.verboseName ?? '').replaceAll('\\\\', '/').endsWith(suffix));
++  if (!entry?.publicModule?.exports) throw new Error('Missing loaded local observation module');
++  return entry.publicModule.exports;
++}; const store = mod('/features/today/completionsStore.ts'); const admission = mod('/lib/consent/healthDataWriteAdmission.ts');`;
++async function readCanonical() {
++  return b.evaluate(client, `(async()=>{${moduleExpression}
++    const lease=admission.captureHealthDataWriteLease();
++    const snapshot=await store.getOptionalChanges41(lease);
++    const raw=await mod('/lib/storage/privateKV.ts').getPrivateItem('layerwell.completions.v1');
++    const envelope=raw===null?null:JSON.parse(raw);
++    const optionalBytes=envelope?.version===5?envelope.completionBytes:raw;
++    const optional=optionalBytes===null?null:JSON.parse(optionalBytes);
++    const coreBytes=optional?.version===4?optional.completionBytes:optionalBytes;
++    const drafts=await mod('/features/today/optionalChangeDraftStore.ts').loadOptionalChangeDrafts(lease);
++    admission.assertOriginalHealthDataWriteLease(lease);
++    return {snapshot,owner:lease.ownerUserId,epoch:lease.epoch,coreBytes,version:envelope?.version??null,
++      actual:envelope?.version===5?envelope.actualRoutine:null,drafts};})()`, true);
++}
++const canonicalReceipts = [];
++async function canonicalReceipt(name) {
++  const current = await readCanonical();
++  canonicalReceipts.push({ name, at: new Date().toISOString(), version: current.version,
++    ownerSha256: sha256(current.owner), epoch: current.epoch, revision: current.snapshot.revision,
++    originalCompletionBytesSha256: sha256(current.coreBytes ?? ''), actualSha256: sha256(JSON.stringify(current.actual)),
++    events: current.snapshot.events.map(({ id, contentHash, kind, category, text, targetEventId, observedOn, revision }) =>
++      ({ id, contentHash, kind, category, text, targetEventId, observedOn, revision })),
++    drafts: current.drafts.drafts.map(({ id, revision, contentHash, fields }) => ({ id, revision, contentHash, fields })),
++  });
++  json('canonical-readbacks.json', canonicalReceipts);
++  return current;
++}
++function assertHistory(current, initial, expectedRevision) {
++  assert.equal(current.owner, initial.owner);
++  assert.equal(current.epoch, initial.epoch);
++  assert.equal(current.snapshot.revision, expectedRevision);
++  assert.equal(current.snapshot.events.length, expectedRevision);
++  assert.equal(new Set(current.snapshot.events.map(event => event.id)).size, expectedRevision, 'No duplicate event IDs');
++  assert.equal(current.coreBytes, initial.coreBytes, 'Optional records must preserve original completion bytes');
++  assert.deepEqual(current.actual, initial.actual, 'Optional records must preserve actual routine history');
++}
++async function openPanel() {
++  await b.waitForText(client, 'Record a change (optional)', 30_000);
++  if (!await b.evaluate(client, `document.body.innerText.includes('Your optional change notes')`)) {
++    await tap('Record a change (optional)');
++    await b.waitForText(client, 'Your optional change notes');
++  }
++  await b.waitForCondition(client, b.enabledControlExpression('Record a change (optional)'), 30_000, 'current optional history');
++}
++async function reloadInventory() {
++  await client.send('Page.reload'); await openPanel(); await inventory();
++}
++async function assertFreshReviewRequired() {
++  assert(!await b.evaluate(client, b.enabledControlExpression('Confirm and save this change')), 'Recovered draft must require a fresh review');
++}
++async function startDraft(action, text, { category = 'Other personal note', observed = null } = {}) {
++  await tap(action);
++  if (category !== null) await tap(category);
++  if (observed) await fill('Observed local date', observed);
++  await fill(action.startsWith('Retract') ? 'Retraction reason' : 'Your factual note', text);
++}
++async function confirm(height) {
++  await tap('Review this change');
++  const geometry = await keyboard('Confirm and save this change', height);
++  await b.waitForText(client, 'Saved on this device and read back.');
++  return geometry;
++}
++async function finishFreeOnboarding(id) {
++  // The optional panel depends on a confirmed profile and routine. Follow the
++  // existing first-session browser journey; do not inject either source.
++  await tapContains('Clear skin'); await tap('Continue');
++  await b.waitForPath(client, '/onboarding/quiz');
++  const answers = ['Shiny in places', 'Rarely', 'Often stings, burns, or reddens',
++    'Frequently', 'Yes, noticeably', 'Weeks or longer', 'Fine lines or firmness changes are visible',
++    'A lot over time', 'Sometimes burns', 'Tone 4', 'None that I know of', 'No'];
++  for (const [index, answer] of answers.entries()) {
++    await b.waitForText(client, answer); await tap(answer);
++    await tap(index < answers.length - 1 ? 'Next' : 'See my profile');
++  }
++  await b.waitForText(client, "What's on your shelf?");
++  await fill('Product name', 'Synthetic21 routine cleanser');
++  if (await b.evaluate(client, b.enabledControlExpression('Choose product category'))) {
++    await tapContains('Choose product category'); await b.waitForText(client, 'Product category');
++  }
++  await tap('Cleanser');
++  await tap('Add to shelf'); await b.waitForText(client, 'When did you open it?');
++  await tap('Just opened it'); await tap('Add to shelf'); await b.waitForText(client, 'Synthetic21 routine cleanser');
++  await tap('Continue with 1 product'); await b.waitForText(client, 'YOUR SKIN PROFILE', 45_000);
++  await tap('Continue'); await b.waitForPath(client, '/onboarding/notifications'); await tap('Not now');
++  await b.waitForText(client, 'Reminders are off. Your choice was saved.'); await tap('Continue');
++  await b.waitForPath(client, '/onboarding/account'); await tap('Not now');
++  await b.waitForPath(client, '/onboarding/paywall'); await tapContains('Continue with the free plan');
++  await b.waitForPath(client, '/today'); await capture(id + '-free-onboarding-today');
++}
++
++try {
++  server = b.startExpoServer({ appPort, evidenceDir: out, group: { id: 'e21-optional-drafts', env: {
++    EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner', EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'false',
++  } } });
++  browser = spawn(browserPath, ['--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${userDataDir}`,
++    '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--disable-sync',
++    '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1', 'about:blank'], { stdio: 'ignore', windowsHide: true });
++  json('owned-processes.json', { serverPid: server.pid, browserPid: browser.pid, appPort, debugPort });
++  await b.waitForUrl(baseUrl);
++  for (const [width, height] of [[375, 667], [390, 844], [430, 932]]) {
++    client = await connect(width, height);
++    const id = `${width}x${height}`;
++    step('Start actual optional recovery journey', id);
++    await client.send('Page.navigate', { url: baseUrl + '/?e2eReset=local' });
++    await b.waitForText(client, 'Begin', 60_000); await tap('Begin');
++    await b.waitForPath(client, '/onboarding/age');
++    await fill('Day of birth', '01'); await fill('Month of birth', '01'); await fill('Year of birth', '1990');
++    await tap('Continue'); await b.waitForPath(client, '/onboarding/consent');
++    await tap('I agree. Continue'); await b.waitForPath(client, '/onboarding/goals');
++    await b.waitForText(client, 'What brings you here?');
++    await capture(id + '-adult-consent');
++    await finishFreeOnboarding(id);
++    await client.send('Page.navigate', { url: baseUrl + '/today?routine=AM' });
++    await openPanel(); await b.waitForText(client, 'Nothing recorded');
++    await inventory(); await b.waitForText(client, labels.empty); await capture(id + '-empty-inventory');
++    const initial = await canonicalReceipt(id + '-initial');
++    assertHistory(initial, initial, 0);
++    await tap(labels.back);
++
++    const noteText = '  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  ';
++    await startDraft('Record a change (optional)', noteText, { observed: '2026-10-01' });
++    const saveGeometry = await keyboard(labels.save, height);
++    await b.waitForText(client, labels.saved); await capture(id + '-note-saved');
++    const noteSaved = await canonicalReceipt(id + '-note-draft');
++    assertHistory(noteSaved, initial, 0);
++    assert.equal(noteSaved.drafts.drafts.length, 1);
++    assert.equal(noteSaved.drafts.drafts[0].fields.text, noteText);
++    const noteId = noteSaved.drafts.drafts[0].fields.eventId;
++    const noteCiphertext = await inspectEncryptedDraft();
++    await fill('Your factual note', 'Unsaved later synthetic note edit.');
++    await b.waitForText(client, 'Unsaved changes'); await capture(id + '-note-unsaved');
++    await reloadInventory(); await b.waitForText(client, 'Original wording retained.');
++    assert(!await b.evaluate(client, `document.body.innerText.includes('Unsaved later synthetic note edit.')`));
++    await tap(labels.resume); await b.waitForInputValue(client, 'Your factual note', noteText);
++    await b.waitForInputValue(client, 'Observed local date', '2026-10-01');
++    await assertFreshReviewRequired(); await capture(id + '-note-resumed-original');
++    assertHistory(await canonicalReceipt(id + '-note-before-confirm'), initial, 0);
++    const confirmGeometry = await confirm(height);
++    const noted = await canonicalReceipt(id + '-note-recorded');
++    assertHistory(noted, initial, 1);
++    assert.equal(noted.snapshot.events[0].id, noteId);
++    assert.equal(noted.snapshot.events[0].text, noteText);
++    assert.equal(noted.drafts.drafts.length, 0, 'Confirmed exact draft must retire');
++    const original = noted.snapshot.events[0];
++    await client.send('Page.reload'); await openPanel();
++    assertHistory(await canonicalReceipt(id + '-note-reloaded-once'), initial, 1);
++
++    // A separate explicit note advances history while a correction stays saved.
++    // Recovery must preserve its target and require an explicit refresh/review.
++    const correctionText = 'Synthetic21 correction: I used less cleanser that day.';
++    await startDraft('Correct entry 1', correctionText);
++    await tap(labels.save); await b.waitForText(client, labels.saved);
++    const correctionSaved = await canonicalReceipt(id + '-correction-draft');
++    const correctionDraft = correctionSaved.drafts.drafts[0];
++    assert.equal(correctionDraft.fields.targetEventId, original.id);
++    assert.equal(correctionDraft.fields.targetContentHash, original.contentHash);
++    await tap('Cancel draft');
++    await startDraft('Record a change (optional)', 'Synthetic21 later factual note reviewed separately.');
++    await confirm(height);
++    assertHistory(await canonicalReceipt(id + '-intervening-note'), initial, 2);
++    await reloadInventory(); await b.waitForText(client, correctionText); await capture(id + '-correction-inventory');
++    await tap(labels.resume); await b.waitForInputValue(client, 'Your factual note', correctionText);
++    await b.waitForText(client, 'History changed since this draft was saved.');
++    assert(!await b.evaluate(client, b.enabledControlExpression('Review this change')));
++    await assertFreshReviewRequired(); await capture(id + '-history-conflict-kept');
++    const conflicted = await canonicalReceipt(id + '-history-conflict');
++    assertHistory(conflicted, initial, 2);
++    assert.deepEqual(conflicted.drafts.drafts[0], correctionDraft, 'Reopening must not silently refresh a saved draft');
++    await keyboard('Refresh changes', height);
++    await b.waitForText(client, 'Draft kept. Current history was read. Review your change again');
++    await assertFreshReviewRequired();
++    const refreshed = await canonicalReceipt(id + '-explicit-refresh');
++    assert.equal(refreshed.drafts.drafts[0].fields.targetEventId, original.id);
++    assert.equal(refreshed.drafts.drafts[0].fields.targetContentHash, original.contentHash);
++    assert.equal(refreshed.drafts.drafts[0].fields.text, correctionText);
++    await confirm(height);
++    const corrected = await canonicalReceipt(id + '-correction-recorded');
++    assertHistory(corrected, initial, 3);
++    assert.deepEqual(corrected.snapshot.events[0], original);
++    assert.equal(corrected.snapshot.events[2].targetEventId, original.id);
++    assert.equal(corrected.snapshot.events[2].id, correctionDraft.fields.eventId);
++    assert.equal(corrected.snapshot.events[2].text, correctionText);
++    assert.equal(corrected.drafts.drafts.length, 0);
++
++    const reason = 'Synthetic21 retraction reason: I no longer stand by that correction.';
++    await startDraft('Retract entry 3', reason, { category: null });
++    await tap(labels.save); await b.waitForText(client, labels.saved);
++    const retractionSaved = await canonicalReceipt(id + '-retraction-draft');
++    const retractionDraft = retractionSaved.drafts.drafts[0];
++    assert.equal(retractionDraft.fields.targetEventId, corrected.snapshot.events[2].id);
++    assert.equal(retractionDraft.fields.targetContentHash, corrected.snapshot.events[2].contentHash);
++    await reloadInventory(); await tap(labels.resume);
++    await b.waitForInputValue(client, 'Retraction reason', reason);
++    await b.waitForInputValue(client, 'Observed local date', '2026-10-01');
++    await assertFreshReviewRequired(); await capture(id + '-retraction-resumed-original');
++    assertHistory(await canonicalReceipt(id + '-retraction-before-confirm'), initial, 3);
++    await confirm(height);
++    const retracted = await canonicalReceipt(id + '-retraction-recorded');
++    assertHistory(retracted, initial, 4);
++    assert.equal(retracted.snapshot.events[3].id, retractionDraft.fields.eventId);
++    assert.equal(retracted.snapshot.events[3].targetEventId, corrected.snapshot.events[2].id);
++    assert.equal(retracted.snapshot.events[3].category, 'personal_note');
++    assert.equal(retracted.snapshot.events[3].text, reason);
++    assert.deepEqual(retracted.snapshot.events.slice(0, 3), corrected.snapshot.events);
++    assert.equal(retracted.drafts.drafts.length, 0);
++    await capture(id + '-retained-correction-retraction');
++
++    const laterCorrection = 'Synthetic21 deliberate correction of the earlier retained original.';
++    await startDraft('Correct entry 1', laterCorrection);
++    await tap(labels.save); await b.waitForText(client, labels.saved);
++    await reloadInventory(); await tap(labels.resume);
++    await b.waitForInputValue(client, 'Your factual note', laterCorrection);
++    await assertFreshReviewRequired(); await confirm(height);
++    const earlierCorrected = await canonicalReceipt(id + '-earlier-retained-correction');
++    assertHistory(earlierCorrected, initial, 5);
++    assert.equal(earlierCorrected.snapshot.events[4].targetEventId, original.id);
++    assert.deepEqual(earlierCorrected.snapshot.events.slice(0, 4), retracted.snapshot.events);
++    assert.equal(earlierCorrected.drafts.drafts.length, 0);
++
++    await startDraft('Record a change (optional)', 'Synthetic21 draft selected for explicit discard.');
++    await tap(labels.save); await b.waitForText(client, labels.saved); await tap('Cancel draft');
++    await inventory(); await tap(labels.discard); await tap(labels.keep);
++    await tap(labels.discard); const discardGeometry = await keyboard(labels.confirmDiscard, height);
++    await b.waitForText(client, labels.empty); await capture(id + '-draft-discarded');
++    assertHistory(await canonicalReceipt(id + '-after-discard'), initial, 5);
++
++    await b.evaluate(client, `(()=>{globalThis.__changeOriginalGet=Storage.prototype.getItem;Storage.prototype.getItem=function(key){if(key===${JSON.stringify(draftKey)})throw new Error('SYNTHETIC_SOURCE_UNAVAILABLE');return globalThis.__changeOriginalGet.call(this,key)}})()`);
++    await tap(labels.refresh); await b.waitForText(client, 'Saved change draft storage is unavailable or unreadable.');
++    assert(!await b.evaluate(client, `document.body.innerText.includes(${JSON.stringify(labels.empty)})`));
++    await capture(id + '-unavailable-storage');
++    await b.evaluate(client, `Storage.prototype.getItem=globalThis.__changeOriginalGet;delete globalThis.__changeOriginalGet`);
++    await keyboard(labels.refresh, height); await b.waitForText(client, labels.empty);
++    const unsupported = await b.evaluate(client, `(()=>{const key=${JSON.stringify(draftKey)};globalThis.__changeOriginalBytes=localStorage.getItem(key);const row=JSON.parse(globalThis.__changeOriginalBytes);row.version='xchacha20poly1305:purpose-bound:v999';const value=JSON.stringify(row);localStorage.setItem(key,value);return value})()`);
++    await tap(labels.refresh); await b.waitForText(client, 'Saved change data is unsupported or invalid.');
++    assert.equal(await b.evaluate(client, `localStorage.getItem(${JSON.stringify(draftKey)})`), unsupported);
++    assert(!await b.evaluate(client, `document.body.innerText.includes(${JSON.stringify(labels.empty)})`));
++    await capture(id + '-unsupported-storage');
++    await b.evaluate(client, `localStorage.setItem(${JSON.stringify(draftKey)},globalThis.__changeOriginalBytes);delete globalThis.__changeOriginalBytes`);
++    await tap(labels.refresh); await b.waitForText(client, labels.empty);
++    await capture(id + '-storage-recovered');
++    const final = await canonicalReceipt(id + '-final');
++    assertHistory(final, initial, 5);
++    assert.deepEqual(final.snapshot.events, earlierCorrected.snapshot.events);
++    const requests = client.events.filter(event => event.method === 'Network.requestWillBeSent').map(event => event.params.request);
++    for (const request of requests) for (const privateText of [noteText, correctionText, reason, laterCorrection]) {
++      assert(!String(request.postData ?? '').includes(privateText) && !request.url.includes(encodeURIComponent(privateText)), 'Optional text must not enter network requests');
++    }
++    const network = requests.map(request => ({ method: request.method, url: request.url.split('?')[0], hasBody: Boolean(request.postData) }));
++    json(id + '-network.json', network);
++    assert(network.every(request => new URL(request.url).origin === baseUrl));
++    assert.equal(receipt.blockedRemoteRequests.length, 0);
++    json(id + '-console.json', client.events.filter(event => ['Runtime.consoleAPICalled', 'Runtime.exceptionThrown', 'Log.entryAdded'].includes(event.method)));
++    receipt.viewports.push({ width, height, explicitAgeConsent: true, noteCiphertext, originalTextRecovered: true,
++      unsavedEditNotRestored: true, notesCorrectionsRetractionsRecovered: true, explicitRefreshAndReviewRequired: true,
++      exactTargetsPreserved: true, earlierRetainedEventCorrectionAllowed: true, noDuplicateEventId: true,
++      originalCompletionAndActualRoutineUnchanged: true, savedDraftsRetiredAfterCanonicalReadback: true,
++      discardReviewCancelConfirm: true, unavailableAndUnsupportedNeverEmpty: true, saveGeometry, confirmGeometry, discardGeometry });
++    await closePage(client); client = undefined;
++  }
++  receipt.pass = true;
++  step('PASS optional change recovery journeys', '375x667, 390x844, 430x932');
++} catch (error) {
++  receipt.error = error instanceof Error ? error.message : String(error);
++  if (client) await capture('FAILURE').catch(() => {});
++  throw error;
++} finally {
++  receipt.endedAt = new Date().toISOString(); json('summary.json', receipt); json('steps.json', steps);
++  client?.close(); secondary?.close();
++  await b.stopProcessBestEffort(browser); await b.stopProcessBestEffort(server);
++}
+diff --git a/scripts/e2e/professional-reconciliation.mjs b/scripts/e2e/professional-reconciliation.mjs
+index 10cd38566a326d653926ae82c35b0ec4f3f648fc..df33a9354b6c9f8b837e5db1e562091cefd8375c 100644
+--- a/scripts/e2e/professional-reconciliation.mjs
++++ b/scripts/e2e/professional-reconciliation.mjs
+@@ -63,8 +63,9 @@ const authority={session:{subjectId:'synthetic-staff',ownerId:null,workspaceId:'
+  health:{ownerId:'client-a',epoch:1,consentReceiptId:'health-a',active:true,deletionPending:false},billing:'write_allowed'};
+ const eventBody={id:'11111111-1111-4111-8111-111111111111',version:1,ownerId:'client-a',workspaceId:'practice-a',grantVersion:1,planHash:'b'.repeat(64),kind:'product_started',detail:'SYNTHETIC selected owner report; no actual person or care.'};
+ const event={...eventBody,contentHash:await recordHash(eventBody)};let log=[];let mode='normal';let held=null;const sent=[];const overflow=[];
++let ownerResponses=[];
+ const model=()=>({sourceHash:'a'.repeat(64),writeAvailable:mode!=='readonly',grantVersion:1,grantEpoch:1,events:mode==='empty'?[]:[event],
+- plans:mode==='empty'?[]:[{planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,sequence:1}],acknowledgements:[],rows:mode==='empty'?[]:log});
++ plans:mode==='empty'?[]:[{planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,sequence:1}],acknowledgements:[],responses:mode==='empty'?[]:ownerResponses,rows:mode==='empty'?[]:log});
+ const scopeText=()=>cdp.value(`document.querySelector('#reconciliation').innerText`);
+ const checkOverflow=async()=>{const ok=await cdp.value('document.documentElement.scrollWidth <= innerWidth');overflow.push(ok);assert(ok,'horizontal overflow');};
+ async function fill(label,value){const point=await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label='+${JSON.stringify(JSON.stringify(label))}+']');if(!n)return null;n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);assert(point,`Missing ${label}`);await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await cdp.send('Input.insertText',{text:value});}
+@@ -97,7 +98,13 @@ try{
+  await cdp.value(`globalThis.__retiredQueueConfirm=[...document.querySelectorAll('#reconciliation button')].find(b=>b.textContent==='Confirm review record').onclick`);await click('Cancel review');const count=sent.length;await cdp.value('__retiredQueueConfirm()');await delay(100);assert(sent.length===count,'Canceled callback submitted');
+  await click('Review owner record 1');mode='unknown';await click('Confirm review record');await text('Review save outcome unknown');const original=JSON.stringify(sent.at(-1));await click('Retry identical review save');await text('Review revision saved');assert(JSON.stringify(sent.at(-1))===original&&log.length===1,'Unknown retry duplicated');
+  await click('Open case 1 history');await text(event.detail);await fill('Reason for this decision','SYNTHETIC exact event reviewed');await choose('in_review');await click('Review decision before saving');await screenshot('decision-review');await click('Confirm review record');await text('Review revision saved');assert(log.length===2,'Decision append');
+- await click('Open case 1 history');await choose('resolved');await fill('Reason for this decision','SYNTHETIC factual resolution');await fill('Communication already provided (record only)','SYNTHETIC prior contact recorded; no message sent');await click('Review decision before saving');await click('Confirm review record');await text('Review revision saved');assert(log.length===3&&log.at(-1).state==='resolved','Closure');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await screenshot('history');await checkOverflow();await click('Back to queue; discard draft');
++ await click('Open case 1 history');await choose('awaiting_client_ack');await fill('Reason for this decision','SYNTHETIC intended version needs owner response');await filter('Changed intended version',event.planHash);
++ await click('Review decision before saving');await text('No explicit response recorded');await click('Confirm review record');await text('Review revision saved');
++ ownerResponses=[{id:'33333333-3333-4333-8333-333333333333',contentHash:'c'.repeat(64),planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,kind:'declined',recordedAt:now}];
++ await click('Load current review records');await text('Open case 1 history');await click('Open case 1 history');await text('Latest recorded owner response to intended version 1: Declined');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Recorded owner acknowledgement"]').options.length`)===1,'Decline offered as acknowledgement');await screenshot('owner-declined');await checkOverflow();
++ await choose('resolved');await fill('Reason for this decision','SYNTHETIC factual resolution');await fill('Communication already provided (record only)','SYNTHETIC prior contact recorded; no message sent');await fill('Reason for closing without exact acknowledgement','SYNTHETIC exact version declined; no actual use inferred');
++ await click('Review decision before saving');await text('Latest recorded owner response to intended version 1: Declined');await click('Confirm review record');await text('Review revision saved');assert(log.length===4&&log.at(-1).state==='resolved','Closure');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await screenshot('history');await checkOverflow();await click('Back to queue; discard draft');
+  const beforeFilters=sent.length;await filter('Filter cases by recorded state','open');await text('No current cases match these filters.');
+  assert(!(await scopeText()).includes('Open case 1 history'),'Closed history misclassified as open');await screenshot('filter-open-empty');
+  await filter('Filter cases by recorded state','resolved');await text('Open case 1 history');

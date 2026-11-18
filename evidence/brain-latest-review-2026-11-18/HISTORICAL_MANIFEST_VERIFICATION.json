@@ -1,0 +1,63 @@
+[
+  {
+    "campaign": "20",
+    "manifest": "No SHA256SUMS.txt; full file snapshot hashed by this handoff",
+    "entries": null
+  },
+  {
+    "campaign": "21",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 333,
+    "errors": [],
+    "unlisted": []
+  },
+  {
+    "campaign": "22",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 24,
+    "errors": [],
+    "unlisted": []
+  },
+  {
+    "campaign": "23",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 36,
+    "errors": [],
+    "unlisted": []
+  },
+  {
+    "campaign": "24",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 11,
+    "errors": [],
+    "unlisted": []
+  },
+  {
+    "campaign": "25",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 240,
+    "errors": [],
+    "unlisted": []
+  },
+  {
+    "campaign": "26",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 24,
+    "errors": [],
+    "unlisted": []
+  },
+  {
+    "campaign": "27",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 22,
+    "errors": [],
+    "unlisted": []
+  },
+  {
+    "campaign": "27R",
+    "manifest": "SHA256SUMS.txt",
+    "entries": 27,
+    "errors": [],
+    "unlisted": []
+  }
+]

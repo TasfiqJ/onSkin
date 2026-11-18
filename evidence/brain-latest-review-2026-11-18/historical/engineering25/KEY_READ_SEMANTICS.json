@@ -1,0 +1,38 @@
+{
+  "scope": "Static source review and ordinary post-fix in-memory adapter invariants; no native qualification",
+  "readOnlyResolution": {
+    "web": "Read the existing AsyncStorage key only; preserve value or null.",
+    "nativeSecureOnly": "Read the secure key and fallback; preserve the existing secure value without fallback removal.",
+    "nativeIdenticalLocations": "Return the same existing key without cleanup.",
+    "nativeLegacyOnly": "Return the existing fallback without migration.",
+    "nativeUnavailableOrReadFailure": "Preserve existing fallback compatibility; refuse if no fallback can be read.",
+    "conflictingLocations": "Refuse without choosing, replacing or deleting either key.",
+    "missing": "Return null at resolution; encrypted readers reject missing key without creation.",
+    "invalid": "Existing privateKV hex/key-length validation is unchanged and remains read-only."
+  },
+  "getExistingContentKeyInventory": [
+    "assertRetainedContentKey: read, validation, no-op, write readback and rollback continuity",
+    "getOrCreateContentKey: initial and rechecked lookup; creation remains restricted to actual authorized writes with orphan safeguards",
+    "getPrivateItem: individual reads",
+    "readPrivateItems: batch and rights-export reads",
+    "validatePrivateItemsWithoutRetainingPlaintext: whole-envelope validation",
+    "updatePrivateItemWithGuard: read/decrypt preparation",
+    "updatePrivateItemWithSources: authority-first source preparation"
+  ],
+  "explicitMaintenance": {
+    "api": "maintainStoredPrivateKVContentKey(expected, assertCurrent)",
+    "entry": "Only genuine changes in commitPrivateMutation46 or updatePrivateItemWithSources, after unchanged exits and before durable intent/data mutation",
+    "continuity": "Compare exact existing selected key; preserve accepted hexadecimal casing in privateKV wrapper; reread guarded native/fallback values before mutation and after migration readback before cleanup.",
+    "originalAuthority": "Original account/write/UI preparation guards are checked around asynchronous probes and immediately before adapter mutation. No successor capability is acquired.",
+    "legacyMigration": "Copy only the already-selected existing fallback after a definitive native miss; preserve it on unavailable/unreadable/omitted/failed native write.",
+    "cleanup": "Remove only an identical fallback after secure readback; preserve conflicts and propagate refusal.",
+    "creation": "No new key is created by maintenance. Existing authorized creation/orphan safeguards remain unchanged."
+  },
+  "unchangedBoundaries": [
+    "Original source ordering, sorted reservations, authority-before-payload validation and source comparisons",
+    "Retained-key validation, mutation generations and quarantine",
+    "Durable intents, exact canonical readback, ambiguous-write compensation and deletion priority",
+    "Direct remove, multi-remove, widget clear, content-key clear and rollback remain separate unchanged paths"
+  ],
+  "legacyRepresentationDistinction": "The existing explicit generic updater still treats unchanged legacy plaintext as a representation/encryption migration. This is an actual write, not an authenticated no-op. Current-envelope/null no-ops return before maintenance; source transactions reject unauthenticated legacy data. No claim that every plaintext update callback is read-only is made."
+}

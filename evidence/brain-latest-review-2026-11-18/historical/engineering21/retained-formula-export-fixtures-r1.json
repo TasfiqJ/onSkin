@@ -1,0 +1,23 @@
+{
+  "label": "retained-formula-export-fixtures-r1",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/formulaAtUse.test.ts",
+    "src/features/settings/exportRetainedHistory14.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T17:46:11.182238+00:00",
+  "head": "4dce84e20a71f19c60c16c7682e683bb512363ed",
+  "tree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+  "status": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/app/shelf/[id].tsx\n M apps/mobile/src/app/shelf/_layout.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts\n M apps/mobile/src/features/routine/SavedRoutineHistory.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/mobile/src/features/routine/formulaAtUse.test.ts\n M apps/mobile/src/features/routine/planHistory45Encrypted.test.ts\n M apps/mobile/src/features/routine/planSourceFence44.test.ts\n M apps/mobile/src/features/settings/exportRetainedHistory14.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/IntakeContext.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/destructiveCommit28TestPorts.ts\n M apps/mobile/src/features/shelf/firstValue25TestPorts.ts\n M apps/mobile/src/features/shelf/intakeRecovery.campaign25.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/openingClock.campaign25.test.ts\n M apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts\n M apps/mobile/src/features/shelf/retainedSafety.integration.test.ts\n M apps/mobile/src/features/shelf/store.test.ts\n M apps/mobile/src/features/shelf/store.ts\n M apps/mobile/src/features/today/OptionalChangePanel41.test.tsx\n M apps/mobile/src/features/today/OptionalChangePanel41.tsx\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/shelf/intake-drafts.tsx\n?? apps/mobile/src/features/shelf/manualIntakeDraftCodec.ts\n?? apps/mobile/src/features/shelf/manualIntakeDraftStore.ts\n?? apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n?? apps/mobile/src/features/shelf/manualIntakeDrafts.test.ts\n?? apps/mobile/src/features/shelf/manualIntakeRecovery.ts\n?? apps/mobile/src/features/shelf/manualIntakeSubmission.ts\n?? apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx\n?? apps/mobile/src/features/today/optionalChangeDraftCodec.ts\n?? apps/mobile/src/features/today/optionalChangeDraftStore.ts\n?? apps/mobile/src/features/today/optionalChangeDraftUI21.test.ts\n?? apps/mobile/src/features/today/optionalChangeDrafts.test.ts\n?? scripts/e2e/manual-intake-drafts21.mjs\n?? scripts/e2e/optional-change-drafts21.mjs",
+  "workingDiffSha256": "79dce63b98a6c6b6aa593e26c4052423afdc40b8500e894c76eb3eb9b012b11f",
+  "exit": 0,
+  "seconds": 2.796,
+  "end": "2026-11-17T17:46:14.282337+00:00",
+  "logSha256": "c636d87b67cb70d3346437b054ebb68da596b7fd41a088bab7ddd774b1c2894e"
+}

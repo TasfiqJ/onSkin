@@ -1,0 +1,45 @@
+{
+  "startedAt": "2026-11-17T12:17:01.163Z",
+  "surface": "Actual local Expo web in Edge; synthetic local owner, no providers",
+  "userDataDir": "[LOCAL_USER_HOME]\\AppData\\Local\\Temp\\[TEMP_BROWSER_PROFILE]",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "explicitAgeConsent": true,
+      "encryptedDraftReadback": true,
+      "unsavedEditNotRestored": true,
+      "explicitResumeReviewConfirm": true,
+      "secondTabRefusedBeforePrivateReads": true,
+      "takeoverAfterOriginalClosed": true,
+      "discardReviewCancelConfirm": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 293,
+        "h": 56,
+        "y": 333,
+        "hit": true
+      }
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "explicitAgeConsent": true,
+      "encryptedDraftReadback": true,
+      "unsavedEditNotRestored": true,
+      "explicitResumeReviewConfirm": true,
+      "secondTabRefusedBeforePrivateReads": true,
+      "takeoverAfterOriginalClosed": true,
+      "discardReviewCancelConfirm": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 348,
+        "h": 56,
+        "y": 466,
+        "hit": true
+      }
+    }
+  ],
+  "pass": true,
+  "endedAt": "2026-11-17T12:18:33.625Z"
+}

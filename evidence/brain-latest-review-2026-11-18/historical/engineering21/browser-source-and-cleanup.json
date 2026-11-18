@@ -1,0 +1,136 @@
+[
+  {
+    "run": "manual-browser-r4",
+    "pass": true,
+    "checkedAt": "2026-11-17T18:04:31.1561389Z",
+    "sourceChecks": [
+      {
+        "file": "scripts/e2e/manual-intake-drafts21.mjs",
+        "recordedSha256": "5e3cf84f9dca8bd229d6f13c2297f2b8064ad3d3f294a21f9b86d7c0a09246fa",
+        "currentSha256": "5e3cf84f9dca8bd229d6f13c2297f2b8064ad3d3f294a21f9b86d7c0a09246fa",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/app/shelf/manual.tsx",
+        "recordedSha256": "bf1a2c528e05125d4c2eac482a3b5fa430f11fc4299637341f5555b2ce7e6f5f",
+        "currentSha256": "bf1a2c528e05125d4c2eac482a3b5fa430f11fc4299637341f5555b2ce7e6f5f",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/app/shelf/opened.tsx",
+        "recordedSha256": "6bccb5643a0e5134e4eb1604ce13899c04716f408153abc552639337bba5c8a2",
+        "currentSha256": "6bccb5643a0e5134e4eb1604ce13899c04716f408153abc552639337bba5c8a2",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/app/shelf/intake-drafts.tsx",
+        "recordedSha256": "a9746fa3758cca0e0426155c2312f81412cdf0c65c5d5ba03035e302470024ab",
+        "currentSha256": "a9746fa3758cca0e0426155c2312f81412cdf0c65c5d5ba03035e302470024ab",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/shelf/IntakeContext.tsx",
+        "recordedSha256": "ea11fb111e0fd709c42ee844c56f18274abbddd7533dc140a91b16338a61d93e",
+        "currentSha256": "ea11fb111e0fd709c42ee844c56f18274abbddd7533dc140a91b16338a61d93e",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/shelf/manualIntakeDraftCodec.ts",
+        "recordedSha256": "53ef816b0fdf7462f463b09c5786b69770efb4e0da0a4723ef8072739a753fe9",
+        "currentSha256": "53ef816b0fdf7462f463b09c5786b69770efb4e0da0a4723ef8072739a753fe9",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/shelf/manualIntakeDraftStore.ts",
+        "recordedSha256": "91d21c5ef7d69a1a29b24da8d3d417c6627087453131135eb3edf3349217c2ad",
+        "currentSha256": "91d21c5ef7d69a1a29b24da8d3d417c6627087453131135eb3edf3349217c2ad",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/shelf/manualIntakeSubmission.ts",
+        "recordedSha256": "2159053120827efaf0ca5be9073b692cf2308584dc53a43e89e0b8b5cb16acf3",
+        "currentSha256": "2159053120827efaf0ca5be9073b692cf2308584dc53a43e89e0b8b5cb16acf3",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/shelf/store.ts",
+        "recordedSha256": "23078dbc2637ed8e0377b506451e52a8eace8d487739b72e8aa8322e62bbf073",
+        "currentSha256": "23078dbc2637ed8e0377b506451e52a8eace8d487739b72e8aa8322e62bbf073",
+        "matches": true
+      }
+    ],
+    "ownedProcesses": {
+      "serverPid": 82656,
+      "browserPid": 62028,
+      "appPort": 8500,
+      "debugPort": 9500
+    },
+    "survivingOwnedProcesses": [],
+    "screenshotCount": 42,
+    "blockedRemoteBrowserRequests": 0
+  },
+  {
+    "run": "optional-browser-r4",
+    "pass": true,
+    "checkedAt": "2026-11-17T18:04:31.1873531Z",
+    "sourceChecks": [
+      {
+        "file": "scripts/e2e/optional-change-drafts21.mjs",
+        "recordedSha256": "1abe0c4360d2a4a1718bfc918d7ed41d5f483cdebb331311b79b58684beeb81d",
+        "currentSha256": "1abe0c4360d2a4a1718bfc918d7ed41d5f483cdebb331311b79b58684beeb81d",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/today/OptionalChangePanel41.tsx",
+        "recordedSha256": "11b1d1492fe4677c5fbc5da27f6bdf19dd132ae8b121201641ae8d9711f7855c",
+        "currentSha256": "11b1d1492fe4677c5fbc5da27f6bdf19dd132ae8b121201641ae8d9711f7855c",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx",
+        "recordedSha256": "116fd8043b497d279548ae677ffaddb82e321cf08344b43891468cf4981d540d",
+        "currentSha256": "116fd8043b497d279548ae677ffaddb82e321cf08344b43891468cf4981d540d",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/today/optionalChangeDraftCodec.ts",
+        "recordedSha256": "03b4ff9153944d2d95e0633767806c87188e5fe7fc1f7d893e851e00f9ccd04f",
+        "currentSha256": "03b4ff9153944d2d95e0633767806c87188e5fe7fc1f7d893e851e00f9ccd04f",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/today/optionalChangeDraftStore.ts",
+        "recordedSha256": "f1a82665b9c49613fda2574ff2d77198bf2a661fbd60f1336e977f608c92bcbf",
+        "currentSha256": "f1a82665b9c49613fda2574ff2d77198bf2a661fbd60f1336e977f608c92bcbf",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/today/completionsStore.ts",
+        "recordedSha256": "a3d9351c9d548f67c45feac2bf5174c2392ddb898418364ca8f75d9bde95206b",
+        "currentSha256": "a3d9351c9d548f67c45feac2bf5174c2392ddb898418364ca8f75d9bde95206b",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/today/optionalChange41.ts",
+        "recordedSha256": "92b5b4ed021bbb4e6452d6087ca78ba4dcbe2d09cdf4473fd204d4bf0243752e",
+        "currentSha256": "92b5b4ed021bbb4e6452d6087ca78ba4dcbe2d09cdf4473fd204d4bf0243752e",
+        "matches": true
+      },
+      {
+        "file": "apps/mobile/src/features/today/optionalChangeJournal41.ts",
+        "recordedSha256": "7bfc842dd3a0024ad16c53fa5cffa04c5766ecb997e2df3e94cfe726f4bfdbf1",
+        "currentSha256": "7bfc842dd3a0024ad16c53fa5cffa04c5766ecb997e2df3e94cfe726f4bfdbf1",
+        "matches": true
+      }
+    ],
+    "ownedProcesses": {
+      "serverPid": 83880,
+      "browserPid": 38112,
+      "appPort": 8500,
+      "debugPort": 9500
+    },
+    "survivingOwnedProcesses": [],
+    "screenshotCount": 42,
+    "blockedRemoteBrowserRequests": 0
+  }
+]

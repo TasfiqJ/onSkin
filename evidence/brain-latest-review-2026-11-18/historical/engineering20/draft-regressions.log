@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/bottleDrafts.test.ts src/features/shelf/formulaHistoryJourney.test.ts src/features/settings/localDeviceExport.test.ts src/features/settings/localPrivateDataKeys.test.ts src/features/settings/localPrivateData.test.ts src/features/healthConsent/selectiveCleanup.test.ts src/lib/storage/privateKV.test.ts src/lib/storage/privateKVSourceTransaction.test.ts src/features/photos/photoDeleteJournal.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  7 passed (7)
+      Tests  166 passed (166)
+   Start at  07:00:13
+   Duration  7.05s (transform 3.68s, setup 0ms, import 5.83s, tests 6.16s, environment 1ms)
+

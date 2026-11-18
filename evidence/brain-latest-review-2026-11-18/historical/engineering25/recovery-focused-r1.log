@@ -1,0 +1,229 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/retainedRecovery/localRecovery.campaign05.test.ts src/features/retainedRecovery/localRecoveryDrafts25.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > coalesces 'Manual intake drafts' retries and recovers only through explicit Check again
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > coalesces 'Optional change drafts' retries and recovers only through explicit Check again
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > withdrawal retires delayed 'Manual intake drafts' results and captured controls
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > withdrawal retires delayed 'Optional change drafts' results and captured controls
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Manual intake drafts' callbacks through 'A-B'
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Manual intake drafts' callbacks through 'A-B-A'
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Manual intake drafts' callbacks through 'same-owner'
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Optional change drafts' callbacks through 'A-B'
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Optional change drafts' callbacks through 'A-B-A'
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Optional change drafts' callbacks through 'same-owner'
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecoveryDrafts25.test.ts > re-entry and foreground refresh the two draft domains instead of retaining earlier statuses
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts (26 tests | 26 failed) 262ms
+   × shows all six empty domains through real loaders without creating keys, records or intents 12ms
+   × shows only generic saved evidence and leaves every original encrypted record unchanged 21ms
+   × keeps every other status independent when 'Shelf' is unreadable 8ms
+   × keeps every other status independent when 'Today check-offs' is unreadable 6ms
+   × keeps every other status independent when 'Reminder choices' is unreadable 6ms
+   × keeps every other status independent when 'Photo cleanup' is unreadable 5ms
+   × keeps every other status independent when 'Manual intake drafts' is unreadable 6ms
+   × keeps every other status independent when 'Optional change drafts' is unreadable 4ms
+   × keeps 'Manual intake drafts' invalid/unsupported refusal generic without altering saved bytes 3ms
+   × keeps 'Optional change drafts' invalid/unsupported refusal generic without altering saved bytes 3ms
+   × coalesces 'Manual intake drafts' retries and recovers only through explicit Check again 25ms
+   × coalesces 'Optional change drafts' retries and recovers only through explicit Check again 11ms
+   × offers existing inventory navigation with accessible live status and 48px controls, without writes 3ms
+   × refuses $kind before either draft payload is read 3ms
+   × refuses $kind before either draft payload is read 3ms
+   × refuses $kind before either draft payload is read 3ms
+   × refuses $kind before either draft payload is read 2ms
+   × withdrawal retires delayed 'Manual intake drafts' results and captured controls 10ms
+   × withdrawal retires delayed 'Optional change drafts' results and captured controls 11ms
+   × retires original 'Manual intake drafts' callbacks through 'A-B' 19ms
+   × retires original 'Manual intake drafts' callbacks through 'A-B-A' 16ms
+   × retires original 'Manual intake drafts' callbacks through 'same-owner' 18ms
+   × retires original 'Optional change drafts' callbacks through 'A-B' 17ms
+   × retires original 'Optional change drafts' callbacks through 'A-B-A' 18ms
+   × retires original 'Optional change drafts' callbacks through 'same-owner' 19ms
+   × re-entry and foreground refresh the two draft domains instead of retaining earlier statuses 9ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 26 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > shows all six empty domains through real loaders without creating keys, records or intents
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:122:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > shows only generic saved evidence and leaves every original encrypted record unchanged
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:129:61
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps every other status independent when 'Shelf' is unreadable
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps every other status independent when 'Today check-offs' is unreadable
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps every other status independent when 'Reminder choices' is unreadable
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps every other status independent when 'Photo cleanup' is unreadable
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps every other status independent when 'Manual intake drafts' is unreadable
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps every other status independent when 'Optional change drafts' is unreadable
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:145:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps 'Manual intake drafts' invalid/unsupported refusal generic without altering saved bytes
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > keeps 'Optional change drafts' invalid/unsupported refusal generic without altering saved bytes
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:157:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > coalesces 'Manual intake drafts' retries and recovers only through explicit Check again
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > coalesces 'Optional change drafts' retries and recovers only through explicit Check again
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:166:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > offers existing inventory navigation with accessible live status and 48px controls, without writes
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:178:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > refuses $kind before either draft payload is read
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > refuses $kind before either draft payload is read
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > refuses $kind before either draft payload is read
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > refuses $kind before either draft payload is read
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:205:51
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > withdrawal retires delayed 'Manual intake drafts' results and captured controls
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > withdrawal retires delayed 'Optional change drafts' results and captured controls
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:217:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Manual intake drafts' callbacks through 'A-B'
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Manual intake drafts' callbacks through 'A-B-A'
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Manual intake drafts' callbacks through 'same-owner'
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Optional change drafts' callbacks through 'A-B'
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Optional change drafts' callbacks through 'A-B-A'
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > retires original 'Optional change drafts' callbacks through 'same-owner'
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:238:53
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/26]⎯
+
+ FAIL  src/features/retainedRecovery/localRecoveryDrafts25.test.ts > re-entry and foreground refresh the two draft domains instead of retaining earlier statuses
+Error: The property "setItemAsync" is not defined on the object.
+ ❯ observeWrites src/features/retainedRecovery/localRecoveryDrafts25.test.ts:79:8
+     77| function observeWrites() {
+     78|   writes = [vi.spyOn(AsyncStorage, 'setItem'), vi.spyOn(AsyncStorage, …
+     79|     vi.spyOn(SecureStore, 'setItemAsync'), vi.spyOn(SecureStore, 'dele…
+       |        ^
+     80|   writes.forEach(spy => spy.mockClear());
+     81| }
+ ❯ src/features/retainedRecovery/localRecoveryDrafts25.test.ts:248:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/26]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  26 failed | 17 passed (43)
+   Start at  19:04:04
+   Duration  1.73s (transform 1.24s, setup 0ms, import 1.97s, tests 736ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/retainedRecovery/localRecovery.campaign05.test.ts src/features/retainedRecovery/localRecoveryDrafts25.test.ts

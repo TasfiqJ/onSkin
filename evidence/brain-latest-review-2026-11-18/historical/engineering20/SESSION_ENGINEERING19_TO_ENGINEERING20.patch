@@ -1,0 +1,1972 @@
+diff --git a/apps/mobile/src/app/(tabs)/shelf.tsx b/apps/mobile/src/app/(tabs)/shelf.tsx
+index aa98f33ce422edbf69e8cb44066f574ed2024a7e..9f99770cc1d3d481debe3001b4467c3314f1ec69 100644
+--- a/apps/mobile/src/app/(tabs)/shelf.tsx
++++ b/apps/mobile/src/app/(tabs)/shelf.tsx
+@@ -529,6 +529,7 @@ function ShelfScreenContent() {
+ 
+   return (
+     <Screen edges={['top']}>
++      <Button variant="ghost" label="Saved bottle drafts" onPress={() => router.push('/shelf/drafts')} />
+       {showLoading ? (
+         <SkeletonShelf compactFilterLabels={compactFilterLabels} />
+       ) : isEmpty ? (
+diff --git a/apps/mobile/src/app/_layout.tsx b/apps/mobile/src/app/_layout.tsx
+index 23712e37f07a8b7d3b575c966f93ce59f17b1ccb..97dff252e0f79a8bbc4a6908fe47319c6ad36fa2 100644
+--- a/apps/mobile/src/app/_layout.tsx
++++ b/apps/mobile/src/app/_layout.tsx
+@@ -3,7 +3,8 @@ import '../global.css';
+ import { Stack } from 'expo-router';
+ import * as SplashScreen from 'expo-splash-screen';
+ import { StatusBar } from 'expo-status-bar';
+-import { lazy, Suspense, useEffect, useState } from 'react';
++import { lazy, Suspense, useEffect, useState, useSyncExternalStore } from 'react';
++import { Platform, Pressable, Text, View } from 'react-native';
+ import { GestureHandlerRootView } from 'react-native-gesture-handler';
+ import { SafeAreaProvider } from 'react-native-safe-area-context';
+ import { QueryClientProvider } from '@tanstack/react-query';
+@@ -30,6 +31,7 @@ import { queryClient } from '@/lib/query/queryClient';
+ import { PrivateDataAvailabilityGate } from '@/lib/storage/PrivateDataAvailabilityGate';
+ import { startPlaintextStagingRecovery } from '@/lib/storage/plaintextStaging';
+ import { useFontDecision } from '@/theme/fontLoader';
++import { webRuntimeAdmission } from '@/lib/storage/webRuntimeAdmission';
+ 
+ // Defer notification scheduling code until private-data + health admission has mounted.
+ const NotificationPreferenceScheduleReconciler = lazy(
+@@ -40,12 +42,25 @@ initSentry();
+ markStartupPhase('javascript_started');
+ // Scrub any sensitive image residue created by older cache defaults. PhotoImage
+ // independently fails closed until this retry-safe per-process migration passes.
+-void prepareSensitiveImageDiskCacheMigration();
+ void SplashScreen.preventAutoHideAsync();
+-void startPlaintextStagingRecovery().catch(() => undefined);
+-void startLabelPhotoStartupScavenge().catch(() => undefined);
++let privateStartupStarted = false;
++function startPrivateRuntime() {
++  if (privateStartupStarted) return;
++  privateStartupStarted = true;
++  void prepareSensitiveImageDiskCacheMigration();
++  void startPlaintextStagingRecovery().catch(() => undefined);
++  void startLabelPhotoStartupScavenge().catch(() => undefined);
++}
++if (Platform.OS !== 'web') startPrivateRuntime();
++else {
++  webRuntimeAdmission.subscribe(() => { if (webRuntimeAdmission.snapshot() === 'admitted') startPrivateRuntime(); });
++  if (webRuntimeAdmission.snapshot() === 'admitted') startPrivateRuntime();
++}
+ 
+ export default function RootLayout() {
++  const runtime = useSyncExternalStore(webRuntimeAdmission.subscribe, webRuntimeAdmission.snapshot, () => 'checking' as const);
++  const privateRuntimeReady = Platform.OS !== 'web' || runtime === 'admitted';
++  useEffect(() => { if (Platform.OS === 'web') webRuntimeAdmission.retry(); }, []);
+   const fontDecisionComplete = useFontDecision();
+   useState(() => {
+     markStartupPhase('root_render_started');
+@@ -61,12 +76,25 @@ export default function RootLayout() {
+ 
+   // Set the local-notification handler + Android channel once at startup (docs/07 §9).
+   useEffect(() => {
+-    void configureNotifications();
+-  }, []);
++    if (privateRuntimeReady) void configureNotifications();
++  }, [privateRuntimeReady]);
+ 
+   useEffect(() => {
+-    void clearUnavailableCloudBackupPreference();
+-  }, []);
++    if (privateRuntimeReady) void clearUnavailableCloudBackupPreference();
++  }, [privateRuntimeReady]);
++
++  if (!privateRuntimeReady) return <View style={{ flex: 1, justifyContent: 'center', padding: 24, backgroundColor: '#fbfaf7' }}>
++    <Text accessibilityRole="header" style={{ fontSize: 24, color: '#20251f' }}>Private app access paused</Text>
++    <Text accessibilityRole="alert" style={{ fontSize: 16, lineHeight: 24, marginTop: 16, color: '#20251f' }}>
++      {runtime === 'checking' ? 'Checking whether another app tab is open.' : runtime === 'occupied'
++        ? 'This app is already open in another tab. Close that tab, then retry here. Private records have not been opened in this tab.'
++        : 'This browser cannot coordinate private storage safely. Use a browser with Web Locks support in a secure context, or the native app. Nothing was reset.'}
++    </Text>
++    <Pressable accessibilityRole="button" accessibilityLabel="Retry private app access" onPress={webRuntimeAdmission.retry}
++      style={{ marginTop: 20, minHeight: 48, padding: 14, borderWidth: 1, borderColor: '#20251f', borderRadius: 12 }}>
++      <Text style={{ fontSize: 16, color: '#20251f' }}>Retry private app access</Text>
++    </Pressable>
++  </View>;
+ 
+   return (
+     <GestureHandlerRootView style={{ flex: 1 }}>
+diff --git a/apps/mobile/src/app/shelf/_layout.tsx b/apps/mobile/src/app/shelf/_layout.tsx
+index adedcc8466e70e6875c8a0c5a6d8a8e794ca0820..8a85805289b7087af4a08b134d108be27a43f28a 100644
+--- a/apps/mobile/src/app/shelf/_layout.tsx
++++ b/apps/mobile/src/app/shelf/_layout.tsx
+@@ -35,6 +35,7 @@ export default function ShelfLayout() {
+       <Stack.Screen name="catalog-recovery" />
+       <Stack.Screen name="[id]" />
+       <Stack.Screen name="formula-history" />
++      <Stack.Screen name="drafts" />
+       <Stack.Screen name="archive" />
+       <Stack.Screen
+         name="no-match"
+diff --git a/apps/mobile/src/app/shelf/drafts.tsx b/apps/mobile/src/app/shelf/drafts.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..9f94a638d9f95336809deb4491986d16266c4e5e
+--- /dev/null
++++ b/apps/mobile/src/app/shelf/drafts.tsx
+@@ -0,0 +1,103 @@
++import { router, useFocusEffect } from 'expo-router';
++import { useCallback, useRef, useState, useSyncExternalStore } from 'react';
++import { ScrollView, View } from 'react-native';
++import { Button, Screen, Text } from '@/components/ui';
++import { type BottleDraft, type BottleDraftCollection } from '@/features/shelf/bottleDraftCodec';
++import { discardBottleDraft, loadBottleDrafts } from '@/features/shelf/bottleDraftStore';
++import { useShelf } from '@/features/shelf/useShelf';
++import { assertOriginalHealthDataWriteLease, captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { activeHealthProcessingLeaseSnapshot, subscribeActiveHealthProcessingLeaseChanges } from '@/lib/consent/healthProcessingEpoch';
++import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
++
++export default function BottleDraftsScreen() {
++  const health = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);
++  return <BottleDraftsContent key={health?.generation ?? 'closed'} />;
++}
++function BottleDraftsContent() {
++  const shelf = useShelf();
++  const [lease] = useState(() => { try { return captureHealthDataWriteLease(); } catch { return null; } });
++  const [collection, setCollection] = useState<BottleDraftCollection | null>(null);
++  const [selected, setSelected] = useState<BottleDraft | null>(null);
++  const selectedRef = useRef<BottleDraft | null>(null);
++  const [error, setError] = useState(false);
++  const [busy, setBusy] = useState(false);
++  const flight = useRef<object | null>(null);
++  const focus = useRef(0);
++  const visible = useRef(false);
++  const refresh = useCallback(async () => {
++    if (!lease || flight.current || !visible.current) return;
++    const attempt = {}, currentFocus = focus.current;
++    flight.current = attempt; setBusy(true); setError(false);
++    setCollection(null); setSelected(null); selectedRef.current = null;
++    try {
++      assertOriginalHealthDataWriteLease(lease);
++      const result = await loadBottleDrafts(lease);
++      assertOriginalHealthDataWriteLease(lease);
++      if (visible.current && focus.current === currentFocus) setCollection(result);
++    } catch { if (visible.current && focus.current === currentFocus) setError(true); }
++    finally { if (flight.current === attempt) { flight.current = null; setBusy(false); } }
++  }, [lease]);
++  useFocusEffect(useCallback(() => {
++    visible.current = true; focus.current += 1; void refresh();
++    return () => { visible.current = false; focus.current += 1; flight.current = null;
++      selectedRef.current = null; setSelected(null); setCollection(null); };
++  }, [refresh]));
++  let admitted = false;
++  try { if (lease) { assertOriginalHealthDataWriteLease(lease); admitted = true; } } catch { /* mask retired content */ }
++  async function discard(expected: BottleDraft) {
++    if (!lease || flight.current || selectedRef.current !== expected) return;
++    const currentFocus = focus.current, attempt = {};
++    const guard = () => {
++      assertOriginalHealthDataWriteLease(lease);
++      if (!visible.current || focus.current !== currentFocus || selectedRef.current !== expected) throw new Error('BOTTLE_DRAFT_STALE');
++    };
++    try { guard(); } catch { return; }
++    flight.current = attempt; setBusy(true); setError(false);
++    try {
++      await discardBottleDraft(lease, expected, guard); guard();
++      selectedRef.current = null; setSelected(null);
++      const result = await loadBottleDrafts(lease);
++      assertOriginalHealthDataWriteLease(lease);
++      if (visible.current && focus.current === currentFocus && flight.current === attempt) setCollection(result);
++    } catch { if (visible.current && focus.current === currentFocus) { setError(true); setCollection(null); } }
++    finally { if (flight.current === attempt) { flight.current = null; setBusy(false); } }
++  }
++  return <Screen edges={['top', 'bottom']}>
++    <Text variant="titleSm">Saved bottle drafts</Text>
++    <Text variant="bodySm" className="mt-3">Unconfirmed transcription, encrypted on this device. Resume opens the bottle for an explicit saved-source review. Removing a product does not erase its draft; you can discard it here. Privacy withdrawal or clearing local data removes drafts, and local export includes them.</Text>
++    <Button className="mt-3" label="Back to Shelf" disabled={busy} onPress={() => backOrReplace(router, APP_SHELF_ROUTE)} />
++    {!admitted ? <Text accessibilityRole="alert" className="mt-3">Draft access closed. Reopen under current adult and privacy access.</Text> : <>
++      {error ? <Text accessibilityRole="alert" className="mt-3">Draft recovery unavailable or changed. Nothing was reset. Refresh before retrying; uncertain encrypted data is preserved.</Text> : null}
++      <Button className="mt-3" label="Refresh saved drafts" disabled={busy} onPress={() => void refresh()} />
++      {busy ? <Text className="mt-3">Verifying private draft storage.</Text> : null}
++      <ScrollView contentContainerClassName="pb-8">
++        {collection?.drafts.length === 0 ? <Text className="mt-3">No saved bottle drafts.</Text> : null}
++        {!error && collection?.drafts.map(row => {
++          const product = [...(shelf.data?.items ?? []), ...(shelf.data?.archive ?? [])].find(item => item.id === row.source.productId)?.product;
++          return <View key={row.id} className="mt-4 rounded-[12px] border border-hairline p-4">
++            <Text variant="body" className="font-sans-semibold">{product?.name ?? 'Bottle no longer on Shelf'}</Text>
++            <Text className="mt-2">Saved draft revision {row.revision}. Source bottle revision {row.source.revision}. Saved {row.updatedAt}.</Text>
++            <Button className="mt-3" label="Open bottle to resume draft" disabled={busy || !!selected || !product || shelf.isError || shelf.isFetching} onPress={() => {
++              if (!lease || flight.current || selectedRef.current || !visible.current) return;
++              try { assertOriginalHealthDataWriteLease(lease); } catch { return; }
++              router.push({ pathname: '/shelf/formula-history', params: { id: row.source.productId } });
++            }} />
++            <Button className="mt-2" label="Review draft discard" disabled={busy || !!selected} onPress={() => {
++              if (!lease || flight.current || selectedRef.current || !visible.current) return;
++              try { assertOriginalHealthDataWriteLease(lease); } catch { return; }
++              selectedRef.current = row; setSelected(row);
++            }} />
++            {selected === row ? <View className="mt-3">
++              <Text accessibilityRole="alert">Discard this saved transcription? Confirmed observations and other drafts stay intact.</Text>
++              <Button className="mt-3" label="Confirm saved draft discard" disabled={busy} onPress={() => void discard(row)} />
++              <Button className="mt-2" label="Keep saved draft" disabled={busy} onPress={() => {
++                if (flight.current || selectedRef.current !== row) return;
++                selectedRef.current = null; setSelected(null);
++              }} />
++            </View> : null}
++          </View>;
++        })}
++      </ScrollView>
++    </>}
++  </Screen>;
++}
+diff --git a/apps/mobile/src/app/shelf/formula-history.tsx b/apps/mobile/src/app/shelf/formula-history.tsx
+index 64920e643f0b6ad9a21451398470cd01ae6c5e6e..7115c1b92264fffc9e672cac28588114a11caee1 100644
+--- a/apps/mobile/src/app/shelf/formula-history.tsx
++++ b/apps/mobile/src/app/shelf/formula-history.tsx
+@@ -22,15 +22,21 @@ import {
+ import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+ import { activeHealthProcessingLeaseSnapshot, subscribeActiveHealthProcessingLeaseChanges } from '@/lib/consent/healthProcessingEpoch';
+ import { colors } from '@/theme/tokens';
++import { randomUUID } from 'expo-crypto';
++import { bottleDraftSource, type BottleDraft as SavedBottleDraft, type BottleDraftSource } from '@/features/shelf/bottleDraftCodec';
++import { loadBottleDrafts, saveBottleDraft, discardBottleDraft } from '@/features/shelf/bottleDraftStore';
+ 
+ const BottleUseHistory = lazy(() => import('@/features/shelf/BottleUseHistory').then(module => ({ default: module.BottleUseHistory })));
+ 
+-type Draft = {
+-  snapshot: OwnedBottleHistorySnapshot38;
++type Draft = Readonly<{
++  snapshot: BottleDraftSource;
++  id: string;
++  durable: SavedBottleDraft | null;
++  needsReview: boolean;
+   source: NonNullable<ReturnType<typeof useShelf>['data']>;
+   lease: ReturnType<typeof captureHealthDataWriteLease>;
+   focus: number;
+-};
++}>;
+ type SourceReview = Readonly<{ draft: Draft; snapshot: OwnedBottleHistorySnapshot38; source: Draft['source']; fields: readonly (string | null)[] }>;
+ type ExitIntent = Readonly<{ draft: Draft | null; focus: number; action?: NavigationAction }>;
+ 
+@@ -68,7 +74,7 @@ export default function FormulaHistoryScreen() {
+   const { id } = useLocalSearchParams<{ id: string }>();
+   const shelf = useShelf();
+   const health = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);
+-  // A new unit or health generation receives a fresh memory-only screen. The
++  // A new unit or health generation receives a fresh screen. The
+   // key also masks former-owner drafts synchronously, before effect cleanup.
+   return <FormulaHistoryContent key={`${id}/${health?.generation ?? 'closed'}`} id={id} shelf={shelf} generation={health?.generation} />;
+ }
+@@ -131,6 +137,12 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+       return { snapshot, generation: lease.generation };
+     }); },
+   });
++  const savedDrafts = useQuery({
++    queryKey: ['bottle-drafts', generation], enabled: original !== null,
++    networkMode: 'always', retry: false,
++    queryFn: () => { assertOriginal(); return loadBottleDrafts(original!); },
++  });
++  const retainedDraft = savedDrafts.data?.drafts.find(row => row.source.productId === id);
+   useFocusEffect(useCallback(() => {
+     focused.current = true;
+     focus.current += 1;
+@@ -211,13 +223,13 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+ 
+   function startDraft() {
+     const state = qc.getQueryState(['shelf']);
+-    if (!snapshot || !shelf.data || !available || !focused.current || saving.current || draftRef.current || reviewRef.current || exitRef.current || approvedExitRef.current ||
++    if (!snapshot || !shelf.data || !available || !savedDrafts.isSuccess || retainedDraft || !focused.current || saving.current || draftRef.current || reviewRef.current || exitRef.current || approvedExitRef.current ||
+         qc.getQueryData(['shelf']) !== shelf.data || state?.status !== 'success' || state.fetchStatus !== 'idle' || state.isInvalidated) return;
+     try {
+       assertOriginal();
+       const lease = captureHealthDataWriteLease();
+       assertHealthDataWriteLease(lease);
+-      replaceDraft({ snapshot, source: shelf.data, lease, focus: focus.current });
++      replaceDraft({ snapshot, source: shelf.data, lease, focus: focus.current, id: randomUUID(), durable: null, needsReview: false });
+       replaceReview(null);
+       setMode(null);
+       setLabel('');
+@@ -230,15 +242,111 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+     }
+   }
+ 
+-  async function confirm() {
+-    if (!draft || draftRef.current !== draft || !formCurrent() || !mode || saving.current || reviewRef.current || exitRef.current || approvedExitRef.current) return;
++  async function resumeDraft() {
++    if (!retainedDraft || !shelf.data || !available || draftRef.current || saving.current || exitRef.current) return;
++    const expectedFocus = focus.current, flight = {};
++    saving.current = flight; setBusy(true);
++    try {
++      assertOriginal();
++      const collection = await loadBottleDrafts(original!);
++      assertOriginal();
++      if (!focused.current || focus.current !== expectedFocus || draftRef.current || exitRef.current) return;
++      const saved = collection.drafts.find(row => row.id === retainedDraft.id);
++      if (!saved || JSON.stringify(saved) !== JSON.stringify(retainedDraft)) throw new Error('BOTTLE_DRAFT_CONFLICT');
++      replaceDraft({ snapshot: saved.source, source: shelf.data, lease: original!, focus: expectedFocus,
++        id: saved.id, durable: saved, needsReview: true });
++      setMode(saved.fields.mode); setLabel(saved.fields.label); setMarket(saved.fields.market);
++      setVariant(saved.fields.variant); setObserved(saved.fields.observed);
++      setFeedback('Saved transcription resumed. Review the current saved bottle before saving or confirming changes. Nothing has been confirmed.');
++    } catch {
++      if (focused.current && focus.current === expectedFocus) setFeedback('Saved draft could not be verified. Refresh saved drafts and retry; nothing was reset.');
++    } finally {
++      if (saving.current === flight) { saving.current = null; setBusy(false); }
++    }
++  }
++
++  async function persistDraft(leaving?: ExitIntent) {
+     const accepted = draft;
++    if (!accepted || accepted.needsReview || saving.current || reviewRef.current || !formCurrent() ||
++        (leaving ? exitRef.current !== leaving || leaving.draft !== accepted : !!exitRef.current)) return;
++    const flight = {};
++    saving.current = flight; setBusy(true); setFeedback(null);
++    try {
++      const guard = () => { assertDraftOwner(accepted); if (!formCurrent()) throw new Error('FORMULA38_STALE'); };
++      guard();
++      const durable = await saveBottleDraft(accepted.lease, { id: accepted.id, expected: accepted.durable,
++        source: bottleDraftSource(accepted.snapshot), fields: { mode, label, market, variant, observed } }, guard);
++      guard();
++      if (leaving && exitRef.current === leaving) {
++        replaceDraft(null); approveExit(leaving);
++      } else {
++        const next = { ...accepted, durable };
++        replaceDraft(next);
++        const pending = exitRef.current as ExitIntent | null;
++        if (pending?.draft === accepted) {
++          const refreshed = { ...pending, draft: next };
++          exitRef.current = refreshed; setExitIntent(refreshed);
++        }
++        setFeedback('Draft encrypted, saved and read back on this device. Later edits need another save. This is not a confirmed bottle observation.');
++      }
++      await savedDrafts.refetch();
++    } catch {
++      if (draftRef.current === accepted && focused.current) setFeedback('Draft save was not confirmed. Keep editing, or review the current saved bottle and retry. Existing saved drafts were not replaced without their exact revision.');
++    } finally {
++      if (saving.current === flight) { saving.current = null; setBusy(false); }
++    }
++  }
++
++  async function discardDraft(leaving?: ExitIntent) {
++    const accepted = draftRef.current;
++    if (!accepted || saving.current || (reviewRef.current && !leaving) ||
++        (leaving ? exitRef.current !== leaving || leaving.draft !== accepted : !!exitRef.current)) return;
++    try { assertDraftOwner(accepted); } catch { return; }
++    const flight = {};
++    saving.current = flight; setBusy(true);
++    // Consume the visible decision synchronously; a same-turn Keep callback
++    // cannot cancel a discard already dispatched to native storage.
++    if (leaving) exitRef.current = null;
++    try {
++      if (accepted.durable) await discardBottleDraft(accepted.lease, accepted.durable, () => assertDraftOwner(accepted));
++      assertDraftOwner(accepted);
++      replaceDraft(null); replaceReview(null); setLabel(''); setMarket(''); setVariant(''); setObserved('');
++      if (leaving) { exitRef.current = leaving; approveExit(leaving); }
++      setFeedback(null); await savedDrafts.refetch();
++    } catch {
++      if (draftRef.current === accepted && focused.current) {
++        if (leaving) exitRef.current = leaving;
++        setFeedback('Draft removal was not confirmed. Refresh saved drafts before retrying; a newer saved draft cannot be discarded by this screen.');
++      }
++    } finally {
++      if (saving.current === flight) { saving.current = null; setBusy(false); }
++    }
++  }
++
++  async function confirm() {
++    if (!draft || draft.needsReview || draftRef.current !== draft || !formCurrent() || !mode || saving.current || reviewRef.current || exitRef.current || approvedExitRef.current) return;
++    let accepted = draft;
+     const flight = {};
+     saving.current = flight;
+     setBusy(true);
+     setFeedback(null);
+     try {
+       assertDraftCurrent(accepted);
++      let durable = accepted.durable;
++      if (durable) {
++        durable = await saveBottleDraft(accepted.lease, { id: accepted.id, expected: durable,
++          source: bottleDraftSource(accepted.snapshot), fields: { mode, label, market, variant, observed } }, () => assertDraftCurrent(accepted));
++        assertDraftCurrent(accepted);
++        // Preserve the exact new revision even if confirmation later refuses.
++        const pending = exitRef.current as ExitIntent | null;
++        const previous = accepted;
++        accepted = { ...accepted, durable };
++        replaceDraft(accepted);
++        if (pending?.draft === previous) {
++          const refreshed = { ...pending, draft: accepted };
++          exitRef.current = refreshed; setExitIntent(refreshed);
++        }
++      }
+       const result = await mutations.confirmBottleObservation({
+         productId: id,
+         expectedUpdatedAt: accepted.snapshot.productUpdatedAt,
+@@ -250,10 +358,23 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+         market: market || null,
+         variant: variant || null,
+         observedOn: observed || null,
+-      }, () => assertDraftCurrent(accepted));
++      }, () => assertDraftCurrent(accepted), durable ? { expected: durable, lease: accepted.lease } : undefined);
+       assertHealthDataWriteLease(accepted.lease);
+       if (!focused.current || focus.current !== accepted.focus || draftRef.current !== accepted) return;
+       qc.setQueryData(['owned-bottle-history38', id, generation], { snapshot: result, generation });
++      if (durable) {
++        try {
++          await discardBottleDraft(accepted.lease, durable, () => assertDraftOwner(accepted));
++          assertDraftOwner(accepted);
++        } catch {
++          try { assertDraftOwner(accepted); } catch { return; }
++          setFeedback('The bottle observation was read back, but draft removal was not confirmed. Review saved drafts before discarding; nothing else was erased.');
++          await savedDrafts.refetch();
++          await history.refetch();
++          return;
++        }
++      }
++      assertDraftOwner(accepted);
+       replaceDraft(null);
+       replaceReview(null);
+       completeSavedDraftExit(accepted);
+@@ -262,6 +383,7 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+       setVariant('');
+       setObserved('');
+       setFeedback('Saved on this device and read back.');
++      await savedDrafts.refetch();
+       await history.refetch();
+     } catch (error) {
+       // Do not surface exception content, which could include personal label text.
+@@ -323,7 +445,7 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+       if (review && reviewRef.current !== review) return;
+       if (review && review.source === source && JSON.stringify(review.snapshot) === JSON.stringify(saved) &&
+           review.fields.every((value, index) => value === currentFields.current[index])) {
+-        replaceDraft({ ...accepted, snapshot: saved, source });
++        replaceDraft({ ...accepted, snapshot: saved, source, needsReview: false });
+         replaceReview(null);
+         setFeedback('Your draft is retained against the reviewed saved source. Confirm again to record it. Matching saved facts do not prove an earlier command succeeded.');
+       } else {
+@@ -344,6 +466,9 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+   const draftEditor = draft ? (
+               <View className="mt-4 rounded-[16px] border border-hairline bg-paper-raised p-4">
+                 <Text variant="titleSm">Draft observation</Text>
++                <Text variant="bodySm" className="mt-2">Save a draft to resume after leaving or restarting. Only the last successful save is retained; later edits need another save. Drafts are encrypted on this device and included in local export and privacy removal.</Text>
++                {draft.needsReview ? <Text accessibilityRole="alert" className="mt-2">Review the current saved bottle to continue this recovered draft.</Text> : null}
++                <Button className="mt-3" label="Save bottle draft on this device" disabled={busy || readingSource || !!currentReview || draft.needsReview} onPress={() => void persistDraft()} />
+                 <Text variant="bodySm" tone="muted" className="mt-2">Nothing is confirmed until you tap Confirm this bottle observation. Corrections append a version; the previous record stays factual.</Text>
+ 
+                 <Button className="mt-3" label="Review current saved bottle" disabled={busy || readingSource} onPress={() => void reviewSavedSource()} />
+@@ -365,8 +490,9 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+                 <ObservationField label="Market as printed" value={market} onChange={(value) => { if (canEditDraft(draft)) setMarket(value); }} maxLength={80} disabled={busy || readingSource || !!currentReview} />
+                 <ObservationField label="Date observed (YYYY-MM-DD)" value={observed} onChange={(value) => { if (canEditDraft(draft)) setObserved(value); }} maxLength={10} disabled={busy || readingSource || !!currentReview} />
+                 <Text variant="label" tone="muted" className="mt-2">Leave unavailable fields empty. Market and variant are your observed text, not validated catalog provenance.</Text>
+-                <Button className="mt-5" label={busy ? 'Saving observation…' : 'Confirm this bottle observation'} onPress={() => void confirm()} disabled={busy || readingSource || !!currentReview || !mode || (mode === 'label' && !label.trim()) || !available} />
+-                <Button className="mt-2" label="Cancel draft" variant="ghost" disabled={busy || readingSource || !!currentReview} onPress={() => { if (draftRef.current !== draft || saving.current || reviewRef.current || exitRef.current || approvedExitRef.current) return; replaceDraft(null); replaceReview(null); setLabel(''); setMarket(''); setVariant(''); setObserved(''); setFeedback(null); }} />
++                <Button className="mt-5" label={busy ? 'Saving observation…' : 'Confirm this bottle observation'} onPress={() => void confirm()} disabled={busy || readingSource || !!currentReview || draft.needsReview || !mode || (mode === 'label' && !label.trim()) || !available} />
++                <Text variant="label" tone="muted" className="mt-2">Cancel draft discards this transcription and its exact saved revision. Confirmed bottle history stays intact.</Text>
++                <Button className="mt-2" label="Cancel draft" variant="ghost" disabled={busy || readingSource || !!currentReview} onPress={() => { if (draftRef.current !== draft || approvedExitRef.current) return; void discardDraft(); }} />
+               </View>
+   ) : null;
+ 
+@@ -375,17 +501,18 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+ 
+   if (exitIntent) return <Screen>
+     <Text accessibilityRole="alert" variant="titleSm">Keep your bottle draft?</Text>
+-    <Text variant="bodySm" className="mt-3">Keep editing or discard this memory-only draft before leaving. A save that was already dispatched may still be recorded; leaving does not erase saved history.</Text>
++    <Text variant="bodySm" className="mt-3">Save this draft to resume later, keep editing, or discard its transcription. A save that was already dispatched may still be recorded; leaving does not erase confirmed history.</Text>
++    {feedback ? <Text accessibilityRole="alert" className="mt-3">{feedback}</Text> : null}
++    <Button className="mt-3" label="Save bottle draft and leave" disabled={busy || readingSource || !!draft?.needsReview} onPress={() => void persistDraft(exitIntent)} />
+     <Button className="mt-4" label="Keep editing bottle draft" onPress={() => {
+-      if (exitRef.current !== exitIntent) return;
++      if (exitRef.current !== exitIntent || saving.current) return;
+       try { assertOriginal(); } catch { return; }
+       exitRef.current = null; setExitIntent(null);
+     }} />
+     <Button className="mt-2" label="Discard bottle draft and leave" disabled={busy || readingSource} onPress={() => {
+       if (exitRef.current !== exitIntent || saving.current || !focused.current || focus.current !== exitIntent.focus || draftRef.current !== exitIntent.draft) return;
+       try { assertOriginal(); } catch { return; }
+-      replaceDraft(null); replaceReview(null); setLabel(''); setMarket(''); setVariant(''); setObserved('');
+-      approveExit(exitIntent);
++      void discardDraft(exitIntent);
+     }} />
+   </Screen>;
+ 
+@@ -398,6 +525,16 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+       {feedback ? <Text accessibilityRole="alert" accessibilityLiveRegion="polite" variant="bodySm" className="mt-3 mb-2">{feedback}</Text> : null}
+       <ScrollView keyboardShouldPersistTaps="handled" contentContainerClassName="pb-8 pt-4">
+         <Text variant="body" className="font-sans-semibold">{product?.name ?? 'Product unavailable'}</Text>
++        {!draft && savedDrafts.isPending ? <Text className="mt-3">Checking saved bottle drafts.</Text> : null}
++        {!draft && savedDrafts.isError ? <View className="mt-3">
++          <Text accessibilityRole="alert">Saved drafts unavailable. Nothing was reset. Current adult and privacy access, storage and keys must be verified.</Text>
++          <Button className="mt-2" label="Refresh saved bottle drafts" onPress={() => void savedDrafts.refetch()} />
++        </View> : null}
++        {!draft && retainedDraft ? <View className="mt-3 rounded-[12px] border border-hairline p-3">
++          <Text>Unconfirmed bottle draft saved on this device. Saved revision {retainedDraft.revision}; bottle source revision {retainedDraft.source.revision}.</Text>
++          <Button className="mt-3" label="Resume saved bottle draft" onPress={() => void resumeDraft()} disabled={!available || busy || readingSource} />
++        </View> : null}
++        <Button className="mt-2" variant="ghost" label="Review all saved bottle drafts" disabled={busy || !!draft} onPress={() => router.push('/shelf/drafts')} />
+         <Text accessibilityLiveRegion="polite" variant="bodySm" className="mt-2">
+           {online ? 'Works offline on this device when private storage is available.' : 'Offline. Bottle history and confirmation use private storage on this device.'}
+         </Text>
+@@ -431,7 +568,7 @@ function FormulaHistoryContent({ id, shelf, generation }: { id: string; shelf: R
+               </Text>
+             </View>
+             {snapshot.revision >= OWNED_BOTTLE38_MAX_VERSIONS ? <Text variant="bodySm" className="mt-3">This bottle has reached the limit of {OWNED_BOTTLE38_MAX_VERSIONS} observations. Its history is retained; no further version can be added.</Text> : null}
+-            {!draft ? <Button className="mt-4" label="Record label observation" onPress={startDraft} disabled={!available || busy || snapshot.revision >= OWNED_BOTTLE38_MAX_VERSIONS} /> : (
++            {!draft ? <Button className="mt-4" label="Record label observation" onPress={startDraft} disabled={!available || busy || !savedDrafts.isSuccess || !!retainedDraft || snapshot.revision >= OWNED_BOTTLE38_MAX_VERSIONS} /> : (
+               draftEditor
+             )}
+             <Button className="mt-2" label="Refresh history" variant="ghost" onPress={() => void refresh()} disabled={busy || readingSource || history.isFetching} />
+diff --git a/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts b/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts
+index 85dae7dec76e0cd48f964548068e0269e4dc821a..bad214d3a527ffd3ccfddc0c1235284eff3fa0a5 100644
+--- a/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts
++++ b/apps/mobile/src/features/notifications/NotificationPreferenceScheduleReconciler.test.ts
+@@ -142,7 +142,7 @@ describe('root local-reminder reconciler', () => {
+     );
+     const delivery = readFileSync(fileURLToPath(new URL('./deliver.ts', import.meta.url)), 'utf8');
+ 
+-    expect(root).toContain("import { lazy, Suspense, useEffect, useState } from 'react';");
++    expect(root).toContain("import { lazy, Suspense, useEffect, useState, useSyncExternalStore } from 'react';");
+     expect(root).toMatch(
+       /<HealthDataLifecycleGate>[\s\S]*?<NotificationPreferenceScheduleReconciler \/>[\s\S]*?<OnboardingProvider>/u,
+     );
+diff --git a/apps/mobile/src/features/onboarding/healthConsentStore.ts b/apps/mobile/src/features/onboarding/healthConsentStore.ts
+index da098463bdc5db548076bfa5e5e14888e93db99d..c18a3d566cd6f9349061713838ec93423770c26c 100644
+--- a/apps/mobile/src/features/onboarding/healthConsentStore.ts
++++ b/apps/mobile/src/features/onboarding/healthConsentStore.ts
+@@ -206,6 +206,14 @@ export async function hasCurrentHealthDataCollectionConsent(): Promise<boolean>
+   return consent.consentTextHash === CURRENT_GRANT_HASH;
+ }
+ 
++/** Pure validation for a reserved, authenticated authority snapshot. */
++export function hasCurrentHealthDataCollectionConsentBytes(raw: string | null): boolean {
++  if (raw === null) return false;
++  const consent = decodeConsent(raw);
++  return consent.granted && consent.version === HEALTH_DATA_CONSENT.version &&
++    consent.consentTextHash === CURRENT_GRANT_HASH;
++}
++
+ /**
+  * Lifecycle recovery must distinguish a genuinely absent/declined grant from
+  * an unreadable consent proof. Preserve the tolerant observer API above, but
+diff --git a/apps/mobile/src/features/settings/localDeviceExport.ts b/apps/mobile/src/features/settings/localDeviceExport.ts
+index 286b0c779840780768220d83c2acb31846268da7..f19adb0e365e8d4f497b290b9274fd709829c72b 100644
+--- a/apps/mobile/src/features/settings/localDeviceExport.ts
++++ b/apps/mobile/src/features/settings/localDeviceExport.ts
+@@ -1,4 +1,5 @@
+ import { validateCompletionHistoryForExport } from '@/features/today/completionLogCodec';
++import { BOTTLE_DRAFT_KEY, decodeBottleDraftCollection } from '@/features/shelf/bottleDraftCodec';
+ import { decryptPhotoNoteForPurposeLimitedExport } from '@/features/photos/encryptedStorage';
+ import { decodePhotoNoteHistory } from '@/features/photos/photoNoteHistory';
+ import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
+@@ -44,6 +45,7 @@ export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
+ ] as const satisfies readonly LocalPrivateDataKey[];
+ 
+ const LOCAL_EXPORT_SPECS = [
++  { key: BOTTLE_DRAFT_KEY, section: 'shelf_and_routine', field: 'unconfirmed_bottle_drafts' },
+   {
+     key: AGE_POLICY_RECEIPT_KEY,
+     section: 'account_and_privacy',
+@@ -491,7 +493,9 @@ export async function collectLocalDeviceExportData(
+       if (spec.key === 'layerwell.completions.v1') {
+         validateCompletionHistoryForExport(raw, expectedUserId);
+       }
+-      const parsed = spec.key === 'layerwell.routinePlanHistory.v1'
++      const parsed = spec.key === BOTTLE_DRAFT_KEY
++        ? decodeBottleDraftCollection(raw, expectedUserId!)
++        : spec.key === 'layerwell.routinePlanHistory.v1'
+         ? decodePlanHistory45(raw, expectedUserId!)
+         : parseStoredValue(raw);
+       if (spec.key === 'layerwell.shelf.v1') validateBottleHistoryForExport(parsed, expectedUserId);
+diff --git a/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts b/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts
+index a23debb8c71275b24aebc24f447feb3b995cbb17..1daacac106a61a9f128361621ffaf7b38c883440 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts
+@@ -947,7 +947,9 @@ it('AUDIT_RESUME CONTROL: actual selective cleanup succeeds alone and preserves
+   native.bytes.delete(PROOFS[2]);
+   await expect(readLocalDataOwnership(OWNER)).resolves.toBe('match');
+   const identity = captureAccountIdentityGeneration();
++  native.bytes.set('layerwell.bottleDrafts.v1', 'synthetic opaque draft ciphertext for authorized erasure');
+   await expect(clearHealthPurposeLocalData(OWNER)).resolves.toBeUndefined();
++  expect(native.bytes.has('layerwell.bottleDrafts.v1')).toBe(false);
+   expect(captureAccountIdentityGeneration()).toBe(identity);
+   expect(native.secure.has(PHOTO_KEY)).toBe(false);
+   expect(native.bytes.has(ORDER_KEY)).toBe(false);
+@@ -955,6 +957,35 @@ it('AUDIT_RESUME CONTROL: actual selective cleanup succeeds alone and preserves
+   await expect(runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
+ });
+ 
++it('reports selective cleanup failure when draft erasure is incomplete and removes it on an explicit retry', async () => {
++  const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
++  native.configuredForSelective = true; native.bytes.delete('layerwell.localDataCleanupRequired.v1');
++  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
++  native.bytes.delete(PROOFS[1]); native.bytes.delete(PROOFS[2]);
++  const key = 'layerwell.bottleDrafts.v1'; native.bytes.set(key, 'synthetic opaque draft ciphertext for authorized erasure');
++  native.failures.add('registered_records');
++  await expect(clearHealthPurposeLocalData(OWNER)).rejects.toThrow('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');
++  expect(native.bytes.has(key)).toBe(true);
++  native.failures.delete('registered_records');
++  await expect(clearHealthPurposeLocalData(OWNER)).resolves.toBeUndefined();
++  expect(native.bytes.has(key)).toBe(false);
++});
++
++it('withdrawal drains an interrupted encrypted draft write before erasure without resurrection', async () => {
++  const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
++  native.configuredForSelective = true; native.bytes.delete('layerwell.localDataCleanupRequired.v1');
++  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
++  native.bytes.delete(PROOFS[1]); native.bytes.delete(PROOFS[2]);
++  const key = 'layerwell.bottleDrafts.v1'; const entered = deferred(); const release = deferred();
++  native.setHook = async item => { if (item === key) { entered.resolve(); await release.promise; } };
++  const saving = observe(setPrivateItem(key, 'synthetic pending unconfirmed draft'));
++  await entered.promise;
++  const clearing = observe(clearHealthPurposeLocalData(OWNER)); release.resolve();
++  expect(await saving).toMatchObject({ status: 'rejected' });
++  expect(await clearing).toMatchObject({ status: 'fulfilled' });
++  await waitForPrivateKVWritesToSettle(); expect(native.bytes.has(key)).toBe(false);
++});
++
+ it('AUDIT_RESUME: existing photo clear drains native key creation before deleting its content key', async () => {
+   native.secure.delete(PHOTO_KEY);
+   const keyCreationEntered = deferred();
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
+index 52d0e698b8cbad4bf7a225eac397be4ebd2b67fe..b0f07d18f3d7d790e6ad79d508e803dbd1b55f1a 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
+@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
+ import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanupRequired';
+ import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+ import { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteAdmission';
++import { PRIVATE_WEB_RUNTIME_LOCK } from '@/lib/storage/webRuntimeAdmission';
+ 
+ import {
+   LOCAL_PRIVATE_CONTROL_KEYS,
+@@ -72,7 +73,7 @@ describe('local private data registry', () => {
+   });
+ 
+   it('covers every on-device private storage key', () => {
+-    const registered = new Set([
++    const registered = new Set<string>([
+       ...LOCAL_PRIVATE_CONTROL_KEYS,
+       ...LOCAL_PRIVATE_DATA_KEYS,
+       ...LOCAL_PRIVATE_METADATA_KEYS,
+@@ -88,6 +89,9 @@ describe('local private data registry', () => {
+       for (const match of source.matchAll(STORAGE_KEY_RE)) discovered.add(match[1]!);
+     }
+     discovered.delete('layerwell.app');
++    // Web Locks names carry no persisted bytes and must not be erased as data.
++    expect(registered.has(PRIVATE_WEB_RUNTIME_LOCK)).toBe(false);
++    discovered.delete(PRIVATE_WEB_RUNTIME_LOCK);
+ 
+     expect([...discovered].sort()).toEqual([...registered].sort());
+   });
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+index 6f64877a72cea2ccace24879e50e83ec8a2da551..bd42dd4003599f43be4d6fb056f7a9e4b1131630 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+@@ -15,6 +15,7 @@ import {
+ import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+ 
+ export const LOCAL_PRIVATE_DATA_KEYS = [
++  'layerwell.bottleDrafts.v1',
+   AGE_POLICY_RECEIPT_KEY,
+   'layerwell.appLock.enabled',
+   'layerwell.ask.consent.v1',
+diff --git a/apps/mobile/src/features/shelf/bottleDraftCodec.ts b/apps/mobile/src/features/shelf/bottleDraftCodec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..d5ac9c0c29b85138f84c0f606dad1cb9df714d93
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/bottleDraftCodec.ts
+@@ -0,0 +1,126 @@
++import { bytesToHex, utf8ToBytes } from '@noble/ciphers/utils.js';
++import { sha256 } from '@noble/hashes/sha2.js';
++import type { OwnedBottleHistorySnapshot38 } from './ownedBottleVersion38';
++
++export const BOTTLE_DRAFT_KEY = 'layerwell.bottleDrafts.v1';
++export const BOTTLE_DRAFT_INVALID = 'BOTTLE_DRAFT_INVALID';
++export const BOTTLE_DRAFT_CONFLICT = 'BOTTLE_DRAFT_CONFLICT';
++export const BOTTLE_DRAFT_AUTHORITY = 'BOTTLE_DRAFT_AUTHORITY';
++export const BOTTLE_DRAFT_LIMIT = 20;
++export type BottleDraftSource = Pick<OwnedBottleHistorySnapshot38,
++  'productId' | 'ownedUnitId' | 'productUpdatedAt' | 'productIdentityHash' | 'revision' | 'currentVersionId'>;
++export type BottleDraftFields = Readonly<{
++  mode: 'label' | 'unknown' | null;
++  label: string;
++  market: string;
++  variant: string;
++  observed: string;
++}>;
++export type BottleDraft = Readonly<{
++  id: string;
++  revision: number;
++  createdAt: string;
++  updatedAt: string;
++  source: BottleDraftSource;
++  fields: BottleDraftFields;
++  contentHash: string;
++}>;
++export type BottleDraftCollection = Readonly<{
++  schemaVersion: 1;
++  provenance: 'owner_unconfirmed_transcription';
++  ownerUserId: string;
++  processingEpoch: number;
++  drafts: readonly BottleDraft[];
++}>;
++
++function invalid(): never { throw new Error(BOTTLE_DRAFT_INVALID); }
++function record(value: unknown, keys: readonly string[]): Record<string, unknown> {
++  if (!value || typeof value !== 'object' || Array.isArray(value) ||
++      Object.keys(value).sort().join('|') !== [...keys].sort().join('|')) invalid();
++  return value as Record<string, unknown>;
++}
++function text(value: unknown, max: number, multiline = false): string {
++  if (typeof value !== 'string' || value.length > max || utf8ToBytes(value).length > max * 3 ||
++      (multiline ? /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f\ud800-\udfff]/u : /[\u0000-\u001f\u007f-\u009f\ud800-\udfff]/u).test(value)) invalid();
++  return value;
++}
++function nonempty(value: unknown, max: number): string {
++  const result = text(value, max);
++  if (!result || result.trim() !== result) invalid();
++  return result;
++}
++function integer(value: unknown, minimum: number): number {
++  if (!Number.isSafeInteger(value) || (value as number) < minimum) invalid();
++  return value as number;
++}
++function hash(value: unknown): string {
++  if (typeof value !== 'string' || !/^[0-9a-f]{64}$/.test(value)) invalid();
++  return value;
++}
++function timestamp(value: unknown): string {
++  const result = nonempty(value, 30);
++  if (!Number.isFinite(Date.parse(result)) || new Date(result).toISOString() !== result) invalid();
++  return result;
++}
++export function bottleDraftSource(snapshot: BottleDraftSource): BottleDraftSource {
++  return decodeSource({ productId: snapshot.productId, ownedUnitId: snapshot.ownedUnitId,
++    productUpdatedAt: snapshot.productUpdatedAt, productIdentityHash: snapshot.productIdentityHash,
++    revision: snapshot.revision, currentVersionId: snapshot.currentVersionId });
++}
++function decodeSource(value: unknown): BottleDraftSource {
++  const row = record(value, ['productId', 'ownedUnitId', 'productUpdatedAt', 'productIdentityHash', 'revision', 'currentVersionId']);
++  const currentVersionId = row.currentVersionId;
++  if (currentVersionId !== null && (typeof currentVersionId !== 'string' || !/^owned38:[0-9a-f]{64}$/.test(currentVersionId))) invalid();
++  const revision = integer(row.revision, 0);
++  if ((revision === 0) !== (currentVersionId === null)) invalid();
++  return Object.freeze({ productId: nonempty(row.productId, 128), ownedUnitId: nonempty(row.ownedUnitId, 200),
++    productUpdatedAt: timestamp(row.productUpdatedAt), productIdentityHash: hash(row.productIdentityHash), revision, currentVersionId });
++}
++export function decodeBottleDraftFields(value: unknown): BottleDraftFields {
++  const row = record(value, ['mode', 'label', 'market', 'variant', 'observed']);
++  const mode = row.mode;
++  if (mode !== null && mode !== 'label' && mode !== 'unknown') invalid();
++  // A draft deliberately permits incomplete dates and empty labels. Actual
++  // observation validation still owns final confirmation.
++  return Object.freeze({ mode, label: text(row.label, 8000, true), market: text(row.market, 80),
++    variant: text(row.variant, 160), observed: text(row.observed, 10) });
++}
++function draftBody(value: Omit<BottleDraft, 'contentHash'>): Omit<BottleDraft, 'contentHash'> {
++  const row = record(value, ['id', 'revision', 'createdAt', 'updatedAt', 'source', 'fields']);
++  const id = nonempty(row.id, 36);
++  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(id)) invalid();
++  const createdAt = timestamp(row.createdAt), updatedAt = timestamp(row.updatedAt);
++  if (updatedAt < createdAt) invalid();
++  return Object.freeze({ id, revision: integer(row.revision, 1), createdAt, updatedAt,
++    source: decodeSource(row.source), fields: decodeBottleDraftFields(row.fields) });
++}
++export function makeBottleDraft(value: Omit<BottleDraft, 'contentHash'>): BottleDraft {
++  const body = draftBody(value);
++  return Object.freeze({ ...body, contentHash: bytesToHex(sha256(utf8ToBytes(JSON.stringify(body)))) });
++}
++export function decodeBottleDraftCollection(raw: string | null, ownerUserId: string, processingEpoch?: number): BottleDraftCollection {
++  nonempty(ownerUserId, 128);
++  if (raw === null) {
++    return Object.freeze({ schemaVersion: 1, provenance: 'owner_unconfirmed_transcription', ownerUserId,
++      processingEpoch: integer(processingEpoch, 0), drafts: Object.freeze([]) });
++  }
++  if (raw.length > 600_000 || utf8ToBytes(raw).length > 600_000) invalid();
++  let parsed: unknown;
++  try { parsed = JSON.parse(raw) as unknown; } catch { invalid(); }
++  const row = record(parsed, ['schemaVersion', 'provenance', 'ownerUserId', 'processingEpoch', 'drafts']);
++  if (row.schemaVersion !== 1 || row.provenance !== 'owner_unconfirmed_transcription') invalid();
++  if (row.ownerUserId !== ownerUserId || (processingEpoch !== undefined && row.processingEpoch !== processingEpoch)) throw new Error(BOTTLE_DRAFT_AUTHORITY);
++  const epoch = integer(row.processingEpoch, 0);
++  if (!Array.isArray(row.drafts) || row.drafts.length > BOTTLE_DRAFT_LIMIT) invalid();
++  const drafts = row.drafts.map(value => {
++    const entry = record(value, ['id', 'revision', 'createdAt', 'updatedAt', 'source', 'fields', 'contentHash']);
++    const { contentHash, ...body } = entry;
++    const draft = makeBottleDraft(body as Omit<BottleDraft, 'contentHash'>);
++    if (draft.contentHash !== hash(contentHash)) invalid();
++    return draft;
++  });
++  if (new Set(drafts.map(d => d.id)).size !== drafts.length ||
++      new Set(drafts.map(d => d.source.productId)).size !== drafts.length) invalid();
++  return Object.freeze({ schemaVersion: 1, provenance: 'owner_unconfirmed_transcription', ownerUserId,
++    processingEpoch: epoch, drafts: Object.freeze(drafts) });
++}
+diff --git a/apps/mobile/src/features/shelf/bottleDraftStore.ts b/apps/mobile/src/features/shelf/bottleDraftStore.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..6ca0c27d69c04e453573114b42166b924229457c
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/bottleDraftStore.ts
+@@ -0,0 +1,106 @@
++import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
++import { classifyAgePolicyReceipt } from '@/features/onboarding/ageGateStore';
++import { hasCurrentHealthDataCollectionConsentBytes } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_LIFECYCLE_KEY, parseHealthDataLifecycleRecord } from '@/features/healthConsent/lifecycleStore';
++import { assertOriginalHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { updatePrivateItemWithSources } from '@/lib/storage/privateKV';
++import {
++  BOTTLE_DRAFT_KEY, BOTTLE_DRAFT_AUTHORITY, BOTTLE_DRAFT_CONFLICT, BOTTLE_DRAFT_LIMIT,
++  decodeBottleDraftCollection, decodeBottleDraftFields, makeBottleDraft, bottleDraftSource,
++  type BottleDraft, type BottleDraftSource, type BottleDraftFields, type BottleDraftCollection,
++} from './bottleDraftCodec';
++
++const CONSENT_KEY = 'layerwell.healthDataCollectionConsent.v1';
++const SHELF_KEY = 'layerwell.shelf.v1';
++export const BOTTLE_DRAFT_AUTHORIZATION_KEYS = [AGE_POLICY_RECEIPT_KEY, CONSENT_KEY, HEALTH_DATA_LIFECYCLE_KEY] as const;
++
++/** These reserved authority records are authenticated before draft/Shelf reads. */
++export function bottleDraftAuthorization(lease: HealthDataWriteLease) {
++  return {
++    keys: BOTTLE_DRAFT_AUTHORIZATION_KEYS,
++    validate(values: ReadonlyMap<string, string | null>) {
++      assertOriginalHealthDataWriteLease(lease);
++      if (classifyAgePolicyReceipt(values.get(AGE_POLICY_RECEIPT_KEY) ?? null) !== 'current' ||
++          !hasCurrentHealthDataCollectionConsentBytes(values.get(CONSENT_KEY) ?? null)) throw new Error(BOTTLE_DRAFT_AUTHORITY);
++      const lifecycle = parseHealthDataLifecycleRecord(values.get(HEALTH_DATA_LIFECYCLE_KEY) ?? '');
++      if (lifecycle.ownerUserId !== lease.ownerUserId || lifecycle.processingEpoch !== lease.epoch ||
++          lifecycle.state !== 'active' || lifecycle.activationRoutePending) throw new Error(BOTTLE_DRAFT_AUTHORITY);
++    },
++  };
++}
++export function assertExactBottleDraft(raw: string | null, lease: HealthDataWriteLease, expected: BottleDraft): void {
++  const current = decodeBottleDraftCollection(raw, lease.ownerUserId, lease.epoch).drafts.find(row => row.id === expected.id);
++  if (!current || JSON.stringify(current) !== JSON.stringify(expected)) throw new Error(BOTTLE_DRAFT_CONFLICT);
++}
++
++export async function loadBottleDrafts(lease: HealthDataWriteLease): Promise<BottleDraftCollection> {
++  const assertCurrent = () => assertOriginalHealthDataWriteLease(lease);
++  assertCurrent();
++  let result: BottleDraftCollection | undefined;
++  await updatePrivateItemWithSources(BOTTLE_DRAFT_KEY, BOTTLE_DRAFT_AUTHORIZATION_KEYS, values => {
++    const raw = values.get(BOTTLE_DRAFT_KEY) ?? null;
++    result = decodeBottleDraftCollection(raw, lease.ownerUserId, lease.epoch);
++    return raw;
++  }, assertCurrent, undefined, undefined, bottleDraftAuthorization(lease));
++  assertCurrent();
++  return result!;
++}
++
++/** Explicit save only. Incomplete text remains unconfirmed and device-local. */
++export async function saveBottleDraft(lease: HealthDataWriteLease, request: Readonly<{
++  id: string;
++  expected: BottleDraft | null;
++  source: BottleDraftSource;
++  fields: BottleDraftFields;
++}>, assertCallerCurrent: () => void): Promise<BottleDraft> {
++  const assertCurrent = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  assertCurrent();
++  const source = bottleDraftSource(request.source);
++  const fields = decodeBottleDraftFields(request.fields);
++  // Copy the request before awaiting; no mutable caller alias grants authority.
++  const expected = request.expected ? JSON.stringify(request.expected) : null;
++  const id = request.id;
++  const { bottleHistorySnapshotFromBytes } = await import('./store');
++  assertCurrent();
++  let result: BottleDraft | undefined;
++  await updatePrivateItemWithSources(BOTTLE_DRAFT_KEY, [...BOTTLE_DRAFT_AUTHORIZATION_KEYS, SHELF_KEY], values => {
++    assertCurrent();
++    const raw = values.get(BOTTLE_DRAFT_KEY) ?? null;
++    const collection = decodeBottleDraftCollection(raw, lease.ownerUserId, lease.epoch);
++    const existing = collection.drafts.find(row => row.source.productId === source.productId);
++    if (collection.drafts.some(row => row.id === id && row.source.productId !== source.productId)) throw new Error(BOTTLE_DRAFT_CONFLICT);
++    if ((existing ? JSON.stringify(existing) : null) !== expected || (existing && existing.id !== id)) throw new Error(BOTTLE_DRAFT_CONFLICT);
++    const currentSource = bottleHistorySnapshotFromBytes(values.get(SHELF_KEY) ?? null, source.productId);
++    if (!currentSource || JSON.stringify(bottleDraftSource(currentSource)) !== JSON.stringify(source)) throw new Error(BOTTLE_DRAFT_CONFLICT);
++    if (existing && JSON.stringify(existing.source) === JSON.stringify(source) && JSON.stringify(existing.fields) === JSON.stringify(fields)) {
++      result = existing;
++      return raw;
++    }
++    if (!existing && collection.drafts.length >= BOTTLE_DRAFT_LIMIT) throw new Error(BOTTLE_DRAFT_CONFLICT);
++    const now = new Date().toISOString();
++    result = makeBottleDraft({ id, revision: (existing?.revision ?? 0) + 1,
++      createdAt: existing?.createdAt ?? now, updatedAt: now, source, fields });
++    const next = JSON.stringify({ ...collection, drafts: [...collection.drafts.filter(row => row.id !== id), result] });
++    decodeBottleDraftCollection(next, lease.ownerUserId, lease.epoch);
++    return next;
++  }, assertCurrent, undefined, undefined, bottleDraftAuthorization(lease));
++  assertCurrent();
++  return result!;
++}
++
++/** Exact revision retirement, including after confirmed observation readback.
++ * Missing or successor data is never treated as permission to remove it. */
++export async function discardBottleDraft(lease: HealthDataWriteLease, expected: BottleDraft, assertCallerCurrent: () => void): Promise<void> {
++  const assertCurrent = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  assertCurrent();
++  const accepted = JSON.stringify(expected);
++  const acceptedId = expected.id;
++  await updatePrivateItemWithSources(BOTTLE_DRAFT_KEY, BOTTLE_DRAFT_AUTHORIZATION_KEYS, values => {
++    assertCurrent();
++    const raw = values.get(BOTTLE_DRAFT_KEY) ?? null;
++    const collection = decodeBottleDraftCollection(raw, lease.ownerUserId, lease.epoch);
++    assertExactBottleDraft(raw, lease, JSON.parse(accepted) as BottleDraft);
++    return JSON.stringify({ ...collection, drafts: collection.drafts.filter(row => row.id !== acceptedId) });
++  }, assertCurrent, undefined, undefined, bottleDraftAuthorization(lease));
++  assertCurrent();
++}
+diff --git a/apps/mobile/src/features/shelf/bottleDrafts.test.ts b/apps/mobile/src/features/shelf/bottleDrafts.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b8548f30bb6818778f79316410e7f5ac832a097
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/bottleDrafts.test.ts
+@@ -0,0 +1,170 @@
++import { adultLifecycle26, close26, grant26, ports26, reset26 } from './firstValue26TestPorts';
++import { randomUUID } from 'node:crypto';
++import AsyncStorage from '@react-native-async-storage/async-storage';
++import type { QueryClient } from '@tanstack/react-query';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { claimLocalDataOwnership } from '@/lib/auth/sessionOwner';
++import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
++import { captureHealthDataWriteLease, HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteAdmission';
++import { activeHealthProcessingLeaseSnapshot, clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
++import { getPrivateItem, setPrivateItem, removePrivateItem, waitForPrivateKVWritesToSettle } from '@/lib/storage/privateKV';
++import { PRIVATE_KV_CONTENT_KEY_NAME } from '@/lib/storage/privateKVContentKey';
++import { setAgeVerified } from '@/features/onboarding/ageGateStore';
++import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
++import { LOCAL_PRIVATE_DATA_KEYS } from '@/features/settings/localPrivateDataKeys';
++import { collectLocalDeviceExportData, LOCAL_DEVICE_EXPORT_STORAGE_KEYS } from '@/features/settings/localDeviceExport';
++import { BOTTLE_DRAFT_KEY as KEY, BOTTLE_DRAFT_CONFLICT, bottleDraftSource, decodeBottleDraftCollection } from './bottleDraftCodec';
++import { discardBottleDraft, loadBottleDrafts, saveBottleDraft } from './bottleDraftStore';
++import { addProduct, confirmOwnedBottleVersion38, loadOwnedBottleHistory38, removeProduct, updateProduct } from './store';
++
++vi.mock('expo-file-system/legacy', () => ({ documentDirectory: null, cacheDirectory: null }));
++let client: QueryClient;
++let productId: string;
++const fields = { mode: 'label' as const, label: 'Synthetic unconfirmed Aqua', market: '', variant: 'Draft variant', observed: '2026-01-01' };
++async function request() {
++  const source = bottleDraftSource((await loadOwnedBottleHistory38(productId))!);
++  return { id: randomUUID(), expected: null, source, fields };
++}
++async function saved() {
++  const lease = captureHealthDataWriteLease();
++  return { lease, draft: await saveBottleDraft(lease, await request(), () => undefined) };
++}
++beforeEach(async () => {
++  vi.stubGlobal('__DEV__', true);
++  client = await reset26(); await claimLocalDataOwnership('synthetic-first-value-a'); await adultLifecycle26();
++  productId = (await addProduct({ name: 'Synthetic draft bottle', category: 'cleanser', addedVia: 'manual' })).id;
++});
++afterEach(async () => {
++  vi.restoreAllMocks(); ports26.failWrite = null; ports26.failRead = null;
++  await waitForPrivateKVWritesToSettle();
++  await close26(client); vi.unstubAllGlobals();
++});
++it('round trips a purpose-bound encrypted unconfirmed draft through a fresh runtime lease', async () => {
++  const { draft } = await saved();
++  const ciphertext = ports26.bytes.get(KEY)!;
++  expect(ciphertext).toContain('xchacha20poly1305:purpose-bound:v2');
++  expect(ciphertext).not.toContain(fields.label); expect(ciphertext).not.toContain(productId);
++  await grant26();
++  expect((await loadBottleDrafts(captureHealthDataWriteLease())).drafts).toEqual([draft]);
++  expect((await loadOwnedBottleHistory38(productId))!.revision).toBe(0);
++});
++it('saves incomplete text without accepting it as an observation', async () => {
++  const lease = captureHealthDataWriteLease();
++  const draft = await saveBottleDraft(lease, { ...await request(), fields: { ...fields, observed: '20', mode: null, label: '' } }, () => undefined);
++  expect((await loadBottleDrafts(lease)).drafts[0]).toEqual(draft);
++  expect((await loadOwnedBottleHistory38(productId))!.revision).toBe(0);
++});
++it('CAS preserves a successor against old save and discard commands', async () => {
++  const { lease, draft } = await saved();
++  const successor = await saveBottleDraft(lease, { id: draft.id, expected: draft, source: draft.source, fields: { ...fields, label: 'New transcription' } }, () => undefined);
++  await expect(discardBottleDraft(lease, draft, () => undefined)).rejects.toThrow(BOTTLE_DRAFT_CONFLICT);
++  await expect(saveBottleDraft(lease, { id: draft.id, expected: draft, source: draft.source, fields }, () => undefined)).rejects.toThrow(BOTTLE_DRAFT_CONFLICT);
++  expect((await loadBottleDrafts(lease)).drafts).toEqual([successor]);
++});
++it('does not replace another bottle draft on an identifier collision', async () => {
++  const { lease, draft } = await saved();
++  productId = (await addProduct({ name: 'Second synthetic bottle', addedVia: 'manual' })).id;
++  await expect(saveBottleDraft(lease, { ...await request(), id: draft.id }, () => undefined)).rejects.toThrow(BOTTLE_DRAFT_CONFLICT);
++  expect((await loadBottleDrafts(lease)).drafts).toEqual([draft]);
++});
++it('retains an exact saved draft if its bottle source changes or disappears', async () => {
++  const { lease, draft } = await saved();
++  await updateProduct(productId, { name: 'Renamed bottle' });
++  await expect(saveBottleDraft(lease, { id: draft.id, expected: draft, source: draft.source, fields }, () => undefined)).rejects.toThrow();
++  await removeProduct(productId);
++  expect((await loadBottleDrafts(lease)).drafts).toEqual([draft]);
++  await discardBottleDraft(lease, draft, () => undefined);
++  expect((await loadBottleDrafts(lease)).drafts).toEqual([]);
++});
++it.each(['adult', 'consent', 'lifecycle'] as const)('refuses %s authority before reading draft or Shelf bytes', async kind => {
++  await saved();
++  if (kind === 'adult') await setAgeVerified(false);
++  if (kind === 'consent') await setHealthDataCollectionConsentLocal({ granted: false, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.declineText });
++  if (kind === 'lifecycle') await removePrivateItem('layerwell.healthDataLifecycle.v1');
++  const read = vi.spyOn(AsyncStorage, 'getItem');
++  await expect(loadBottleDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(read.mock.calls.filter(([key]) => key === KEY || key === 'layerwell.shelf.v1')).toEqual([]);
++});
++it('refuses old callbacks after same-owner lease replacement', async () => {
++  const { lease, draft } = await saved(); await grant26();
++  await expect(discardBottleDraft(lease, draft, () => undefined)).rejects.toThrow();
++  expect((await loadBottleDrafts(captureHealthDataWriteLease())).drafts).toEqual([draft]);
++});
++it('refuses a different persisted grant epoch without rewriting ciphertext', async () => {
++  await saved(); const before = ports26.bytes.get(KEY);
++  await adultLifecycle26(26);
++  const active = activeHealthProcessingLeaseSnapshot()!;
++  clearActiveHealthProcessingEpoch(); setActiveHealthProcessingEpoch(26, { ownerUserId: active.ownerUserId!, accountGeneration: active.accountGeneration! });
++  await expect(loadBottleDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(ports26.bytes.get(KEY)).toBe(before);
++});
++it('refuses a foreign owner before reading draft bytes', async () => {
++  await saved(); await grant26('synthetic-other-owner');
++  const read = vi.spyOn(AsyncStorage, 'getItem');
++  await expect(loadBottleDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(read.mock.calls.some(([key]) => key === KEY)).toBe(false);
++});
++it('does not confirm a draft when its saved revision has changed', async () => {
++  const { lease, draft } = await saved();
++  await saveBottleDraft(lease, { id: draft.id, expected: draft, source: draft.source, fields: { ...fields, label: 'New transcription' } }, () => undefined);
++  await expect(confirmOwnedBottleVersion38({ productId, expectedUpdatedAt: draft.source.productUpdatedAt,
++    expectedProductIdentityHash: draft.source.productIdentityHash, expectedRevision: draft.source.revision,
++    expectedCurrentVersionId: draft.source.currentVersionId, confirmation: 'confirm_label', labelText: fields.label,
++    market: null, variant: fields.variant, observedOn: fields.observed }, () => undefined, { expected: draft, lease })).rejects.toThrow(BOTTLE_DRAFT_CONFLICT);
++  expect((await loadOwnedBottleHistory38(productId))!.revision).toBe(0);
++});
++it('keeps the draft across confirmed observation readback until exact retirement', async () => {
++  const { lease, draft } = await saved();
++  const input = { productId, expectedUpdatedAt: draft.source.productUpdatedAt,
++    expectedProductIdentityHash: draft.source.productIdentityHash, expectedRevision: draft.source.revision,
++    expectedCurrentVersionId: draft.source.currentVersionId, confirmation: 'confirm_label' as const,
++    labelText: fields.label, market: null, variant: fields.variant, observedOn: fields.observed };
++  const confirmed = await confirmOwnedBottleVersion38(input, () => undefined, { expected: draft, lease });
++  expect((await loadBottleDrafts(lease)).drafts).toEqual([draft]);
++  expect(await confirmOwnedBottleVersion38(input, () => undefined, { expected: draft, lease })).toEqual(confirmed);
++  await discardBottleDraft(lease, draft, () => undefined);
++  expect((await loadBottleDrafts(lease)).drafts).toEqual([]);
++});
++it('refuses omitted native writes and does not announce durable success', async () => {
++  const original = AsyncStorage.setItem.bind(AsyncStorage);
++  vi.spyOn(AsyncStorage, 'setItem').mockImplementation(async (key, value) => { if (key !== KEY) await original(key, value); });
++  await expect(saveBottleDraft(captureHealthDataWriteLease(), await request(), () => undefined)).rejects.toThrow();
++  expect(ports26.bytes.has(KEY)).toBe(false);
++});
++it('preserves ciphertext on missing key and never invents a recovery key', async () => {
++  await saved(); const before = ports26.bytes.get(KEY);
++  ports26.bytes.delete(PRIVATE_KV_CONTENT_KEY_NAME);
++  await expect(loadBottleDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(ports26.bytes.get(KEY)).toBe(before); expect(ports26.bytes.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
++});
++it('rejects unsupported records and unauthenticated bytes without promotion', async () => {
++  const { lease } = await saved();
++  const raw = await getPrivateItem(KEY);
++  expect(() => decodeBottleDraftCollection(JSON.stringify({ ...JSON.parse(raw!), schemaVersion: 2 }), lease.ownerUserId, lease.epoch)).toThrow();
++  await setPrivateItem(KEY, JSON.stringify({ ...JSON.parse(raw!), schemaVersion: 2 }));
++  const unsupported = ports26.bytes.get(KEY);
++  await expect(loadBottleDrafts(lease)).rejects.toThrow();
++  expect(ports26.bytes.get(KEY)).toBe(unsupported);
++  ports26.bytes.set(KEY, raw!);
++  await expect(loadBottleDrafts(lease)).rejects.toThrow();
++  expect(ports26.bytes.get(KEY)).toBe(raw);
++});
++it('registers drafts for withdrawal, full deletion, rights export and strict decoding', async () => {
++  const { lease, draft } = await saved();
++  expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toContain(KEY); expect(LOCAL_PRIVATE_DATA_KEYS).toContain(KEY);
++  expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).toContain(KEY);
++  expect(decodeBottleDraftCollection(await getPrivateItem(KEY), lease.ownerUserId).drafts).toEqual([draft]);
++  for (const key of HEALTH_PURPOSE_PRIVATE_DATA_KEYS) await removePrivateItem(key);
++  expect(ports26.bytes.has(KEY)).toBe(false);
++});
++it('exports unconfirmed drafts through the actual rights collector with processing paused and refuses a foreign owner or invalid schema', async () => {
++  const { lease, draft } = await saved(); const bytes = await getPrivateItem(KEY);
++  clearActiveHealthProcessingEpoch();
++  const collect = (owner = lease.ownerUserId) => runAccountGenerationOperation(account => collectLocalDeviceExportData(account, owner));
++  const result = await collect();
++  expect(result.sections.shelf_and_routine.unconfirmed_bottle_drafts).toMatchObject({ drafts: [{ id: draft.id, fields }] });
++  await expect(collect('synthetic-other-owner')).rejects.toThrow();
++  await grant26(); await setPrivateItem(KEY, JSON.stringify({ ...JSON.parse(bytes!), schemaVersion: 2 })); clearActiveHealthProcessingEpoch();
++  await expect(collect()).rejects.toThrow();
++});
+diff --git a/apps/mobile/src/features/shelf/firstValue26TestPorts.ts b/apps/mobile/src/features/shelf/firstValue26TestPorts.ts
+index 8f7043bc34d9b9a7f2433b1bf8f4360a2f2b7837..03d4a3b2bb18063746ab495dfdf2a294165889c6 100644
+--- a/apps/mobile/src/features/shelf/firstValue26TestPorts.ts
++++ b/apps/mobile/src/features/shelf/firstValue26TestPorts.ts
+@@ -151,6 +151,15 @@ export async function grant26(ownerUserId = 'synthetic-first-value-a') {
+   const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+   setActiveHealthProcessingEpoch(25, { ownerUserId, accountGeneration });
+ }
++/** Explicit synthetic adult/lifecycle fixture for durable-draft authorization. */
++export async function adultLifecycle26(epoch = 25, ownerUserId = 'synthetic-first-value-a') {
++  const { setAgeVerified } = await import('@/features/onboarding/ageGateStore');
++  const { writeHealthDataLifecycle } = await import('@/features/healthConsent/lifecycleStore');
++  await setAgeVerified(true);
++  await writeHealthDataLifecycle({ ownerUserId, processingEpoch: epoch, state: 'active',
++    operationId: null, idempotencyKey: null, localCleanupComplete: false,
++    activationRoutePending: false, verificationReason: null, verificationResumeState: null, serverVerifiedAt: null });
++}
+ export async function reset26() {
+   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+   ports26.bytes.clear();
+diff --git a/apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts b/apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts
+index 9e04337b29a0a805c13d252164b71085e9d1f999..8733fc474dd2d6d96f4bbc26f11dc23c999f2c22 100644
+--- a/apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts
++++ b/apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts
+@@ -1,4 +1,4 @@
+-import { close26, flush26, grant26, ports26, profile26, reset26 } from './firstValue26TestPorts';
++import { adultLifecycle26, close26, flush26, grant26, ports26, profile26, reset26 } from './firstValue26TestPorts';
+ import { createElement } from 'react';
+ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+ import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
+@@ -6,6 +6,9 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+ import FormulaHistoryScreen from '@/app/shelf/formula-history';
+ import { addProduct, confirmOwnedBottleVersion38, loadOwnedBottleHistory38 } from './store';
+ import { claimLocalDataOwnership } from '@/lib/auth/sessionOwner';
++import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { loadBottleDrafts } from './bottleDraftStore';
++import { BOTTLE_DRAFT_KEY } from './bottleDraftCodec';
+ vi.mock('expo-file-system/legacy',()=>({documentDirectory:null,cacheDirectory:null}));
+ let client:QueryClient;let renderer:ReactTestRenderer|undefined;
+ const control=(label:string)=>renderer!.root.findAll(node=>node.props.label===label&&typeof node.props.onPress==='function')[0]!;
+@@ -13,11 +16,52 @@ async function press(label:string){expect(control(label),label).toBeDefined();ex
+ async function label(value:string){const field=renderer!.root.findAll(node=>node.props.accessibilityLabel==='Ingredient label as printed'&&typeof node.props.onChangeText==='function')[0]!;await act(async()=>field.props.onChangeText(value));}
+ beforeEach(async()=>{
+   vi.stubGlobal('__DEV__',true);client=await reset26();await profile26();await claimLocalDataOwnership('synthetic-first-value-a');
++  await adultLifecycle26();
+   ports26.params.id=(await addProduct({name:'Formula review bottle',category:'cleanser',addedVia:'manual'})).id;
+   await act(async()=>{renderer=create(createElement(QueryClientProvider,{client},createElement(FormulaHistoryScreen)));});await flush26();
+   await press('Record label observation');await press('I have the printed label');await label('Aqua');
+ });
+ afterEach(async()=>{if(renderer)await act(async()=>renderer!.unmount());renderer=undefined;vi.restoreAllMocks();await close26(client);vi.unstubAllGlobals();});
++it('resumes only explicitly after remount, reviews saved source, and confirms the saved transcription', async () => {
++  await press('Save bottle draft on this device');
++  await label('Unsaved later edit');
++  await act(async () => renderer!.unmount()); renderer = undefined; client.clear();
++  await grant26();
++  await act(async () => { renderer = create(createElement(QueryClientProvider, { client }, createElement(FormulaHistoryScreen))); });
++  await flush26();
++  expect(JSON.stringify(renderer!.toJSON())).not.toContain('Unsaved later edit');
++  expect(renderer!.root.findAll(node => node.props.accessibilityLabel === 'Ingredient label as printed')).toHaveLength(0);
++  await press('Resume saved bottle draft');
++  expect(control('Confirm this bottle observation').props.disabled).toBe(true);
++  expect(renderer!.root.findAll(node => node.props.accessibilityLabel === 'Ingredient label as printed' && typeof node.props.onChangeText === 'function')[0]!.props.value).toBe('Aqua');
++  await press('Review current saved bottle'); await press('Keep draft with reviewed source');
++  await press('Confirm this bottle observation');
++  expect((await loadOwnedBottleHistory38(ports26.params.id!))!.currentVersion!.formulaVersion.labelText).toBe('Aqua');
++  expect((await loadBottleDrafts(captureHealthDataWriteLease())).drafts).toEqual([]);
++});
++it('saves and leaves through the explicit navigation decision without confirming history', async () => {
++  await act(async () => ports26.preventRemove!({ data: { action: { type: 'GO_BACK' } } })); await flush26();
++  await press('Save bottle draft and leave');
++  expect(ports26.dispatch).toHaveBeenCalledExactlyOnceWith({ type: 'GO_BACK' });
++  expect((await loadBottleDrafts(captureHealthDataWriteLease())).drafts[0]!.fields.label).toBe('Aqua');
++  expect((await loadOwnedBottleHistory38(ports26.params.id!))!.revision).toBe(0);
++});
++it('does not let old save or cancel callbacks replace or discard a newly saved revision', async () => {
++  const cancel = control('Cancel draft').props.onPress;
++  const save = control('Save bottle draft on this device').props.onPress;
++  await press('Save bottle draft on this device');
++  await label('New durable transcription'); await press('Save bottle draft on this device');
++  await act(async () => { await cancel(); await save(); }); await flush26();
++  expect((await loadBottleDrafts(captureHealthDataWriteLease())).drafts[0]!.fields.label).toBe('New durable transcription');
++});
++it('preserves editable text and shows a refusal when draft persistence fails', async () => {
++  ports26.failWrite = BOTTLE_DRAFT_KEY;
++  await press('Save bottle draft on this device');
++  expect(JSON.stringify(renderer!.toJSON())).toContain('Draft save was not confirmed');
++  ports26.failWrite = null;
++  await press('Save bottle draft on this device');
++  expect((await loadBottleDrafts(captureHealthDataWriteLease())).drafts[0]!.fields.label).toBe('Aqua');
++});
+ it('cannot confirm a cancelled bottle observation against a successor draft',async()=>{
+   const old=control('Confirm this bottle observation').props.onPress;
+   await press('Cancel draft');await press('Record label observation');await press('I have the printed label');await label('Glycerin');
+diff --git a/apps/mobile/src/features/shelf/mutations.ts b/apps/mobile/src/features/shelf/mutations.ts
+index 149dfc1760a0fe9c9722e3684336ee64ebf86f6c..adc185a1a993fbd1411bd9cea5918aa06d1cbdce 100644
+--- a/apps/mobile/src/features/shelf/mutations.ts
++++ b/apps/mobile/src/features/shelf/mutations.ts
+@@ -61,9 +61,10 @@ export function useShelfMutations() {
+     async confirmBottleObservation(
+       input: ConfirmOwnedBottleVersionInput38,
+       assertBeforeNativeWrite: () => void,
++      durableDraft?: Parameters<typeof confirmOwnedBottleVersion38>[2],
+     ): Promise<OwnedBottleHistorySnapshot38> {
+       return runShelfMutation(async (lease) => {
+-        const snapshot = await confirmOwnedBottleVersion38(input, assertBeforeNativeWrite);
++        const snapshot = await confirmOwnedBottleVersion38(input, assertBeforeNativeWrite, durableDraft);
+         lease.assertCurrent();
+         await invalidate(lease);
+         lease.assertCurrent();
+diff --git a/apps/mobile/src/features/shelf/shelfRoutes.test.ts b/apps/mobile/src/features/shelf/shelfRoutes.test.ts
+index 837882e5448bc854d14f97ea318fe10992948cb6..84111bcf77c194d36151ebe273d51346191481d8 100644
+--- a/apps/mobile/src/features/shelf/shelfRoutes.test.ts
++++ b/apps/mobile/src/features/shelf/shelfRoutes.test.ts
+@@ -1303,10 +1303,13 @@ describe('real bottle-history screen privacy retirement', () => {
+       '@/features/shelf/BottleUseHistory', 'react-native', '@/components/ui', 'expo-router', 'expo-router/react-navigation', '@tanstack/react-query',
+       '@/features/shelf/useShelf', '@/features/shelf/mutations', '@/features/shelf/store',
+       '@/lib/consent/healthDataWriteAdmission', '@/lib/consent/healthProcessingEpoch', '@/features/today/useToday',
++      'expo-crypto', '@/features/shelf/bottleDraftStore',
+     ];
+     // This draft-retirement fixture controls canonical reads; use-history runs
+     // with real storage and component events in bottleUseHistory.test.ts.
+     vi.doMock('@/features/shelf/BottleUseHistory', () => ({ BottleUseHistory: () => null }));
++    vi.doMock('expo-crypto', () => ({ randomUUID: () => '11111111-1111-4111-8111-111111111111' }));
++    vi.doMock('@/features/shelf/bottleDraftStore', () => ({ loadBottleDrafts: vi.fn(), saveBottleDraft: vi.fn(), discardBottleDraft: vi.fn() }));
+     vi.doMock('react-native', () => ({ View: 'View', ScrollView: 'ScrollView', TextInput: 'TextInput' }));
+     vi.doMock('@/components/ui', () => ({ Button: 'Button', RouteIconButton: 'RouteIconButton', Screen: 'Screen', Text: 'Text' }));
+     vi.doMock('expo-router', () => ({
+@@ -1336,10 +1339,10 @@ describe('real bottle-history screen privacy retirement', () => {
+     vi.doMock('@tanstack/react-query', () => ({
+       onlineManager: { subscribe: () => () => {}, isOnline: () => true },
+       useQueryClient: () => ({ getQueryData: () => shelf.data, getQueryState: () => ({ status: 'success', fetchStatus: 'idle' }) }),
+-      useQuery: () => ({ data: { generation, snapshot: {
+-        productId: id, ownedUnitId: id, productUpdatedAt: '', productIdentityHash: '',
++      useQuery: ({ queryKey }: { queryKey: string[] }) => ({ data: queryKey[0] === 'bottle-drafts' ? { drafts: [] } : { generation, snapshot: {
++        productId: id, ownedUnitId: id, productUpdatedAt: '2026-11-01T00:00:00.000Z', productIdentityHash: 'a'.repeat(64),
+         revision: 0, currentVersionId: null, currentVersion: null, versions: [], localOnly: true,
+-      } }, isError: false, isFetching: false, isPending: false, refetch: vi.fn() }),
++      } }, isError: false, isFetching: false, isPending: false, isSuccess: true, refetch: vi.fn() }),
+     }));
+     let screen: ReactTestRenderer | undefined;
+     try {
+diff --git a/apps/mobile/src/features/shelf/store.ts b/apps/mobile/src/features/shelf/store.ts
+index d51924c51866da52e38fd1be2fbbfdd6a6517881..4e09777fa66d65612a9937e382ceb4037a40186e 100644
+--- a/apps/mobile/src/features/shelf/store.ts
++++ b/apps/mobile/src/features/shelf/store.ts
+@@ -3,7 +3,9 @@ import { randomUUID } from 'expo-crypto';
+ import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@layerwell/types';
+ import type { CatalogQualityGrade } from '@/features/catalog/quality';
+ import { captureHealthDataWriteLease, runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
++import { getPrivateItem, removePrivateItem, updatePrivateItem, updatePrivateItemWithSources } from '@/lib/storage/privateKV';
++import type { HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { BOTTLE_DRAFT_KEY, BOTTLE_DRAFT_CONFLICT, type BottleDraft } from './bottleDraftCodec';
+ 
+ import {
+   currentLocalDate,
+@@ -1208,14 +1210,24 @@ export function loadOwnedBottleHistory38(productId: string): Promise<OwnedBottle
+   });
+ }
+ 
++/** Pure snapshot from already reserved/authenticated Shelf bytes. */
++export function bottleHistorySnapshotFromBytes(raw: string | null, productId: string): OwnedBottleHistorySnapshot38 | null {
++  const decoded = decodeShelfState(raw);
++  const product = decoded.products.find(candidate => candidate.id === productId);
++  return product ? historySnapshot38(product, decoded.ownedBottleHistories.find(history => history.productId === productId)) : null;
++}
++
+ /** Append and pointer CAS share the existing encrypted Shelf transaction.
+  * Formula observations never enter the unrelated user_products replay schema. */
+ export function confirmOwnedBottleVersion38(
+   input: ConfirmOwnedBottleVersionInput38,
+   assertBeforeNativeWrite?: () => void,
++  durableDraft?: Readonly<{ expected: BottleDraft; lease: HealthDataWriteLease }>,
+ ): Promise<OwnedBottleHistorySnapshot38> {
+   return runCurrentHealthDataOperation(async (lease) => {
+     const expectedKeys = ['productId', 'expectedUpdatedAt', 'expectedProductIdentityHash', 'expectedRevision', 'expectedCurrentVersionId', 'confirmation', 'labelText', 'market', 'variant', 'observedOn'];
++    input = { ...input };
++    durableDraft = durableDraft ? { lease: durableDraft.lease, expected: JSON.parse(JSON.stringify(durableDraft.expected)) as BottleDraft } : undefined;
+     if (!isRecord(input) || !hasExactKeys(input, expectedKeys) || !Number.isSafeInteger(input.expectedRevision) || input.expectedRevision < 0 ||
+         !/^[0-9a-f]{64}$/.test(input.expectedProductIdentityHash) ||
+         (input.expectedCurrentVersionId !== null && !/^owned38:[0-9a-f]{64}$/.test(input.expectedCurrentVersionId))) throw new Error(FORMULA38_INVALID);
+@@ -1223,7 +1235,7 @@ export function confirmOwnedBottleVersion38(
+     const ts = nowISO();
+     let committed: OwnedBottleHistorySnapshot38 | null = null;
+     let outboxChanged = false;
+-    await updatePrivateItem(KEY, (current) => {
++    const transform = (current: string | null) => {
+       lease.assertCurrent();
+       const decoded = decodeShelfState(current, ts);
+       const product = decoded.products.find((candidate) => candidate.id === input.productId);
+@@ -1257,7 +1269,27 @@ export function confirmOwnedBottleVersion38(
+         ownedBottleHistories,
+         originalShelfBytes: decoded.ownedBottleHistories.length === 0 ? current : decoded.originalShelfBytes,
+       });
+-    }, undefined, assertBeforeNativeWrite);
++    };
++    if (durableDraft) {
++      const draftLease = durableDraft.lease;
++      const { bottleDraftAuthorization, BOTTLE_DRAFT_AUTHORIZATION_KEYS, assertExactBottleDraft } = await import('./bottleDraftStore');
++      const expected = durableDraft.expected;
++      const source = expected.source, fields = expected.fields;
++      if (source.productId !== input.productId || source.productUpdatedAt !== input.expectedUpdatedAt ||
++          source.productIdentityHash !== input.expectedProductIdentityHash || source.revision !== input.expectedRevision ||
++          source.currentVersionId !== input.expectedCurrentVersionId || !fields.mode ||
++          (fields.mode === 'label' ? 'confirm_label' : 'retain_unknown') !== input.confirmation ||
++          (fields.mode === 'label' ? fields.label : null) !== input.labelText ||
++          (fields.market || null) !== input.market || (fields.variant || null) !== input.variant ||
++          (fields.observed || null) !== input.observedOn) throw new Error(BOTTLE_DRAFT_CONFLICT);
++      const guard = () => { lease.assertCurrent(); assertBeforeNativeWrite?.(); };
++      await updatePrivateItemWithSources(KEY, [BOTTLE_DRAFT_KEY, ...BOTTLE_DRAFT_AUTHORIZATION_KEYS], values => {
++        assertExactBottleDraft(values.get(BOTTLE_DRAFT_KEY) ?? null, draftLease, expected);
++        return transform(values.get(KEY) ?? null);
++      }, guard, undefined, undefined, bottleDraftAuthorization(draftLease));
++    } else {
++      await updatePrivateItem(KEY, transform, undefined, assertBeforeNativeWrite);
++    }
+     lease.assertCurrent();
+     if (outboxChanged) notifyShelfMirrorOutboxChanged();
+     // A returned storage promise alone cannot prove persistence. Read the
+diff --git a/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts b/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts
+index e17b0a1f040c64136659bfa0fabcc34f27d22f18..dd2120586c93bb34fdbf4246ebe05c1ee6009b61 100644
+--- a/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts
++++ b/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts
+@@ -11,6 +11,7 @@ export const HEALTH_DATA_WRITE_OWNER_MISMATCH = 'HEALTH_DATA_WRITE_OWNER_MISMATC
+  * commerce recovery records are deliberately outside this set.
+  */
+ export const HEALTH_PURPOSE_PRIVATE_DATA_KEYS = [
++  'layerwell.bottleDrafts.v1',
+   'layerwell.ask.consent.v1',
+   'layerwell.ask.groundedTurns.v1',
+   'layerwell.catalog.lookupQueue.v1',
+diff --git a/apps/mobile/src/lib/storage/privateKV.ts b/apps/mobile/src/lib/storage/privateKV.ts
+index b4e60ce48e043c5abed39c55f4d93e3e1f55b55a..87a9bde4423da6c77dbc1810efe4e86c77b3b80f 100644
+--- a/apps/mobile/src/lib/storage/privateKV.ts
++++ b/apps/mobile/src/lib/storage/privateKV.ts
+@@ -291,7 +291,7 @@ async function assertHistoryKeysReadable45(keys: readonly string[]): Promise<voi
+ function rejectLegacyHistoryRaw45(key: string, raw: string | null): void {
+   // This new key has no plaintext legacy format. In particular, native '' is
+   // invalid data, never the null absence used by the strict history decoder.
+-  if ((key === 'layerwell.routinePlanHistory.v1' || key === 'layerwell.photos.deleteJournal.v1') && raw !== null &&
++  if ((key === 'layerwell.routinePlanHistory.v1' || key === 'layerwell.photos.deleteJournal.v1' || key === 'layerwell.bottleDrafts.v1') && raw !== null &&
+       classifyEnvelope(key, raw).kind === 'legacy') {
+     rememberFailedRead(key, raw);
+     throw new Error(PRIVATE_KV_SOURCE_UNAUTHENTICATED);
+@@ -299,7 +299,7 @@ function rejectLegacyHistoryRaw45(key: string, raw: string | null): void {
+ }
+ 
+ function assertHistoryBatchShape45(keys: readonly string[], entries: unknown): void {
+-  const historyKey = 'layerwell.routinePlanHistory.v1';
++  for (const historyKey of ['layerwell.routinePlanHistory.v1', 'layerwell.bottleDrafts.v1']) {
+   const requested = keys.filter((key) => key === historyKey).length;
+   if (!Array.isArray(entries)) throw new Error(PRIVATE_KV_ENVELOPE_INVALID);
+   const rows = entries.filter((entry: unknown): entry is unknown[] => Array.isArray(entry) && entry[0] === historyKey);
+@@ -307,6 +307,7 @@ function assertHistoryBatchShape45(keys: readonly string[], entries: unknown): v
+       (row[1] !== null && typeof row[1] !== 'string') || row[1] !== rows[0]?.[1])) {
+     throw new Error(PRIVATE_KV_ENVELOPE_INVALID);
+   }
++  }
+ }
+ 
+ function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
+@@ -368,7 +369,7 @@ function envelopeClassificationError(kind: 'malformed' | 'unsupported'): Error {
+ }
+ 
+ function privateEnvelopeVersion(key: string): PrivateEnvelope['version'] {
+-  return key === 'layerwell.photos.deleteJournal.v1' ? PURPOSE_BOUND_VERSION : ENCRYPTION_VERSION;
++  return key === 'layerwell.photos.deleteJournal.v1' || key === 'layerwell.bottleDrafts.v1' ? PURPOSE_BOUND_VERSION : ENCRYPTION_VERSION;
+ }
+ 
+ function cipherForPrivateKey45(key: string, contentKey: Uint8Array, nonce: Uint8Array, version = privateEnvelopeVersion(key)) {
+@@ -386,6 +387,9 @@ function decryptEnvelopeBytes(key: string, envelope: PrivateEnvelope, contentKey
+ }
+ 
+ function decryptEnvelope(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): string {
++  if (key === 'layerwell.bottleDrafts.v1' && envelope.version !== PURPOSE_BOUND_VERSION) {
++    throw new Error(PRIVATE_KV_PURPOSE_BINDING_REQUIRED);
++  }
+   const plaintext = decryptEnvelopeBytes(key, envelope, contentKey);
+   try {
+     const value = bytesToUtf8(plaintext);
+@@ -1223,8 +1227,17 @@ export async function updatePrivateItemWithSources(
+   assertCurrent: () => void,
+   prepareSources?: (values: ReadonlyMap<string, string | null>) => Promise<void>,
+   publishUnchangedSources?: () => void,
++  authorization?: Readonly<{
++    keys: readonly string[];
++    validate: (values: ReadonlyMap<string, string | null>) => void;
++  }>,
+ ): Promise<void> {
+   const keys = [...new Set([...sourceKeys, key])].sort();
++  const authorizationKeys = [...new Set(authorization?.keys ?? [])];
++  if (authorizationKeys.some(source => !keys.includes(source)) || (authorization && authorizationKeys.length === 0)) {
++    throw new Error(PRIVATE_KV_SOURCE_TRANSFORM_INVALID);
++  }
++  const readKeys = [...authorizationKeys, ...keys.filter(source => !authorizationKeys.includes(source))];
+   for (const sourceKey of keys) assertPrivateReadAllowed(sourceKey);
+   // Capture synchronously, before queuing. A stale callback cannot inherit a
+   // lease granted while it waited for a source reservation.
+@@ -1250,7 +1263,13 @@ export async function updatePrivateItemWithSources(
+         let contentKey: Uint8Array | null = null;
+         await assertHistoryKeysReadable45(keys);
+         assertAllowed();
+-        for (const sourceKey of keys) {
++        for (const sourceKey of readKeys) {
++          // Reserve all keys in the existing canonical order, but verify the
++          // caller's authority records before reading any private payload.
++          if (authorization && sourceKey === readKeys[authorizationKeys.length]) {
++            authorization.validate(values);
++            assertAllowed();
++          }
+           const raw = await assertNoFailedReadRewrite(sourceKey);
+           await assertMutationReadCurrent46();
+           assertAllowed();
+@@ -1284,6 +1303,7 @@ export async function updatePrivateItemWithSources(
+           }
+         }
+ 
++        authorization?.validate(values);
+         await assertMutationReadCurrent46();
+         await prepareSources?.(values);
+         await assertMutationReadCurrent46();
+diff --git a/apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts b/apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a3322d55bc7385b4629d654abd725433990ce3e
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts
+@@ -0,0 +1,48 @@
++import { expect, it, vi } from 'vitest';
++import { createWebRuntimeAdmission, gateWebRuntimeStorage, PRIVATE_WEB_RUNTIME_LOCK, type RuntimeLockPort } from './webRuntimeAdmission';
++
++it('holds one exclusive origin lock for the document lifetime without steal or unmount release', async () => {
++  let held = false;
++  const request = vi.fn<RuntimeLockPort['request']>(async (_name, _options, callback) => {
++    if (held) return callback(null);
++    held = true;
++    return callback({ name: PRIVATE_WEB_RUNTIME_LOCK }).finally(() => { held = false; });
++  });
++  const first = createWebRuntimeAdmission({ request }), second = createWebRuntimeAdmission({ request });
++  const changed = vi.fn(); const unsubscribe = first.subscribe(changed);
++  first.subscribe(() => { throw new Error('Synthetic notification failure'); });
++  first.retry(); await Promise.resolve();
++  expect(first.snapshot()).toBe('admitted');
++  unsubscribe(); first.retry(); second.retry(); await Promise.resolve();
++  expect(second.snapshot()).toBe('occupied'); expect(held).toBe(true);
++  expect(request).toHaveBeenCalledTimes(2);
++  expect(request.mock.calls.every(([name, options]) => name === PRIVATE_WEB_RUNTIME_LOCK &&
++    JSON.stringify(options) === JSON.stringify({ mode: 'exclusive', ifAvailable: true }))).toBe(true);
++});
++it('holds import-time auth reads, writes and removal until the document is admitted', async () => {
++  let occupied = true;
++  const admission = createWebRuntimeAdmission({ request: async (_name, _options, callback) => callback(occupied ? null : {}) });
++  const storage = { getItem: vi.fn(async () => 'retained synthetic session'), setItem: vi.fn(async () => {}), removeItem: vi.fn(async () => {}) };
++  const gated = gateWebRuntimeStorage(storage, admission);
++  const read = gated.getItem('session'), write = gated.setItem('session', 'synthetic'), remove = gated.removeItem('session');
++  admission.retry(); await new Promise(resolve => setTimeout(resolve, 0));
++  expect(storage.getItem).not.toHaveBeenCalled(); expect(storage.setItem).not.toHaveBeenCalled(); expect(storage.removeItem).not.toHaveBeenCalled();
++  occupied = false; admission.retry();
++  expect(await read).toBe('retained synthetic session'); await write; await remove;
++  expect(storage.getItem).toHaveBeenCalledOnce(); expect(storage.setItem).toHaveBeenCalledOnce(); expect(storage.removeItem).toHaveBeenCalledOnce();
++});
++it('permits explicit retry after the other context has closed', async () => {
++  let occupied = true;
++  const request: RuntimeLockPort['request'] = async (_name, _options, callback) => callback(occupied ? null : {});
++  const admission = createWebRuntimeAdmission({ request });
++  admission.retry(); await new Promise(resolve => setTimeout(resolve, 0));
++  expect(admission.snapshot()).toBe('occupied');
++  occupied = false; admission.retry(); expect(admission.snapshot()).toBe('admitted');
++});
++it('refuses unsupported and denied browser coordination without storage access', async () => {
++  const unavailable = createWebRuntimeAdmission(undefined); unavailable.retry();
++  expect(unavailable.snapshot()).toBe('unavailable');
++  const denied = createWebRuntimeAdmission({ request: async () => { throw new Error('Unavailable'); } });
++  denied.retry(); await Promise.resolve(); await Promise.resolve();
++  expect(denied.snapshot()).toBe('unavailable');
++});
+diff --git a/apps/mobile/src/lib/storage/webRuntimeAdmission.ts b/apps/mobile/src/lib/storage/webRuntimeAdmission.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f652d09ac25744760bf9db660e9ce3db66f82b6
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/webRuntimeAdmission.ts
+@@ -0,0 +1,69 @@
++export type WebRuntimeStatus = 'checking' | 'admitted' | 'occupied' | 'unavailable';
++export type RuntimeLockPort = {
++  request(name: string, options: { mode: 'exclusive'; ifAvailable: true },
++    callback: (lock: unknown | null) => Promise<void>): Promise<unknown>;
++};
++export const PRIVATE_WEB_RUNTIME_LOCK = 'layerwell.private-runtime.v1';
++
++/** One application runtime per browser origin. Holding the lock for the
++ * document lifetime also covers direct cleanup/key/control-record operations
++ * which do not participate in privateKV's per-key mutation queues.
++ * Never steal or release on blur/navigation/component unmount. The browser
++ * releases the lock when this context ends, including a crash or reload. */
++export function createWebRuntimeAdmission(port: RuntimeLockPort | undefined) {
++  let status: WebRuntimeStatus = 'checking';
++  let pending = false;
++  const listeners = new Set<() => void>();
++  const publish = (next: WebRuntimeStatus) => {
++    status = next;
++    for (const listener of [...listeners]) {
++      try { listener(); } catch { /* A listener cannot release runtime ownership. */ }
++    }
++  };
++  const retry = () => {
++    if (pending || status === 'admitted') return;
++    if (!port) { publish('unavailable'); return; }
++    pending = true; publish('checking');
++    try {
++      void port.request(PRIVATE_WEB_RUNTIME_LOCK, { mode: 'exclusive', ifAvailable: true }, async lock => {
++        if (lock === null) { publish('occupied'); return; }
++        publish('admitted');
++        await new Promise<void>(() => { /* Deliberately retained until context destruction. */ });
++      }).then(() => { pending = false; if (status === 'admitted') publish('unavailable'); }, () => {
++        pending = false; publish('unavailable');
++      });
++    } catch { pending = false; publish('unavailable'); }
++  };
++  return { snapshot: () => status, retry, subscribe: (listener: () => void) => {
++    listeners.add(listener); return () => { listeners.delete(listener); };
++  } };
++}
++
++type Admission = ReturnType<typeof createWebRuntimeAdmission>;
++const runtimeGlobal = globalThis as typeof globalThis & { __layerwellPrivateWebRuntime?: Admission };
++// Preserve ownership during development Fast Refresh. No storage or private
++// content is placed on this singleton; it is only browser lock admission.
++export const webRuntimeAdmission = runtimeGlobal.__layerwellPrivateWebRuntime ??= createWebRuntimeAdmission(
++  (globalThis as unknown as { navigator?: { locks?: RuntimeLockPort } }).navigator?.locks,
++);
++
++/** auth-js initializes at module construction, before React mounts the root.
++ * Keep that initialization dormant until this document owns private storage.
++ * Refusal is never translated into an absent session or permission to erase. */
++export function gateWebRuntimeStorage(storage: {
++  getItem(key: string): Promise<string | null>;
++  setItem(key: string, value: string): Promise<void>;
++  removeItem(key: string): Promise<void>;
++}, admission = webRuntimeAdmission) {
++  const ready = () => new Promise<void>(resolve => {
++    if (admission.snapshot() === 'admitted') { resolve(); return; }
++    const unsubscribe = admission.subscribe(() => {
++      if (admission.snapshot() === 'admitted') { unsubscribe(); resolve(); }
++    });
++  });
++  return {
++    async getItem(key: string) { await ready(); return storage.getItem(key); },
++    async setItem(key: string, value: string) { await ready(); return storage.setItem(key, value); },
++    async removeItem(key: string) { await ready(); return storage.removeItem(key); },
++  };
++}
+diff --git a/apps/mobile/src/lib/supabase/client.test.ts b/apps/mobile/src/lib/supabase/client.test.ts
+index 43fa11458e643780f20c463202cde3101f6cfc87..b8f9604d2efa9fd7d04b012c55ad0440f0b3fbc5 100644
+--- a/apps/mobile/src/lib/supabase/client.test.ts
++++ b/apps/mobile/src/lib/supabase/client.test.ts
+@@ -1,4 +1,5 @@
+ import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { webRuntimeAdmission } from '../storage/webRuntimeAdmission';
+ 
+ import {
+   isSupabaseControlledRefreshTerminalError,
+@@ -11,6 +12,9 @@ const h = vi.hoisted(() => {
+     configurable: true,
+     value: {},
+   });
++  Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { locks: {
++    request: async (_name: string, _options: unknown, callback: (lock: object) => Promise<void>) => callback({}),
++  } } });
+   return {
+     fetch: vi.fn(),
+     getUser: vi.fn(),
+@@ -19,6 +23,7 @@ const h = vi.hoisted(() => {
+ });
+ 
+ vi.mock('react-native-url-polyfill/auto', () => ({}));
++vi.mock('react-native', () => ({ Platform: { OS: 'web' } }));
+ 
+ vi.mock('../env', () => ({
+   env: {
+@@ -81,6 +86,7 @@ function sessionPayload() {
+ 
+ describe('controlled Supabase session storage', () => {
+   beforeEach(() => {
++    webRuntimeAdmission.retry();
+     h.fetch.mockReset();
+     h.getUser.mockReset();
+     h.values.clear();
+diff --git a/apps/mobile/src/lib/supabase/client.ts b/apps/mobile/src/lib/supabase/client.ts
+index f6dace345280e12336f6c016bcb15fd07d19e763..3f1fb8a15768b8806439eb13dbe4b473cc90f0cd 100644
+--- a/apps/mobile/src/lib/supabase/client.ts
++++ b/apps/mobile/src/lib/supabase/client.ts
+@@ -2,6 +2,8 @@ import 'react-native-url-polyfill/auto'; // supabase-js needs a WHATWG URL on RN
+ import type { ClientDatabase } from '@layerwell/types/database';
+ import type { Session } from '@supabase/supabase-js';
+ import { createClient } from '@supabase/supabase-js';
++import { Platform } from 'react-native';
++import { gateWebRuntimeStorage } from '../storage/webRuntimeAdmission';
+ 
+ import { env } from '../env';
+ import { createHealthEpochFetch } from '../consent/healthProcessingEpoch';
+@@ -23,7 +25,9 @@ const serverAuthStorage = {
+   async setItem(): Promise<void> {},
+   async removeItem(): Promise<void> {},
+ };
+-const authStorage = isServerRender ? serverAuthStorage : new LargeSecureStore();
++const deviceAuthStorage = new LargeSecureStore();
++const authStorage = isServerRender ? serverAuthStorage : Platform.OS === 'web'
++  ? gateWebRuntimeStorage(deviceAuthStorage) : deviceAuthStorage;
+ const authStorageKey = `sb-${new URL(env.supabaseUrl).hostname.split('.')[0]}-auth-token`;
+ const authRefreshProtectiveFetch = createSupabaseAuthRefreshProtectiveFetch({
+   fetchImplementation: (input, init) => fetch(input, init),
+diff --git a/apps/professional-web/src/encryptedWorkspaceRepository.test.ts b/apps/professional-web/src/encryptedWorkspaceRepository.test.ts
+index bf05213196ef57ff20fb8976778b8590a8e49c6b..574fcc021d3b288602d10b92601d64b18481dc3b 100644
+--- a/apps/professional-web/src/encryptedWorkspaceRepository.test.ts
++++ b/apps/professional-web/src/encryptedWorkspaceRepository.test.ts
+@@ -637,6 +637,8 @@ it('resolves closure acknowledgement only from the retained exact owner receipt'
+   const afterDecline = await f.load();
+   expect(afterDecline.rows.at(-1)).toEqual(closed);
+   expect(afterDecline.acknowledgements).toEqual([]);
++  expect(afterDecline.responses).toEqual([expect.objectContaining({ kind: 'declined', planId: f.plan.id, planHash: f.plan.contentHash,
++    id: receipts.at(-1)!.id, contentHash: receipts.at(-1)!.contentHash, recordedAt: receipts.at(-1)!.recordedAt })]);
+   expect(afterDecline.sourceHash).not.toBe(model.sourceHash);
+ });
+ 
+@@ -664,8 +666,10 @@ it('retires acknowledgement choices and reviewed queue commands after owner resp
+   const oldAck = await respond('acknowledged');
+   await respond('declined'); await respond('received');
+   model = await f.load(); expect(model.acknowledgements).toEqual([]);
++  expect(model.responses).toHaveLength(1); expect(model.responses[0]!.kind).toBe('declined');
+   const newest = await respond('acknowledged'); await respond('received');
+   model = await f.load(); expect(model.acknowledgements.map(row => row.id)).toEqual([newest.id]);
++  expect(model.responses).toEqual([expect.objectContaining({ id: newest.id, kind: 'acknowledged' })]);
+   const current = transition('resolved');
+   const beforeStaleAck = canonical([...f.records()]);
+   await expect(reconciliationWorkspace(f.repository(), f.staff.token, f.request, { ...current,
+diff --git a/apps/professional-web/src/reconciliation.test.ts b/apps/professional-web/src/reconciliation.test.ts
+index a708312283c7c2587cf947d904d48a2f18647c23..70c4095089b7e9619f80462ae83eb000743f3bd4 100644
+--- a/apps/professional-web/src/reconciliation.test.ts
++++ b/apps/professional-web/src/reconciliation.test.ts
+@@ -4,7 +4,30 @@ import { decodeReconciliation, enqueueMaterial, transitionCase, type MaterialEve
+ import { recordHash } from './grants';
+ import type { Authority } from './authority';
+ import { createReconciliationController, filterCurrentCases, type QueueViewState } from './reconciliationView';
++import type { ReconciliationModel } from './reconciliationService';
+ const now = 1_800_000_000_000;
++it('links each current owner response to one exact intended version and refuses inconsistent projections', async () => {
++  const plan = { planId: randomUUID(), planHash: 'b'.repeat(64), sequence: 1 };
++  const response = { id: randomUUID(), contentHash: 'c'.repeat(64), planId: plan.planId, planHash: plan.planHash, kind: 'declined' as const, recordedAt: now };
++  const model: ReconciliationModel = { sourceHash: 'a'.repeat(64), writeAvailable: true, grantEpoch: 1, grantVersion: 1,
++    plans: [plan], responses: [response], acknowledgements: [], events: [], rows: [] };
++  let supplied: unknown = model;
++  const controller = createReconciliationController(async () => new Response(JSON.stringify({ kind: 'source', context: 'synthetic-current-response', model: supplied }),
++    { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }), () => {});
++  await controller.load(controller.generation); expect(controller.state.kind).toBe('source');
++  for (const recordedAt of [0, 0.5, 8.64e15]) {
++    supplied = { ...model, responses: [{ ...response, recordedAt }] };
++    await controller.load(controller.generation); expect(controller.state.kind).toBe('source');
++  }
++  for (const patch of [{ responses: [response, response] }, { responses: [{ ...response, planId: 'different' }] },
++    { responses: [{ ...response, recordedAt: -1 }] }, { responses: [{ ...response, kind: 'received' }] },
++    { acknowledgements: [{ id: response.id, contentHash: response.contentHash, planHash: response.planHash }] },
++    { responses: [{ ...response, kind: 'acknowledged' }] }]) {
++    supplied = { ...model, ...patch }; await controller.load(controller.generation); expect(controller.state.kind).toBe('unavailable');
++  }
++  supplied = { ...model, responses: [{ ...response, kind: 'acknowledged' }], acknowledgements: [{ id: response.id, contentHash: response.contentHash, planHash: response.planHash }] };
++  await controller.load(controller.generation); expect(controller.state.kind).toBe('source');
++});
+ function authority(): Authority {
+   return { session: { subjectId: 'staff-a', ownerId: null, workspaceId: 'practice-a', epoch: 1, startedAt: now - 1000, lastActivityAt: now, stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
+     membership: { subjectId: 'staff-a', workspaceId: 'practice-a', roles: ['assigned_practitioner'], revision: 1, active: true },
+@@ -140,7 +163,7 @@ it('keeps queue filters memory-only across read/edit/back and retires hidden or
+   const change = await event(); const concern = await event({ kind: 'concern_reported' });
+   const log = await enqueueMaterial(await enqueueMaterial([], authority(), change, randomUUID(), now), authority(), concern, randomUUID(), now);
+   const model = { sourceHash: 'a'.repeat(64), writeAvailable: true, grantVersion: 1, grantEpoch: 4, rows: log,
+-    events: [change, concern], plans: [{ planId: randomUUID(), planHash: change.planHash, sequence: 1 }], acknowledgements: [] };
++    events: [change, concern], plans: [{ planId: randomUUID(), planHash: change.planHash, sequence: 1 }], acknowledgements: [], responses: [] };
+   const request = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ kind: 'source', context: 'synthetic-filter-context', model }),
+     { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }));
+   let state: QueueViewState = { kind: 'idle' }; const c = createReconciliationController(request, next => { state = next; }); await c.load(c.generation);
+@@ -156,7 +179,7 @@ it('keeps queue filters memory-only across read/edit/back and retires hidden or
+ });
+ it('a filter change cannot modify a pending review command or admit unknown states and material kinds', async () => {
+   const source = await event(); const model = { sourceHash: 'a'.repeat(64), writeAvailable: true, grantVersion: 1, grantEpoch: 4,
+-    rows: [], events: [source], plans: [{ planId: randomUUID(), planHash: source.planHash, sequence: 1 }], acknowledgements: [] };
++    rows: [], events: [source], plans: [{ planId: randomUUID(), planHash: source.planHash, sequence: 1 }], acknowledgements: [], responses: [] };
+   const request = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ kind: 'source', context: 'synthetic-filter-context', model }),
+     { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }));
+   const c = createReconciliationController(request, () => {}); await c.load(c.generation); const state = c.state; const generation = c.generation;
+diff --git a/apps/professional-web/src/reconciliationService.ts b/apps/professional-web/src/reconciliationService.ts
+index 3a864573a1342fddef3091cb79de23da36d4caa3..cef834e42428c3d9a078f218a47603eb094eda06 100644
+--- a/apps/professional-web/src/reconciliationService.ts
++++ b/apps/professional-web/src/reconciliationService.ts
+@@ -123,6 +123,8 @@ export async function reconciliationWorkspace(repository: WorkspaceRepository |
+     const rows = next.filter(row => row.grantVersion === a.grant!.version && plans.some(plan => plan.contentHash === row.planHash));
+     return { sourceHash, writeAvailable: a.billing === 'write_allowed', events: source.events,
+       plans: plans.map(plan => ({ planId: plan.id, planHash: plan.contentHash, sequence: plan.sequence })),
++      responses: [...responses.values()].map(receipt => ({ id: receipt.id, contentHash: receipt.contentHash,
++        planId: receipt.planId, planHash: receipt.planHash, kind: receipt.kind as 'acknowledged' | 'declined', recordedAt: receipt.recordedAt })),
+       acknowledgements: acknowledgements.map(receipt => ({ id: receipt.id, contentHash: receipt.contentHash, planHash: receipt.planHash })),
+       rows, grantVersion: a.grant!.version, grantEpoch: a.grant!.epoch };
+   });
+diff --git a/apps/professional-web/src/reconciliationView.ts b/apps/professional-web/src/reconciliationView.ts
+index 9a51a0b047134b933eb10b75b13147cea8908bb2..233351493d54f7b092d3fb12bb4c67c369d307a2 100644
+--- a/apps/professional-web/src/reconciliationView.ts
++++ b/apps/professional-web/src/reconciliationView.ts
+@@ -21,10 +21,10 @@ const hash = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64
+ const safe = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0 && v.length <= 2000 && !/[\p{Cf}\p{Cs}\u0000-\u001f\u007f-\u009f]/u.test(v);
+ async function decodeModel(value: unknown): Promise<ReconciliationModel> {
+   if (!value || typeof value !== 'object' || Array.isArray(value)) return fail(); const m = value as ReconciliationModel;
+-  if (Object.keys(m).sort().join(',') !== 'acknowledgements,events,grantEpoch,grantVersion,plans,rows,sourceHash,writeAvailable' ||
++  if (Object.keys(m).sort().join(',') !== 'acknowledgements,events,grantEpoch,grantVersion,plans,responses,rows,sourceHash,writeAvailable' ||
+       !hash(m.sourceHash) || typeof m.writeAvailable !== 'boolean' || ![m.grantVersion, m.grantEpoch].every(v => Number.isSafeInteger(v) && v > 0) ||
+       !Array.isArray(m.events) || m.events.length > 1000 || !Array.isArray(m.plans) || m.plans.length > 100 || !Array.isArray(m.rows) || m.rows.length > 5000 ||
+-      !Array.isArray(m.acknowledgements) || m.acknowledgements.length > 1000) return fail();
++      !Array.isArray(m.acknowledgements) || m.acknowledgements.length > 1000 || !Array.isArray(m.responses) || m.responses.length > 100) return fail();
+   for (const p of m.plans) if (!p || Object.keys(p).sort().join(',') !== 'planHash,planId,sequence' || !hash(p.planHash) || !safe(p.planId) || !Number.isSafeInteger(p.sequence) || p.sequence < 1) return fail();
+   if (new Set(m.plans.map(p => p.planId)).size !== m.plans.length) return fail();
+   for (const e of m.events) if (!e || Object.keys(e).sort().join(',') !== 'contentHash,detail,grantVersion,id,kind,ownerId,planHash,version,workspaceId' ||
+@@ -32,6 +32,13 @@ async function decodeModel(value: unknown): Promise<ReconciliationModel> {
+       !MATERIAL_EVENTS.includes(e.kind) || !m.plans.some(p => p.planHash === e.planHash)) return fail();
+   if (new Set(m.events.map(e => `${e.id}:${e.version}`)).size !== m.events.length) return fail();
+   for (const a of m.acknowledgements) if (!a || Object.keys(a).sort().join(',') !== 'contentHash,id,planHash' || !safe(a.id) || !hash(a.contentHash) || !m.plans.some(p => p.planHash === a.planHash)) return fail();
++  for (const r of m.responses) if (!r || Object.keys(r).sort().join(',') !== 'contentHash,id,kind,planHash,planId,recordedAt' ||
++      !safe(r.id) || !hash(r.contentHash) || !['acknowledged', 'declined'].includes(r.kind) || !Number.isFinite(r.recordedAt) || r.recordedAt < 0 || r.recordedAt > 8.64e15 ||
++      !m.plans.some(p => p.planId === r.planId && p.planHash === r.planHash)) return fail();
++  if (new Set(m.responses.map(r => r.planId)).size !== m.responses.length || new Set(m.responses.map(r => r.id)).size !== m.responses.length ||
++      m.acknowledgements.length !== m.responses.filter(r => r.kind === 'acknowledged').length ||
++      new Set(m.acknowledgements.map(a => a.id)).size !== m.acknowledgements.length ||
++      m.acknowledgements.some(a => !m.responses.some(r => r.kind === 'acknowledged' && r.id === a.id && r.contentHash === a.contentHash && r.planHash === a.planHash))) return fail();
+   const first = m.rows[0]; await decodeReconciliation(m.rows, first?.ownerId ?? '', first?.workspaceId ?? '');
+   if (m.rows.some(row => row.grantVersion !== m.grantVersion || !m.plans.some(p => p.planHash === row.planHash))) return fail();
+   return structuredClone(m);
+@@ -131,6 +138,12 @@ export function mountReconciliationView(root: HTMLElement, request: typeof fetch
+     if (state.kind === 'saved') p('The exact stored queue revision was read back. Recording communication does not prove message delivery.', true);
+     if ('scope' in state) {
+       const model = state.scope.model;
++      const ownerResponse = (planHash: string) => {
++        const plan = model.plans.find(plan => plan.planHash === planHash);
++        const response = model.responses.find(response => response.planHash === planHash && response.planId === plan?.planId);
++        p(`Latest recorded owner response to intended version ${plan?.sequence ?? 'unavailable'}: ${response ? `${response.kind === 'acknowledged' ? 'Acknowledged' : 'Declined'} (${new Date(response.recordedAt).toISOString()})` : 'No explicit response recorded'}.`);
++        p('An owner response does not establish application of the plan, product use, message delivery or a clinical outcome.');
++      };
+       if (!model.writeAvailable) p('Read-only: verified workspace write authority is unavailable. History remains readable.');
+       if (state.kind === 'source' || state.kind === 'saved') {
+         const filter = state.scope.filter ?? allRecords;
+@@ -162,6 +175,7 @@ export function mountReconciliationView(root: HTMLElement, request: typeof fetch
+           p(`Case ${number}: ${row.category}, ${row.state.replaceAll('_', ' ')}, revision ${row.revision}.`); button(`Open case ${number} history`, () => controller.edit(admitted, row.caseId)); });
+       }
+       if (state.kind === 'editing') {
++        if (state.row.changedPlanHash) ownerResponse(state.row.changedPlanHash);
+         for (const row of model.rows.filter(row => row.caseId === state.row.caseId)) {
+           p(`Revision ${row.revision} · ${new Date(row.recordedAt).toISOString()} · ${row.state.replaceAll('_', ' ')}. ${row.reason}`);
+           row.events.forEach(e => p(`${e.kind.replaceAll('_', ' ')}: ${e.detail}`));
+@@ -194,7 +208,8 @@ export function mountReconciliationView(root: HTMLElement, request: typeof fetch
+         else { p(`Next state: ${command.next.replaceAll('_', ' ')}. Reason: ${command.reason}`); p(`Recorded communication: ${command.communication ?? 'None'}`); p(`Nonacknowledgement reason: ${command.nonAcknowledgementReason ?? 'None'}`);
+           const current = [...model.rows].reverse().find(row => row.caseId === command.caseId);
+           const selectedPlan = command.changedPlanHash ?? current?.changedPlanHash;
+-          p(`Changed intended version: ${selectedPlan ? model.plans.find(p => p.planHash === selectedPlan)?.sequence ?? 'unavailable' : 'None'}. Owner acknowledgement: ${command.acknowledgementId ? 'Selected exact stored receipt' : 'None selected'}.`); }
++          p(`Changed intended version: ${selectedPlan ? model.plans.find(p => p.planHash === selectedPlan)?.sequence ?? 'unavailable' : 'None'}. Owner acknowledgement: ${command.acknowledgementId ? 'Selected exact stored receipt' : 'None selected'}.`);
++          if (selectedPlan) ownerResponse(selectedPlan); }
+         if (state.kind === 'review' || state.kind === 'unknown') button(state.kind === 'unknown' ? 'Retry identical review save' : 'Confirm review record', () => { void controller.confirm(admitted); });
+         if (state.kind === 'review') button('Cancel review', () => controller.back(admitted));
+       }
+diff --git a/docs/ENGINEERING20_DRAFT_DESIGN.md b/docs/ENGINEERING20_DRAFT_DESIGN.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..90865fa8a11cef7fa7922318ce3100eada1370b9
+--- /dev/null
++++ b/docs/ENGINEERING20_DRAFT_DESIGN.md
+@@ -0,0 +1,15 @@
++# Engineering20 durable transcription design
++
++Local implementation only. Frozen contract/matrix bytes and every formal acceptance state remain unchanged. J01 stays closed; no additional assessment is implemented.
++
++The first durable journey is an explicitly saved bottle transcription. It uses a bounded collection (20 drafts, 600,000 UTF-8 bytes) under a new purpose-bound encrypted private key, `layerwell.bottleDrafts.v1`. Each draft has a random UUID, revision, timestamps, exact bottle source identity/revision, unconfirmed fields and deterministic content hash. The envelope owns the stable owner and persisted health-processing epoch. Runtime generations are only cancellation capabilities. Incomplete text is allowed in drafts and remains subject to existing observation validation at explicit confirmation.
++
++The existing privateKV source transaction reserves authority, Shelf and draft keys in canonical order. A new optional authorization phase authenticates and validates the adult receipt, current consent hash/version and active owner/lifecycle epoch before reading private payload keys. It then retains existing exact-byte source checks, mutation intents, native readback, rollback and retained-key continuity. Drafts have no plaintext or unbound-encryption migration. Unknown bytes and keys remain preserved, never empty defaults or rekey permission.
++
++Save/discard compare the exact prior record. Source changes require explicit review. Confirmation reserves the exact durable draft as a source for the existing Shelf transaction. Its later exact-revision draft retirement is deliberately separate: an interruption may leave a saved observation and a reviewable unconfirmed draft. The UI does not infer command success from matching content. No draft enters the product mirror, analytics or a provider.
++
++Single-runtime mutation queues cannot coordinate another browser tab's direct cleanup/control/key operations. A per-key browser lock would therefore be incomplete. The web root instead holds one exclusive Web Lock for the complete document lifetime and gates private startup/providers. Secondary/unsupported contexts refuse access before recovery starts; visibility/navigation do not release ownership. Native retains its existing single-JavaScript-runtime boundary. This coordinates cooperating builds on one origin; it is not protection against an older build that lacks the gate, external storage alteration, multiple native processes, key loss, or hostile host code. Those are separate qualification/custody limitations.
++
++Explicit saves avoid per-keystroke persistence and make the durability boundary visible: later unsaved edits can be lost on restart. Resume is explicit and requires saved-source review. The recovery inventory remains reachable for removed bottles so the owner can discard their drafts. Privacy withdrawal/full reset remove the registered health-purpose key. The established rights-export lane strictly decodes the collection for its verified owner independently of processing permission and strips private owner fields using existing redaction.
++
++Web Locks semantics were checked against [MDN LockManager.request](https://developer.mozilla.org/en-US/docs/Web/API/LockManager/request). Local source tests and browser results qualify only their exercised synthetic/local behavior, never native, security-gate, professional/provider, clinical or release acceptance.
+diff --git a/docs/ENGINEERING20_LOCAL_VERIFICATION.md b/docs/ENGINEERING20_LOCAL_VERIFICATION.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..a3b0c338f12bb53a0056e4dd1f293a0a3ec3815c
+--- /dev/null
++++ b/docs/ENGINEERING20_LOCAL_VERIFICATION.md
+@@ -0,0 +1,17 @@
++# Engineering20 local verification scope
++
++Authorization: BRAIN-ONSKIN-AUTONOMOUS-PRODUCT-COMPLETION-20 / ENGINEERING20_DEFENSIVE_001. Source work stays on the existing Windows worktree and branch. All 38 requirements and 18 gates remain formally UNACCEPTED; release NO_GO.
++
++The phase-specific evidence directory is the sibling `../ENGINEERING20_EVIDENCE/`. Final receipts, exact source identities, diagnostic failures and packaging hashes are recorded there; this document does not substitute for those receipts.
++
++Consumer human-simulated E2E ran against actual local Expo web in isolated Edge with providers blocked, offline Metro and an explicitly synthetic owner. At both 375x667 and 430x932 it entered adult DOB and consent through the UI, created a manual bottle, explicitly saved an encrypted unconfirmed transcription, reloaded, resumed and reviewed the saved source, confirmed the observation, reloaded again, and reviewed/canceled/confirmed draft discard. A second same-origin tab refused access before private app storage reads; after closing the first tab it explicitly retried and resumed. Screenshots and DOM/geometry/network receipts are retained in `bottle-browser-r4/`. Keyboard activation and 44px minimum targets were checked for principal save/confirm/retry/discard controls; captured screens had no horizontal overflow.
++
++Professional E2E ran the actual local Vite UI at both viewports. The real API returned 503. Explicitly synthetic HTTP responses exercised current source review, cancellation, exact retry, queue transition, no owner response then decline linked to an exact intended version, closure with recorded nonacknowledgement reason, history, filters, keyboard/focus, read-only and unavailable states. These fixtures are not authentication, licensing, delivery, custody, payment or production authority. Receipts and screenshots are in `professional-browser/`.
++
++The initial consumer browser attempts exposed harness/environment issues: restricted localhost access, an obsolete category control name, and an incomplete Shelf accessibility label. The harness was corrected to use observed controls. No app acceptance was claimed from failed attempts. An initial mounted-flow regression in navigation discard during source review was fixed by permitting the explicit leaving decision, while retaining stale-decision fences; the original test then passed. Type errors and unsupported Turbo flag combinations are retained as engineering diagnostics. The first concurrent full-suite attempt hit an existing 5-second professional history test timeout under simultaneous build/check load; the complete suite is rerun without that competing load, with no timeout or assertion weakened.
++
++Additional ordinary source tests exercise actual encryption/readback, stable identity and exact CAS, source changes, current adult/owner/consent/epoch authority, omitted writes, missing keys, unknown formats, delayed callbacks, paused-processing rights export, foreign-owner refusal, authorized withdrawal failure/retry, and drain-before-erasure. Existing photo/recovery tests remain intact.
++
++The complete suite also caught older fixtures that assumed one bottle-history query, no native platform import in auth storage, an exact React import list, and that every `layerwell.*` literal named persisted storage. Fixtures now admit the real Web Lock, represent the separate draft query, and classify the lock name as non-storage; all prior behavioral assertions remain. The professional projection accepts the existing receipt domain's finite nonnegative timestamps, including zero/fractional values, with the JavaScript date upper bound enforced.
++
++Uncovered qualifications remain open: native/physical device persistence and accessibility, genuine OCR/camera providers, process or OS crash durability, multiple native processes, older ungated browser builds, real accounts/backend custody, professional staff/licence/payment authority, clinical/scientific/device evidence, independent security and release acceptance. Manual intake and optional correction drafts still have their prior memory-only behavior. Explicit bottle saves retain only the latest successful save; later unsaved edits can be lost on restart. No external service or native attempt was run.
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 734906fc1901e59b7f13b8d2df5e09cd8549c2a4..9583fd1e10b96e5ab5ea4fb058d1d34b62161e4b 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -1,5 +1,15 @@
+ # User Flow Tree
+ 
++## Engineering20 durable bottle transcription (local implementation, unaccepted)
++
++Critical, repeatable Expo-web branches at 375x667 and 430x932: explicit adult/health-consent entry -> manual bottle -> Bottle & formula history -> Record label observation -> type unconfirmed text -> Save bottle draft on this device -> confirmed encrypted readback -> navigation/reload -> explicit Resume saved bottle draft -> Review current saved bottle -> Keep draft with reviewed source -> explicit Confirm this bottle observation. Unsaved later edits are not claimed durable. Resume/review alone creates no observation, use or inferred formula.
++
++Back during editing offers Keep editing, Save bottle draft and leave, or exact-revision discard. Failed save/removal shows a content-free refusal and retains uncertainty. A replaced source requires another explicit review; missing products cannot receive an observation. Shelf -> Saved bottle drafts lists retained unconfirmed drafts, including removed bottles, and offers review/cancel/confirm discard. Empty inventory is distinct from unreadable/unsupported/key/authority failure. Full export includes strictly decoded owner-bound drafts; withdrawal and full deletion own their registered key.
++
++Current adult receipt, health-consent contract and persisted owner/lifecycle epoch are authenticated before private draft reads and rechecked inside reserved mutations. Fresh runtime leases may resume the same persisted epoch; actual regrant epochs do not inherit older drafts. Stale save, review, discard and cleanup callbacks cannot mutate successor revisions. Confirmation reserves the exact saved draft while appending Shelf history; draft retirement is separate and may remain unconfirmed after interruption. Matching facts never automatically accept transcription.
++
++Web startup admits one application runtime per origin with a document-lifetime exclusive Web Lock before private providers and recovery startup. A second tab shows refusal/retry; closing the first permits explicit retry. Missing lock support refuses private startup. Visibility and navigation do not release ownership. Browser verification includes second-tab refusal, takeover, reload, keyboard/focus, 48px controls, and zero horizontal overflow. Native single-runtime durability, physical keys/crashes and VoiceOver remain unqualified. All38/all18 UNACCEPTED; release NO_GO.
++
+ ## Engineering17 explicit applied-routine clearing and original-record consistency
+ 
+ Appointment brief selection → Review starts at the top with a semantic review heading and opening text visible → Edit returns to selection with chosen records/questions intact → reopen starts at the top again. The scroller alone remounts; authority, reviewed content, photo readiness and cleanup state retain their existing parent lifecycle. Keyboard stays in the existing modal.
+@@ -3208,3 +3218,10 @@ You -> Delete account / Withdraw health-data consent -> exact rendered confirmat
+ - Unbound nonempty legacy journals remain unavailable and preserved. An authenticated old empty journal supplies no operation authority and may be read as empty without rewriting. No key is minted to repair recovery.
+ - Diary/capture/detail storage refusal → content-free conflict/provenance/key-loss/cleanup explanation → Try again / existing Back to Progress or tab navigation. Retry does not select ciphertext or erase ambiguous evidence. Reload preserves refusal while uncertainty remains; unknown exceptions never display private text. Retired owner/consent cannot publish photo content.
+ - Verify actual Expo web at375×667 and430×932 with keyboard/focus, scroll and overflow, repeated retry, exit and reload. Browser development refusals and synthetic filesystem tests do not qualify physical keys, camera, native move/crash behavior, external authority or release.
++# Engineering20 professional response linkage
++
++- Current authorized material-change queue -> case history -> changed intended version -> latest explicit owner response (acknowledged, declined, or no response recorded).
++- Historical closure keeps its exact prior acknowledgement; a later decline remains visible and removes current acknowledgement eligibility.
++- Decision review -> exact response displayed -> cancel or explicit save -> stored revision readback. Source changes require reload; exact retry and current authority checks remain required.
++- Local browser coverage: 375x667 and 430x932, keyboard selection/focus, no overflow, no-response then synthetic decline, closure with explicit nonacknowledgement reason, retained history, current API refusal.
++- Responses do not establish application, use, delivery or clinical outcome. Synthetic fixtures establish no professional/provider authority. All 38 requirements and 18 gates remain UNACCEPTED; release NO_GO.
+diff --git a/scripts/e2e/bottle-drafts20.mjs b/scripts/e2e/bottle-drafts20.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..d6c5092dc2a1022491e80dce520d0712a0f86d06
+--- /dev/null
++++ b/scripts/e2e/bottle-drafts20.mjs
+@@ -0,0 +1,117 @@
++import assert from 'node:assert/strict';
++import { spawn } from 'node:child_process';
++import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const out = path.resolve(process.env.ONSKIN_DRAFT_EVIDENCE ?? '../ENGINEERING20_EVIDENCE/bottle-browser');
++mkdirSync(out, { recursive: false });
++const browserPath = process.env.BROWSER_PATH ?? 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
++assert(existsSync(browserPath), 'The existing authorized Edge browser is required.');
++const appPort = await b.findAvailablePort(8500), debugPort = await b.findAvailablePort(9500);
++const baseUrl = `http://localhost:${appPort}`;
++const userDataDir = mkdtempSync(path.join(tmpdir(), 'onskin-e20-drafts-'));
++const receipt = { startedAt: new Date().toISOString(), surface: 'Actual local Expo web in Edge; synthetic local owner, no providers', userDataDir, viewports: [], pass: false };
++let server, browser, client, secondary;
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2));
++async function capture(name, page = client) {
++  const state = await b.evaluate(page, `({path:location.pathname,text:document.body.innerText,width:innerWidth,height:innerHeight,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth)})`);
++  assert.equal(state.overflow, 0, 'Horizontal overflow'); json(name + '.json', state);
++  const shot = await page.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
++  writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++}
++async function tap(label, page = client) { await b.scrollControlIntoView(page, label); await b.clickByText(page, label); }
++async function keyboard(label, height, page = client) {
++  await b.scrollControlIntoView(page, label);
++  const geometry = await b.evaluate(page, `(()=>{const n=[...document.querySelectorAll('[role="button"],button')].find(n=>n.textContent.trim()===${JSON.stringify(label)}||n.getAttribute('aria-label')===${JSON.stringify(label)});if(!n)throw new Error('Missing visible control');n.focus();const r=n.getBoundingClientRect();return {focus:document.activeElement===n,w:r.width,h:r.height,y:r.y,hit:n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}})()`);
++  assert(geometry.focus && geometry.hit && geometry.h >= 44 && geometry.y >= 0 && geometry.y + geometry.h <= height);
++  await page.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
++  await page.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
++  return geometry;
++}
++try {
++  server = b.startExpoServer({ appPort, evidenceDir: out, group: { id: 'e20-drafts', env: {
++    EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner', EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'false',
++  } } });
++  browser = spawn(browserPath, ['--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${userDataDir}`,
++    '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--disable-sync', 'about:blank'], { stdio: 'ignore', windowsHide: true });
++  json('owned-processes.json', { serverPid: server.pid, browserPid: browser.pid, appPort, debugPort });
++  await b.waitForUrl(baseUrl);
++  for (const [width, height] of [[375, 667], [430, 932]]) {
++    client = await b.connectToPage(debugPort, baseUrl);
++    for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable']) await client.send(method);
++    await b.setViewport(client, { width, height });
++    const id = `${width}x${height}`;
++    console.log(`Starting visible app journey ${id}`);
++    await client.send('Page.navigate', { url: baseUrl + '/?e2eReset=local' });
++    await b.waitForText(client, 'Begin', 60_000); await tap('Begin');
++    await b.waitForPath(client, '/onboarding/age');
++    await b.fillByLabel(client, 'Day of birth', '01'); await b.fillByLabel(client, 'Month of birth', '01'); await b.fillByLabel(client, 'Year of birth', '1990');
++    await tap('Continue'); await b.waitForPath(client, '/onboarding/consent');
++    await tap('I agree. Continue'); await b.waitForPath(client, '/onboarding/goals');
++    await b.waitForText(client, 'What brings you here?'); await delay(2000);
++    await capture(id + '-adult-consent');
++    await client.send('Page.navigate', { url: baseUrl + '/shelf/manual' });
++    await b.waitForText(client, 'Add by hand'); await b.fillByLabel(client, 'Product name', 'Synthetic durable bottle');
++    await tap('Category'); await b.waitForText(client, 'Product category');
++    await tap('Category, Cleanser'); await tap('Continue'); await b.waitForText(client, 'When did you open it?');
++    await tap('Just opened it'); await tap('Add to shelf'); await b.waitForText(client, 'Synthetic durable bottle');
++    await client.send('Page.navigate', { url: baseUrl + '/shelf' }); await b.waitForText(client, 'Synthetic durable bottle');
++    await tap('Synthetic durable bottle, Date unknown'); await b.waitForText(client, 'Bottle & formula history');
++    await tap('Bottle & formula history'); await b.waitForText(client, 'Record label observation');
++    await tap('Record label observation'); await tap('I have the printed label');
++    await b.fillByLabel(client, 'Ingredient label as printed', 'Aqua, synthetic draft ingredient');
++    const saveGeometry = await keyboard('Save bottle draft on this device', height);
++    await b.waitForText(client, 'Draft encrypted, saved and read back'); await capture(id + '-saved');
++    const formulaUrl = await b.evaluate(client, 'location.href');
++    const raw = await b.evaluate(client, `localStorage.getItem('layerwell.bottleDrafts.v1')`);
++    assert(raw && raw.includes('purpose-bound:v2') && !raw.includes('synthetic draft ingredient'));
++    await b.fillByLabel(client, 'Ingredient label as printed', 'Unsaved later synthetic edit');
++    await client.send('Page.reload'); await b.waitForText(client, 'Resume saved bottle draft'); await capture(id + '-reload');
++    assert(!await b.evaluate(client, `document.body.innerText.includes('Unsaved later synthetic edit')`));
++    await tap('Resume saved bottle draft'); await b.waitForInputValue(client, 'Ingredient label as printed', 'Aqua, synthetic draft ingredient');
++    await tap('Review current saved bottle'); await b.waitForText(client, 'Current saved revision 0');
++    await tap('Keep draft with reviewed source'); await keyboard('Confirm this bottle observation', height);
++    await b.waitForText(client, 'Saved on this device and read back.'); await capture(id + '-confirmed');
++    await client.send('Page.reload'); await b.waitForText(client, 'User confirmed label');
++    await tap('Record label observation'); await tap('I have the printed label');
++    await b.fillByLabel(client, 'Ingredient label as printed', 'Second unconfirmed synthetic draft');
++    await tap('Save bottle draft on this device'); await b.waitForText(client, 'Draft encrypted, saved and read back');
++    await client.send('Page.reload'); await b.waitForText(client, 'Resume saved bottle draft');
++    secondary = await b.connectToPage(debugPort, formulaUrl);
++    for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable']) await secondary.send(method);
++    await b.setViewport(secondary, { width, height });
++    await secondary.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__draftStorageReads=[];const original=Storage.prototype.getItem;Storage.prototype.getItem=function(key){globalThis.__draftStorageReads.push(key);return original.call(this,key)};` });
++    await secondary.send('Page.reload'); await b.waitForText(secondary, 'already open in another tab');
++    await capture(id + '-second-tab-refusal', secondary);
++    const deniedReads = await b.evaluate(secondary, `globalThis.__draftStorageReads.filter(key=>String(key).startsWith('layerwell.'))`);
++    assert.deepEqual(deniedReads, [], 'Denied tab read private app storage');
++    const originalTarget = (await client.send('Target.getTargetInfo')).targetInfo.targetId;
++    const network = client.events.filter(event => event.method === 'Network.requestWillBeSent').map(event => ({ method: event.params.request.method, url: event.params.request.url.split('?')[0] }));
++    json(id + '-network.json', network);
++    assert(network.every(request => ['localhost', '127.0.0.1'].includes(new URL(request.url).hostname)));
++    await secondary.send('Target.closeTarget', { targetId: originalTarget }); client.close(); client = secondary; secondary = undefined;
++    await keyboard('Retry private app access', height); await b.waitForText(client, 'Resume saved bottle draft');
++    await capture(id + '-takeover');
++    await tap('Review all saved bottle drafts'); await b.waitForText(client, 'Saved bottle drafts');
++    await tap('Review draft discard'); await tap('Keep saved draft'); await tap('Review draft discard');
++    await keyboard('Confirm saved draft discard', height); await b.waitForText(client, 'No saved bottle drafts.');
++    await capture(id + '-discarded');
++    const target = (await client.send('Target.getTargetInfo')).targetInfo.targetId;
++    await client.send('Target.closeTarget', { targetId: target }).catch(() => {}); client.close(); client = undefined;
++    receipt.viewports.push({ width, height, explicitAgeConsent: true, encryptedDraftReadback: true, unsavedEditNotRestored: true,
++      explicitResumeReviewConfirm: true, secondTabRefusedBeforePrivateReads: true, takeoverAfterOriginalClosed: true,
++      discardReviewCancelConfirm: true, saveGeometry });
++  }
++  receipt.pass = true; console.log('PASS durable bottle draft journeys at both requested viewports');
++} catch (error) {
++  receipt.error = error.message;
++  if (client) await capture('FAILURE').catch(() => {});
++  throw error;
++} finally {
++  receipt.endedAt = new Date().toISOString(); json('summary.json', receipt);
++  client?.close(); secondary?.close();
++  await b.stopProcessBestEffort(browser); await b.stopProcessBestEffort(server);
++}
+diff --git a/scripts/e2e/professional-reconciliation.mjs b/scripts/e2e/professional-reconciliation.mjs
+index 10cd38566a326d653926ae82c35b0ec4f3f648fc..df33a9354b6c9f8b837e5db1e562091cefd8375c 100644
+--- a/scripts/e2e/professional-reconciliation.mjs
++++ b/scripts/e2e/professional-reconciliation.mjs
+@@ -63,8 +63,9 @@ const authority={session:{subjectId:'synthetic-staff',ownerId:null,workspaceId:'
+  health:{ownerId:'client-a',epoch:1,consentReceiptId:'health-a',active:true,deletionPending:false},billing:'write_allowed'};
+ const eventBody={id:'11111111-1111-4111-8111-111111111111',version:1,ownerId:'client-a',workspaceId:'practice-a',grantVersion:1,planHash:'b'.repeat(64),kind:'product_started',detail:'SYNTHETIC selected owner report; no actual person or care.'};
+ const event={...eventBody,contentHash:await recordHash(eventBody)};let log=[];let mode='normal';let held=null;const sent=[];const overflow=[];
++let ownerResponses=[];
+ const model=()=>({sourceHash:'a'.repeat(64),writeAvailable:mode!=='readonly',grantVersion:1,grantEpoch:1,events:mode==='empty'?[]:[event],
+- plans:mode==='empty'?[]:[{planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,sequence:1}],acknowledgements:[],rows:mode==='empty'?[]:log});
++ plans:mode==='empty'?[]:[{planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,sequence:1}],acknowledgements:[],responses:mode==='empty'?[]:ownerResponses,rows:mode==='empty'?[]:log});
+ const scopeText=()=>cdp.value(`document.querySelector('#reconciliation').innerText`);
+ const checkOverflow=async()=>{const ok=await cdp.value('document.documentElement.scrollWidth <= innerWidth');overflow.push(ok);assert(ok,'horizontal overflow');};
+ async function fill(label,value){const point=await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label='+${JSON.stringify(JSON.stringify(label))}+']');if(!n)return null;n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);assert(point,`Missing ${label}`);await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await cdp.send('Input.insertText',{text:value});}
+@@ -97,7 +98,13 @@ try{
+  await cdp.value(`globalThis.__retiredQueueConfirm=[...document.querySelectorAll('#reconciliation button')].find(b=>b.textContent==='Confirm review record').onclick`);await click('Cancel review');const count=sent.length;await cdp.value('__retiredQueueConfirm()');await delay(100);assert(sent.length===count,'Canceled callback submitted');
+  await click('Review owner record 1');mode='unknown';await click('Confirm review record');await text('Review save outcome unknown');const original=JSON.stringify(sent.at(-1));await click('Retry identical review save');await text('Review revision saved');assert(JSON.stringify(sent.at(-1))===original&&log.length===1,'Unknown retry duplicated');
+  await click('Open case 1 history');await text(event.detail);await fill('Reason for this decision','SYNTHETIC exact event reviewed');await choose('in_review');await click('Review decision before saving');await screenshot('decision-review');await click('Confirm review record');await text('Review revision saved');assert(log.length===2,'Decision append');
+- await click('Open case 1 history');await choose('resolved');await fill('Reason for this decision','SYNTHETIC factual resolution');await fill('Communication already provided (record only)','SYNTHETIC prior contact recorded; no message sent');await click('Review decision before saving');await click('Confirm review record');await text('Review revision saved');assert(log.length===3&&log.at(-1).state==='resolved','Closure');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await screenshot('history');await checkOverflow();await click('Back to queue; discard draft');
++ await click('Open case 1 history');await choose('awaiting_client_ack');await fill('Reason for this decision','SYNTHETIC intended version needs owner response');await filter('Changed intended version',event.planHash);
++ await click('Review decision before saving');await text('No explicit response recorded');await click('Confirm review record');await text('Review revision saved');
++ ownerResponses=[{id:'33333333-3333-4333-8333-333333333333',contentHash:'c'.repeat(64),planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,kind:'declined',recordedAt:now}];
++ await click('Load current review records');await text('Open case 1 history');await click('Open case 1 history');await text('Latest recorded owner response to intended version 1: Declined');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Recorded owner acknowledgement"]').options.length`)===1,'Decline offered as acknowledgement');await screenshot('owner-declined');await checkOverflow();
++ await choose('resolved');await fill('Reason for this decision','SYNTHETIC factual resolution');await fill('Communication already provided (record only)','SYNTHETIC prior contact recorded; no message sent');await fill('Reason for closing without exact acknowledgement','SYNTHETIC exact version declined; no actual use inferred');
++ await click('Review decision before saving');await text('Latest recorded owner response to intended version 1: Declined');await click('Confirm review record');await text('Review revision saved');assert(log.length===4&&log.at(-1).state==='resolved','Closure');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await screenshot('history');await checkOverflow();await click('Back to queue; discard draft');
+  const beforeFilters=sent.length;await filter('Filter cases by recorded state','open');await text('No current cases match these filters.');
+  assert(!(await scopeText()).includes('Open case 1 history'),'Closed history misclassified as open');await screenshot('filter-open-empty');
+  await filter('Filter cases by recorded state','resolved');await text('Open case 1 history');

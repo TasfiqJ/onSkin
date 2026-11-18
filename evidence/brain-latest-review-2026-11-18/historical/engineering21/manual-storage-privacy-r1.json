@@ -1,0 +1,29 @@
+{
+  "label": "manual-storage-privacy-r1",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/manualIntakeDrafts.test.ts",
+    "src/features/shelf/bottleDrafts.test.ts",
+    "src/features/settings/localDeviceExport.test.ts",
+    "src/features/settings/localPrivateDataKeys.test.ts",
+    "src/features/settings/localPrivateData.test.ts",
+    "src/features/settings/localPrivateDataFence44.test.ts",
+    "src/features/healthConsent/selectiveCleanup.test.ts",
+    "src/lib/storage/privateKV.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-17T17:23:03.988954+00:00",
+  "head": "4dce84e20a71f19c60c16c7682e683bb512363ed",
+  "tree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+  "status": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/app/shelf/_layout.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/IntakeContext.tsx\n M apps/mobile/src/features/shelf/store.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/app/shelf/intake-drafts.tsx\n?? apps/mobile/src/features/shelf/manualIntakeDraftCodec.ts\n?? apps/mobile/src/features/shelf/manualIntakeDraftStore.ts\n?? apps/mobile/src/features/shelf/manualIntakeDrafts.test.ts\n?? apps/mobile/src/features/shelf/manualIntakeRecovery.ts\n?? apps/mobile/src/features/shelf/manualIntakeSubmission.ts\n?? scripts/e2e/manual-intake-drafts21.mjs",
+  "workingDiffSha256": "af28a9b1c1c87c9cc005f75e30c9c8ec49abccdcca25ccd4cfc609eebe8804cf",
+  "exit": 0,
+  "seconds": 4.172,
+  "end": "2026-11-17T17:23:08.422808+00:00",
+  "logSha256": "cbe0c4f9dc33dfdbfef784d7992c21c54a03441ad43b615153a3b69b8b15d734"
+}

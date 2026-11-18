@@ -1,0 +1,12 @@
+{
+  "run": "manual-browser-r1",
+  "status": "FAILED_BEFORE_APP_INTERACTION",
+  "localSocketResult": "Invoke-WebRequest http://localhost:8500 reported: An attempt was made to access a socket in a way forbidden by its access permissions.",
+  "driverError": "Timed out waiting for http://localhost:8500: fetch failed",
+  "toolingWarning": "Failed to download the latest version of React Native DevTools. Using a fallback version instead. Connect to the internet or check your network settings.",
+  "toolingSource": "node_modules/@react-native/debugger-shell/dist/node/private/LaunchUtils.js:32 calls fb-dotslash fetch; the warning at line 59 indicates no providers succeeded.",
+  "scope": "The local synthetic browser driver ran with EXPO_OFFLINE=1, EXPO_NO_DOTENV=1 and CI=1. Expo 57 still enabled standalone debugger-shell prefetch. This is an attempted tooling artifact fetch, not an OCR/camera/clinical/professional provider call. No successful download or dependency installation is established. Browser-local network assertions were not reached and do not establish process-wide network absence.",
+  "suppression": "Set EXPO_UNSTABLE_HEADLESS=1 in the driver. @expo/cli/build/src/start/server/metro/debugging/createDebugMiddleware.js:49 sets enableStandaloneFuseboxShell to !envIsHeadless(); env.js:288 resolves EXPO_UNSTABLE_HEADLESS. This suppresses the background fetch at its existing source option, without dependency/source modification.",
+  "cleanup": "The driver finally stopped its recorded server PID 86332 and browser PID 82952. Neither PID existed at the subsequent Get-Process check.",
+  "next": "Retry only the authorized local synthetic browser journey with the existing headless flag and loopback-capable execution. Preserve r1 evidence. No provider or native work is permitted."
+}

@@ -1,0 +1,400 @@
+{
+  "receipts": [
+    {
+      "label": "browser-r1",
+      "command": [
+        "node",
+        "..\\ENGINEERING25_EVIDENCE\\local-recovery-browser25.mjs"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:04:21.218177+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 1,
+      "seconds": 120.609,
+      "end": "2026-11-18T00:06:22.089637+00:00",
+      "logSha256": "6d54ee6403c8fb2f2bf322be62ff522d2c3fce9c878fadcbc4141a45cc80ce5e"
+    },
+    {
+      "label": "browser-r2",
+      "command": [
+        "node",
+        "..\\ENGINEERING25_EVIDENCE\\local-recovery-browser25.mjs"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:07:03.691685+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 1,
+      "seconds": 109.781,
+      "end": "2026-11-18T00:08:53.643260+00:00",
+      "logSha256": "1b05465e9cd1f99fb857a5daac6c1e393311f8eafe2a84599351e81d0d74ff48"
+    },
+    {
+      "label": "browser-r3",
+      "command": [
+        "node",
+        "..\\ENGINEERING25_EVIDENCE\\local-recovery-browser25.mjs"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:09:20.186618+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 1,
+      "seconds": 113.219,
+      "end": "2026-11-18T00:11:13.566951+00:00",
+      "logSha256": "f22defe885d4f6f35abf575e789219ff14ca0340ffd53461ea17265246a1d08a"
+    },
+    {
+      "label": "browser-r4",
+      "command": [
+        "node",
+        "..\\ENGINEERING25_EVIDENCE\\local-recovery-browser25.mjs"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:12:30.517527+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 0,
+      "seconds": 205.734,
+      "end": "2026-11-18T00:15:56.591201+00:00",
+      "logSha256": "e1403d21dd59c2147e9324bdc854cf13c3c3efd2b4d0624b59e8e6e784fec127"
+    },
+    {
+      "label": "draft-regression-r1",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/shelf/manualIntakeDrafts.test.ts",
+        "src/features/shelf/manualIntakeDraftUI21.test.ts",
+        "src/features/today/optionalChangeDrafts.test.ts",
+        "src/features/today/optionalChangeDraftUI21.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:02:38.399200+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "166d8aa22295304729a6f99f9f95b8fee6f29c08150b2c012c35213ee4cc7dfa",
+      "exit": 0,
+      "seconds": 6.36,
+      "end": "2026-11-18T00:02:45.024496+00:00",
+      "logSha256": "3fa9695249254337346b304751a4ba19faef2d003e48ff9800e9399bea1220db"
+    },
+    {
+      "label": "formula-journey-diagnostic-r1",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/shelf/formulaHistoryJourney.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:08:48.631978+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 0,
+      "seconds": 8.297,
+      "end": "2026-11-18T00:08:57.197218+00:00",
+      "logSha256": "f1fbfd52a723bb0a201c571960862256edfaa69ab210862e508e83b7c6fdb1f2"
+    },
+    {
+      "label": "key-read-focused-r1",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/lib/storage/privateKVContentKey.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-17T23:58:44.937945+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts",
+      "workingDiffSha256": "29fe0ca11ef7bc2d117cc9361687dcd7e9efba6650cc37605f9cfd34e4e4d1e1",
+      "exit": 0,
+      "seconds": 2.625,
+      "end": "2026-11-17T23:58:47.810345+00:00",
+      "logSha256": "3e78edbaab5343667f5fa2b5614261d42dd59e12b4568f512eb5623abc32ad8c"
+    },
+    {
+      "label": "key-read-focused-r2",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/lib/storage/privateKVContentKey.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:00:43.124996+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a14fb1998827d0f65425f8a4ed86c044d6cf5b2e9e4fd0ef2cb9046beac872d1",
+      "exit": 0,
+      "seconds": 1.609,
+      "end": "2026-11-18T00:00:44.978806+00:00",
+      "logSha256": "9cad6539b4197269b566ba7049f9ba7c349cb8d0b3701a36adad16d49beff6f4"
+    },
+    {
+      "label": "recovery-focused-r1",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+        "src/features/retainedRecovery/localRecoveryDrafts25.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:04:03.601965+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 1,
+      "seconds": 2.969,
+      "end": "2026-11-18T00:04:06.817881+00:00",
+      "logSha256": "b63f96ea73dcbebb4c15833cb7099ca30712b72fb49d6b31c5ffca06ccc1fc9e"
+    },
+    {
+      "label": "recovery-focused-r2",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+        "src/features/retainedRecovery/localRecoveryDrafts25.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:04:37.090368+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 0,
+      "seconds": 2.937,
+      "end": "2026-11-18T00:04:40.288880+00:00",
+      "logSha256": "89f7320db1c9577f5b4d9ef5ec569986c80b4a94fceae25ad07fb31ec0ff05e6"
+    },
+    {
+      "label": "root-lint-r1",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:09:42.326381+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 0,
+      "seconds": 90.0,
+      "end": "2026-11-18T00:11:12.951590+00:00",
+      "logSha256": "7d486041d7c83c24ff60a2f51bac1df579e0ba89cc1a3d89429173e5bd1cc582"
+    },
+    {
+      "label": "root-tests-r1",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:07:27.234204+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 1,
+      "seconds": 59.203,
+      "end": "2026-11-18T00:08:27.069595+00:00",
+      "logSha256": "ca749271ecb2336dd526a467ec926d57e71aee8c6f0698bd0b85ef976d931379"
+    },
+    {
+      "label": "root-tests-r2",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:12:23.867897+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 0,
+      "seconds": 81.11,
+      "end": "2026-11-18T00:13:45.234078+00:00",
+      "logSha256": "1e96c7ddbf356ecbe5ee8baf34291f1458960aa20988b3da3b48bd692ac4ef31"
+    },
+    {
+      "label": "root-types-r1",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:05:24.308328+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 2,
+      "seconds": 23.531,
+      "end": "2026-11-18T00:05:48.099762+00:00",
+      "logSha256": "883529e1034c89beb1db008ca3d3b6e035ba086ad0697d16e9456afc9ffc83b1"
+    },
+    {
+      "label": "root-types-r2",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--cache=local:w",
+        "--concurrency=1"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:08:49.906221+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/localRecoveryDrafts25.test.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "a19b4cecb5c2035177d8daf2ee470c64005bb0bdc775ae4fc5ed793f03ed31c5",
+      "exit": 0,
+      "seconds": 24.234,
+      "end": "2026-11-18T00:09:14.423615+00:00",
+      "logSha256": "8724b62dce22020396b4396e33a2bd93437cfb3b6b4be047f4969fca8f712fca"
+    },
+    {
+      "label": "storage-boundary-r1",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/lib/storage/privateKVReadOnly25.test.ts",
+        "src/lib/storage/privateKV.test.ts",
+        "src/lib/storage/privateKVBoundaryRead39.test.ts",
+        "src/lib/storage/privateKVCommitFence28.test.ts",
+        "src/lib/storage/privateKVSourceFence44.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-17T23:59:56.349705+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "c49642ae5784cecfcb8a257ffb3c1b17f044dc75395cfac21b088d1a96bde11a",
+      "exit": 1,
+      "seconds": 4.797,
+      "end": "2026-11-18T00:00:01.382370+00:00",
+      "logSha256": "bdb213f37a82c0452671179eaba92eb280d5007dfebe48fd7c315b5098a86d2b"
+    },
+    {
+      "label": "storage-boundary-r2",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/lib/storage/privateKVReadOnly25.test.ts",
+        "src/lib/storage/privateKV.test.ts",
+        "src/lib/storage/privateKVBoundaryRead39.test.ts",
+        "src/lib/storage/privateKVCommitFence28.test.ts",
+        "src/lib/storage/privateKVSourceFence44.test.ts"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:00:38.080341+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "1d91fbb5015c8e2c02ee7ba054df1837f9a5939e7bc8c67bfddf8573bb2a47e8",
+      "exit": 0,
+      "seconds": 4.562,
+      "end": "2026-11-18T00:00:42.881223+00:00",
+      "logSha256": "0ba5aa03a03ebefd8044d1e7687713934a49f4a10efa72570df8fcfd7e5d2b00"
+    },
+    {
+      "label": "types-focused-r1",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+      "start": "2026-11-18T00:03:26.235784+00:00",
+      "head": "8b63185db4400d43517c7e05a2e8ad8371e984ca",
+      "tree": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd",
+      "status": "M apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx\n M apps/mobile/src/features/retainedRecovery/localEvidence.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.test.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/lib/storage/privateKVReadOnly25.test.ts",
+      "workingDiffSha256": "166d8aa22295304729a6f99f9f95b8fee6f29c08150b2c012c35213ee4cc7dfa",
+      "exit": 0,
+      "seconds": 17.171,
+      "end": "2026-11-18T00:03:43.665823+00:00",
+      "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+    }
+  ],
+  "finalRootTests": {
+    "tests": 8639,
+    "files": 579,
+    "cachedTasks": 0
+  },
+  "browserSummary": "browser-r4/summary.json",
+  "nativeQualification": "NOT_RUN",
+  "failuresRetained": [
+    "browser-r1",
+    "browser-r2",
+    "browser-r3",
+    "recovery-focused-r1",
+    "root-tests-r1",
+    "root-types-r1",
+    "storage-boundary-r1"
+  ]
+}

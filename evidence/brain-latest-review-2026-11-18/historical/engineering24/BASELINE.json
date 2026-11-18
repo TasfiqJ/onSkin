@@ -1,0 +1,95 @@
+{
+  "authorization": "BRAIN-ONSKIN-LOCAL-RECOVERY-DRAFT-VISIBILITY-24",
+  "result": "MATCH",
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "host",
+        "chunk_id": "5fb709",
+        "wall_time_seconds": 0.689218924,
+        "exit_code": 0,
+        "original_token_count": 22,
+        "output": "[LOCAL_HOST]\r\n\r\nPath\r\n----\r\n[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate\r\n\r\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "branch",
+        "chunk_id": "45518c",
+        "wall_time_seconds": 0.546607147,
+        "exit_code": 0,
+        "original_token_count": 7,
+        "output": "stage/m1-native-runtime47\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "head",
+        "chunk_id": "b639c7",
+        "wall_time_seconds": 0.571063641,
+        "exit_code": 0,
+        "original_token_count": 11,
+        "output": "8b63185db4400d43517c7e05a2e8ad8371e984ca\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "tree",
+        "chunk_id": "14b7db",
+        "wall_time_seconds": 0.542040045,
+        "exit_code": 0,
+        "original_token_count": 11,
+        "output": "8c9a1409dbcfbfbcc5923f41382263364a5bf6fd\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "parent",
+        "chunk_id": "af582d",
+        "wall_time_seconds": 0.573795623,
+        "exit_code": 0,
+        "original_token_count": 11,
+        "output": "08da2f379c487f8b56d470c7093eb6045b700204\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "status",
+        "chunk_id": "d40a9a",
+        "wall_time_seconds": 0.598330891,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "ancestor",
+        "chunk_id": "c9d791",
+        "wall_time_seconds": 0.59005888,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "writers",
+        "chunk_id": "83cc70",
+        "wall_time_seconds": 0.77576279,
+        "exit_code": 0,
+        "original_token_count": 27,
+        "output": "{\r\n  \"Id\": 54376,\r\n  \"ProcessName\": \"pwsh\",\r\n  \"StartTime\": \"2026-11-17T18:40:52.8969836-05:00\"\r\n}\r\nFalse\r\n"
+      }
+    }
+  ],
+  "writerCheck": "Only the calling pwsh process observed; no index.lock. Review agents read-only; test agent stopped before edits."
+}

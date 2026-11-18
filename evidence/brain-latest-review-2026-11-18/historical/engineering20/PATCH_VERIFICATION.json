@@ -1,0 +1,29 @@
+{
+  "patches": [
+    {
+      "file": "CUMULATIVE_PR48_TO_ENGINEERING20.patch",
+      "base": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+      "baseTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8",
+      "target": "4dce84e20a71f19c60c16c7682e683bb512363ed",
+      "targetTree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+      "bytes": 3080583,
+      "sha256": "341d5814914c9888414db2b0fe9e77ccebe0b5fca8b7be28bff437a5ff83d285",
+      "forwardExactTree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+      "reverseExactTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8"
+    },
+    {
+      "file": "SESSION_ENGINEERING19_TO_ENGINEERING20.patch",
+      "base": "2f699f6157c1d6414b7e74661a4e11e89a77ed92",
+      "baseTree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5",
+      "target": "4dce84e20a71f19c60c16c7682e683bb512363ed",
+      "targetTree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+      "bytes": 148493,
+      "sha256": "cffbc3aaf2b183b652cff399d98532aa8d7b02381c22e1967fbc6b74bcfe083d",
+      "forwardExactTree": "9d61cabdc11cff36577e4e7aa94b00ca4a95f393",
+      "reverseExactTree": "c3968521569a5ae0ce5cea0a96a1d6350684e4b5"
+    }
+  ],
+  "activeIndexUnchanged": true,
+  "cleanPorcelain": "",
+  "method": "isolated temporary index; no source checkout/ref/history mutation"
+}

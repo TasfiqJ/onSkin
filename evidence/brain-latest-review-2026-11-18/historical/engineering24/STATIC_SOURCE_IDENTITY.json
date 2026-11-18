@@ -1,0 +1,26 @@
+[
+  {
+    "path": "apps/mobile/src/features/shelf/manualIntakeDraftStore.ts",
+    "workingSha256": "91d21c5ef7d69a1a29b24da8d3d417c6627087453131135eb3edf3349217c2ad",
+    "gitBlob": "3d678b4737f51684429b86a4a998372d2d970fd0",
+    "gitBlobSha256": "91d21c5ef7d69a1a29b24da8d3d417c6627087453131135eb3edf3349217c2ad"
+  },
+  {
+    "path": "apps/mobile/src/features/today/optionalChangeDraftStore.ts",
+    "workingSha256": "d6f914316def002ba0d14e8b51b64ff1dd2b8e478216cde3082925f206a3ab0e",
+    "gitBlob": "861b0e06d0d2e3fea7fd9dee423d5fb3afb90304",
+    "gitBlobSha256": "d6f914316def002ba0d14e8b51b64ff1dd2b8e478216cde3082925f206a3ab0e"
+  },
+  {
+    "path": "apps/mobile/src/lib/storage/privateKV.ts",
+    "workingSha256": "3e0248f789f6d770840190e5e72ee8e8d0f1658834e4440ce6366066e8dbb76a",
+    "gitBlob": "e5cc45ad4bde2962e62d6a3a16574dbeaa6d590c",
+    "gitBlobSha256": "151c6cf08bdfd2af094b0bbd3f9e8d24cde3c5e79241a6c517fe3c77a40f2fa6"
+  },
+  {
+    "path": "apps/mobile/src/lib/storage/privateKVContentKey.ts",
+    "workingSha256": "d849b6b0f036e17474d4a9084bd907e0f3fefb5c5cae5eb44e1fc1893d4c1c16",
+    "gitBlob": "d89b8c491d39ea8b62fc17c569e6c894f8483f04",
+    "gitBlobSha256": "d849b6b0f036e17474d4a9084bd907e0f3fefb5c5cae5eb44e1fc1893d4c1c16"
+  }
+]
