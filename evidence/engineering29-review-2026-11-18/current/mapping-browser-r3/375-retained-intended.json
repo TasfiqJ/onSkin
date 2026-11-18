@@ -1,0 +1,54 @@
+[
+  {
+    "actorId": "synthetic-staff",
+    "am": [
+      {
+        "productId": "bottle-a",
+        "name": "Recorded cleanser"
+      }
+    ],
+    "contentHash": "858cfd6fc1ec00297fc167a2473e7bab9e930c1e789c12056e8c62c245dfd801",
+    "createdAt": 1800000000000,
+    "grantEpoch": 1,
+    "grantId": "synthetic-grant",
+    "grantVersion": 1,
+    "healthEpoch": 1,
+    "id": "34580063-a655-4ff4-8b38-5b79a70d2a33",
+    "ownerId": "client-a",
+    "parentHash": null,
+    "parentId": null,
+    "pm": [
+      {
+        "productId": "bottle-b",
+        "name": "Recorded cream"
+      }
+    ],
+    "schemaVersion": 1,
+    "sequence": 1,
+    "source": "practitioner-intended",
+    "sourceProjectionHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "templateOrigin": {
+      "am": [
+        {
+          "productId": "bottle-a",
+          "role": "cleanser"
+        },
+        {
+          "productId": null,
+          "role": "moisturizer"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "role": "moisturizer"
+        }
+      ],
+      "revision": 1,
+      "revisionHash": "ba9b558c3a3eee739c449b2c68beb9eb467007644cd58070da9c4e8d790cab7c",
+      "revisionId": "30ee4bbf-849c-4d05-9ebd-12d73775f5ec",
+      "templateId": "2ae0f5d3-e859-44d7-9557-3a19bf070dce"
+    },
+    "workspaceId": "practice-a"
+  }
+]

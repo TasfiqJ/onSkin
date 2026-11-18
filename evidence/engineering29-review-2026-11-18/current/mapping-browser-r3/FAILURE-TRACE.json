@@ -1,0 +1,4 @@
+{
+  "message": "Error: Timed out waiting for Review current client records again: condition false",
+  "stack": "Error: Timed out waiting for Review current client records again: condition false\n    at Module.waitForCondition (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:967:9)\n    at async file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/template-mapping29.mjs:110:52"
+}

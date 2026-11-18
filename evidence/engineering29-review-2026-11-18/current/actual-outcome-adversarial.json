@@ -1,0 +1,30 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/actualRoutineJourney.test.ts",
+    "src/features/routine/actualRoutineStore.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T19:17:51.113298+00:00",
+  "before": {
+    "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+    "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+  },
+  "end": "2026-11-18T19:17:57.283877+00:00",
+  "after": {
+    "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+    "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+  },
+  "exit": 0,
+  "logSha256": "49810759cdf795d6bedfa720f6d670f8e388db66cafb373b74751bb1fc89804b",
+  "logBytes": 402
+}

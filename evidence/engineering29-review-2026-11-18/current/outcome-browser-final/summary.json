@@ -1,0 +1,37 @@
+{
+  "start": "2026-11-18T19:32:35.309Z",
+  "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+  "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+  "status": "",
+  "surface": "Actual local Expo/Edge UI and encrypted records; synthetic owner and acknowledgement faults, no native qualification",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true
+    }
+  ],
+  "blocked": [],
+  "pass": true,
+  "end": "2026-11-18T19:35:06.529Z",
+  "ownedBrowserAndServerStopped": true
+}

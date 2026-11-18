@@ -1,0 +1,1129 @@
+[
+  {
+    "label": "actual-navigation-ack-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:24:51.126622+00:00",
+    "before": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "end": "2026-11-18T19:24:57.601856+00:00",
+    "after": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "bf56aaed7b184bf1abc1b019a36794fe91a5a26718d9bfeb72adad2f48f9c3b6",
+    "logBytes": 402
+  },
+  {
+    "label": "actual-navigation-ack-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:23:36.553033+00:00",
+    "before": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "end": "2026-11-18T19:23:43.263461+00:00",
+    "after": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "exit": 1,
+    "logSha256": "b3e6daa24a3032299cb609fb89f2c4ee0ff84211ead58c0bcb8c2d4c0d9be5d7",
+    "logBytes": 4757
+  },
+  {
+    "label": "actual-outcome-adversarial",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:17:51.113298+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:17:57.283877+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "49810759cdf795d6bedfa720f6d670f8e388db66cafb373b74751bb1fc89804b",
+    "logBytes": 402
+  },
+  {
+    "label": "actual-outcome-complete",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:25:57.481283+00:00",
+    "before": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/release/full-app-j01/actual-apply-outcome29.md\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "end": "2026-11-18T19:26:04.370990+00:00",
+    "after": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/release/full-app-j01/actual-apply-outcome29.md\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "a66207eb44047be29c4bae6c526e8ce321b694e2d35886b0fbc29987e72ccd4a",
+    "logBytes": 402
+  },
+  {
+    "label": "actual-outcome-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:16:54.861540+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:17:00.524546+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "07dc0653316b38ac31740da4c5512ea00edda7dd6e46bec320c7539858a21880",
+    "logBytes": 402
+  },
+  {
+    "label": "actual-outcome-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:15:33.541824+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:15:39.337520+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 1,
+    "logSha256": "be23253904e6e4f61b156b00c5be693d43261d040a06053a22457f082ca8b395",
+    "logBytes": 4702
+  },
+  {
+    "label": "consumer-build-final",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "expo",
+      "export",
+      "--platform",
+      "web",
+      "--output-dir",
+      "[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/ENGINEERING29_EVIDENCE/build/consumer-final"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:30:24.075912+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:31:16.538781+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "32e94d0d6d2237f6f3bc8c3da2df6e85ab69081ac567a317ce57773cfbd07c42",
+    "logBytes": 6160
+  },
+  {
+    "label": "lint-final",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:29:15.885479+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:30:16.131389+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "696be761d5dfadb800a00f3a5dc84e99b923b0cc18ac5ac29f41b1f4087ccae3",
+    "logBytes": 1534
+  },
+  {
+    "label": "lint-final2",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:42:09.509279+00:00",
+    "before": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:43:13.546291+00:00",
+    "after": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "16669d375e4b7167d343986f9f6228ad474bb8f2ce5197956fc0256bc64e2a43",
+    "logBytes": 1535
+  },
+  {
+    "label": "mapping-browser-final",
+    "command": [
+      "node",
+      "scripts/e2e/template-mapping29.mjs"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:32:02.844834+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:32:34.910311+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "cf6d9299f8bfeb0464ba38eefe3d1964f4c5adfe02650ee92ee00c40656d7346",
+    "logBytes": 9941
+  },
+  {
+    "label": "mapping-browser-r2",
+    "command": [
+      "node",
+      "scripts/e2e/template-mapping29.mjs"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:15:39.882192+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:15:49.909935+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 1,
+    "logSha256": "78cc7beb3769459c12f6b3c3ead7f99ca6f38ebe2990585e1b22c11e94260172",
+    "logBytes": 2566
+  },
+  {
+    "label": "mapping-browser-r3",
+    "command": [
+      "node",
+      "scripts/e2e/template-mapping29.mjs"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:17:57.479616+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:18:22.081838+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 1,
+    "logSha256": "5909cf52dccd14db906022ac7596ecf5c334a86ecfca5646358445f412032248",
+    "logBytes": 4355
+  },
+  {
+    "label": "mapping-browser-r4",
+    "command": [
+      "node",
+      "scripts/e2e/template-mapping29.mjs"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:19:07.945606+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:19:40.022281+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "4fecfc42b9bf3779d322f38dad80218b16c1294ceadb464aca6196b4fb887524",
+    "logBytes": 11028
+  },
+  {
+    "label": "mapping-capability-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test",
+      "--",
+      "src/templateMapping29.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:04:19.745992+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "?? apps/professional-web/src/templateMapping29.test.ts"
+    },
+    "end": "2026-11-18T19:04:21.213716+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "?? apps/professional-web/src/templateMapping29.test.ts"
+    },
+    "exit": 1,
+    "logSha256": "5c6b93c7a9464f770b0d102d6e7cbd2f87023c4d0ed55e31b67c7d382d444673",
+    "logBytes": 1512
+  },
+  {
+    "label": "mapping-domain-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test",
+      "--",
+      "src/templateMapping29.test.ts",
+      "src/intendedPlans.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:05:16.546076+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts"
+    },
+    "end": "2026-11-18T19:05:18.281717+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts"
+    },
+    "exit": 0,
+    "logSha256": "bf76700e849b7c01b14dae72b8cb9aec948fce8f72b4f7eeffc4d4ffd3536a6a",
+    "logBytes": 380
+  },
+  {
+    "label": "mobile-lint-pre",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "lint"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:26:04.568911+00:00",
+    "before": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/release/full-app-j01/actual-apply-outcome29.md\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "end": "2026-11-18T19:27:03.131342+00:00",
+    "after": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/release/full-app-j01/actual-apply-outcome29.md\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "6386e4966836ef8b80a4d9ec9858b2cfd8709b6eeed4350dfaf37baebb524835",
+    "logBytes": 61
+  },
+  {
+    "label": "mobile-typecheck-outcome",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:22:00.511131+00:00",
+    "before": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "end": "2026-11-18T19:22:29.622400+00:00",
+    "after": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290",
+    "logBytes": 53
+  },
+  {
+    "label": "outcome-browser-final",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:32:35.117864+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:35:12.214973+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "1bb71e56e2b4a949e8d940e678861bad85a8b26aa036d8e29b7c7c0b6c75d5b9",
+    "logBytes": 776
+  },
+  {
+    "label": "outcome-browser",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:21:40.804224+00:00",
+    "before": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "end": "2026-11-18T19:24:22.370305+00:00",
+    "after": {
+      "head": "d72248019d4b51580f0d4e306d1eb1492bcc3d8a",
+      "tree": "50d12c6781a6a23b8904b4761837373c1946f7da",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n?? scripts/e2e/actual-apply-outcome29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "ef5dd2ae5eb7a02de10c1cb625e8cfe17cc4cbe29c2cd849f442b4984a4ca3d8",
+    "logBytes": 1060
+  },
+  {
+    "label": "privacy-focused-final",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/privateKV.test.ts",
+      "src/lib/storage/privateKVContentKey.test.ts",
+      "src/lib/storage/privateKVReadOnly25.test.ts",
+      "src/lib/storage/privateKVCreation28.test.ts",
+      "src/lib/consent/healthDataWriteAdmission.test.ts",
+      "src/lib/consent/healthProcessingEpoch.test.ts",
+      "src/lib/auth/accountGeneration.test.ts",
+      "src/lib/auth/localAccountIsolation.test.ts",
+      "src/features/today/optionalChangeDraftProof23.test.ts",
+      "src/features/photos/photoDeleteR3.integration.test.ts",
+      "src/features/photos/encryptedStorage.test.ts",
+      "src/features/settings/localDeviceExport.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/retainedRecovery/localRecoveryDrafts25.test.ts",
+      "src/features/today/optionalChangeNavigation28.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:30:16.333928+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:30:23.866724+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "b90494f509ed1adb8900fdca9da35d156f760b781639db2e8056647c11df07e9",
+    "logBytes": 1117
+  },
+  {
+    "label": "professional-build-final",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "build"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:31:16.759664+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:31:17.637940+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "95abcd224fbc2a7cf20b34e171f3def7c2f74ec5ee165653c44cdca9929cd04c",
+    "logBytes": 450
+  },
+  {
+    "label": "professional-owner375-final",
+    "command": [
+      "node",
+      "scripts/e2e/professional-owner.mjs",
+      "375",
+      "667"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:35:12.415968+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:35:50.750042+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "4a0a1c63f3487b9de2856ad4bc5c247b7fef7c41d4c10a7469016bb107c5ab0d",
+    "logBytes": 32
+  },
+  {
+    "label": "professional-owner430-final",
+    "command": [
+      "node",
+      "scripts/e2e/professional-owner.mjs",
+      "430",
+      "932"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:35:50.955751+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:36:28.970736+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "9585eb04e882ba930f1ba022ff192bd4faec8f86f58b89686289dbe2b9f287fd",
+    "logBytes": 32
+  },
+  {
+    "label": "professional-queue375-final",
+    "command": [
+      "node",
+      "scripts/e2e/professional-reconciliation.mjs",
+      "375",
+      "667"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:36:29.166245+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:36:29.676121+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 1,
+    "logSha256": "c577d72114c9eab689c8cc60240782bc37db2ac8bda7a70d9189eefe67e2cb72",
+    "logBytes": 1109
+  },
+  {
+    "label": "professional-queue375-final2",
+    "command": [
+      "node",
+      "scripts/e2e/professional-reconciliation.mjs",
+      "375",
+      "667"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:42:14.212075+00:00",
+    "before": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:42:19.053927+00:00",
+    "after": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "e3922f815681e895665ab07d19ea43c2dd0a6ec43a59e52eb84d5df48f8e4f2c",
+    "logBytes": 19
+  },
+  {
+    "label": "professional-queue430-final",
+    "command": [
+      "node",
+      "scripts/e2e/professional-reconciliation.mjs",
+      "430",
+      "932"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:36:29.881676+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:36:30.379929+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 1,
+    "logSha256": "eb3be1a7db4369b921c6e8d77e05d82eed69d5ee03fcf20c3a337569b71a3a4f",
+    "logBytes": 1109
+  },
+  {
+    "label": "professional-queue430-final2",
+    "command": [
+      "node",
+      "scripts/e2e/professional-reconciliation.mjs",
+      "430",
+      "932"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:42:19.286307+00:00",
+    "before": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:42:23.991736+00:00",
+    "after": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "5e20567d10c3467e60d65dd72b7a61aa151e6ef78176dc0088aea4670528d8e0",
+    "logBytes": 19
+  },
+  {
+    "label": "professional-suite-pre",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:11:57.603198+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md"
+    },
+    "end": "2026-11-18T19:12:01.734771+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md"
+    },
+    "exit": 0,
+    "logSha256": "be0dcc97040c3880088b273f18dd432d7db0228d13301d160bbf738b6dd439e0",
+    "logBytes": 328
+  },
+  {
+    "label": "professional-typecheck-domain",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:12:01.944186+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md"
+    },
+    "end": "2026-11-18T19:12:05.221724+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md"
+    },
+    "exit": 0,
+    "logSha256": "512b8943150da3b35d6d384aad1bab5fe6b02ab020d171d14ee1389a3d083f3f",
+    "logBytes": 63
+  },
+  {
+    "label": "professional-typecheck-pre",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:06:48.645362+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts"
+    },
+    "end": "2026-11-18T19:06:51.963107+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts"
+    },
+    "exit": 0,
+    "logSha256": "512b8943150da3b35d6d384aad1bab5fe6b02ab020d171d14ee1389a3d083f3f",
+    "logBytes": 63
+  },
+  {
+    "label": "professional-typecheck-ui",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:07:53.197349+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts"
+    },
+    "end": "2026-11-18T19:07:56.267702+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts"
+    },
+    "exit": 0,
+    "logSha256": "512b8943150da3b35d6d384aad1bab5fe6b02ab020d171d14ee1389a3d083f3f",
+    "logBytes": 63
+  },
+  {
+    "label": "root-tests-final",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:27:50.591062+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:28:37.165589+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "290907ee0de714238d73426909064ae9ad4919fb12f6490ec3a0a0df8fa1e619",
+    "logBytes": 686135
+  },
+  {
+    "label": "root-tests-final2",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:41:02.070414+00:00",
+    "before": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:41:48.328967+00:00",
+    "after": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "9fb146e9a851eefd93f793307827504111a8f6740912a3d68818ea932ebd3185",
+    "logBytes": 679536
+  },
+  {
+    "label": "template-mapping-integration-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test",
+      "--",
+      "src/templateMapping29.test.ts",
+      "src/templateMappingJourney29.test.ts",
+      "src/practitioner.test.ts",
+      "src/practiceTemplates.test.ts",
+      "src/workspaceService.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:10:27.481860+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts"
+    },
+    "end": "2026-11-18T19:10:30.917635+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts"
+    },
+    "exit": 0,
+    "logSha256": "6a81fc30c37432ed2a84d9db8277914cd22bd0b8511612316cb2302482d68a0f",
+    "logBytes": 477
+  },
+  {
+    "label": "template-mapping-integration-pre",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test",
+      "--",
+      "src/templateMapping29.test.ts",
+      "src/templateMappingJourney29.test.ts",
+      "src/practitioner.test.ts",
+      "src/practiceTemplates.test.ts",
+      "src/workspaceService.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:10:06.073503+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts"
+    },
+    "end": "2026-11-18T19:10:09.612653+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts"
+    },
+    "exit": 1,
+    "logSha256": "f2cf1c1294d9eddfdd336506ae3a1ba649028c7130cc13ce4251504af1ae1133",
+    "logBytes": 2136
+  },
+  {
+    "label": "template-retirement-status-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test",
+      "--",
+      "src/templateMappingJourney29.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:19:06.099041+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:19:07.738216+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 0,
+    "logSha256": "01b61244d41cacaa7c76d0984ee7ff1a5b5c0ca994c084503d7c9d1a39a564fc",
+    "logBytes": 361
+  },
+  {
+    "label": "template-retirement-status-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test",
+      "--",
+      "src/templateMappingJourney29.test.ts"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:18:52.210260+00:00",
+    "before": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "end": "2026-11-18T19:18:53.959406+00:00",
+    "after": {
+      "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs"
+    },
+    "exit": 1,
+    "logSha256": "b1e5aa7196cc321a00045ee48ccc1bb3774509e34c7d9a995ce7c301e746e22b",
+    "logBytes": 1845
+  },
+  {
+    "label": "typecheck-final",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:28:55.686297+00:00",
+    "before": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:29:15.667046+00:00",
+    "after": {
+      "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+      "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "4d1e9ba26ead541ec9c1db3f18d07287405bcedd1a332e0584264d9fcb18fda1",
+    "logBytes": 1552
+  },
+  {
+    "label": "typecheck-final2",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+    "start": "2026-11-18T19:41:48.566899+00:00",
+    "before": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "end": "2026-11-18T19:42:09.303222+00:00",
+    "after": {
+      "head": "b29e731097984be98f5b06024d11255dbb732809",
+      "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+      "branch": "stage/m1-native-runtime47",
+      "status": ""
+    },
+    "exit": 0,
+    "logSha256": "1dce3a7d15f389b3b1a14e3849c5c462b91537e5cf9356b9c9bf7a7f0e01b096",
+    "logBytes": 1552
+  }
+]

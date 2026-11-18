@@ -1,0 +1,4 @@
+{
+  "message": "Error: SyntaxError: Failed to execute 'querySelector' on 'Document': 'select[aria-label=\"\"am role 1: cleanser\"\"]' is not a valid selector.\n    at <anonymous>:1:10",
+  "stack": "Error: SyntaxError: Failed to execute 'querySelector' on 'Document': 'select[aria-label=\"\"am role 1: cleanser\"\"]' is not a valid selector.\n    at <anonymous>:1:10\n    at Module.evaluate (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:947:11)\n    at async choose (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/template-mapping29.mjs:49:5)\n    at async file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/template-mapping29.mjs:93:5"
+}

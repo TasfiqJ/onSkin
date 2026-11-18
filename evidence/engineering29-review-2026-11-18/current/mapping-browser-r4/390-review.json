@@ -1,0 +1,6 @@
+{
+  "text": "Review intended sequence before issuing\n\nLatest issued version: none. This sequence proposes only selected recorded products. It does not establish formula equivalence, safety, use or clinical approval.\n\nStarted from practice template revision 1 (6040a82c-64b3-4f95-bf4a-4371b64f5e45).\n\nMorning template roles: 1. cleanser (mapped to recorded product); 2. moisturizer (explicitly omitted).\n\nEvening template roles: 1. moisturizer (mapped to recorded product).\n\nMorning sequence\nRecorded cleanser\nEvening sequence\nRecorded cream\n\nIssuing creates an immutable intended version. The owner must separately receive and acknowledge it, and explicitly choose any actual routine change. No capacity reservation, subscription change or notification is implied.\n\nIssue this intended versionReturn to draftClear practitioner draft",
+  "focus": "Review intended sequence before issuing",
+  "overflow": 0,
+  "persisted": "[[],[]]"
+}

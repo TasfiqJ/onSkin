@@ -1,0 +1,170 @@
+[
+  {
+    "status": 503,
+    "reply": "{\"status\":\"unavailable\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":null,\"latestSequence\":0,\"latestIssued\":null}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":null,\"latestSequence\":0,\"latestIssued\":null},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"createdAt\":1800000000000,\"id\":\"dd0a493b-e730-411d-8702-ebd00759e697\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"d53e6c9c061da9ec6ef4ce8752e887d54ddc72bf5d5f75fc5ba767939c4caea0\",\"createdAt\":1800000000000,\"id\":\"1b8ab5b1-a1dd-4ef4-a1ef-82e52823ee91\",\"parentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 503,
+    "reply": "{\"status\":\"unavailable\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"issued\",\"context\":\"synthetic-session\",\"id\":\"63baa851-b6bc-460a-8bf4-8cd351e21684\",\"contentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"sequence\":1}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"63baa851-b6bc-460a-8bf4-8cd351e21684\",\"contentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"63baa851-b6bc-460a-8bf4-8cd351e21684\",\"contentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"createdAt\":1800000000000,\"id\":\"dd0a493b-e730-411d-8702-ebd00759e697\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"d53e6c9c061da9ec6ef4ce8752e887d54ddc72bf5d5f75fc5ba767939c4caea0\",\"createdAt\":1800000000000,\"id\":\"1b8ab5b1-a1dd-4ef4-a1ef-82e52823ee91\",\"parentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 409,
+    "reply": "{\"status\":\"changed\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"63baa851-b6bc-460a-8bf4-8cd351e21684\",\"contentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"63baa851-b6bc-460a-8bf4-8cd351e21684\",\"contentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"createdAt\":1800000000000,\"id\":\"dd0a493b-e730-411d-8702-ebd00759e697\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"d53e6c9c061da9ec6ef4ce8752e887d54ddc72bf5d5f75fc5ba767939c4caea0\",\"createdAt\":1800000000000,\"id\":\"1b8ab5b1-a1dd-4ef4-a1ef-82e52823ee91\",\"parentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 409,
+    "reply": "{\"status\":\"changed\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"63baa851-b6bc-460a-8bf4-8cd351e21684\",\"contentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"63baa851-b6bc-460a-8bf4-8cd351e21684\",\"contentHash\":\"c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"createdAt\":1800000000000,\"id\":\"dd0a493b-e730-411d-8702-ebd00759e697\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"d53e6c9c061da9ec6ef4ce8752e887d54ddc72bf5d5f75fc5ba767939c4caea0\",\"createdAt\":1800000000000,\"id\":\"1b8ab5b1-a1dd-4ef4-a1ef-82e52823ee91\",\"parentHash\":\"3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"cff364aa0135c8e0c66f9be90d15e3823a61c07ce87fae104ee250c2d556aac8\",\"createdAt\":1800000000000,\"id\":\"7b15ea4f-7b7d-44ee-b5d1-ced04a76d7ee\",\"parentHash\":\"d53e6c9c061da9ec6ef4ce8752e887d54ddc72bf5d5f75fc5ba767939c4caea0\",\"pm\":[],\"revision\":3,\"schemaVersion\":1,\"status\":\"retired\",\"templateId\":\"36dfcccd-8c94-4884-b0aa-5cd937ca9e52\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 403,
+    "reply": "{\"status\":\"denied\"}"
+  },
+  {
+    "status": 503,
+    "reply": "{\"status\":\"unavailable\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":null,\"latestSequence\":0,\"latestIssued\":null}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":null,\"latestSequence\":0,\"latestIssued\":null},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"createdAt\":1800000000000,\"id\":\"bebf31d0-56a7-4bda-8908-fc9336fbea73\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"c7f1476106814abbf69a13bdf703a577dd312c834c4cf109e8e80278b452a1a1\",\"createdAt\":1800000000000,\"id\":\"ad840b56-86c5-4354-9250-38f1f194a332\",\"parentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 503,
+    "reply": "{\"status\":\"unavailable\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"issued\",\"context\":\"synthetic-session\",\"id\":\"55dbef87-91df-45ca-be94-44818c3ab6ed\",\"contentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"sequence\":1}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"55dbef87-91df-45ca-be94-44818c3ab6ed\",\"contentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"55dbef87-91df-45ca-be94-44818c3ab6ed\",\"contentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"createdAt\":1800000000000,\"id\":\"bebf31d0-56a7-4bda-8908-fc9336fbea73\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"c7f1476106814abbf69a13bdf703a577dd312c834c4cf109e8e80278b452a1a1\",\"createdAt\":1800000000000,\"id\":\"ad840b56-86c5-4354-9250-38f1f194a332\",\"parentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 409,
+    "reply": "{\"status\":\"changed\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"55dbef87-91df-45ca-be94-44818c3ab6ed\",\"contentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"55dbef87-91df-45ca-be94-44818c3ab6ed\",\"contentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"createdAt\":1800000000000,\"id\":\"bebf31d0-56a7-4bda-8908-fc9336fbea73\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"c7f1476106814abbf69a13bdf703a577dd312c834c4cf109e8e80278b452a1a1\",\"createdAt\":1800000000000,\"id\":\"ad840b56-86c5-4354-9250-38f1f194a332\",\"parentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 409,
+    "reply": "{\"status\":\"changed\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"55dbef87-91df-45ca-be94-44818c3ab6ed\",\"contentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"55dbef87-91df-45ca-be94-44818c3ab6ed\",\"contentHash\":\"0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"createdAt\":1800000000000,\"id\":\"bebf31d0-56a7-4bda-8908-fc9336fbea73\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"c7f1476106814abbf69a13bdf703a577dd312c834c4cf109e8e80278b452a1a1\",\"createdAt\":1800000000000,\"id\":\"ad840b56-86c5-4354-9250-38f1f194a332\",\"parentHash\":\"5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"be32fa648cfec766a8538d7893b5e5681a8707aa4d3d4827cb299d775b0fd502\",\"createdAt\":1800000000000,\"id\":\"c98a614b-7b73-43fb-864d-18a25b9a3024\",\"parentHash\":\"c7f1476106814abbf69a13bdf703a577dd312c834c4cf109e8e80278b452a1a1\",\"pm\":[],\"revision\":3,\"schemaVersion\":1,\"status\":\"retired\",\"templateId\":\"727c998d-8580-46d0-a6de-4186ef81d661\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 403,
+    "reply": "{\"status\":\"denied\"}"
+  },
+  {
+    "status": 503,
+    "reply": "{\"status\":\"unavailable\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":null,\"latestSequence\":0,\"latestIssued\":null}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":null,\"latestSequence\":0,\"latestIssued\":null},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"createdAt\":1800000000000,\"id\":\"084c40ff-b3c9-4904-bbe7-90ade64d8088\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"8b065584e7cf2e0e6654cc70f82d840faaac761862213928edb2ca0a2def59d3\",\"createdAt\":1800000000000,\"id\":\"b081dedf-2b0b-4179-bfc5-816e69bd3125\",\"parentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 503,
+    "reply": "{\"status\":\"unavailable\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"issued\",\"context\":\"synthetic-session\",\"id\":\"e3c35933-0e72-4fd5-8236-7677cb740d6b\",\"contentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"sequence\":1}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"e3c35933-0e72-4fd5-8236-7677cb740d6b\",\"contentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"e3c35933-0e72-4fd5-8236-7677cb740d6b\",\"contentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"createdAt\":1800000000000,\"id\":\"084c40ff-b3c9-4904-bbe7-90ade64d8088\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"8b065584e7cf2e0e6654cc70f82d840faaac761862213928edb2ca0a2def59d3\",\"createdAt\":1800000000000,\"id\":\"b081dedf-2b0b-4179-bfc5-816e69bd3125\",\"parentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 409,
+    "reply": "{\"status\":\"changed\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"e3c35933-0e72-4fd5-8236-7677cb740d6b\",\"contentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"e3c35933-0e72-4fd5-8236-7677cb740d6b\",\"contentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"createdAt\":1800000000000,\"id\":\"084c40ff-b3c9-4904-bbe7-90ade64d8088\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"8b065584e7cf2e0e6654cc70f82d840faaac761862213928edb2ca0a2def59d3\",\"createdAt\":1800000000000,\"id\":\"b081dedf-2b0b-4179-bfc5-816e69bd3125\",\"parentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 409,
+    "reply": "{\"status\":\"changed\"}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"source\",\"context\":\"synthetic-session\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"e3c35933-0e72-4fd5-8236-7677cb740d6b\",\"contentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}}}"
+  },
+  {
+    "status": 200,
+    "reply": "{\"kind\":\"template-options\",\"context\":\"synthetic-session\",\"workspaceId\":\"practice-a\",\"source\":{\"products\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"},{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}],\"sourceHash\":\"c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b\",\"grantVersion\":1,\"grantEpoch\":1,\"expectedParentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"latestSequence\":1,\"latestIssued\":{\"id\":\"e3c35933-0e72-4fd5-8236-7677cb740d6b\",\"contentHash\":\"d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259\",\"sequence\":1,\"issuedAt\":1800000000000,\"am\":[{\"productId\":\"bottle-a\",\"name\":\"Recorded cleanser\"}],\"pm\":[{\"productId\":\"bottle-b\",\"name\":\"Recorded cream\"}]}},\"templates\":[{\"actorId\":\"synthetic-staff\",\"am\":[\"cleanser\",\"moisturizer\"],\"contentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"createdAt\":1800000000000,\"id\":\"084c40ff-b3c9-4904-bbe7-90ade64d8088\",\"parentHash\":null,\"pm\":[\"moisturizer\"],\"revision\":1,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"8b065584e7cf2e0e6654cc70f82d840faaac761862213928edb2ca0a2def59d3\",\"createdAt\":1800000000000,\"id\":\"b081dedf-2b0b-4179-bfc5-816e69bd3125\",\"parentHash\":\"bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8\",\"pm\":[],\"revision\":2,\"schemaVersion\":1,\"status\":\"active\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"},{\"actorId\":\"synthetic-staff\",\"am\":[\"other\"],\"contentHash\":\"1c25f90a5a6c60952ca32d9cb9ff3c1af2dc193351099e4b5ddf1c3d44498057\",\"createdAt\":1800000000000,\"id\":\"26e9af6c-e7a9-455c-bdd9-45d040f7889f\",\"parentHash\":\"8b065584e7cf2e0e6654cc70f82d840faaac761862213928edb2ca0a2def59d3\",\"pm\":[],\"revision\":3,\"schemaVersion\":1,\"status\":\"retired\",\"templateId\":\"4bd6ee18-f324-4739-800a-430b5446e81c\",\"title\":\"Later generic roles\",\"workspaceId\":\"practice-a\"}]}"
+  },
+  {
+    "status": 403,
+    "reply": "{\"status\":\"denied\"}"
+  }
+]

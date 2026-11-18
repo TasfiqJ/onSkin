@@ -1,0 +1,44 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/actualRoutineJourney.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/routine/actualRoutineJourney.test.ts > does not claim an uncertain earlier apply never happened when a later version wins
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/routine/actualRoutineJourney.test.ts (16 tests | 1 failed) 3529ms
+   × does not claim an uncertain earlier apply never happened when a later version wins 208ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/routine/actualRoutineJourney.test.ts > does not claim an uncertain earlier apply never happened when a later version wins
+AssertionError: expected '{"type":"View","props":{"className":"…' not to contain 'Nothing from this review was applied'
+
+Expected: "Nothing from this review was applied"
+Received: "{"type":"View","props":{"className":"gap-3 rounded-card border border-hairline bg-paper-raised p-4"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[18px]","accessibilityRole":"header"},"children":["My actual routine"]},{"type":"Text","props":{"className":"font-sans text-sm leading-5 text-ink"},"children":["Only an explicit apply creates an actual routine version. Saved snapshots, generated suggestions and old check-offs are not apply intent. This does not confirm use or provide advice. Sequence records commit order; device dates are not a trusted clock."]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["Current owner-applied version 2 · 2026-11-18T19:15:36.964Z"]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-ink w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-paper"},"children":["Review current Shelf sequence as actual routine"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-transparent w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-ink"},"children":["Review clearing my applied routine"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-transparent w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-ink"},"children":["Reload actual routine and source"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-transparent w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-ink"},"children":["Show actual routine and use history"]}]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink","accessibilityLiveRegion":"polite"},"children":["Source or current version changed. Nothing from this review was applied. Refresh and review again."]}]}"
+
+ ❯ src/features/routine/actualRoutineJourney.test.ts:149:22
+    147|   await act(async () => oldApply()); await flush26();
+    148|   expect((await getActualRoutineSnapshot(lease)).versions).toHaveLengt…
+    149|   expect(text()).not.toContain('Nothing from this review was applied');
+       |                      ^
+    150|   expect(text()).toContain('Check saved apply outcome');
+    151| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  14:15:34
+   Duration  4.78s (transform 752ms, setup 0ms, import 1.07s, tests 3.53s, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/routine/actualRoutineJourney.test.ts

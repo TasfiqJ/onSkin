@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-18T20:05:29.234Z",
+  "selectedUtf8FilesScanned": 287,
+  "credentialPatternMatches": 0,
+  "emailMatches": 1,
+  "emailDisposition": "Only already-public synthetic owner@example.invalid EXIF test fixture in cumulative exact patch.",
+  "rawCommitObjects": 151,
+  "rawCommitIdentities": 1,
+  "allRawIdentitiesAlreadyPublicInPR48": true,
+  "scope": "Complete selected UTF8 source patches, actual logs/receipts/DOM/state/reports and decoded raw commit headers. No credential liveness probes; no binary images selected.",
+  "exact": "Source patches and raw commit witness byte-exact; derived home/host/profile/terminal sanitization separately hashed.",
+  "zeroCost": "Fresh absent evidence ref only, immutable E28 evidence parent, no workflows in parent/candidate tree; default workflow identities/main-only filters/absent create+indirect triggers/visible hooks+rules and source refs rechecked. GitHub connector Git-data publication only, no local push hooks/tag/submodule propagation. No source/PR/main update.",
+  "limits": "Bounded material/visible-trigger inspection, not security/native/paid-service acceptance. Complete postpublication byte/hash/ref/all-event-Actions verification required before delivery.",
+  "environment": "Final validation PARTIAL_BLOCKED by C:0 free bytes. Memory-only packaging/remote verification; actual forward/reverse Git tree proof completed before exhaustion. Postpublication temporary-index rerun not claimed."
+}

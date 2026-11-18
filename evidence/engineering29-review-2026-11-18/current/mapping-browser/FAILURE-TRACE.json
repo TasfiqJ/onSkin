@@ -1,0 +1,4 @@
+{
+  "message": "Error: Timed out waiting for Practitioner editor unavailable: TypeError: Cannot read properties of null (reading 'innerText')\n    at <anonymous>:1:47",
+  "stack": "Error: Timed out waiting for Practitioner editor unavailable: TypeError: Cannot read properties of null (reading 'innerText')\n    at <anonymous>:1:47\n    at Module.waitForCondition (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:967:9)\n    at async file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/template-mapping29.mjs:91:66"
+}

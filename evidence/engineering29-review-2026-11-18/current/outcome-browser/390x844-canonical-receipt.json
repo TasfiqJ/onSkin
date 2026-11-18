@@ -1,0 +1,28 @@
+{
+  "versions": [
+    {
+      "id": "019df0ba-841d-420c-9f2f-a645fe43ca89",
+      "sequence": 1,
+      "contentHash": "27836db3856b0148b7d90394ac825db23d3da08b9184d0b4099396955d1776bb",
+      "parentHash": null,
+      "source": "owner-applied-local"
+    },
+    {
+      "id": "ddb37cb7-93cf-4f07-a2a7-cdeffc264d03",
+      "sequence": 2,
+      "contentHash": "bd034dbfe890e1d704d61de10406eb3370d9fee5a040bafebc1c5bd8a3c84c97",
+      "parentHash": "27836db3856b0148b7d90394ac825db23d3da08b9184d0b4099396955d1776bb",
+      "source": "owner-cleared-local"
+    },
+    {
+      "id": "4b586d3a-73ff-4943-a0ca-96e1949d93a5",
+      "sequence": 3,
+      "contentHash": "b885f1631968947fa5e8819d2fc3e882dd6befded2ac812c06e530b84aa97ea6",
+      "parentHash": "bd034dbfe890e1d704d61de10406eb3370d9fee5a040bafebc1c5bd8a3c84c97",
+      "source": "owner-applied-local"
+    }
+  ],
+  "uses": 0,
+  "ciphertextSha256": "a6d71a6945904f3ded664c77cea093bd8edd887d0875a74ab98103bbd614f039",
+  "inspectionPreservedCiphertext": true
+}

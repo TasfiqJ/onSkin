@@ -1,0 +1,37 @@
+
+> @layerwell/professional-web@0.1.0 test
+> vitest run src/templateMapping29.test.ts src/templateMappingJourney29.test.ts src/practitioner.test.ts src/practiceTemplates.test.ts src/workspaceService.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/professional-web
+
+ ❯ src/templateMappingJourney29.test.ts (13 tests | 1 failed) 222ms
+   × connects exact revision, ordered mapping, cancel, identical unknown retry, encrypted reload and independent owner received provenance 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/templateMappingJourney29.test.ts > connects exact revision, ordered mapping, cancel, identical unknown retry, encrypted reload and independent owner received provenance
+TypeError: ownerPlanIndex is not a function
+ ❯ src/templateMappingJourney29.test.ts:49:17
+     47|   const report = await ownerReceivedPlanReport(f.repository, 'syntheti…
+     48|   expect(report).toContain('practice template revision 1'); expect(rep…
+     49|   expect((await ownerPlanIndex(f.repository, 'synthetic-owner', 'clien…
+       |                 ^
+     50|   await expect(practiceTemplates(f.repository, 'synthetic', 'practice-…
+     51|   expect([...f.records().keys()].some(k => /actual|use_events/.test(k)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 256 passed (257)
+   Start at  14:10:07
+   Duration  2.51s (transform 932ms, setup 0ms, import 1.30s, tests 3.35s, environment 1ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\professional-web
+npm error workspace @layerwell/professional-web@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\professional-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/templateMapping29.test.ts src/templateMappingJourney29.test.ts src/practitioner.test.ts src/practiceTemplates.test.ts src/workspaceService.test.ts

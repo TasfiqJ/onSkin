@@ -1,0 +1,30 @@
+{
+  "reviewedAt": "2026-11-18T19:28:29.468374+00:00",
+  "immutableEvidenceCommit": "63898e8dceb11d953bb1e2f137439c7e52c3e6fe",
+  "reviewedDocuments": [
+    "FINAL_REPORT.md",
+    "ALL38_ALL18_MATRIX.md",
+    "SECURITY_PRIVACY_REVIEW.md",
+    "OPEN_DEFECTS_AND_RELEASE_BLOCKERS.md",
+    "BRAIN_NEXT_DECISION.md",
+    "TEST_EVIDENCE_INDEX.md",
+    "CHANGED_FILES.json",
+    "PATCH_INDEX.md"
+  ],
+  "patches": [
+    {
+      "base": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+      "target": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "bytes": 3599620,
+      "sha256": "3ec4eec22d1134bfab54e51c15ae33aee208b09cb7ef70349c28904ec143aaa7",
+      "matchesPublished": true
+    },
+    {
+      "base": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+      "target": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "bytes": 96044,
+      "sha256": "466e8372f722336687ee4c34593150c6213b66881645ae46babe008a1691fb5f",
+      "matchesPublished": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/professional-web",
+    "run",
+    "typecheck"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T19:12:01.944186+00:00",
+  "before": {
+    "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+    "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M PROGRESS.md\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md"
+  },
+  "end": "2026-11-18T19:12:05.221724+00:00",
+  "after": {
+    "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+    "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M PROGRESS.md\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md"
+  },
+  "exit": 0,
+  "logSha256": "512b8943150da3b35d6d384aad1bab5fe6b02ab020d171d14ee1389a3d083f3f",
+  "logBytes": 63
+}

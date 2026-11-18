@@ -1,0 +1,26 @@
+{
+  "command": [
+    "node",
+    "scripts/e2e/professional-reconciliation.mjs",
+    "430",
+    "932"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T19:36:29.881676+00:00",
+  "before": {
+    "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+    "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "end": "2026-11-18T19:36:30.379929+00:00",
+  "after": {
+    "head": "f8a364c38533cbd15b81bd5f52ea37c87cdf4000",
+    "tree": "1e4d0720aef3d81eef1beed074ce0131c81828e6",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "exit": 1,
+  "logSha256": "eb3be1a7db4369b921c6e8d77e05d82eed69d5ee03fcf20c3a337569b71a3a4f",
+  "logBytes": 1109
+}

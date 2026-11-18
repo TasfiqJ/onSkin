@@ -1,0 +1,698 @@
+[
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": null,
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "63baa851-b6bc-460a-8bf4-8cd351e21684",
+      "expectedParentHash": null,
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "dd0a493b-e730-411d-8702-ebd00759e697",
+      "revisionHash": "3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "63baa851-b6bc-460a-8bf4-8cd351e21684",
+      "expectedParentHash": null,
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "dd0a493b-e730-411d-8702-ebd00759e697",
+      "revisionHash": "3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "a8478433-2e79-4685-8da9-6c5237f88f5b",
+      "expectedParentHash": "c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee",
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "dd0a493b-e730-411d-8702-ebd00759e697",
+      "revisionHash": "3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "6ecfffc4-8b04-4491-ac74-d7beae899d97",
+      "expectedParentHash": "c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee",
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "dd0a493b-e730-411d-8702-ebd00759e697",
+      "revisionHash": "3943ce2c392ce263a30ecbe6132f9eb8fb99321aba433db99ecb2166e549075b",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "c57a8a8b94ad19cfe77b2bafe3abe435c517e0661353eff45cecfa9cef2f68ee",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": null,
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "55dbef87-91df-45ca-be94-44818c3ab6ed",
+      "expectedParentHash": null,
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "bebf31d0-56a7-4bda-8908-fc9336fbea73",
+      "revisionHash": "5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "55dbef87-91df-45ca-be94-44818c3ab6ed",
+      "expectedParentHash": null,
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "bebf31d0-56a7-4bda-8908-fc9336fbea73",
+      "revisionHash": "5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "7626fea0-c18c-4b61-a968-06c9cdae42ab",
+      "expectedParentHash": "0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad",
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "bebf31d0-56a7-4bda-8908-fc9336fbea73",
+      "revisionHash": "5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "7a1953b1-f091-45c0-96cf-31871d9a0fda",
+      "expectedParentHash": "0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad",
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "bebf31d0-56a7-4bda-8908-fc9336fbea73",
+      "revisionHash": "5c7705ebf0ba9aec441684adaa9327d303ff46ba817d54100067ee0e76202e32",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "0302f310b8f0e81826d4c7fcf01ba813df062e56d6c79f3076ddf830d4680bad",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": null,
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "e3c35933-0e72-4fd5-8236-7677cb740d6b",
+      "expectedParentHash": null,
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "084c40ff-b3c9-4904-bbe7-90ade64d8088",
+      "revisionHash": "bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "e3c35933-0e72-4fd5-8236-7677cb740d6b",
+      "expectedParentHash": null,
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "084c40ff-b3c9-4904-bbe7-90ade64d8088",
+      "revisionHash": "bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "42cbd7d7-df06-4c01-92db-3c21bef6289c",
+      "expectedParentHash": "d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259",
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "084c40ff-b3c9-4904-bbe7-90ade64d8088",
+      "revisionHash": "bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "issue",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "grantVersion": 1,
+    "grantEpoch": 1,
+    "command": {
+      "id": "8b792d28-fcfd-4ce0-b852-b0c49926140d",
+      "expectedParentHash": "d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259",
+      "am": [
+        {
+          "productId": "bottle-a",
+          "name": "Recorded cleanser"
+        }
+      ],
+      "pm": [
+        {
+          "productId": "bottle-b",
+          "name": "Recorded cream"
+        }
+      ],
+      "confirmed": true
+    },
+    "templateMapping": {
+      "revisionId": "084c40ff-b3c9-4904-bbe7-90ade64d8088",
+      "revisionHash": "bdc8f888c79b3a031ba512293de053eaa5a41b4b997ed7a6834f828bcb9baff8",
+      "am": [
+        {
+          "kind": "product",
+          "productId": "bottle-a"
+        },
+        {
+          "kind": "omit"
+        }
+      ],
+      "pm": [
+        {
+          "kind": "product",
+          "productId": "bottle-b"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "source",
+    "context": null
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  },
+  {
+    "kind": "template-options",
+    "context": "synthetic-session",
+    "sourceHash": "c69eecc8daa17ad2f39c496dd92cbe5598eff7ad6289a82a5aee8ad9d212857b",
+    "expectedParentHash": "d26915332dace5ccb9e6f4e71295df6717d430cee47d7b6ba76f3e5345077259",
+    "grantVersion": 1,
+    "grantEpoch": 1
+  }
+]

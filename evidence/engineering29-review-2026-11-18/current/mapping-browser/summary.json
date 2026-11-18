@@ -1,0 +1,115 @@
+{
+  "start": "2026-11-18T19:14:54.411Z",
+  "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+  "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+  "status": "M PROGRESS.md\n M apps/professional-web/src/intendedPlans.ts\n M apps/professional-web/src/practitionerApi.ts\n M apps/professional-web/src/practitionerHistory.ts\n M apps/professional-web/src/practitionerService.ts\n M apps/professional-web/src/practitionerView.ts\n M apps/professional-web/src/workspaceService.ts\n M docs/USER_FLOW_TREE.md\n?? apps/professional-web/src/templateMapping29.test.ts\n?? apps/professional-web/src/templateMapping29.ts\n?? apps/professional-web/src/templateMappingJourney29.test.ts\n?? apps/professional-web/src/test/templateMappingFixture29.ts\n?? docs/release/full-app-j01/template-mapping29.md\n?? scripts/e2e/template-mapping29.mjs",
+  "surface": "Actual local Edge and source UI/API/domain/encrypted repository; synthetic trust/key/serial ports only",
+  "viewports": [],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/@fs/[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/node_modules/vite/dist/client/env.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "/favicon.ico"
+    },
+    {
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "method": "GET",
+      "path": "/@vite/client"
+    },
+    {
+      "method": "GET",
+      "path": "/src/style.css"
+    },
+    {
+      "method": "GET",
+      "path": "/src/main.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/@fs/[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/node_modules/vite/dist/client/env.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "/src/ownerView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/workspaceStatusView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/practitionerView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/previsitView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/grantView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/practitionerHistoryView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/reconciliationView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/templateView.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/ownerPortal.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/requestDeadline.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/grants.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/previsitRecords.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/practiceTemplates.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/templateMapping29.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/authority.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/reconciliation.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/src/intendedPlans.ts"
+    },
+    {
+      "method": "POST",
+      "path": "/api/professional/practitioner-plan"
+    }
+  ],
+  "blocked": [],
+  "interceptionErrors": [],
+  "pass": false,
+  "end": "2026-11-18T19:15:06.483Z",
+  "ownedBrowserAndServerStopped": true
+}

@@ -1,0 +1,6 @@
+{
+  "text": "Issuance outcome unknown\n\nLatest issued version: none. This sequence proposes only selected recorded products. It does not establish formula equivalence, safety, use or clinical approval.\n\nStarted from practice template revision 1 (3d455f24-41ca-4889-a01a-6284aedbf09e).\n\nMorning template roles: 1. cleanser (mapped to recorded product); 2. moisturizer (explicitly omitted).\n\nEvening template roles: 1. moisturizer (mapped to recorded product).\n\nMorning sequence\nRecorded cleanser\nEvening sequence\nRecorded cream\n\nThe request may have completed. Retry sends the identical command without creating another version. Clear or reload abandons this in-memory retry; check the latest issued version before creating a new draft.\n\nRetry identical issuance requestClear practitioner draft",
+  "focus": "Issuance outcome unknown",
+  "overflow": 0,
+  "persisted": "[[],[]]"
+}
