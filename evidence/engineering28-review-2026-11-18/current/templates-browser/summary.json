@@ -1,0 +1,11 @@
+{
+  "start": "2026-11-18T17:40:44.521Z",
+  "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+  "surface": "Actual local Edge; real source API/domain/encryption with synthetic trust/serial driver only",
+  "viewports": [],
+  "requests": [],
+  "blocked": [],
+  "pass": false,
+  "end": "2026-11-18T17:40:45.711Z",
+  "ownedBrowserAndServerStopped": true
+}

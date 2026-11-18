@@ -1,0 +1,13 @@
+
+> @layerwell/professional-web@0.1.0 test
+> vitest run src/intendedPlans.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/professional-web
+
+
+ Test Files  1 passed (1)
+      Tests  20 passed (20)
+   Start at  12:51:02
+   Duration  776ms (transform 68ms, setup 0ms, import 95ms, tests 480ms, environment 0ms)
+

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/professional-web",
+    "run",
+    "typecheck"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T17:36:15.507137+00:00",
+  "before": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/today/OptionalChangePanel41.tsx\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M apps/professional-web/index.html\n M apps/professional-web/src/encryptedWorkspaceRepository.ts\n M apps/professional-web/src/main.ts\n M apps/professional-web/src/workspaceReadSnapshot.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/mobile/src/features/today/optionalChangeNavigation28.test.ts\n?? apps/mobile/src/lib/storage/privateKVCreation28.test.ts\n?? apps/professional-web/src/practiceTemplates.ts\n?? apps/professional-web/src/templateApi.ts\n?? apps/professional-web/src/templateService.ts\n?? apps/professional-web/src/templateView.ts"
+  },
+  "end": "2026-11-18T17:36:18.570402+00:00",
+  "after": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/today/OptionalChangePanel41.tsx\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n M apps/professional-web/index.html\n M apps/professional-web/src/encryptedWorkspaceRepository.ts\n M apps/professional-web/src/main.ts\n M apps/professional-web/src/workspaceReadSnapshot.ts\n M apps/professional-web/src/workspaceService.ts\n?? apps/mobile/src/features/today/optionalChangeNavigation28.test.ts\n?? apps/mobile/src/lib/storage/privateKVCreation28.test.ts\n?? apps/professional-web/src/practiceTemplates.ts\n?? apps/professional-web/src/templateApi.ts\n?? apps/professional-web/src/templateService.ts\n?? apps/professional-web/src/templateView.ts"
+  },
+  "exit": 0,
+  "logSha256": "512b8943150da3b35d6d384aad1bab5fe6b02ab020d171d14ee1389a3d083f3f",
+  "logBytes": 63
+}

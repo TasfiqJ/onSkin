@@ -1,0 +1,41 @@
+
+> @layerwell/professional-web@0.1.0 test
+> vitest run src/practiceTemplates.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/professional-web
+
+ ❯ src/practiceTemplates.test.ts (10 tests | 1 failed) 103ms
+   × refuses absent history instead of provisioning it and refuses cross-practice access 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/practiceTemplates.test.ts > refuses absent history instead of provisioning it and refuses cross-practice access
+AssertionError: expected [Function] to throw error including 'TEMPLATE_INVALID' but got 'PROFESSIONAL_ACCESS_UNAVAILABLE'
+
+Expected: "TEMPLATE_INVALID"
+Received: "PROFESSIONAL_ACCESS_UNAVAILABLE"
+
+ ❯ src/practiceTemplates.test.ts:80:77
+     78|   const read = f.custody.transaction.bind(f.custody);
+     79|   vi.spyOn(f.custody, 'transaction').mockImplementation(work => read(t…
+     80|   await expect(practiceTemplates(f.repository(), 'synthetic', 'practic…
+       |                                                                             ^
+     81|   expect(canonical([...f.records()])).toBe(before);
+     82| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  12:37:45
+   Duration  480ms (transform 135ms, setup 0ms, import 179ms, tests 103ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\professional-web
+npm error workspace @layerwell/professional-web@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\professional-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/practiceTemplates.test.ts

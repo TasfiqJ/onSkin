@@ -1,0 +1,40 @@
+{
+  "formatVersion": 1,
+  "sourceHead": "1962b44aec384545638f4aaede36ac64ef31aebe",
+  "sourceTree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+  "logicalFiles": 347,
+  "maxPartBytes": 245760,
+  "shards": [
+    {
+      "path": "manifests/FILES-001.json",
+      "bytes": 43959,
+      "sha256": "11b62241d852262c68ab601e96b515dc19d31f4f437b0d1df1b5a52c0afc04a6"
+    },
+    {
+      "path": "manifests/FILES-002.json",
+      "bytes": 47049,
+      "sha256": "ce9bb364c941687a2d1d47c3abbbe1fb522fbae69b00e6fd22fcd6fe85531a44"
+    },
+    {
+      "path": "manifests/FILES-003.json",
+      "bytes": 47848,
+      "sha256": "dfe2b6efea45e9e1b4dbdd9e3683b52199f2a2b1dfe277582a928cbec0e72600"
+    },
+    {
+      "path": "manifests/FILES-004.json",
+      "bytes": 44743,
+      "sha256": "364e67ff9baa5afa2417259c729a84d8b248d4edaa3c091c8b63c5e3136540ef"
+    },
+    {
+      "path": "manifests/FILES-005.json",
+      "bytes": 44072,
+      "sha256": "4cfe629c7f76201cb9bc5baa02f20b690a689278f3726b1f0056c45e241da0f3"
+    },
+    {
+      "path": "manifests/FILES-006.json",
+      "bytes": 34702,
+      "sha256": "6327a0dce5d372d18c66633838a89888b4f5cf55cf5391f1874ff5538cbcb178"
+    }
+  ],
+  "rootHashScope": "Manifest root authenticated by immutable Git commit/blob; all payload files authenticated through ordered shards/parts."
+}

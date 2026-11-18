@@ -1,0 +1,33 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--",
+    "expo",
+    "export",
+    "--platform",
+    "web",
+    "--output-dir",
+    "[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/ENGINEERING28_EVIDENCE/build/consumer"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T17:48:30.524045+00:00",
+  "before": {
+    "head": "c43ef2f74f6ee22511a92d40381b757f04a70dca",
+    "tree": "7cf6ce5e46e33f498147ea8103192e82d1b294e0",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "end": "2026-11-18T17:49:41.217157+00:00",
+  "after": {
+    "head": "c43ef2f74f6ee22511a92d40381b757f04a70dca",
+    "tree": "7cf6ce5e46e33f498147ea8103192e82d1b294e0",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "exit": 0,
+  "logSha256": "0aa6c48fb3005a44cdbba9f9bfe63e614e0e47b1e0b51988d5838bb805b7f81e",
+  "logBytes": 6091
+}

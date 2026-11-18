@@ -1,0 +1,10 @@
+# Independent Brain next decision
+
+Audit final `1962b44aec384545638f4aaede36ac64ef31aebe` / tree `ad97b496949cdaae0cbfe5d8c778b3c54576e14f` on existing stage/m1-native-runtime47. Verify CHECKPOINT, both exact patches and forward/reverse trees,148 raw commit objects/147 edges, all manifests and the complete current logs. Four local commits follow Engineering27R. Prior immutable evidence is [fdcade](https://github.com/TasfiqJ/onSkin/blob/fdcade2438e0d8f8e1611f03cf6f3575dc1600ac/evidence/brain-latest-review-2026-11-18/README.md). No subsequent engineering campaign should begin until this return is audited.
+
+1. Review the proven creation-authority/successor-key repairs and navigation-retirement/same-lease recovery behavior. Passing local tests do not admit protected security or native storage policy.
+2. Review the practice-only role-template aggregate, trusted transaction/API and memory-only UI. Decide the next finite provider-free implementation: exact template-revision-to-client mapping/unshelved proposal review, or authenticated recovery/accessibility. Do not turn a client-supplied fixture or copied plan into real professional/source authority.
+3. Before connecting F06/V2-C05 or real P03/P04, establish genuine original-owner provenance/application writer, roster/grants, lawful retained-copy/offboarding and serial backend. Current default503 remains required. Template read-only offboarding needs a specific lawful role/lifecycle contract.
+4. Protected Security/DB/native/device/J01/rights/provider/payment/Apple/support work remains external or separately authorized. M1-03 unaccepted; M2-01 not authorized; native79–86 unused. Founder retains spending/accounts/permissions/merge/release authority.
+
+Continue only after the Brain audits source. Retain all38/all18 UNACCEPTED and release NO_GO. Never infer actual use from response, accepted plan, schedule or silence. Future source work must recheck the exact clean identity and competing writers without reset/rebase/amend/new application worktree/branch. Evidence-only publication grants no application-source push, hosted CI, paid operation or release.

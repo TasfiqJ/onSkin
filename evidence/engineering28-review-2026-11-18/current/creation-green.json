@@ -1,0 +1,32 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/lib/storage/privateKVCreation28.test.ts",
+    "src/lib/storage/privateKVContentKey.test.ts",
+    "src/lib/storage/privateKVReadOnly25.test.ts",
+    "src/lib/storage/privateKV.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T17:32:52.511073+00:00",
+  "before": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/today/OptionalChangePanel41.tsx\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n?? apps/mobile/src/features/today/optionalChangeNavigation28.test.ts\n?? apps/mobile/src/lib/storage/privateKVCreation28.test.ts"
+  },
+  "end": "2026-11-18T17:32:54.214609+00:00",
+  "after": {
+    "head": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+    "tree": "83670a073910a840c69368f1760d5cb59d021054",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/today/OptionalChangePanel41.tsx\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/privateKVContentKey.ts\n?? apps/mobile/src/features/today/optionalChangeNavigation28.test.ts\n?? apps/mobile/src/lib/storage/privateKVCreation28.test.ts"
+  },
+  "exit": 0,
+  "logSha256": "fe6fd2a81535e9d6ff8b38806a170b5992b09110d1e4cd92eef49c4d32205da1",
+  "logBytes": 472
+}

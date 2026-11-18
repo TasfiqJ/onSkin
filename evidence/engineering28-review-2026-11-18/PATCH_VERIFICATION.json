@@ -1,0 +1,29 @@
+{
+  "patches": [
+    {
+      "file": "patches/CUMULATIVE_PR48_TO_FINAL.patch",
+      "base": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+      "baseTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8",
+      "target": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "targetTree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "bytes": 3599620,
+      "sha256": "3ec4eec22d1134bfab54e51c15ae33aee208b09cb7ef70349c28904ec143aaa7",
+      "forwardExactTree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "reverseExactTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8"
+    },
+    {
+      "file": "patches/SESSION_ENGINEERING27R_TO_FINAL.patch",
+      "base": "efd3af803a2a71bd2fdd644ecfd500c619fb996c",
+      "baseTree": "83670a073910a840c69368f1760d5cb59d021054",
+      "target": "1962b44aec384545638f4aaede36ac64ef31aebe",
+      "targetTree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "bytes": 96044,
+      "sha256": "466e8372f722336687ee4c34593150c6213b66881645ae46babe008a1691fb5f",
+      "forwardExactTree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+      "reverseExactTree": "83670a073910a840c69368f1760d5cb59d021054"
+    }
+  ],
+  "activeIndexUnchanged": true,
+  "sourceClean": true,
+  "method": "isolated temporary indexes, forward and reverse git apply --cached --binary, exact Git trees; active worktree and index untouched"
+}

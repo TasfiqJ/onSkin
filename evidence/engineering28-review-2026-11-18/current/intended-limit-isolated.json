@@ -1,0 +1,29 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/professional-web",
+    "run",
+    "test",
+    "--",
+    "src/intendedPlans.test.ts"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T17:51:01.236288+00:00",
+  "before": {
+    "head": "c43ef2f74f6ee22511a92d40381b757f04a70dca",
+    "tree": "7cf6ce5e46e33f498147ea8103192e82d1b294e0",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/practice-templates28.mjs"
+  },
+  "end": "2026-11-18T17:51:03.043013+00:00",
+  "after": {
+    "head": "c43ef2f74f6ee22511a92d40381b757f04a70dca",
+    "tree": "7cf6ce5e46e33f498147ea8103192e82d1b294e0",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/practice-templates28.mjs"
+  },
+  "exit": 0,
+  "logSha256": "cb5090f8884475400a01129909ac079dd84316ee6be6acfd7b337857cfa46372",
+  "logBytes": 348
+}

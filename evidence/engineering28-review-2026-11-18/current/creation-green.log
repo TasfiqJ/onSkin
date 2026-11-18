@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/lib/storage/privateKVCreation28.test.ts src/lib/storage/privateKVContentKey.test.ts src/lib/storage/privateKVReadOnly25.test.ts src/lib/storage/privateKV.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  4 passed (4)
+      Tests  166 passed (166)
+   Start at  12:32:53
+   Duration  718ms (transform 529ms, setup 0ms, import 628ms, tests 706ms, environment 0ms)
+

@@ -1,0 +1,4 @@
+{
+  "message": "Error: CAT04 base target must use localhost exactly.",
+  "stack": "Error: CAT04 base target must use localhost exactly.\n    at assert (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:259:25)\n    at assertCat04LocalPageTarget (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:656:5)\n    at Module.connectToPage (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:924:28)\n    at file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/practice-templates28.mjs:79:20\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"
+}

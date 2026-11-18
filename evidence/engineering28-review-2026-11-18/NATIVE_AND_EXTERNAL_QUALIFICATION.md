@@ -1,0 +1,3 @@
+# Qualification limits
+
+No new macOS/native/simulator/device attempt, including79–86, was made. No physical iPhone/keychain/filesystem/camera/notification/widget/purchase/VoiceOver qualification is inferred from Node, synthetic native ports or Edge. No genuine professional account/licence/roster/grant/source/backend/provider/clinical corpus/payment operation was installed or treated as admitted. Default production API503 remains. Protected findings and native causes UNKNOWN remain as in the [immutable native/external ledger](https://github.com/TasfiqJ/onSkin/blob/fdcade2438e0d8f8e1611f03cf6f3575dc1600ac/evidence/brain-latest-review-2026-11-18/NATIVE_AND_EXTERNAL_QUALIFICATION.md). All18 gates UNACCEPTED; M2-01 not authorized; release NO_GO.

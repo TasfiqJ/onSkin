@@ -1,0 +1,1141 @@
+diff --git a/PROGRESS.md b/PROGRESS.md
+index 7dc842f0a9444578a9787d806a88ff44073ade23..69b2bd12321ba6d71e9f55bc479f78c75f1a1c35 100644
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -1,3 +1,7 @@
++# Practice templates and original-authority recovery Engineering28 - 2026-11-18
++
++Local implementation under BRAIN-ONSKIN-AUTONOMOUS-LOCAL-PRODUCT-28: practice-scoped immutable role templates, explicit review/cancel/revision/copy/retirement, encrypted repository readback and exact uncertain retry; default real API503 preserved. Collapsed optional entries retire on navigation blur/refocus while original-lease source recovery remains available. First-key creation now retains original authority across probes, preserves discovered successor keys and leaves dispatched uncertain keys intact. See [bounded behavior and missing connections](docs/release/full-app-j01/practice-templates28.md). Original RED traces, browser failures, the first full-root two-regression failure and their repair sequence are preserved outside application source for the screened GitHub handoff. Frozen scope/matrix unchanged; all38/all18 UNACCEPTED, J01-only positive admission closed, release NO_GO. No native/device/security/provider qualification is claimed.
++
+ # Read-only private storage and Local recovery Engineering25 - 2026-11-18
+ 
+ **COMPLETE_LOCAL_CHECKPOINT**, authorization BRAIN-ONSKIN-PRIVATE-KV-READONLY-25. Existing-key resolution and retained-key checks now perform no adapter mutations; explicit write-time migration/identical-fallback cleanup requires the selected key and original authority after no-op exits and before durable intent. Local recovery adds independent generic manual-intake and optional-change draft rows through the unchanged production loaders, with existing inventory navigation and no inspection writes. Final uncached root: **8,639 tests passed**; configured typecheck/lint each passed four uncached tasks. All 55 key, 180 storage, 80 existing draft and 43 recovery tests passed. Actual isolated Expo web passed at 375x667, 390x844 and 430x932, including keyboard/48px targets, privacy, zero inspection writes and return navigation. Initial failures, corrections and reruns remain in the separate local [Engineering25 evidence](../ENGINEERING25_EVIDENCE/FINAL_REPORT.md); E24 evidence is untouched. No native/device qualification or independent acceptance is claimed. All 38 requirements and 18 gates remain UNACCEPTED; J01 Visible Pores remains the only Korean assessment, inactive/refusing positive results; release NO_GO. Brain retains independent review. No remote publication, provider, download/install, new spend, production or release operation.
+diff --git a/apps/mobile/src/features/today/OptionalChangePanel41.tsx b/apps/mobile/src/features/today/OptionalChangePanel41.tsx
+index 213fa7396724702925abf6a4b064d39fb4dd36df..fc2dad040efa7fac76f477ba4b4f17c8c85192d1 100644
+--- a/apps/mobile/src/features/today/OptionalChangePanel41.tsx
++++ b/apps/mobile/src/features/today/OptionalChangePanel41.tsx
+@@ -69,22 +69,24 @@ type PanelProps41 = {
+ };
+ 
+ export function OptionalChangePanel41(props: PanelProps41) {
+-  const [opened, setOpened] = useState(false);
++  const [opened, setOpened] = useState<PanelProps41 | null>(null);
+   const [savedEntry, setSavedEntry] = useState<PanelProps41 | null>(null);
+   const entryFocus = useRef(0);
+   const [renderedEntryFocus, setRenderedEntryFocus] = useState<number | null>(null);
+   useFocusEffect(useCallback(() => {
+     setRenderedEntryFocus(++entryFocus.current);
+-    return () => { entryFocus.current += 1; setSavedEntry(null); };
++    return () => { entryFocus.current += 1; setRenderedEntryFocus(null); setOpened(null); setSavedEntry(null); };
+   }, []));
+-  if (opened || savedEntry) return <OptionalChangeContent41 {...(savedEntry ?? props)} initialInventoryOpen={savedEntry !== null} />;
++  // Same original lease may expose a freshly rendered source for explicit
++  // conflict recovery. A replacement owner/consent lease cannot inherit entry.
++  if (opened || savedEntry) return <OptionalChangeContent41 {...(savedEntry ?? (props.lease === opened?.lease ? props : opened!))} initialInventoryOpen={savedEntry !== null} />;
+   return <View className="mt-4 rounded-card border border-hairline p-4"
+     style={{ backgroundColor: props.dark ? colors.nightSurface : colors.paperRaised }}>
+     <Text variant="titleSm" accessibilityRole="header" style={{ color: props.dark ? colors.cream : colors.ink }}>Your optional change notes</Text>
+     <Button className="mt-3" label="Record a change (optional)" variant={props.dark ? 'inverse' : 'primary'} onPress={() => {
+       try {
+         assertHealthDataWriteLease(props.lease);
+-        if (props.isSourceCurrent()) setOpened(true);
++        if (renderedEntryFocus !== null && renderedEntryFocus === entryFocus.current && props.isSourceCurrent()) setOpened(props);
+       } catch { /* A retired entry cannot open a successor owner's history. */ }
+     }} />
+     <Text variant="bodySm" className="mt-2" style={{ color: props.dark ? colors.cream : colors.muted }}>
+diff --git a/apps/mobile/src/features/today/optionalChangeNavigation28.test.ts b/apps/mobile/src/features/today/optionalChangeNavigation28.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..270205f8f706893062df868d0ba5c3d909220e36
+--- /dev/null
++++ b/apps/mobile/src/features/today/optionalChangeNavigation28.test.ts
+@@ -0,0 +1,89 @@
++import * as React from 'react';
++import { act, create, type ReactTestRenderer } from 'react-test-renderer';
++import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
++import { BaseNavigationContainer, createNavigationContainerRef, createNavigatorFactory, useNavigationBuilder } from 'expo-router/build/react-navigation/core';
++import { StackRouter } from 'expo-router/build/react-navigation/routers';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { OptionalChangePanel41 } from './OptionalChangePanel41';
++
++// Real installed focus effect and navigation events. Both routes remain mounted.
++// Only platform/content ports and owner authority are synthetic.
++const ports = vi.hoisted(() => ({ get: vi.fn(), save: vi.fn(), owner: 'owner-a', source: true }));
++vi.mock('expo-router', async () => ({ useFocusEffect: (await import('expo-router/build/react-navigation/core')).useFocusEffect }));
++vi.mock('expo-router/build/react-navigation/core/NavigationContext', async original => original());
++vi.mock('react-native', () => ({ TextInput: 'TextInput', View: 'View' }));
++vi.mock('@/components/ui', () => ({ Button: 'Button', Text: 'Text' }));
++vi.mock('@/theme/tokens', () => ({ colors: {} }));
++vi.mock('./useToday', () => ({ localDateString: () => '2026-11-18' }));
++vi.mock('./completionsStore', () => ({ getOptionalChanges41: ports.get, appendOptionalChange41: ports.save, submitDurableOptionalChange: ports.save }));
++vi.mock('./optionalChangeDraftStore', () => ({ readOptionalChangeDraftHistory: ports.get, saveOptionalChangeDraft: ports.save, refreshOptionalChangeDraft: ports.save }));
++vi.mock('./OptionalChangeDraftInventory', () => ({ OptionalChangeDraftInventory: 'Inventory' }));
++vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({ assertHealthDataWriteLease: (lease: { ownerUserId: string }) => {
++  if (lease.ownerUserId !== ports.owner) throw new Error('RETIRED');
++} }));
++const navigation = createNavigationContainerRef<{ Notes: undefined; Away: undefined }>();
++function PlainStack(props: Parameters<typeof useNavigationBuilder>[1]) {
++  const { state, descriptors, NavigationContent } = useNavigationBuilder(StackRouter, props);
++  return React.createElement(NavigationContent, null, state.routes.map(route =>
++    React.createElement(React.Fragment, { key: route.key }, descriptors[route.key]!.render())));
++}
++const Stack = createNavigatorFactory(PlainStack)();
++const Host = BaseNavigationContainer as React.ComponentType<React.PropsWithChildren<Omit<React.ComponentProps<typeof BaseNavigationContainer>, 'children'>>>;
++let rerenderNotes: () => void;
++function Notes() {
++  const [, update] = React.useState(0);
++  React.useEffect(() => { rerenderNotes = () => update(n => n + 1); }, [update]);
++  return React.createElement(OptionalChangePanel41, { lease: { ownerUserId: ports.owner, generation: 1, accountGeneration: 1, epoch: 1, expiresAt: null }, isSourceCurrent: () => ports.source });
++}
++const Away = () => React.createElement('Away');
++let renderer: ReactTestRenderer | undefined;
++let client: QueryClient;
++async function flush(work: () => void = () => {}) {
++  await act(async () => { work(); });
++  await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
++}
++const control = (label: string) => renderer!.root.findAll(n => n.type === ('Button' as never) && n.props.label === label)[0]!;
++beforeEach(async () => {
++  vi.stubGlobal('React', React); vi.stubGlobal('__DEV__', true); vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
++  ports.owner = 'owner-a'; ports.source = true; ports.get.mockReset(); ports.save.mockReset();
++  ports.get.mockResolvedValue({ revision: 0, sourceBytes: null, sourceProof: 'a'.repeat(64), events: [] });
++  client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity } } });
++  await flush(() => { renderer = create(React.createElement(QueryClientProvider, { client }, React.createElement(Host, { ref: navigation },
++    React.createElement(Stack.Navigator, null, React.createElement(Stack.Screen, { name: 'Notes', component: Notes }), React.createElement(Stack.Screen, { name: 'Away', component: Away }))))); });
++});
++afterEach(async () => { await flush(() => renderer?.unmount()); renderer = undefined; client.clear(); vi.unstubAllGlobals(); });
++it.each(['Record a change (optional)', 'Saved change drafts'])('retires %s on navigation blur and same-owner refocus without unmount', async label => {
++  const old = control(label).props.onPress;
++  await flush(() => navigation.navigate('Away'));
++  expect(renderer!.root.findAllByType(OptionalChangePanel41)).toHaveLength(1);
++  await flush(old);
++  expect(ports.get).not.toHaveBeenCalled();
++  expect(renderer!.root.findAll(n => n.type === ('Inventory' as never))).toHaveLength(0);
++  await flush(() => navigation.goBack());
++  await flush(old);
++  expect(ports.get).not.toHaveBeenCalled();
++  await flush(control(label).props.onPress);
++  expect(ports.get).toHaveBeenCalled();
++  expect(ports.save).not.toHaveBeenCalled();
++});
++it('closes an opened history on blur and requires a fresh explicit entry on return', async () => {
++  await flush(control('Record a change (optional)').props.onPress);
++  expect(ports.get).toHaveBeenCalled();
++  await flush(() => navigation.navigate('Away'));
++  const reads = ports.get.mock.calls.length;
++  await flush(() => navigation.goBack());
++  expect(ports.get.mock.calls.length).toBe(reads);
++  expect(renderer!.root.findAll(n => n.type === ('TextInput' as never))).toHaveLength(0);
++  await flush(control('Record a change (optional)').props.onPress);
++  expect(ports.save).not.toHaveBeenCalled();
++});
++it.each(['Record a change (optional)', 'Saved change drafts'])('cannot borrow a replacement owner through a retired %s callback', async label => {
++  const old = control(label).props.onPress;
++  await flush(() => navigation.navigate('Away'));
++  ports.owner = 'owner-b'; await flush(() => rerenderNotes());
++  await flush(old); expect(ports.get).not.toHaveBeenCalled();
++  await flush(() => navigation.goBack()); await flush(old); expect(ports.get).not.toHaveBeenCalled();
++  await flush(control(label).props.onPress);
++  expect(ports.get.mock.calls.every(([lease]) => lease.ownerUserId === 'owner-b')).toBe(true);
++  expect(ports.get).toHaveBeenCalled(); expect(ports.save).not.toHaveBeenCalled();
++});
+diff --git a/apps/mobile/src/lib/storage/privateKV.ts b/apps/mobile/src/lib/storage/privateKV.ts
+index 461048e7ba5c6ff0835d4d0ce9ded95ee0551a91..2c41c5a0995c474607140a891d999811f7047cea 100644
+--- a/apps/mobile/src/lib/storage/privateKV.ts
++++ b/apps/mobile/src/lib/storage/privateKV.ts
+@@ -222,21 +222,27 @@ async function hasOrphanedPrivateCiphertext(): Promise<boolean> {
+   });
+ }
+ 
+-async function getOrCreateContentKey(): Promise<Uint8Array> {
++async function getOrCreateContentKey(assertCurrent: () => void): Promise<Uint8Array> {
++  assertCurrent();
+   const existing = await getExistingContentKey();
++  assertCurrent();
+   if (existing) return existing;
+ 
+   if (!contentKeyCreation) {
+     contentKeyCreation = (async () => {
+       const rechecked = await getExistingContentKey();
++      assertCurrent();
+       if (rechecked) return rechecked;
+-      if (await hasOrphanedPrivateCiphertext()) {
++      const orphaned = await hasOrphanedPrivateCiphertext();
++      assertCurrent();
++      if (orphaned) {
+         throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+       }
+ 
+       const key = randomBytes(32);
+       try {
+-        await setStoredPrivateKVContentKey(bytesToHex(key));
++        await setStoredPrivateKVContentKey(bytesToHex(key), assertCurrent);
++        assertCurrent();
+       } catch (error) {
+         key.fill(0);
+         throw error;
+@@ -247,7 +253,9 @@ async function getOrCreateContentKey(): Promise<Uint8Array> {
+ 
+   const pending = contentKeyCreation;
+   try {
+-    return await pending;
++    const key = await pending;
++    assertCurrent();
++    return key;
+   } finally {
+     if (contentKeyCreation === pending) contentKeyCreation = null;
+   }
+@@ -1164,7 +1172,7 @@ async function updatePrivateItemWithGuard(
+           return;
+         }
+ 
+-        contentKey ??= await getOrCreateContentKey();
++        contentKey ??= await getOrCreateContentKey(assertOriginalPreparation46);
+         assertPreparationCurrent();
+         const nonce = randomBytes(NONCE_BYTES);
+         const ciphertext = cipherForPrivateKey45(key, contentKey, nonce).encrypt(utf8ToBytes(nextValue));
+@@ -1366,7 +1374,7 @@ export async function updatePrivateItemWithSources(
+ 
+         let committedRaw: string | null = null;
+         if (nextValue !== null) {
+-          contentKey ??= await getOrCreateContentKey();
++          contentKey ??= await getOrCreateContentKey(() => { assertAllowed(); assertBeforeNativeWrite?.(); });
+           assertAllowed();
+           const nonce = randomBytes(NONCE_BYTES);
+           committedRaw = JSON.stringify({
+diff --git a/apps/mobile/src/lib/storage/privateKVContentKey.ts b/apps/mobile/src/lib/storage/privateKVContentKey.ts
+index 1ab627c53d1a3ca59ad60c59a44e5bfe5da1300d..b203134e886b5b1705c2b2b1d238a89716d9827c 100644
+--- a/apps/mobile/src/lib/storage/privateKVContentKey.ts
++++ b/apps/mobile/src/lib/storage/privateKVContentKey.ts
+@@ -112,29 +112,35 @@ export async function maintainStoredPrivateKVContentKey(expected: string, assert
+   }
+ }
+ 
+-export async function setStoredPrivateKVContentKey(value: string): Promise<void> {
+-  if (Platform.OS === 'web') {
+-    try {
+-      await AsyncStorage.setItem(PRIVATE_KV_CONTENT_KEY_NAME, value);
+-      if (await AsyncStorage.getItem(PRIVATE_KV_CONTENT_KEY_NAME) !== value) throw storageUnavailable();
+-    } catch { throw storageUnavailable(); }
++/** First-key creation only. Retained keys are never replaced or migrated here.
++ * A dispatched native mutation may have completed despite a lost reply: preserve
++ * that key and refuse the record write, without compensating key deletion. */
++export async function setStoredPrivateKVContentKey(value: string, assertCurrent: () => void = () => undefined): Promise<void> {
++  const stored = await resolveStoredKey(assertCurrent);
++  assertCurrent();
++  if (stored.value !== null) {
++    if (stored.value !== value) throw storageUnavailable();
+     return;
+   }
+-
+-  let secureStoreAvailable: boolean;
++  if (Platform.OS !== 'web' && !stored.secure) throw storageUnavailable();
+   try {
+-    secureStoreAvailable =
+-      await isPrivateSecureStoreAvailableAsync();
+-  } catch {
+-    throw storageUnavailable();
+-  }
+-  if (!secureStoreAvailable) throw storageUnavailable();
+-
+-  try {
+-    await setPrivateSecureStoreItemAsync(PRIVATE_KV_CONTENT_KEY_NAME, value);
+-    if (await getPrivateSecureStoreItemAsync(PRIVATE_KV_CONTENT_KEY_NAME) !== value) throw storageUnavailable();
+-    await AsyncStorage.removeItem(PRIVATE_KV_CONTENT_KEY_NAME).catch(() => undefined);
++    if (Platform.OS !== 'web') {
++      // The fallback probe followed the native miss across an await. A new
++      // native value must be preserved, never overwritten using that old miss.
++      const latest = await getPrivateSecureStoreItemAsync(PRIVATE_KV_CONTENT_KEY_NAME);
++      assertCurrent();
++      if (latest !== null) throw storageUnavailable();
++    }
++    assertCurrent();
++    if (Platform.OS === 'web') await AsyncStorage.setItem(PRIVATE_KV_CONTENT_KEY_NAME, value);
++    else await setPrivateSecureStoreItemAsync(PRIVATE_KV_CONTENT_KEY_NAME, value);
++    assertCurrent();
++    const retained = Platform.OS === 'web' ? await AsyncStorage.getItem(PRIVATE_KV_CONTENT_KEY_NAME) :
++      await getPrivateSecureStoreItemAsync(PRIVATE_KV_CONTENT_KEY_NAME);
++    assertCurrent();
++    if (retained !== value) throw storageUnavailable();
+   } catch {
++    assertCurrent();
+     throw storageUnavailable();
+   }
+ }
+diff --git a/apps/mobile/src/lib/storage/privateKVCreation28.test.ts b/apps/mobile/src/lib/storage/privateKVCreation28.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..bee68a2c82ae25255a9f2063a21214b8fef5c0d5
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/privateKVCreation28.test.ts
+@@ -0,0 +1,90 @@
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++
++const ports = vi.hoisted(() => ({ bytes: new Map<string, string>(), secure: new Map<string, string>(),
++  gate: null as Promise<void> | null, release: () => {}, reached: false, creating: false,
++  hold: 'orphan' as 'orphan' | 'availability' | 'fallback' | 'ack', rejectAck: false, mutations: [] as string[] }));
++vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
++vi.mock('react-native-get-random-values', () => ({}));
++vi.mock('expo-crypto', async () => ({ randomUUID: (await import('node:crypto')).randomUUID }));
++vi.mock('@react-native-async-storage/async-storage', () => ({ default: {
++  getItem: vi.fn(async (key: string) => { if (ports.creating && ports.hold === 'fallback' && key === 'layerwell.private_kv.content_key.v1') { ports.reached = true; await ports.gate; } return ports.bytes.get(key) ?? null; }),
++  getAllKeys: vi.fn(async () => { ports.creating = true; if (ports.hold === 'orphan') { ports.reached = true; await ports.gate; } return [...ports.bytes.keys()]; }),
++  multiGet: vi.fn(async (keys: string[]) => keys.map(key => [key, ports.bytes.get(key) ?? null])),
++  setItem: vi.fn(async (key: string, value: string) => { ports.mutations.push('set:' + key); ports.bytes.set(key, value); }),
++  removeItem: vi.fn(async (key: string) => { ports.mutations.push('remove:' + key); ports.bytes.delete(key); }),
++  multiRemove: vi.fn(async (keys: string[]) => { ports.mutations.push('multiRemove'); keys.forEach(key => ports.bytes.delete(key)); }),
++} }));
++vi.mock('expo-secure-store', () => ({ WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
++  isAvailableAsync: vi.fn(async () => { if (ports.creating && ports.hold === 'availability') { ports.reached = true; await ports.gate; } return true; }),
++  getItemAsync: vi.fn(async (key: string) => ports.secure.get(key) ?? null),
++  setItemAsync: vi.fn(async (key: string, value: string) => { ports.mutations.push('secureSet:' + key); ports.secure.set(key, value);
++    if (ports.hold === 'ack') { ports.reached = true; await ports.gate; if (ports.rejectAck) throw new Error('SYNTHETIC_LOST_ACK'); } }),
++  deleteItemAsync: vi.fn(async (key: string) => { ports.mutations.push('secureDelete:' + key); ports.secure.delete(key); }),
++}));
++const KEY = 'layerwell.private_kv.content_key.v1', DATA = 'layerwell.shelf.v1';
++let epoch: typeof import('@/lib/consent/healthProcessingEpoch');
++let kv: typeof import('./privateKV');
++beforeEach(async () => {
++  vi.resetModules(); ports.bytes.clear(); ports.secure.clear(); ports.mutations = []; ports.reached = false; ports.creating = false; ports.rejectAck = false;
++  ports.gate = new Promise(resolve => { ports.release = resolve; });
++  kv = await import('./privateKV'); epoch = await import('@/lib/consent/healthProcessingEpoch');
++  const account = await import('@/lib/auth/accountGeneration');
++  const generation = await account.runAccountGenerationOperation(lease => lease.generation);
++  epoch.setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-create-28', accountGeneration: generation });
++});
++afterEach(async () => { ports.release(); await kv.waitForPrivateKVWritesToSettle(); epoch.clearActiveHealthProcessingEpoch(); });
++it.each(['ordinary', 'sources'] as const)('preserves original authority before first-key mutation for %s writes', async method => {
++  for (const boundary of ['orphan', 'availability'] as const) {
++    ports.hold = boundary; ports.reached = false; ports.creating = false;
++    ports.gate = new Promise(resolve => { ports.release = resolve; });
++    const authority = await import('@/lib/consent/healthDataWriteAdmission');
++    const lease = authority.captureHealthDataWriteLease();
++    const pending = (method === 'ordinary' ? kv.setPrivateItem(DATA, 'synthetic new record') :
++      kv.updatePrivateItemWithSources(DATA, [], () => 'synthetic new record', () => authority.assertHealthDataWriteLease(lease)))
++      .then(() => null, error => error as Error);
++    await vi.waitFor(() => expect(ports.reached).toBe(true));
++    epoch.clearActiveHealthProcessingEpoch(); ports.release();
++    expect(await pending).toBeInstanceOf(Error);
++    expect(ports.mutations).toEqual([]);
++    expect(ports.secure.has(KEY)).toBe(false); expect(ports.bytes.has(DATA)).toBe(false);
++    epoch.setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-create-28', accountGeneration: lease.accountGeneration });
++  }
++});
++it('retains an already-dispatched key when authority retires before native acknowledgement', async () => {
++  ports.hold = 'ack';
++  const pending = kv.setPrivateItem(DATA, 'synthetic new record').then(() => null, error => error as Error);
++  await vi.waitFor(() => expect(ports.reached).toBe(true));
++  const retained = ports.secure.get(KEY); expect(retained).toMatch(/^[a-f0-9]{64}$/);
++  epoch.clearActiveHealthProcessingEpoch(); ports.release();
++  expect(await pending).toBeInstanceOf(Error);
++  expect(ports.secure.get(KEY)).toBe(retained);
++  expect(ports.mutations).toEqual(['secureSet:' + KEY]);
++  expect(ports.bytes.has(DATA)).toBe(false);
++});
++it('preserves a conflicting key installed during first-key native availability', async () => {
++  ports.hold = 'availability';
++  const pending = kv.setPrivateItem(DATA, 'synthetic new record').then(() => null, error => error as Error);
++  await vi.waitFor(() => expect(ports.reached).toBe(true));
++  ports.secure.set(KEY, 'b'.repeat(64)); ports.release();
++  expect(await pending).toBeInstanceOf(Error);
++  expect(ports.secure.get(KEY)).toBe('b'.repeat(64)); expect(ports.mutations).toEqual([]);
++  expect(ports.bytes.has(DATA)).toBe(false);
++});
++it('preserves a successor native key installed during the final fallback read', async () => {
++  ports.hold = 'fallback';
++  const pending = kv.setPrivateItem(DATA, 'synthetic new record').then(() => null, error => error as Error);
++  await vi.waitFor(() => expect(ports.reached).toBe(true));
++  ports.secure.set(KEY, 'c'.repeat(64)); ports.release();
++  expect(await pending).toBeInstanceOf(Error);
++  expect(ports.secure.get(KEY)).toBe('c'.repeat(64)); expect(ports.mutations).toEqual([]);
++});
++it('preserves a commit-then-reject native key and reuses it on a genuinely admitted retry', async () => {
++  ports.hold = 'ack'; ports.rejectAck = true;
++  const pending = kv.setPrivateItem(DATA, 'synthetic new record').then(() => null, error => error as Error);
++  await vi.waitFor(() => expect(ports.reached).toBe(true)); const retained = ports.secure.get(KEY);
++  ports.release(); expect(await pending).toBeInstanceOf(Error);
++  expect(ports.bytes.has(DATA)).toBe(false); expect(ports.secure.get(KEY)).toBe(retained);
++  ports.rejectAck = false; await kv.setPrivateItem(DATA, 'synthetic new record');
++  expect(ports.secure.get(KEY)).toBe(retained); expect(await kv.getPrivateItem(DATA)).toBe('synthetic new record');
++  expect(ports.mutations.filter(m => m === 'secureSet:' + KEY)).toHaveLength(1);
++});
+diff --git a/apps/professional-web/index.html b/apps/professional-web/index.html
+index 5208efdd8399b231f7d26faa7e29d18800514936..f7839ec713aef65a57f7c089388322526d55afc7 100644
+--- a/apps/professional-web/index.html
++++ b/apps/professional-web/index.html
+@@ -6,6 +6,7 @@
+ <section id="owner-portal" aria-label="Independent owner records"></section>
+ <section id="workspace-status" aria-label="Read-only workspace status"></section>
+ <section id="practitioner-plan" aria-label="Assigned practitioner intended sequence"></section>
++<section id="practice-templates" aria-label="Practice-scoped reusable templates"></section>
+ <section id="practitioner-history" aria-label="Assigned practitioner intended history"></section>
+ <section id="previsit-panel" aria-label="Selected pre-visit text records"></section>
+ <section id="grant-invitation" aria-label="Owner practice invitation and permission"></section>
+diff --git a/apps/professional-web/src/encryptedWorkspaceRepository.ts b/apps/professional-web/src/encryptedWorkspaceRepository.ts
+index aaba523692cf3298a10207d5226fd0213da83e91..0c71d86fb825ea608ab8363a55655b244febd56f 100644
+--- a/apps/professional-web/src/encryptedWorkspaceRepository.ts
++++ b/apps/professional-web/src/encryptedWorkspaceRepository.ts
+@@ -9,6 +9,7 @@ import { decodeReconciliation } from './reconciliation';
+ import type { ReconciliationSource } from './reconciliationService';
+ import type { PrevisitRecordField, PrevisitRecordSource } from './previsitRecords';
+ import { snapshotWorkspaceTransaction } from './workspaceReadSnapshot';
++import { decodePracticeTemplates } from './practiceTemplates';
+ 
+ /** Current trust/source projections MUST be resolved in the same custody
+  * transaction (including session/revocation and tombstones before restore).
+@@ -32,6 +33,7 @@ export const workspaceRecordKey = {
+   reconciliation: (owner: string, workspace: string) => `owner/${id(owner)}/workspace/${id(workspace)}/reconciliation`,
+   billing: (workspace: string) => `workspace/${id(workspace)}/billing`,
+   capacity: (workspace: string) => `workspace/${id(workspace)}/capacity`,
++  templates: (workspace: string) => `workspace/${id(workspace)}/templates`,
+ };
+ function prefix(previous: readonly unknown[], next: readonly unknown[]): void {
+   if (next.length < previous.length || canonical(next.slice(0, previous.length)) !== canonical(previous)) changed();
+@@ -82,6 +84,14 @@ export class EncryptedWorkspaceRepository implements WorkspaceRepository {
+           return authority;
+         },
+         lifecycle: async owner => assertOwner(owner),
++        templates: async workspace => { assertWorkspace(workspace);
++          return decodePracticeTemplates(await store.read(workspaceRecordKey.templates(workspace)), workspace, store.now()); },
++        saveTemplates: async value => {
++          if (!authorizedWorkspace || authorizedOwner !== null) return changed();
++          const next = await decodePracticeTemplates(value, authorizedWorkspace, store.now());
++          const previous = await tx.templates!(authorizedWorkspace); prefix(previous, next);
++          await store.write(workspaceRecordKey.templates(authorizedWorkspace), next);
++        },
+         grants: async owner => { await assertOwner(owner); return decodeGrants(await store.read(workspaceRecordKey.grants(owner)), owner, store.now()); },
+         billing: async workspace => { await discoverWorkspace(workspace); return decodeWorkspaceBilling(await store.read(workspaceRecordKey.billing(workspace)), workspace); },
+         capacity: async workspace => { await discoverWorkspace(workspace); return decodeWorkspaceCapacity(await store.read(workspaceRecordKey.capacity(workspace)), workspace, store.now()); },
+diff --git a/apps/professional-web/src/main.ts b/apps/professional-web/src/main.ts
+index 35ffe31d8741e542767a2ad9179b66615af46971..9d58c7c77dbbd146da17dee99959b9f29c99c6a0 100644
+--- a/apps/professional-web/src/main.ts
++++ b/apps/professional-web/src/main.ts
+@@ -5,6 +5,7 @@ import { mountPreVisitPanel } from './previsitView';
+ import { mountGrantView } from './grantView';
+ import { mountPractitionerHistory } from './practitionerHistoryView';
+ import { mountReconciliationView } from './reconciliationView';
++import { mountTemplateView } from './templateView';
+ 
+ mountOwnerView(document.querySelector<HTMLElement>('#owner-portal')!);
+ mountWorkspaceStatusView(document.querySelector<HTMLElement>('#workspace-status')!);
+@@ -13,3 +14,4 @@ mountPractitionerHistory(document.querySelector<HTMLElement>('#practitioner-hist
+ mountPreVisitPanel(document.querySelector<HTMLElement>('#previsit-panel')!);
+ mountGrantView(document.querySelector<HTMLElement>('#grant-invitation')!);
+ mountReconciliationView(document.querySelector<HTMLElement>('#reconciliation')!);
++mountTemplateView(document.querySelector<HTMLElement>('#practice-templates')!);
+diff --git a/apps/professional-web/src/practiceTemplates.test.ts b/apps/professional-web/src/practiceTemplates.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1077236171c158d4ac8eee7e3e8db09f52b8f698
+--- /dev/null
++++ b/apps/professional-web/src/practiceTemplates.test.ts
+@@ -0,0 +1,131 @@
++import { randomUUID } from 'node:crypto';
++import { expect, it, vi } from 'vitest';
++import type { Authority } from './authority';
++import { canonical } from './grants';
++import { changePracticeTemplate, decodePracticeTemplates, type TemplateCommand } from './practiceTemplates';
++import { createTemplateApi } from './templateApi';
++import { practiceTemplates } from './templateService';
++import { createTemplateController, type TemplateState } from './templateView';
++import { EncryptedWorkspaceRepository, workspaceRecordKey as key, type WorkspaceTrust } from './encryptedWorkspaceRepository';
++import { emptyWorkspaceBilling, reconcileWorkspaceBilling } from './workspaceBilling';
++import { custodyFixture } from './test/custodyFixture';
++
++const origin = 'https://onskin.test';
++const command = (): TemplateCommand => ({ id: randomUUID(), templateId: randomUUID(), expectedHeadHash: null,
++  kind: 'revise', title: 'Generic sequence', am: ['cleanser'], pm: ['moisturizer'], confirmed: true });
++async function fixture() {
++  const f = await custodyFixture(), now = f.controls.now;
++  let authority: Authority = { session: { subjectId: 'synthetic-staff', workspaceId: 'practice-a', ownerId: null, epoch: 1,
++    startedAt: now, lastActivityAt: now, stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
++    membership: { subjectId: 'synthetic-staff', workspaceId: 'practice-a', roles: ['assigned_practitioner'], revision: 1, active: true },
++    licence: { subjectId: 'synthetic-staff', jurisdiction: 'CA', verifiedAt: now, expiresAt: now + 100_000 },
++    billing: 'unknown', assignment: null, health: null, grant: null };
++  const billing = await reconcileWorkspaceBilling(emptyWorkspaceBilling('practice-a', 'customer-a', 'subscription-a'), {
++    verifyAndRetrieve: async () => ({ workspaceId: 'practice-a', customerId: 'customer-a', subscriptionId: 'subscription-a',
++      eventId: 'synthetic-event', eventAt: now, retrievedAt: now, verifiedUntil: now + 100_000, paidThrough: now + 100_000,
++      pastDueSince: null, status: 'active', tier: 'solo' }) }, new Uint8Array([1]), 'synthetic-only', now);
++  await f.custody.transaction(async tx => { await tx.write(key.billing('practice-a'), billing); await tx.write(key.templates('practice-a'), []); });
++  const forbidden = vi.fn(async (): Promise<never> => { throw new Error('CLIENT_RECORD_PORT_MUST_NOT_BE_CALLED'); });
++  const trust: WorkspaceTrust = { authority: async () => authority, lifecycle: forbidden, planSource: forbidden, activationAvailable: forbidden };
++  const repository = () => new EncryptedWorkspaceRepository(f.custody, trust);
++  let context = 'synthetic-practice-session';
++  const api = createTemplateApi({ origin, repository: repository(), authenticate: async () => ({ token: 'synthetic-token', workspaceId: 'practice-a', context }) });
++  const transport: typeof fetch = async (_url, init) => api(new Request(origin + '/api/professional/templates', { ...init, headers: { ...init?.headers, Origin: origin } }));
++  return { ...f, repository, forbidden, transport, api, retire: () => { authority = { ...authority, session: { ...authority.session, revoked: true } }; },
++    mutate: (work: (a: Authority) => Authority) => { authority = work(authority); }, replaceContext: () => { context = 'successor-session'; } };
++}
++it('connects authoring, exact retry after lost acknowledgement, revision history, retirement and encrypted reload without client ports', async () => {
++  const f = await fixture(); const render = vi.fn<(s: TemplateState) => void>();
++  const c = createTemplateController(f.transport, render);
++  await c.load(c.generation); c.edit(c.generation); c.title(c.generation, 'Generic morning');
++  c.role(c.generation, 'am', 'cleanser'); c.role(c.generation, 'pm', 'moisturizer'); c.review(c.generation);
++  const review = c.generation; c.cancel(review); await c.confirm(review);
++  expect(await practiceTemplates(f.repository(), 'synthetic', 'practice-a')).toEqual([]);
++  c.review(c.generation); f.controls.loseCommitReply = true; await c.confirm(c.generation);
++  expect(render.mock.lastCall![0].kind).toBe('unknown');
++  f.controls.loseCommitReply = false; await c.confirm(c.generation);
++  const first = await practiceTemplates(f.repository(), 'synthetic', 'practice-a'); expect(first).toHaveLength(1);
++  const firstBytes = canonical(first[0]);
++  const retiredControl = c.generation; c.edit(c.generation, first[0]); c.title(c.generation, 'Generic revised'); c.review(c.generation); await c.confirm(c.generation);
++  const second = await practiceTemplates(f.repository(), 'synthetic', 'practice-a'); expect(second).toHaveLength(2);
++  expect(render.mock.lastCall![0].kind).toBe('index');
++  expect(canonical(second[0])).toBe(firstBytes); expect(second[1]!.parentHash).toBe(first[0]!.contentHash);
++  c.retire(retiredControl, first[0]!); expect(render.mock.lastCall![0].kind).toBe('index');
++  c.retire(c.generation, second[1]!); const oldConfirm = c.generation; c.cancel(c.generation); await c.confirm(oldConfirm);
++  expect(await practiceTemplates(f.repository(), 'synthetic', 'practice-a')).toHaveLength(2);
++  c.retire(c.generation, second[1]!); await c.confirm(c.generation);
++  expect(render.mock.lastCall![0].kind).toBe('index');
++  c.clear(); await c.load(c.generation);
++  const final = await practiceTemplates(f.repository(), 'synthetic', 'practice-a');
++  expect(final.map(t => t.status)).toEqual(['active', 'active', 'retired']); expect(final[2]!.title).toBe('Generic revised');
++  expect(canonical([...f.records()])).not.toContain('Generic'); expect(f.forbidden).not.toHaveBeenCalled();
++  expect([...f.records().keys()].every(k => k.startsWith('workspace/practice-a/'))).toBe(true);
++});
++it.each(['session', 'role', 'licence', 'workspace', 'billing'] as const)('denies %s authority initially and at commit, preserving every original byte', async boundary => {
++  for (const final of [false, true]) {
++    const f = await fixture(), before = canonical([...f.records()]);
++    const retire = () => f.mutate(a => boundary === 'session' ? { ...a, session: { ...a.session, revoked: true } } :
++      boundary === 'role' ? { ...a, membership: { ...a.membership!, roles: ['workspace_owner'] } } :
++      boundary === 'licence' ? { ...a, licence: null } :
++      boundary === 'workspace' ? { ...a, session: { ...a.session, workspaceId: 'practice-b' } } : a);
++    if (boundary === 'billing') f.controls.now += final ? 0 : 100_001;
++    if (final) f.controls.beforeCommit = () => { if (boundary === 'billing') f.controls.now += 100_001; else retire(); }; else retire();
++    await expect(practiceTemplates(f.repository(), 'synthetic', 'practice-a', command())).rejects.toThrow();
++    expect(canonical([...f.records()])).toBe(before); expect(f.forbidden).not.toHaveBeenCalled();
++  }
++});
++it('refuses absent history instead of provisioning it and refuses cross-practice access', async () => {
++  const f = await fixture();
++  await expect(practiceTemplates(f.repository(), 'synthetic', 'practice-b')).rejects.toThrow();
++  const before = canonical([...f.records()]);
++  const read = f.custody.transaction.bind(f.custody);
++  vi.spyOn(f.custody, 'transaction').mockImplementation(work => read(tx => work({ ...tx, read: async k => k.endsWith('/templates') ? null : tx.read(k) })));
++  await expect(practiceTemplates(f.repository(), 'synthetic', 'practice-a')).rejects.toThrow('PROFESSIONAL_ACCESS_UNAVAILABLE');
++  expect(canonical([...f.records()])).toBe(before);
++});
++it('refuses changed ID reuse, stale revisions, retirement resurrection, altered hashes and client-text smuggling', async () => {
++  const c = command(), first = await changePracticeTemplate([], 'practice-a', 'staff', c, 1);
++  expect(await changePracticeTemplate(first, 'practice-a', 'staff', c, 2)).toEqual(first);
++  await expect(changePracticeTemplate(first, 'practice-a', 'staff', { ...c, title: 'Different' }, 2)).rejects.toThrow('CONFLICT');
++  await expect(changePracticeTemplate(first, 'practice-a', 'staff', { ...c, id: randomUUID() }, 2)).rejects.toThrow('CONFLICT');
++  const retire = { id: randomUUID(), templateId: c.templateId, expectedHeadHash: first[0]!.contentHash, kind: 'retire', confirmed: true };
++  const final = await changePracticeTemplate(first, 'practice-a', 'staff', retire, 2);
++  await expect(changePracticeTemplate(final, 'practice-a', 'staff', { ...c, id: randomUUID(), expectedHeadHash: final[1]!.contentHash }, 3)).rejects.toThrow('CONFLICT');
++  await expect(decodePracticeTemplates([{ ...first[0], title: 'Tampered' }], 'practice-a')).rejects.toThrow('INVALID');
++  await expect(decodePracticeTemplates(first, 'practice-b')).rejects.toThrow('INVALID');
++  for (const extra of [{ ownerId: 'client-a' }, { clientText: 'private record' }, { am: [{ productId: 'bottle-a', name: 'Private' }] }]) {
++    await expect(changePracticeTemplate([], 'practice-a', 'staff', { ...c, ...extra }, 1)).rejects.toThrow('INVALID');
++  }
++});
++it('reserves terminal retirement beyond the immutable authoring revision ceiling', async () => {
++  const first = command(); let history = await changePracticeTemplate([], 'practice-a', 'staff', first, 1);
++  for (let revision = 2; revision <= 100; revision++) history = await changePracticeTemplate(history, 'practice-a', 'staff', {
++    ...first, id: randomUUID(), title: `Generic revision ${revision}`, expectedHeadHash: history.at(-1)!.contentHash,
++  }, revision);
++  await expect(changePracticeTemplate(history, 'practice-a', 'staff', { ...first, id: randomUUID(), expectedHeadHash: history.at(-1)!.contentHash }, 101)).rejects.toThrow('INVALID');
++  const retired = await changePracticeTemplate(history, 'practice-a', 'staff', { id: randomUUID(), templateId: first.templateId,
++    kind: 'retire', expectedHeadHash: history.at(-1)!.contentHash, confirmed: true }, 101);
++  expect(retired).toHaveLength(101); expect(retired.at(-1)!.status).toBe('retired'); expect(retired.slice(0, 100)).toEqual(history);
++});
++it('keeps the API closed by default, binds server practice/context and rejects cross-origin or oversized input', async () => {
++  const f = await fixture();
++  const request = (input: unknown, headers = {}) => new Request(origin + '/api/professional/templates', { method: 'POST',
++    headers: { Origin: origin, 'Content-Type': 'application/json', 'X-OnSkin-Request': 'templates-v1', ...headers }, body: JSON.stringify(input) });
++  expect((await createTemplateApi(null)(request({}))).status).toBe(503);
++  expect((await f.api(request({ kind: 'list', context: null }, { Origin: 'https://other.test' }))).status).toBe(403);
++  expect((await f.api(request({ kind: 'list', context: null, workspaceId: 'practice-b' }))).status).toBe(400);
++  expect((await f.api(request({ kind: 'change', context: 'retired', command: command() }))).status).toBe(409);
++  expect((await f.api(request({ kind: 'list', context: 'x'.repeat(20_000) }))).status).toBe(400);
++  const response = await f.api(request({ kind: 'list', context: null })); expect(response.status).toBe(200); expect(response.headers.get('Cache-Control')).toBe('no-store');
++});
++it('retires pending transport and captured controls on clear and refuses successor session adoption', async () => {
++  const f = await fixture(), render = vi.fn<(s: TemplateState) => void>(); let release!: () => void;
++  const gate = new Promise<void>(resolve => { release = resolve; });
++  const c = createTemplateController(async (...args) => { await gate; return f.transport(...args); }, render);
++  const pending = c.load(c.generation); c.clear(); release(); await pending;
++  expect(render.mock.lastCall![0].kind).toBe('idle');
++  const current = createTemplateController(f.transport, render); await current.load(current.generation); current.edit(current.generation);
++  current.title(current.generation, 'Generic'); current.role(current.generation, 'am', 'cleanser'); current.review(current.generation);
++  f.replaceContext(); await current.confirm(current.generation); expect(render.mock.lastCall![0].kind).toBe('changed');
++  expect(await practiceTemplates(f.repository(), 'synthetic', 'practice-a')).toHaveLength(0);
++});
+diff --git a/apps/professional-web/src/practiceTemplates.ts b/apps/professional-web/src/practiceTemplates.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ceda982283bf33d7fa0b1eda5582abd18663439d
+--- /dev/null
++++ b/apps/professional-web/src/practiceTemplates.ts
+@@ -0,0 +1,77 @@
++import { canonical, recordHash } from './grants';
++
++// Reusable practice-authored roles only: no owner IDs, bottle IDs, client notes,
++// formula text or import-from-client capability enters this aggregate.
++export const TEMPLATE_ROLES = ['cleanser', 'moisturizer', 'sun_protection', 'other'] as const;
++export type TemplateRole = typeof TEMPLATE_ROLES[number];
++export type PracticeTemplate = Readonly<{
++  schemaVersion: 1; id: string; templateId: string; workspaceId: string; revision: number;
++  actorId: string; createdAt: number; parentHash: string | null; status: 'active' | 'retired';
++  title: string; am: readonly TemplateRole[]; pm: readonly TemplateRole[]; contentHash: string;
++}>;
++export type TemplateCommand = Readonly<{ id: string; templateId: string; expectedHeadHash: string | null; confirmed: true } &
++  ({ kind: 'revise'; title: string; am: readonly TemplateRole[]; pm: readonly TemplateRole[] } | { kind: 'retire' })>;
++export const templateId = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u.test(v);
++export const templateHash = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
++const fail = (): never => { throw new Error('TEMPLATE_INVALID'); };
++export const templateConflict = (): never => { throw new Error('TEMPLATE_CONFLICT'); };
++const identifier = (v: unknown): v is string => typeof v === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u.test(v);
++export function templateTitle(value: unknown): value is string {
++  return typeof value === 'string' && value.trim() === value && value.length > 0 && value.length <= 80 && !/[\p{Cf}\p{Cs}\u0000-\u001f\u007f-\u009f]/u.test(value);
++}
++export function templateRoles(value: unknown): value is readonly TemplateRole[] {
++  return Array.isArray(value) && value.length <= 20 && value.every(role => TEMPLATE_ROLES.includes(role as TemplateRole));
++}
++export function decodeTemplateCommand(value: unknown): TemplateCommand {
++  if (!value || typeof value !== 'object' || Array.isArray(value)) return fail();
++  const c = value as TemplateCommand;
++  const expected = c.kind === 'retire' ? 'confirmed,expectedHeadHash,id,kind,templateId' : 'am,confirmed,expectedHeadHash,id,kind,pm,templateId,title';
++  if (Object.keys(c).sort().join(',') !== expected || !templateId(c.id) || !templateId(c.templateId) || c.confirmed !== true ||
++      (c.expectedHeadHash !== null && !templateHash(c.expectedHeadHash)) || !['revise', 'retire'].includes(c.kind)) return fail();
++  if (c.kind === 'revise' && (!templateTitle(c.title) || !templateRoles(c.am) || !templateRoles(c.pm) || !c.am.length && !c.pm.length)) return fail();
++  return structuredClone(c);
++}
++export async function decodePracticeTemplates(value: unknown, workspaceId: string, now = 8.64e15): Promise<readonly PracticeTemplate[]> {
++  const copied: unknown = structuredClone(value);
++  if (!identifier(workspaceId) || !Array.isArray(copied) || copied.length > 600 || !Number.isFinite(now) || now < 0) return fail();
++  const result: PracticeTemplate[] = [], heads = new Map<string, PracticeTemplate>(), ids = new Set<string>();
++  for (const t of copied as PracticeTemplate[]) {
++    if (!t || Object.keys(t).sort().join(',') !== 'actorId,am,contentHash,createdAt,id,parentHash,pm,revision,schemaVersion,status,templateId,title,workspaceId' ||
++        t.schemaVersion !== 1 || !templateId(t.id) || !templateId(t.templateId) || ids.has(t.id) || t.workspaceId !== workspaceId ||
++        !identifier(t.actorId) || !templateTitle(t.title) || !templateRoles(t.am) || !templateRoles(t.pm) || !t.am.length && !t.pm.length ||
++        !['active', 'retired'].includes(t.status) || !Number.isSafeInteger(t.revision) || t.revision < 1 || t.revision > (t.status === 'retired' ? 101 : 100) ||
++        !Number.isSafeInteger(t.createdAt) || t.createdAt < (result.at(-1)?.createdAt ?? 0) || t.createdAt > Math.min(now, 8.64e15)) return fail();
++    const parent = heads.get(t.templateId);
++    if (t.revision !== (parent?.revision ?? 0) + 1 || t.parentHash !== (parent?.contentHash ?? null) || parent?.status === 'retired' ||
++        t.status === 'retired' && (!parent || canonical([t.title, t.am, t.pm]) !== canonical([parent.title, parent.am, parent.pm]))) return fail();
++    const { contentHash, ...body } = t;
++    if (!templateHash(contentHash) || contentHash !== await recordHash(body)) return fail();
++    const record = Object.freeze({ ...t, am: Object.freeze([...t.am]), pm: Object.freeze([...t.pm]) });
++    result.push(record); ids.add(t.id); heads.set(t.templateId, record);
++  }
++  if (heads.size > 100 || result.filter(t => t.status === 'active').length > 500) return fail();
++  return Object.freeze(result);
++}
++export async function changePracticeTemplate(value: unknown, workspaceId: string, actorId: string, input: unknown, now: number) {
++  const command = decodeTemplateCommand(input);
++  const history = await decodePracticeTemplates(value, workspaceId, now);
++  if (!identifier(actorId)) return fail();
++  const existing = history.find(t => t.id === command.id);
++  if (existing) {
++    if (existing.templateId !== command.templateId || existing.actorId !== actorId || existing.parentHash !== command.expectedHeadHash ||
++        existing.status !== (command.kind === 'retire' ? 'retired' : 'active') || command.kind === 'revise' &&
++        canonical([existing.title, existing.am, existing.pm]) !== canonical([command.title, command.am, command.pm])) return templateConflict();
++    return history; // Exact historical retry certifies this revision only, never currentness.
++  }
++  const parent = history.filter(t => t.templateId === command.templateId).at(-1);
++  if ((parent?.contentHash ?? null) !== command.expectedHeadHash || parent?.status === 'retired') return templateConflict();
++  // Reserve one terminal retirement per template even at the authoring ceiling.
++  if (command.kind === 'retire' && !parent || command.kind === 'revise' &&
++      (history.filter(t => t.status === 'active').length >= 500 || (parent?.revision ?? 0) >= 100) ||
++      !parent && new Set(history.map(t => t.templateId)).size >= 100) return fail();
++  const content = command.kind === 'revise' ? command : parent!;
++  const body = { schemaVersion: 1 as const, id: command.id, templateId: command.templateId, workspaceId,
++    revision: (parent?.revision ?? 0) + 1, actorId, createdAt: now, parentHash: parent?.contentHash ?? null,
++    status: command.kind === 'retire' ? 'retired' as const : 'active' as const, title: content.title, am: content.am, pm: content.pm };
++  return decodePracticeTemplates([...history, { ...body, contentHash: await recordHash(body) }], workspaceId, now);
++}
+diff --git a/apps/professional-web/src/style.css b/apps/professional-web/src/style.css
+index c2bc04065b1eb63a1357e9da5af20e511b263f88..2ad0f1379007ba0b6c36d4d4b8c0ac85cb70aa30 100644
+--- a/apps/professional-web/src/style.css
++++ b/apps/professional-web/src/style.css
+@@ -16,4 +16,8 @@ select, textarea { box-sizing: border-box; max-width: 100%; min-width: 0; min-he
+ textarea { width: 100%; min-height: 96px; }
+ label:has(textarea), label:has(select) { display: block; }
+ label select, label textarea { display: block; width: 100%; margin-top: 8px; }
++label:has(input[type=text]) { display: block; }
++input[type=text] { display: block; box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; min-height: 48px; font: inherit; margin-top: 8px; }
++summary { min-height: 48px; padding: 8px 0; cursor: pointer; }
++summary:focus-visible { outline: 3px solid #315b49; outline-offset: 3px; }
+ textarea:focus-visible, select:focus-visible { outline: 3px solid #315b49; outline-offset: 3px; }
+diff --git a/apps/professional-web/src/templateApi.ts b/apps/professional-web/src/templateApi.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..9ef4fc22f4c399a40d6e234029cd7e84ffd0a8d7
+--- /dev/null
++++ b/apps/professional-web/src/templateApi.ts
+@@ -0,0 +1,49 @@
++import { ProfessionalAccessError } from './authority';
++import { decodeTemplateCommand } from './practiceTemplates';
++import { practiceTemplates } from './templateService';
++import type { WorkspaceRepository } from './workspaceService';
++
++export type TemplateApiDependencies = Readonly<{ origin: string; repository: WorkspaceRepository;
++  authenticate(request: Request): Promise<Readonly<{ token: string; workspaceId: string; context: string }> | null> }>;
++const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
++  'Referrer-Policy': 'no-referrer', Vary: 'Cookie', 'Cross-Origin-Resource-Policy': 'same-origin' };
++const reply = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers });
++/** No default authenticator, provisioning or production registration. */
++export function createTemplateApi(dependencies: TemplateApiDependencies | null) {
++  const deps = dependencies ? { ...dependencies } : null;
++  return async (request: Request): Promise<Response> => {
++    if (new URL(request.url).pathname !== '/api/professional/templates') return reply(404, { status: 'unavailable' });
++    if (!deps) return reply(503, { status: 'unavailable' });
++    try {
++      if (request.method !== 'POST' || new URL(request.url).origin !== deps.origin || request.headers.get('Origin') !== deps.origin ||
++          request.headers.get('X-OnSkin-Request') !== 'templates-v1' || request.headers.get('Content-Type') !== 'application/json' ||
++          request.headers.has('Sec-Fetch-Site') && request.headers.get('Sec-Fetch-Site') !== 'same-origin') return reply(403, { status: 'denied' });
++      const p = await deps.authenticate(request);
++      const id = (v: unknown) => typeof v === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u.test(v);
++      if (!p || !p.token || !id(p.context) || !id(p.workspaceId)) return reply(401, { status: 'session' });
++      if (!request.body) return reply(400, { status: 'invalid' });
++      const reader = request.body.getReader(); const chunks: Uint8Array[] = []; let size = 0;
++      try {
++        while (true) { const next = await reader.read(); if (next.done) break;
++          size += next.value.byteLength; if (size > 16_384) { await reader.cancel(); return reply(400, { status: 'invalid' }); } chunks.push(next.value); }
++      } finally { reader.releaseLock(); }
++      const bytes = new Uint8Array(size); let offset = 0;
++      for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
++      let value: unknown;
++      try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); } catch { return reply(400, { status: 'invalid' }); }
++      if (!value || typeof value !== 'object' || Array.isArray(value)) return reply(400, { status: 'invalid' });
++      const input = value as Record<string, unknown>;
++      if (!['list', 'change'].includes(input.kind as string) || Object.keys(input).sort().join(',') !==
++          (input.kind === 'list' ? 'context,kind' : 'command,context,kind')) return reply(400, { status: 'invalid' });
++      if (input.context !== p.context && !(input.kind === 'list' && input.context === null)) return reply(409, { status: 'changed' });
++      const command = input.kind === 'change' ? decodeTemplateCommand(input.command) : undefined;
++      const templates = await practiceTemplates(deps.repository, p.token, p.workspaceId, command);
++      return reply(200, { kind: 'templates', context: p.context, workspaceId: p.workspaceId, templates });
++    } catch (error) {
++      if (error instanceof Error && error.message === 'TEMPLATE_INVALID') return reply(400, { status: 'invalid' });
++      if (error instanceof Error && error.message === 'TEMPLATE_CONFLICT' || error instanceof ProfessionalAccessError && error.reason === 'changed') return reply(409, { status: 'changed' });
++      if (error instanceof ProfessionalAccessError && error.reason !== 'unavailable') return reply(403, { status: 'denied' });
++      return reply(503, { status: 'unavailable' }); // Never echo exception/source text.
++    }
++  };
++}
+diff --git a/apps/professional-web/src/templateService.ts b/apps/professional-web/src/templateService.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7fe171a6de4ffc264e9a648ae43996486aa67af3
+--- /dev/null
++++ b/apps/professional-web/src/templateService.ts
+@@ -0,0 +1,34 @@
++import { accessDenial, ProfessionalAccessError, type AccessRequest } from './authority';
++import { canonical } from './grants';
++import { changePracticeTemplate, decodePracticeTemplates, type TemplateCommand } from './practiceTemplates';
++import { snapshotWorkspaceTransaction } from './workspaceReadSnapshot';
++import { decodeWorkspaceBilling, workspaceBillingAccess } from './workspaceBilling';
++import type { WorkspaceRepository } from './workspaceService';
++
++/** Workspace-only trusted transaction. There is no client/source/record port in
++ * this journey. Existing template permission requires current licence/billing. */
++export async function practiceTemplates(repository: WorkspaceRepository | null, token: string, workspaceId: string, command?: TemplateCommand) {
++  if (!repository) throw new ProfessionalAccessError('unavailable');
++  const captured = command ? structuredClone(command) : undefined;
++  const request: AccessRequest = { action: 'template_author_issue', operation: 'write', workspaceId, ownerId: null,
++    fields: [], purpose: null, grantVersion: null, grantEpoch: null };
++  return repository.transaction({ workspaceId, ownerId: null }, async raw => {
++    const tx = snapshotWorkspaceTransaction(raw);
++    const authority = async () => {
++      const billing = await decodeWorkspaceBilling(await tx.billing(workspaceId), workspaceId);
++      const a = { ...await tx.authority(token, request), billing: workspaceBillingAccess(billing, tx.now()) };
++      const denied = accessDenial(a, request, tx.now());
++      if (denied) throw new ProfessionalAccessError(denied);
++      return { a, billing };
++    };
++    const admitted = await authority(); const initial = canonical(admitted);
++    if (!tx.templates || captured && !tx.saveTemplates) throw new ProfessionalAccessError('unavailable');
++    const previous = await decodePracticeTemplates(await tx.templates(workspaceId), workspaceId, tx.now());
++    const next = captured ? await changePracticeTemplate(previous, workspaceId, admitted.a.session.subjectId, captured, tx.now()) : previous;
++    if (canonical(previous) !== canonical(next)) await tx.saveTemplates!(next);
++    tx.beforeCommit(async () => {
++      if (canonical(await authority()) !== initial || canonical(await tx.templates!(workspaceId)) !== canonical(next)) throw new ProfessionalAccessError('changed');
++    });
++    return next;
++  });
++}
+diff --git a/apps/professional-web/src/templateView.ts b/apps/professional-web/src/templateView.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4f4274546a0328dce6768542d4cae86e0fed0bb8
+--- /dev/null
++++ b/apps/professional-web/src/templateView.ts
+@@ -0,0 +1,172 @@
++import { decodePracticeTemplates, templateTitle, TEMPLATE_ROLES, type PracticeTemplate, type TemplateCommand, type TemplateRole } from './practiceTemplates';
++import { untilAborted } from './requestDeadline';
++import { canonical } from './grants';
++
++type Source = Readonly<{ context: string; workspaceId: string; templates: readonly PracticeTemplate[] }>;
++type Draft = { templateId: string; expectedHeadHash: string | null; title: string; am: readonly TemplateRole[]; pm: readonly TemplateRole[] };
++export type TemplateState = { kind: 'idle' | 'loading' | 'unavailable' | 'changed' } | { kind: 'index'; source: Source } |
++  { kind: 'editing' | 'review'; source: Source; draft: Draft } | { kind: 'retire-review'; source: Source; template: PracticeTemplate } |
++  { kind: 'submitting' | 'unknown'; source: Source; command: TemplateCommand };
++const heads = (templates: readonly PracticeTemplate[]) => [...new Map(templates.map(t => [t.templateId, t])).values()];
++const fail = (): never => { throw new Error('TEMPLATES_UNAVAILABLE'); };
++/** Memory only. No private text in browser persistence, URL, logs or errors. */
++export function createTemplateController(request: typeof fetch, render: (state: TemplateState) => void, newId = () => crypto.randomUUID()) {
++  let generation = 0; let pending: AbortController | null = null; let state: TemplateState = { kind: 'idle' };
++  const show = (next: TemplateState) => { state = next; generation++; render(next); };
++  const current = (g: number) => g === generation;
++  async function post(input: unknown, source?: Source) {
++    const controller = new AbortController(); pending = controller;
++    const admitted = generation; const timeout = setTimeout(() => controller.abort(), 15_000);
++    try {
++      const response = await untilAborted(controller.signal, request('/api/professional/templates', { method: 'POST', credentials: 'same-origin', cache: 'no-store', redirect: 'error',
++        headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'templates-v1' }, signal: controller.signal, body: JSON.stringify(input) }));
++      if (!current(admitted)) return fail();
++      if (response.status === 409) throw new Error('TEMPLATES_CHANGED');
++      if (response.status === 401 || response.status === 403 || response.status === 400) throw new Error('TEMPLATES_DENIED');
++      if (!response.ok || response.headers.get('Cache-Control') !== 'no-store' || !response.headers.get('Content-Type')?.startsWith('application/json')) return fail();
++      const text = await untilAborted(controller.signal, response.text());
++      if (!current(admitted) || text.length > 1_000_000) return fail();
++      const v = JSON.parse(text) as Source & { kind: string };
++      if (!v || Object.keys(v).sort().join(',') !== 'context,kind,templates,workspaceId' || v.kind !== 'templates' ||
++          !/^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u.test(v.context) || source && (v.context !== source.context || v.workspaceId !== source.workspaceId)) return fail();
++      const templates = await decodePracticeTemplates(v.templates, v.workspaceId);
++      if (!current(admitted)) return fail();
++      return { context: v.context, workspaceId: v.workspaceId, templates };
++    } finally { clearTimeout(timeout); if (current(admitted)) pending = null; }
++  }
++  async function submit(source: Source, command: TemplateCommand) {
++    show({ kind: 'submitting', source, command }); const admitted = generation;
++    try {
++      const result = await post({ kind: 'change', context: source.context, command }, source);
++      if (!current(admitted)) return;
++      const saved = result.templates.find(t => t.id === command.id);
++      if (!saved || saved.templateId !== command.templateId || saved.parentHash !== command.expectedHeadHash ||
++          saved.status !== (command.kind === 'retire' ? 'retired' : 'active') || command.kind === 'revise' &&
++          JSON.stringify([saved.title, saved.am, saved.pm]) !== JSON.stringify([command.title, command.am, command.pm]) ||
++          canonical(result.templates.slice(0, source.templates.length)) !== canonical(source.templates)) return fail();
++      show({ kind: 'index', source: result });
++    } catch (error) {
++      if (!current(admitted)) return;
++      if (error instanceof Error && error.message === 'TEMPLATES_CHANGED') show({ kind: 'changed' });
++      else if (error instanceof Error && error.message === 'TEMPLATES_DENIED') show({ kind: 'unavailable' });
++      else show({ kind: 'unknown', source, command });
++    }
++  }
++  return {
++    get generation() { return generation; },
++    clear() { generation++; pending?.abort(); pending = null; show({ kind: 'idle' }); },
++    async load(g: number) {
++      if (!current(g)) return;
++      pending?.abort(); show({ kind: 'loading' }); const admitted = generation;
++      try { const source = await post({ kind: 'list', context: null }); if (current(admitted)) show({ kind: 'index', source }); }
++      catch { if (current(admitted)) show({ kind: 'unavailable' }); }
++    },
++    edit(g: number, selected?: PracticeTemplate) {
++      if (!current(g) || state.kind !== 'index') return;
++      const template = selected && heads(state.source.templates).find(t => t.id === selected.id && t.contentHash === selected.contentHash && t.status === 'active');
++      if (selected && !template) return;
++      show({ kind: 'editing', source: state.source, draft: { templateId: template?.templateId ?? newId(), expectedHeadHash: template?.contentHash ?? null,
++        title: template?.title ?? '', am: template?.am ?? [], pm: template?.pm ?? [] } });
++    },
++    copy(g: number, selected: PracticeTemplate) {
++      if (!current(g) || state.kind !== 'index') return;
++      const template = state.source.templates.find(t => t.id === selected.id && t.contentHash === selected.contentHash);
++      if (template) show({ kind: 'editing', source: state.source, draft: { templateId: newId(), expectedHeadHash: null,
++        title: template.title, am: template.am, pm: template.pm } });
++    },
++    title(g: number, title: string) {
++      if (!current(g) || state.kind !== 'editing') return;
++      state = { ...state, draft: { ...state.draft, title } }; // Input keeps focus; next action renders captured text.
++    },
++    role(g: number, phase: 'am' | 'pm', role: TemplateRole | null) {
++      if (!current(g) || state.kind !== 'editing') return;
++      const items = state.draft[phase];
++      if (role !== null && (!TEMPLATE_ROLES.includes(role) || items.length >= 20)) return;
++      show({ ...state, draft: { ...state.draft, [phase]: role === null ? items.slice(0, -1) : [...items, role] } });
++    },
++    review(g: number) {
++      if (!current(g) || state.kind !== 'editing' || !templateTitle(state.draft.title) || !state.draft.am.length && !state.draft.pm.length) return;
++      show({ ...state, kind: 'review' });
++    },
++    retire(g: number, selected: PracticeTemplate) {
++      if (!current(g) || state.kind !== 'index') return;
++      const template = heads(state.source.templates).find(t => t.id === selected.id && t.contentHash === selected.contentHash && t.status === 'active');
++      if (template) show({ kind: 'retire-review', source: state.source, template });
++    },
++    cancel(g: number) {
++      if (!current(g)) return;
++      if (state.kind === 'review') show({ ...state, kind: 'editing' });
++      else if (state.kind === 'editing' || state.kind === 'retire-review') show({ kind: 'index', source: state.source });
++    },
++    async confirm(g: number) {
++      if (!current(g)) return;
++      if (state.kind === 'unknown') return submit(state.source, state.command);
++      if (state.kind === 'retire-review') return submit(state.source, { id: newId(), templateId: state.template.templateId,
++        expectedHeadHash: state.template.contentHash, kind: 'retire', confirmed: true });
++      if (state.kind === 'review') return submit(state.source, { ...state.draft, id: newId(), kind: 'revise', confirmed: true });
++    },
++  };
++}
++
++export function mountTemplateView(root: HTMLElement, request: typeof fetch = fetch) {
++  const names: Record<TemplateRole, string> = { cleanser: 'Cleanser', moisturizer: 'Moisturizer', sun_protection: 'Sun protection', other: 'Other product role' };
++  const controller = createTemplateController(request, state => {
++    const heading = document.createElement('h2'); heading.tabIndex = -1;
++    heading.textContent = ({ idle: 'Practice templates', loading: 'Loading practice templates', unavailable: 'Practice templates unavailable', changed: 'Template source changed',
++      index: 'Saved practice templates', editing: 'Compose practice template', review: 'Review exact template revision', 'retire-review': 'Review template retirement',
++      submitting: 'Saving template revision', unknown: 'Template save outcome unknown' })[state.kind];
++    root.replaceChildren(heading); root.setAttribute('aria-busy', String(state.kind === 'loading' || state.kind === 'submitting'));
++    const g = controller.generation;
++    const p = (text: string) => { const node = document.createElement('p'); node.textContent = text; root.append(node); };
++    const button = (text: string, work: () => unknown) => { const node = document.createElement('button'); node.type = 'button'; node.textContent = text; node.onclick = () => { void work(); }; root.append(node); };
++    p('Reusable product-role sequences belong to this practice. Use a generic title. Do not enter client names, records or private plan text. Templates do not establish product safety, owner agreement, routine application or use.');
++    if (state.kind === 'unavailable') p('Current practice membership, licence, billing or template history could not be verified. A previous save may have completed; load current history after authority returns.');
++    if (state.kind === 'changed') p('The practice, authority or template source changed. Load current history before reviewing again. A prior request may already have saved.');
++    if (state.kind === 'index') {
++      if (!state.source.templates.length) p('No practice templates have been recorded.');
++      for (const t of heads(state.source.templates)) {
++        p(`${t.title} · revision ${t.revision} · ${t.status}`);
++        for (const v of state.source.templates.filter(v => v.templateId === t.templateId)) {
++          const detail = document.createElement('details'), summary = document.createElement('summary'); summary.textContent = `${v.title}: revision ${v.revision} (${v.status})`;
++          const text = document.createElement('p'); text.textContent = `Recorded ${new Date(v.createdAt).toISOString()}. Morning: ${v.am.map(r => names[r]).join(' → ') || 'No steps'}. Evening: ${v.pm.map(r => names[r]).join(' → ') || 'No steps'}.`;
++          detail.append(summary, text); root.append(detail);
++          const copy = document.createElement('button'); copy.type = 'button'; copy.textContent = `Draft new template from ${v.title} revision ${v.revision}`;
++          copy.onclick = () => controller.copy(g, v); detail.append(copy);
++        }
++        if (t.status === 'active') { button(`Revise ${t.title}`, () => controller.edit(g, t)); button(`Retire ${t.title}`, () => controller.retire(g, t)); }
++      }
++      button('New practice template', () => controller.edit(g));
++    }
++    if (state.kind === 'editing' || state.kind === 'review') {
++      if (state.kind === 'editing') {
++        const label = document.createElement('label'); label.textContent = 'Generic template title';
++        const input = document.createElement('input'); input.type = 'text'; input.maxLength = 80; input.value = state.draft.title;
++        input.oninput = () => controller.title(g, input.value); label.append(input); root.append(label);
++      } else p(state.draft.title);
++      for (const phase of ['am', 'pm'] as const) {
++        p(`${phase === 'am' ? 'Morning' : 'Evening'}: ${state.draft[phase].map(role => names[role]).join(' → ') || 'No steps'}`);
++        if (state.kind === 'editing') {
++          for (const role of TEMPLATE_ROLES) button(`Add ${names[role]} to template ${phase}`, () => controller.role(g, phase, role));
++          if (state.draft[phase].length) button(`Remove last template ${phase} step`, () => controller.role(g, phase, null));
++        }
++      }
++      if (state.kind === 'editing') { p('Enter a generic title and at least one role before review. Only explicitly saved revisions survive reload.'); button('Review template revision', () => controller.review(g)); }
++      else { p('Save creates a separate immutable revision. Earlier revisions remain in practice history.'); button('Save exact template revision', () => controller.confirm(g)); }
++      button(state.kind === 'review' ? 'Return to template draft' : 'Cancel template draft', () => controller.cancel(g));
++    }
++    if (state.kind === 'retire-review') {
++      p(`Retire ${state.template.title}, revision ${state.template.revision}. Retirement preserves history and prevents further revisions of this template.`);
++      button('Confirm exact template retirement', () => controller.confirm(g)); button('Keep template active', () => controller.cancel(g));
++    }
++    if (state.kind === 'unknown') { p('This request may have saved. Retry sends the identical command. Clearing or reloading loses the in-memory retry; inspect saved history before starting again.'); button('Retry identical template save', () => controller.confirm(g)); }
++    if (['idle', 'unavailable', 'changed', 'index'].includes(state.kind)) button('Load practice templates', () => controller.load(g));
++    button('Clear template screen', () => { if (controller.generation === g) controller.clear(); });
++    if (!['idle', 'loading', 'submitting'].includes(state.kind)) heading.focus();
++  });
++  const clear = () => controller.clear(), visibility = () => { if (document.hidden) clear(); };
++  for (const event of ['blur', 'pagehide', 'pageshow']) window.addEventListener(event, clear);
++  document.addEventListener('visibilitychange', visibility);
++  const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('onskin-professional-session') : null;
++  channel?.addEventListener('message', clear); controller.clear();
++  return () => { clear(); channel?.close(); for (const event of ['blur', 'pagehide', 'pageshow']) window.removeEventListener(event, clear); document.removeEventListener('visibilitychange', visibility); };
++}
+diff --git a/apps/professional-web/src/workspaceReadSnapshot.ts b/apps/professional-web/src/workspaceReadSnapshot.ts
+index 7eca0f72e7f9f28b87d022870929850da7919086..9b55709cfc303647bd1f857f427ce93aa7b2f2fb 100644
+--- a/apps/professional-web/src/workspaceReadSnapshot.ts
++++ b/apps/professional-web/src/workspaceReadSnapshot.ts
+@@ -4,7 +4,7 @@ import type { WorkspaceTransaction } from './workspaceService';
+ 
+ const READS = new Set<keyof WorkspaceTransaction>([
+   'authority', 'lifecycle', 'grants', 'billing', 'capacity', 'plans', 'receivedPlans',
+-  'receipts', 'planSource', 'activationAvailable', 'reconciliation', 'reconciliationSource', 'previsitRecords',
++  'receipts', 'planSource', 'activationAvailable', 'reconciliation', 'reconciliationSource', 'previsitRecords', 'templates',
+ ]);
+ 
+ /** A repository read is a value, never permission to adopt a later mutable
+diff --git a/apps/professional-web/src/workspaceService.ts b/apps/professional-web/src/workspaceService.ts
+index 213a0dcab1c70ca2a38470c43e6d84a23aebbf0c..b16e25992764f97a0f9f35b1a0599c76fc657b94 100644
+--- a/apps/professional-web/src/workspaceService.ts
++++ b/apps/professional-web/src/workspaceService.ts
+@@ -8,6 +8,7 @@ import { decodeWorkspaceBilling, reconcileWorkspaceBilling, workspaceBillingAcce
+ import { capacityPublicationAllowed, decodeWorkspaceCapacity, transitionWorkspaceCapacity,
+   type CapacityCommand, type WorkspaceCapacity } from './workspaceCapacity';
+ import type { ReconciliationLog } from './reconciliation';
++import type { PracticeTemplate } from './practiceTemplates';
+ import type { ReconciliationSource } from './reconciliationService';
+ import { readPrevisitRecords, previsitRecordText, type PrevisitRecordField, type PrevisitRecordSelection, type PrevisitRecordSource } from './previsitRecords';
+ 
+@@ -37,6 +38,8 @@ export interface WorkspaceTransaction {
+   // receipts and copy together. A missing/corrupt copy is not an implicit repair.
+   saveOwnerReceiptAndCopy(receipts: readonly PlanReceipt[], plan: IntendedPlan): Promise<void>;
+   beforeCommit(check: () => Promise<void>): void;
++  templates?(workspaceId: string): Promise<readonly PracticeTemplate[]>;
++  saveTemplates?(value: readonly PracticeTemplate[]): Promise<void>;
+   // Missing unconfigured ports refuse; no synthetic event or empty-log fallback.
+   reconciliation?(ownerId: string, workspaceId: string): Promise<ReconciliationLog>;
+   reconciliationSource?(ownerId: string, workspaceId: string): Promise<ReconciliationSource>;
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 903eb34391f56956636973040eb2f5e82a02073f..fadc022d04a5e8115b840420332c4b4877517f78 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -1,5 +1,11 @@
+ # User Flow Tree
+ 
++## Engineering28 practice template library and navigation retirement (local, unaccepted)
++
++Critical professional web flow at 375×667 and 430×932: Practice templates → Load practice templates → real default503 refusal / admitted practice-only template history → New practice template → generic title and explicit ordered product roles → Review template revision → Return to draft / Save exact template revision → immutable readback → expand any dated prior revision → Revise → cancel or explicitly save a separate revision → Retire → Keep active / Confirm exact retirement → reload retained history. Unknown save retries the identical command; changed authority/history requires fresh review. Missing/corrupt history refuses instead of provisioning. Clear/background/session replacement invalidates pending work and captured controls. Keyboard focus moves to the new heading; title input keeps focus. No owner source or private client plan is imported, no owner record is changed, and no licence or provider admission is created. Exact role-to-bottle mapping, unshelved proposals, plan issuance from a template and original-owner application remain unavailable.
++
++Critical consumer flow: collapsed optional notes → explicit history or direct Saved change drafts entry → navigation away while route stays mounted → stale entry/editor callbacks refuse → return to collapsed entry → fresh explicit open under original current owner. The maintained optional browser driver detects the expanded Find recorded changes control, preserving all original durable-history assertions. Earlier obsolete-heading failure remains immutable historical evidence.
++
+ ## Engineering21 durable optional change drafts (local implementation, unaccepted)
+ 
+ Critical, repeatable synthetic Expo-web branches: current adult/owner/health-consent access -> Today -> Record a change (optional) -> new factual note / exact retained event correction / retraction reason -> Save change draft on this device -> verified encrypted saved revision -> make later unsaved edits -> reload -> reopen optional changes -> Saved change drafts -> Resume saved change draft -> review restored original text, observed date, kind and exact target -> Review this change -> fresh Confirm and save this change -> canonical exact-event readback -> retire only that saved revision. Notes, corrections and retractions remain owner reports and do not alter actual routine/check-offs or automatically enter a brief. No provider, sync or analytics emission is introduced.
+diff --git a/docs/release/full-app-j01/practice-templates28.md b/docs/release/full-app-j01/practice-templates28.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..7d99054c19bfdf6200556af18f581aa1c7b1a7ef
+--- /dev/null
++++ b/docs/release/full-app-j01/practice-templates28.md
+@@ -0,0 +1,15 @@
++# Engineering28 local template and recovery work
++
++Authorization BRAIN-ONSKIN-AUTONOMOUS-LOCAL-PRODUCT-28. All38/all18 remain UNACCEPTED; release NO_GO. The frozen contract/matrix and default professional HTTP503 remain unchanged. J01 Visible Pores is the only Korean assessment; positive evaluation remains closed.
++
++Practice templates now have a dedicated role-based sequence library, immutable practice-scoped revisions, exact predecessor hashes, explicit review/save/cancel, historical revision inspection/copy into a new template, retirement, encrypted durable readback and identical retry after uncertain acknowledgement. Generic titles and bounded product-role arrays are authored directly; no client record, plan text, owner/bottle ID, formula text or client import port enters this aggregate. Retirement has reserved terminal capacity after the authoring ceiling. No template orders a product, admits clinical advice or changes an owner's routine/use.
++
++The service uses the existing trusted WorkspaceRepository/EncryptedCustody transaction. Current template role, practice membership, AAL2/TOTP, licence and verified workspace billing are checked before template reads and again before final handoff. Missing history/ports refuse; there is no automatic provisioning or production fixture. A separately authorized trusted custodian must provision a genuine empty aggregate and install genuine identity, licence, key and serial storage ports. The browser stores no template text outside transient DOM/memory and clears on background/session retirement. Local positive tests use explicit synthetic trust/keys/serial drivers; the real production route remains503. Template reads currently use the existing template-author permission and require active write billing; lawful read-only offboarding is still unfinished.
++
++F06/V2-C05 and the rest of P03/P04 remain partial. Original-owner record ingress/application writer, exact role-to-owned-product mapping, unshelved product proposal identity, named roster assignment and lawful retained-copy lifecycle are not installed. Template-to-client issuance and owner application stay disconnected until those real source/authority prerequisites exist. Existing owner acknowledgement/capacity acceptance remains separate from routine application and genuinely recorded use. No owner records or professional admission were invented.
++
++Consumer fixes independently address first-content-key creation under retired authority and navigation-retired collapsed optional entries. First-key probes retain original authority; a native successor discovered after fallback probing is preserved, and dispatched/uncertain keys are never compensating-deleted. Observational recovery/no-op writes remain non-mutating. Native storage has no atomic compare-and-set; uncoordinated external/native-process writers and physical keychain/crash behavior remain unqualified. E23 outer CAS bytes and inner v5 predecessor proof remain unchanged, including schema2/unprovable-legacy refusal.
++
++Both collapsed optional entries now require their rendered navigation generation. Real installed navigation tests keep routes mounted across blur/refocus and owner replacement. An entered primary history retains the original lease while accepting a fresh source callback only under that same exact lease for explicit conflict recovery. The maintained browser driver now detects the expanded search control instead of the intentionally collapsed heading. All substantive historical/draft/recovery assertions are preserved; the original obsolete-heading failure remains in immutable Engineering27R evidence.
++
++The Engineering28 GitHub evidence handoff supplies full source patches, current validation receipts, failing intermediate traces, offline ancestry and forward/reverse tree checks. Unit, synthetic native-port and Edge browser results do not imply physical/native/backend/provider/security acceptance. No new native allocation, account/spending change, application-source push, PR change, hosted CI, merge, deployment or release is authorized.
+diff --git a/scripts/e2e/optional-change-drafts21.mjs b/scripts/e2e/optional-change-drafts21.mjs
+index 8ee7aec065aff0c895401c14a340ece10c9bee88..df536cf7857e69d0548d29be2fbe3c6c728c5ff5 100644
+--- a/scripts/e2e/optional-change-drafts21.mjs
++++ b/scripts/e2e/optional-change-drafts21.mjs
+@@ -174,7 +174,7 @@ function assertHistory(current, initial, expectedRevision) {
+ }
+ async function openPanel() {
+   await b.waitForText(client, 'Record a change (optional)', 30_000);
+-  if (!await b.evaluate(client, `document.body.innerText.includes('Your optional change notes')`)) {
++  if (!await b.evaluate(client, `!!document.querySelector('input[aria-label="Find recorded changes"]')`)) {
+     await tap('Record a change (optional)');
+     await b.waitForText(client, 'Your optional change notes');
+   }
+diff --git a/scripts/e2e/practice-templates28.mjs b/scripts/e2e/practice-templates28.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..5005834ae6ec36e7db771386d682cbe16fc7f176
+--- /dev/null
++++ b/scripts/e2e/practice-templates28.mjs
+@@ -0,0 +1,122 @@
++// Local browser + real API/domain/encrypted repository. All identity, licence,
++// billing, retained keys and serial storage are explicitly synthetic ports.
++import assert from 'node:assert/strict';
++import { spawn, execFileSync } from 'node:child_process';
++import { createRequire } from 'node:module';
++import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath, pathToFileURL } from 'node:url';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const repo = fileURLToPath(new URL('../../', import.meta.url));
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const { createServer } = await import(pathToFileURL(require.resolve('vite')).href);
++const out = path.resolve(process.env.ONSKIN_TEMPLATE_EVIDENCE ?? path.join(repo, '../ENGINEERING28_EVIDENCE/templates-browser'));
++mkdirSync(out, { recursive: false });
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
++const port = await b.findAvailablePort(4336), debugPort = await b.findAvailablePort(9466), origin = `http://localhost:${port}`;
++const root = path.join(repo, 'apps/professional-web');
++const browserPath = process.env.BROWSER_PATH ?? 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
++assert(existsSync(browserPath));
++const receipt = { start: new Date().toISOString(), head: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8', windowsHide: true }).trim(),
++  surface: 'Actual local Edge; real source API/domain/encryption with synthetic trust/serial driver only', viewports: [], requests: [], blocked: [], interceptionErrors: [], pass: false };
++let server, browser, client, f, repository, context = 'synthetic-practice-session', loseNext = false, denied = false;
++const submitted = [], responses = [];
++async function wait(work) { for (let n = 0; n < 100; n++) { try { if (await work()) return; } catch {} await delay(100); } throw new Error('Local browser readiness timeout'); }
++async function capture(name) {
++  const state = await b.evaluate(client, `({text:document.querySelector('#practice-templates').innerText,focus:document.activeElement?.textContent,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),persisted:JSON.stringify([Object.entries(localStorage),Object.entries(sessionStorage)])})`);
++  assert.equal(state.overflow, 0); assert(!state.persisted.includes('Generic'), 'Template text must never persist in browser storage'); json(name + '.json', state);
++  const shot = await client.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++}
++const text = expected => b.waitForCondition(client, `document.querySelector('#practice-templates').innerText.includes(${JSON.stringify(expected)})`, 10000, expected);
++const click = label => b.clickByText(client, label);
++async function title(value) {
++  await b.evaluate(client, `(()=>{const n=document.querySelector('#practice-templates input');n.focus();n.value=${JSON.stringify(value)};n.dispatchEvent(new Event('input',{bubbles:true}));return document.activeElement===n})()`);
++  assert(await b.evaluate(client, `document.activeElement===document.querySelector('#practice-templates input')`), 'Typing must retain focus');
++}
++async function keyboard(label) {
++  const result = await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practice-templates button')].find(n=>n.textContent===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();const r=n.getBoundingClientRect();return {focused:document.activeElement===n,height:r.height,visible:r.y>=0&&r.bottom<=innerHeight}})()`);
++  assert(result.focused && result.height >= 44 && result.visible);
++  for (const type of ['keyDown', 'keyUp']) await client.send('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, ...(type === 'keyDown' ? { text: '\r' } : {}) });
++}
++try {
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true } }); await server.listen();
++  assert.equal((await fetch(origin + '/api/professional/templates', { method: 'POST' })).status, 503, 'Actual default API must refuse');
++  await server.close();
++  let handler;
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true }, plugins: [{ name: 'synthetic-template-browser-only', enforce: 'pre',
++    configureServer(s) { s.middlewares.use('/api/professional/templates', async (req, res) => {
++      try {
++        const chunks = []; for await (const chunk of req) chunks.push(chunk); const body = Buffer.concat(chunks);
++        const input = JSON.parse(body.toString()); submitted.push(input);
++        f.controls.loseCommitReply = loseNext && input.kind === 'change'; if (f.controls.loseCommitReply) loseNext = false;
++        const response = denied ? new Response('{"status":"unavailable"}', { status: 503, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }) :
++          await handler(new Request(origin + '/api/professional/templates', { method: req.method, headers: req.headers, body }));
++        f.controls.loseCommitReply = false;
++        const reply = await response.text(); responses.push({ status: response.status, reply });
++        res.writeHead(response.status, Object.fromEntries(response.headers)); res.end(reply);
++      } catch (error) { responses.push({ fixtureError: String(error) }); res.writeHead(503, { 'Cache-Control': 'no-store' }); res.end(); }
++    }); } }] });
++  const { custodyFixture } = await server.ssrLoadModule('/src/test/custodyFixture.ts'); f = await custodyFixture(); const now = f.controls.now;
++  const { EncryptedWorkspaceRepository, workspaceRecordKey: keys } = await server.ssrLoadModule('/src/encryptedWorkspaceRepository.ts');
++  const { emptyWorkspaceBilling, reconcileWorkspaceBilling } = await server.ssrLoadModule('/src/workspaceBilling.ts');
++  const billing = await reconcileWorkspaceBilling(emptyWorkspaceBilling('practice-a', 'customer-a', 'subscription-a'), { verifyAndRetrieve: async () => ({
++    workspaceId: 'practice-a', customerId: 'customer-a', subscriptionId: 'subscription-a', eventId: 'synthetic-event', eventAt: now, retrievedAt: now,
++    verifiedUntil: now + 100000, paidThrough: now + 100000, pastDueSince: null, status: 'active', tier: 'solo' }) }, new Uint8Array([1]), 'synthetic-only', now);
++  await f.custody.transaction(async tx => { await tx.write(keys.billing('practice-a'), billing); await tx.write(keys.templates('practice-a'), []); });
++  const forbidden = async () => { throw new Error('No client record authority in template fixture'); };
++  repository = new EncryptedWorkspaceRepository(f.custody, { authority: async () => ({ session: { subjectId: 'synthetic-staff', ownerId: null, workspaceId: 'practice-a',
++    epoch: 1, startedAt: now, lastActivityAt: now, stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
++    membership: { subjectId: 'synthetic-staff', workspaceId: 'practice-a', roles: ['assigned_practitioner'], revision: 1, active: true },
++    licence: { subjectId: 'synthetic-staff', jurisdiction: 'CA', verifiedAt: now, expiresAt: now + 100000 }, billing: 'unknown', assignment: null, grant: null, health: null }),
++    lifecycle: forbidden, planSource: forbidden, activationAvailable: forbidden });
++  const { createTemplateApi } = await server.ssrLoadModule('/src/templateApi.ts');
++  handler = createTemplateApi({ origin, repository, authenticate: async () => ({ token: 'synthetic-only', workspaceId: 'practice-a', context }) });
++  await server.listen();
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-template28-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  json('owned-processes.json', { browserPid: browser.pid, appPort: port, debugPort });
++  await wait(async () => (await fetch(`http://127.0.0.1:${debugPort}/json/version`)).ok);
++  client = await b.connectToPage(debugPort, origin);
++  await client.send('Page.enable'); await client.send('Runtime.enable'); await client.send('Network.enable');
++  await client.send('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
++  client.ws.addEventListener('message', event => { const m = JSON.parse(event.data); if (m.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = m.params; const url = new URL(request.url);
++    if (url.origin === origin) { receipt.requests.push({ method: request.method, path: url.pathname }); void client.send('Fetch.continueRequest', { requestId }).catch(error => receipt.interceptionErrors.push(String(error))); }
++    else { receipt.blocked.push(url.origin); void client.send('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' }).catch(error => receipt.interceptionErrors.push(String(error))); }
++  });
++  for (const [width, height] of [[375, 667], [430, 932]]) {
++    await client.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
++    await client.send('Page.navigate', { url: origin }); await text('Practice templates');
++    denied = true; await click('Load practice templates'); await text('Practice templates unavailable'); await capture(width + '-unavailable'); denied = false;
++    await click('Load practice templates'); await text('Saved practice templates');
++    await click('New practice template'); await title('Generic ' + width); await click('Add Cleanser to template am'); await click('Add Moisturizer to template pm');
++    await click('Review template revision'); await text('Review exact template revision'); await capture(width + '-review');
++    assert(await b.evaluate(client, `document.activeElement===document.querySelector('#practice-templates h2')`));
++    await b.evaluate(client, `globalThis.__oldTemplateConfirm=[...document.querySelectorAll('#practice-templates button')].find(n=>n.textContent==='Save exact template revision').onclick`);
++    await click('Return to template draft'); const beforeCancel = submitted.length; await b.evaluate(client, 'globalThis.__oldTemplateConfirm()'); assert.equal(submitted.length, beforeCancel);
++    await click('Review template revision'); loseNext = true; await keyboard('Save exact template revision'); await text('Template save outcome unknown');
++    const first = submitted.at(-1); await capture(width + '-unknown'); await keyboard('Retry identical template save'); await text('Saved practice templates');
++    assert.deepEqual(submitted.at(-1), first, 'Unknown outcome retry must be byte-identical');
++    await click('Revise Generic ' + width); await title('Generic revised ' + width); await click('Add Other product role to template pm');
++    await click('Review template revision'); await click('Save exact template revision'); await text('Generic revised ' + width + ' · revision 2');
++    const summary = `Generic ${width}: revision 1 (active)`;
++    await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practice-templates summary')].find(n=>n.textContent===${JSON.stringify(summary)});n.scrollIntoView({block:'center'});n.click()})()`);
++    await click(`Draft new template from Generic ${width} revision 1`); await text('Compose practice template'); await click('Cancel template draft');
++    await click('Retire Generic revised ' + width); await text('Review template retirement'); await click('Keep template active');
++    await click('Retire Generic revised ' + width); await keyboard('Confirm exact template retirement'); await text('Generic revised ' + width + ' · revision 3 · retired');
++    await capture(width + '-retired'); await client.send('Page.reload'); await text('Practice templates'); await click('Load practice templates'); await text('Generic revised ' + width + ' · revision 3 · retired');
++    await click('New practice template'); await title('Generic abandoned'); await click('Add Cleanser to template am'); await click('Review template revision');
++    context += '-next'; const before = submitted.length; await keyboard('Save exact template revision'); await text('Template source changed'); assert.equal(submitted.length, before + 1);
++    await capture(width + '-changed'); await click('Clear template screen'); await text('Practice templates');
++    receipt.viewports.push({ width, height, pass: true });
++  }
++  const { practiceTemplates } = await server.ssrLoadModule('/src/templateService.ts');
++  const retained = await practiceTemplates(repository, 'synthetic', 'practice-a'); assert.equal(retained.length, 6);
++  assert(!JSON.stringify([...f.records()]).includes('Generic'), 'Custody must retain ciphertext only');
++  json('retained-template-revisions.json', retained); json('submitted-commands.json', submitted);
++  receipt.pass = true;
++} catch (error) { json('FAILURE-TRACE.json', { message: String(error), stack: error.stack }); if (client) await capture('failure-state').catch(() => {}); process.exitCode = 1;
++} finally { json('responses.json', responses); json('submitted-commands.json', submitted); client?.close(); await b.stopProcessBestEffort(browser); await server?.close(); receipt.end = new Date().toISOString(); receipt.ownedBrowserAndServerStopped = true; json('summary.json', receipt); }
++console.log(JSON.stringify(receipt));

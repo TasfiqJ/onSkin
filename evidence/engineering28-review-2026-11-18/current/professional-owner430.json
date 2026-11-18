@@ -1,0 +1,26 @@
+{
+  "command": [
+    "node",
+    "scripts/e2e/professional-owner.mjs",
+    "430",
+    "932"
+  ],
+  "cwd": "[LOCAL_USER_HOME]\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-18T17:53:33.618231+00:00",
+  "before": {
+    "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+    "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "end": "2026-11-18T17:54:12.668118+00:00",
+  "after": {
+    "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
+    "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "exit": 0,
+  "logSha256": "9585eb04e882ba930f1ba022ff192bd4faec8f86f58b89686289dbe2b9f287fd",
+  "logBytes": 32
+}

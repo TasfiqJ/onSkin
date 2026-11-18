@@ -1,0 +1,18 @@
+{
+  "path": "/today",
+  "text": "WEDNESDAY, NOVEMBER 18\nGood morning.\n1 step left in your morning routine.\nShelf projection · no actual routine applied. Review and apply to record version-bound use.\nMorning routine\n0 of 1\nSynthetic21 routine cleanser\nStart with a clean base.\nNEXT\nYour optional change notes\nFactual notes you choose to record, separate from check-offs. These are your reports, not a diagnosis or an app observation.\n2026-10-01 · Other personal note\nEarlier observation\nOwner reported · Entry 1 · Recorded 2026-11-18T17:52:39.578Z\n  Synthetic21: I used my usual cleanser.\nOriginal wording retained.  \nEvent bcd26f6b-196d-4d01-81ee-b0a0e6974097\n2026-11-18 · Other personal note\nCurrent observation\nOwner reported · Entry 2 · Recorded 2026-11-18T17:52:46.460Z\nSynthetic21 later factual note reviewed separately.\nEvent 869b38f7-ef5a-432f-9c68-b6ae1511b3b6\n2026-10-01 · Other personal note\nCurrent observation\nCorrection of entry 1 · Entry 3 · Recorded 2026-11-18T17:52:51.100Z\nSynthetic21 correction: I used less cleanser that day.\nEvent d1890dc9-2212-4111-a3c3-e5c42e733626\nRetract entry 3\nPrevious entries stay recorded. Only confirmation appends history. Save a draft explicitly to keep incomplete text after reload.\nSaved draft revision 1. Fresh review and confirmation are required.\nOriginal target event: d1890dc9-2212-4111-a3c3-e5c42e733626. Original text: Synthetic21 correction: I used less cleanser that day.\nSave change draft on this device\nObserved local date (YYYY-MM-DD)\nThe original observed date is retained. This new event has its own recorded time.\nRetraction reason\nUp to 2,000 characters / 6,000 UTF-8 bytes. Record only what you noticed.\nSaved draft resumed. Review the original text and current history, then explicitly confirm. Nothing was submitted.\nReview this change\nCancel draft\nRefresh changes\nLocal to this device; notes are not sent with check-offs. Clearing local data removes this history. Uninstalling or losing the encryption key may lose it. Local exports may include it; exported copies cannot be revoked and cannot be imported here.\nSPF\nNo SPF this morning\nSee why\nNot now\nToday\nProgress\nShelf\nYou",
+  "width": 390,
+  "height": 844,
+  "overflow": 0,
+  "inputs": [
+    {
+      "label": "Observed local date",
+      "value": "2026-10-01"
+    },
+    {
+      "label": "Retraction reason",
+      "value": "Synthetic21 retraction reason: I no longer stand by that correction."
+    }
+  ],
+  "choices": []
+}

@@ -1,0 +1,71 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/lib/storage/privateKVCreation28.test.ts
+
+
+ RUN  v4.1.12 [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+ ❯ src/lib/storage/privateKVCreation28.test.ts (3 tests | 3 failed) 303ms
+   × preserves original authority before first-key mutation for ordinary writes 185ms
+   × preserves original authority before first-key mutation for sources writes 56ms
+   × retains an already-dispatched key when authority retires before native acknowledgement 62ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/storage/privateKVCreation28.test.ts > preserves original authority before first-key mutation for ordinary writes
+ FAIL  src/lib/storage/privateKVCreation28.test.ts > preserves original authority before first-key mutation for sources writes
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "secureSet:layerwell.private_kv.content_key.v1",
++   "remove:layerwell.private_kv.content_key.v1",
++ ]
+
+ ❯ src/lib/storage/privateKVCreation28.test.ts:48:29
+     46|     epoch.clearActiveHealthProcessingEpoch(); ports.release();
+     47|     expect(await pending).toBeInstanceOf(Error);
+     48|     expect(ports.mutations).toEqual([]);
+       |                             ^
+     49|     expect(ports.secure.has(KEY)).toBe(false); expect(ports.bytes.has(…
+     50|     epoch.setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/lib/storage/privateKVCreation28.test.ts > retains an already-dispatched key when authority retires before native acknowledgement
+AssertionError: expected [ …(2) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+    "secureSet:layerwell.private_kv.content_key.v1",
++   "remove:layerwell.private_kv.content_key.v1",
+  ]
+
+ ❯ src/lib/storage/privateKVCreation28.test.ts:61:27
+     59|   expect(await pending).toBeInstanceOf(Error);
+     60|   expect(ports.secure.get(KEY)).toBe(retained);
+     61|   expect(ports.mutations).toEqual(['secureSet:' + KEY]);
+       |                           ^
+     62|   expect(ports.bytes.has(DATA)).toBe(false);
+     63| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  12:31:51
+   Duration  557ms (transform 130ms, setup 0ms, import 56ms, tests 303ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location [LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/lib/storage/privateKVCreation28.test.ts

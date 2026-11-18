@@ -1,0 +1,1853 @@
+{
+  "sourceHead": "1962b44aec384545638f4aaede36ac64ef31aebe",
+  "sourceTree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
+  "release": "NO_GO",
+  "requiredCount": 38,
+  "gateCount": 18,
+  "acceptanceGranted": false,
+  "assessmentMethod": "Engineering28 exact-source local regression plus bounded source inspection; inherited E27R evidence remains historical at its immutable link. No native/security/provider/scientific acceptance.",
+  "rows": [
+    {
+      "id": "F01",
+      "name": "Brand and legal identity",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Brand/configuration and policy-link refusal guards exist.",
+      "missingFunctionality": "Cleared public identity, seller, territories, final assets and authenticated public destinations.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Brand/configuration regression; frozen source refs. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Install only independently approved identity/assets/destinations and test refusal for incomplete configuration.",
+      "externalQualificationDependencies": "Founder, counsel, trademark/content rights and domain/account owners.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/brand-decision-memo.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "c8ac8b31675e61341696cffd6194228f01f93e22",
+          "mode": "100644",
+          "sha256": "4232d7b51cf51a1a08774155cea30adb1b9a6f46fa7a52b8f4e2a8fe61648245"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "name": "Accounts, age, privacy and consent",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Owner/account-generation, age, health lifecycle and original-lease gates precede private reads/writes; all three durable draft families join export and withdrawal. E25 key reads are non-mutating. E28 first-key creation retains original authority through probes and preserves dispatched/uncertain keys and discovered successors.",
+      "missingFunctionality": "Genuine complete account/link/recovery/backend authority and production cross-device rights lifecycle.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 490 focused privacy tests; root regression; synthetic onboarding/browser. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Finish genuine auth integration and durable tombstone/restore contracts after authorized custody; preserve denial before payload reads.",
+      "externalQualificationDependencies": "Auth/DB/security custodians, native SecureStore and device qualification.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/onboarding/ageGate.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "c7903e47c72d7a6a8d79d654c55e53aed46d2688",
+          "mode": "100644",
+          "sha256": "c2005abf68f2bbb5c024bed45ee44bb6ba46cab4104d86394428a0a81be24606"
+        },
+        {
+          "path": "apps/mobile/src/features/onboarding/ageGate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "bbede8f6f6c7e90ef66d9f028f9123185e0c0a5c",
+          "mode": "100644",
+          "sha256": "fb1792495e5f03ed487cb30ceae4f3f43c3f7c861978b1866be4febf8e099b58"
+        },
+        {
+          "path": "apps/mobile/src/features/onboarding/ageGateStore.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "054eda80293a3ef1e24c02559fbc7ee54736efb8",
+          "mode": "100644",
+          "sha256": "c7df79cf96922a0c645ae1059d652faed3283c58f330788e51a906df0c166d2e"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountGeneration.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "00afcec330c4875909a69f02cac6ca055a318bc2",
+          "mode": "100644",
+          "sha256": "aa0a702874069f12a968f4e7edbaa1a35ad5ac3487ffea25ac451d69c7553217"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwner.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "00deb51abdd0f77e3154a4bcad35a044c9cc35d2",
+          "mode": "100644",
+          "sha256": "a885092e3b6021e13d475db804e908e6c4a6947bfc7e7a56f43128875e96283d"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwner.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "e04e8f6302b343c14da71cd8c4975820a5536bee",
+          "mode": "100644",
+          "sha256": "19a80b00e69e3826da7f5bc7856cc166693d405af48aae43df1711b58ab5d20b"
+        },
+        {
+          "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "5285bb32987582d330d46cc07aa4a0e488b8347a",
+          "mode": "100644",
+          "sha256": "f46c362e5be316aec7477354006d1d8f0ca8c0ed6313a32a42d5436eb5e5d3e4"
+        },
+        {
+          "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "8a2b5a8bb65a6182db0d8dae928fd7abc11c0ea9",
+          "mode": "100644",
+          "sha256": "8896b82049d3fd11c6311f43674b7a0aad463ccf146624d40b7d9b4a2aaff3ee"
+        },
+        {
+          "path": "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "41e0281da9b2335eb4d9a72d8afc32a86e6228e2",
+          "mode": "100644",
+          "sha256": "d6f6d14e558078ce4d07ef72c166a3c8b43b3b79b1f1e5bb0764dad9530eb1dd"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "name": "Full Shelf intake",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Shelf manual intake and bottle transcription have explicitly saved encrypted drafts, list/resume/discard/review/confirm and restart recovery; no automatic observation success.",
+      "missingFunctionality": "Admitted OCR/catalog input and qualified physical camera intake.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: bottleDrafts/manualIntakeDrafts tests; current manual browser; E20 bottle browser. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Connect approved catalog/OCR adapters; improve bounded unavailable/conflict recovery without inferring unknown payloads.",
+      "externalQualificationDependencies": "Catalog rights, native OCR/camera and device owners.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "883f6d061f171ebc971cc67e39aff566fc15c428",
+          "mode": "100644",
+          "sha256": "15dda0a67779599f7b29f2ab73d24b45cd7ccb50c44172a18a4ad63120f5fff6"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/intakeSession.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "6a236737d217aa41da2da1bcf4b09bfa5b590b56",
+          "mode": "100644",
+          "sha256": "51e3eb2a4384da1f128b530867bfc23b13a85f24e69de3ab223eb8356368609c"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "5b97e47e582d70e84d45ebcc0dca2f4ca65ff5af",
+          "mode": "100644",
+          "sha256": "4c85382cb07493350ec3c8f9556e8ce11adf26675e03e2173c9f712b9cf648f0"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/store.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "dcd328078036f7ed68fef0935edabe8f9bb9da0f",
+          "mode": "100644",
+          "sha256": "ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/store.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "5fdcef634976a752843930898aee462e64bbe1fb",
+          "mode": "100644",
+          "sha256": "0ad436f703af60d7da0afbfa12cf23d7c722e37650ac03f9360316098bb33e5a"
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "name": "Rights-reviewed catalog",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Catalog import/report/operator quality/refusal foundations remain.",
+      "missingFunctionality": "Rights-reviewed serving membership, approved installed content and genuine reviewer/correction operations.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Catalog operator 24 tests; frozen source refs. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete serving/correction interfaces and operator lifecycle once actual source and reviewer authority are supplied.",
+      "externalQualificationDependencies": "Catalog rights reviewers, DB/security and operating staff.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/catalog/analytics.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "5ad4d5ef0d3f7c119d321639d3830203c85f6165",
+          "mode": "100644",
+          "sha256": "aebe009cf40c8c8c07e88395c0395a90449d79bb24d514a187b06fee7b6bfacc"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/client.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "2cab74dae31cdf49ed69787f5615de52a52859ab",
+          "mode": "100644",
+          "sha256": "42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/client.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "92d35455de03a871471d3af508f39ca9bdfbb5d4",
+          "mode": "100644",
+          "sha256": "85b771f782010e99cd4061ed331557de73e68a16fb838d92f720f58d042f693e"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/ingredientParser.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ed264102bf0587c6fa9b5f6b3c6d8be8a1a5e811",
+          "mode": "100644",
+          "sha256": "a38abeedcf0b3a02e36b32ff6d3fa699d27c19dd5ffc2d3286f05e3278ec2afc"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/normalization.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "871c228b06743e346aae5fbb7fa1f30fd318e01d",
+          "mode": "100644",
+          "sha256": "1f31a87618439a232cb1d96c17ac460a5b0d7fe7a6588f6ba61283f79ff875c8"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/obf.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "9b21845146ab193f841229c7415a5a70fc6489a8",
+          "mode": "100644",
+          "sha256": "c2213d6ebbda2d3531207576a2452e66f1c0d4a719fd5b1a2f367cb6539c3ea4"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/ocrRenderDiagnostics.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "57b00932f50d976a1abd11a68daf2625ea65bff8",
+          "mode": "100644",
+          "sha256": "d2ae6887317284f49809f2d7bfcabb39edad07a5dd68023d35d0cd379f85b590"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/ocrReview.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "a80b5869ed756a19c31c193e336a08597ac7d743",
+          "mode": "100644",
+          "sha256": "6cbec28973d2dafe17b71d319d5cf0f9fb637c7925d6318e7e0f05c179531102"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/quality.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "e067677e820242136c5c225fe6aa75c541e8335e",
+          "mode": "100644",
+          "sha256": "b5187f33001f741cdb8636ad61343f072502b60ffe2fba70b5e831fce570e599"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/recoveryReport.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "6e1b8b66ec5f809ed2de4daf7d18f2e0e1b4a3a7",
+          "mode": "100644",
+          "sha256": "b7e4593f9b49f40152266ff5f1ef68d45fc3d651fbaba7bc50bc10858c1a8e94"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/reportOperation.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ef941fb01a24e201fdf2bd522c6b2bde4667ca2a",
+          "mode": "100644",
+          "sha256": "f306511b72663dfa01c24897a58ccdc6bdaba2081a28a64222e16e9f851c5752"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/reportPresentation.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "a86c9323e30144450127517a319ee74e287f30ac",
+          "mode": "100644",
+          "sha256": "226c050f99dae3e465fbf49da3c6618549bab261dccecb64773a8b3efaaaf4ab"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/searchQuery.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "78d78e56cd018a839fb12549b5da5db230f0720b",
+          "mode": "100644",
+          "sha256": "2aeec78ae03dcd2ddd01bc0f5e462d72c50214ffda24aa0652fcad4b9476c446"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/searchRenderDiagnostics.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "df2d06a9dd2262af9216745f49602ec638c28611",
+          "mode": "100644",
+          "sha256": "6b596f431cc3e96299944681b131d7abaeacea4d0c708113841226a114284684"
+        },
+        {
+          "path": "apps/mobile/src/features/catalog/searchRequestCoordinator.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "792a5a3558c132a0c37e2525b268d2da3bd939e2",
+          "mode": "100644",
+          "sha256": "337ee756d8c8afcc855466255a0b8141ca46f67ea8e56cb139c2ec83b23f12aa"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "name": "Reviewed conflict guidance",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Conflict-checking/refusal foundations and reviewed-source boundaries exist.",
+      "missingFunctionality": "Admitted current clinical/cosmetic corpus, claims, jurisdiction and review lifecycle.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root conflict/refusal regressions; no clinical validation. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Wire approved versioned corpus and conservative coverage/refusal UX; no fabricated advice.",
+      "externalQualificationDependencies": "Clinical/cosmetic/regulatory reviewers and content rights.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "396dbf0b3c7efb98b216b4317db9816b1ee98e59",
+          "mode": "100644",
+          "sha256": "9be6e596ecd9c3d79cc14d830622b14f330866ed2d861319cc8b1fc7bf979344"
+        },
+        {
+          "path": "apps/mobile/src/features/intelligence/engine.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "11c1bb977702cbbd7d0c13185e08a48628c9bf4c",
+          "mode": "100644",
+          "sha256": "df95f6fd83e2aba09ceb10e237c2efeb0789fffc75a13fc0a34eeee618740b07"
+        },
+        {
+          "path": "apps/mobile/src/features/intelligence/engine.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "df6142d2ffd6e4dc3e2db8380b4fc5b4a4258d93",
+          "mode": "100644",
+          "sha256": "1f4d44d4e723e8c6f7eff6f673048b639f053078b377611ffafebc1671e7ec3c"
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "name": "Version-aware routine builder",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Actual routine records and immutable intended plan/version records remain separate; a response does not mean actual use. E28 role templates are independently versioned; no owner application bridge is fabricated.",
+      "missingFunctionality": "Complete intended-to-actual application bridge, immutable professional templates and unshelved-item resolution.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Routine/plan regression; professional browser uses synthetic intended records. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Implement explicit exact-version review/application and template UX against approved authority interfaces.",
+      "externalQualificationDependencies": "Professional/DB custody and qualified clinical plan content.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/routine/firstValueSources.campaign25.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "858520af37134278bf82d732744954c801ad79dc",
+          "mode": "100644",
+          "sha256": "52b53600b57a481b418acff8d017f51bf6ff373dd4840dc09efbf53b747f78fd"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/generate.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "e55e34c635c104ff47388a297acce3df37849902",
+          "mode": "100644",
+          "sha256": "e7f02f596be2b7101c840cb5e85025360f6e478df84280065612d26c80427789"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/generate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "b2569993ddfb40491430038e4c54d2f38b94ad35",
+          "mode": "100644",
+          "sha256": "c1df5f975d91d7eb94e8bb7fc8a0e48eb570de41ada27fc4254e8aed1ea3b557"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderStore.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "1bc7117a9a4f2abb9f71c9cf2df5ad696487eedf",
+          "mode": "100644",
+          "sha256": "bf9de584a71261637865333b6fb6fee3b8953bbd98f64d8711ffbc11a8906189"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderStore.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3c856051f03ee1dcbb2dc3e9276298885f2a34b6",
+          "mode": "100644",
+          "sha256": "3b08983c188287434cda96444cfed91d23c3d653952aec2cbf1a2ab92f0d656d"
+        }
+      ]
+    },
+    {
+      "id": "F07",
+      "name": "Today and adherence",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Today records actual use separately from optional self-report history. Durable optional drafts require explicit fresh review; latest collapsed panel directly opens Saved change drafts. E28 real navigation integration retires both collapsed entry callbacks across blur/refocus and owner replacement, retaining explicit same-lease source recovery.",
+      "missingFunctionality": "Hosted synchronization/delete-wins restore and full native/accessibility qualification.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 48 mounted panel cases; current optional browser; root history tests. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Finish approved sync/tombstone protocol; validate direct saved-draft entry across real navigation and accessibility modes.",
+      "externalQualificationDependencies": "DB custody and native/device accessibility QA.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/today/NextVisitCard.tsx",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "fc9e132e4ed15ce0d696620e285b5306c7fefa21",
+          "mode": "100644",
+          "sha256": "95ec6a73d86b6f61ef4cd86151051987f885e9ad50f90390f599859311f5d124"
+        },
+        {
+          "path": "apps/mobile/src/features/today/completionSync.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "cd03f0ed79f07d0591c7986030322bc6cd3788a8",
+          "mode": "100644",
+          "sha256": "93cf60067147f5ce16b3f19aeae826ebda1a53e043f6a4c5cad1f124f73acd5c"
+        },
+        {
+          "path": "apps/mobile/src/features/today/completionsStore.t1.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "dd1eb227879f0a5a90bd26214a14d015f892ef82",
+          "mode": "100644",
+          "sha256": "790829b58c6b668515ba1b304048dc24a80316195a9a4127bedf8ca461aa7bb6"
+        },
+        {
+          "path": "apps/mobile/src/features/today/completionsStore.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "d95edab1209e02bf3800a162a0ad879409ce9696",
+          "mode": "100644",
+          "sha256": "26f5616f33bb413563e9e25ba9957cae0178ffc803dc8ec6dfeb268ee56e166d"
+        },
+        {
+          "path": "apps/mobile/src/features/today/cycleCompletion.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "6d9acd722300f4b1294f5830efafbea958c38153",
+          "mode": "100644",
+          "sha256": "437d3282afaac2a6c106fc3e056b410dab2fb6d34c3363bc99de829e615b3462"
+        },
+        {
+          "path": "apps/mobile/src/features/today/localCompletionAccess.t1.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "56133aa62bd96cf2bed22645f89939536de234a5",
+          "mode": "100644",
+          "sha256": "a6d8b37f6348421484d74f03de8557ef694c04627448ef2783419a2a42f1c82b"
+        },
+        {
+          "path": "apps/mobile/src/features/today/routineClock.cont01.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "000d34ec89f8cf45cd64a624c074074fc343322d",
+          "mode": "100644",
+          "sha256": "97bd4d6190a2063af18808d47749a032ce4034ffe98abba203153d712303b929"
+        },
+        {
+          "path": "apps/mobile/src/features/today/routineProjection.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3e24b864141a83abec564d9cdc63185ede935879",
+          "mode": "100644",
+          "sha256": "c89b88c5a960fc77fec7508528b5d0f10699600a17bc917a7b4371f0d1f761ed"
+        },
+        {
+          "path": "apps/mobile/src/features/today/todayPersistence.t1.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "fb8f07f53d1ad513401ccd8f4e2dec3bd1f73daa",
+          "mode": "100644",
+          "sha256": "929fc2313d3b31a1a3f0cd1fe0748aed999b6dc7d99a3fe4d286d809f82e494a"
+        },
+        {
+          "path": "apps/mobile/src/features/today/todayRoute.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "1a859e6afe56897616e63850ecf8f808e7676054",
+          "mode": "100644",
+          "sha256": "8ec5a3e651f1f16a473e600d0989c6245fd503c9c2b8f3430ea4f400d1179a5c"
+        },
+        {
+          "path": "apps/mobile/src/features/today/useRoutineClock.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "39989f8ba77ab39b0efe139e82cf2dcc34617f14",
+          "mode": "100644",
+          "sha256": "e12e98334b3a77c91b285d398a4b7db7063648da4637716eb4dbbf33d7d90e7f"
+        },
+        {
+          "path": "apps/mobile/src/features/today/useToday.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "d2ffe4b068e6ed6bac2e9046a3a7c4e76d1243c9",
+          "mode": "100644",
+          "sha256": "66a6927259a6380ff62875007d5730fff619c027d3951be420859b4c8b3bc46a"
+        }
+      ]
+    },
+    {
+      "id": "F08",
+      "name": "Cycle, ramp and recovery",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Cycle/ramp/recovery source rules, explicit observations and conservative refusal remain.",
+      "missingFunctionality": "Admitted reviewed cadence, safety content and exact-build physical behavior.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: cycleReadiness/planRecovery regression; E27R mock adapters preserve original assertions. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete approved recovery presentation and connect reviewed rules without asserting causality from self-report.",
+      "externalQualificationDependencies": "Clinical review, native reminders and supported devices.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/scheduler/cyclePersistence.regression.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "89fbcaebd9534fa7f6c709c8023c3630133a0022",
+          "mode": "100644",
+          "sha256": "ecbe387aebed1633aad347f8e24fc9f9aa5f1118a22b175d8c0864c04b917ede"
+        },
+        {
+          "path": "apps/mobile/src/features/scheduler/orchestrate.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3e5b424acef6acd53822573956d6c7d9eb6839b5",
+          "mode": "100644",
+          "sha256": "adf9461b4f76f0e4662c26784805ee7d7a8bda7b77bd1ea3a0314f994c3484d3"
+        },
+        {
+          "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "dee221d126261ae2242d5c346c7b4914e9794c74",
+          "mode": "100644",
+          "sha256": "270438bd3b141bfec25009e1045931768ff5f2742bace5eda7b049ea8c3e7b98"
+        }
+      ]
+    },
+    {
+      "id": "F09",
+      "name": "Private photo diary and comparison",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Encrypted photo diary/history/manual comparison, purpose-bound delete journals and exact ciphertext provenance exist. Source-missing recovery requires retained pre-move proof; uncertain orphan data is preserved.",
+      "missingFunctionality": "Qualified native capture/key/filesystem/EXIF/deletion lifecycle, complete authenticated remote cleanup and product recovery for uncertain data.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: photoDeleteR3/encryptedStorage focused tests; current native NOT_RUN. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Design explicit safe recovery for refused/orphaned ciphertext and source-bound remote deletion; preserve no-guess rules.",
+      "externalQualificationDependencies": "Physical camera/filesystem, security/DB and privacy review.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/photos/encryptedStorage.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "7e7f4c46185394e19f29130fec3a9437f955e268",
+          "mode": "100644",
+          "sha256": "dc56de1aeb07bf54bf7e33da018b79007dd81dbc3076ce82ba1687d16ab340d2"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "55aafc5dec99fe89dd092e961b389076ef05d555",
+          "mode": "100644",
+          "sha256": "4a5de9b5dd3d49c90b36e1c2d732a7bbbe1d686bec8b9a7d9c8fa09fbdf2a399"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/manualCompare20.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "e2c835dd132d88530525fe616e37ad40353edb4f",
+          "mode": "100644",
+          "sha256": "320219b73da8f13d1b455cf020dce4796099102057fb826df80f612f8b4c174f"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/manualCompare20.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "de15b4c65df9c9367c7b9863806a3efa4f83fad9",
+          "mode": "100644",
+          "sha256": "9280aa154bec1ae5f177cbb2492195b6d5137d51a9c0d69b35c6227f7d7531e5"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/manualCompare20Route.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "0d1092a65ef32e7bafd68800c94724e8deff06a3",
+          "mode": "100644",
+          "sha256": "1ca1a29f447cd8918c86d2461383f7a599b46d3873840e5cc05c9e6dc7dd08dc"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/offlineDiary.retained03.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "a22997a598069364f0203a8423440b2ae9c1ae15",
+          "mode": "100644",
+          "sha256": "59b44a4879abe8aade145e2e9d77bc465312169f3e6dfed7e989b6ba748d9a21"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/photoDeleteJournal.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "0c8268b3a2ddfd2f4a2f07d3e505a5662a2ddd0b",
+          "mode": "100644",
+          "sha256": "2f90cd20448c69a78ec8ad499694219eb21646c155dbc80b3d6fa164e981927c"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "794a22b3505968a6edc55c58abbb6d1e86f945e7",
+          "mode": "100644",
+          "sha256": "7be08c43980eb9048d52837dea69db6bf25b87b3f72cd3830b14513558d8299c"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/photoNoteSaveCoordinator.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ff41f53ef395da1a840bb8d604ac8b42b12ccb58",
+          "mode": "100644",
+          "sha256": "eb105502bae9f9896ff6acebc95438ed1250182f56b7202992d3ac68d173ff6a"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/photoNoteSaveCoordinator.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "a75e1bedecf3bd3923ef62035b9e1967c2bef8bd",
+          "mode": "100644",
+          "sha256": "8ad4dad859ce254425a7b5f2b0a356d92282655a9e5eaf085e70f78fa268f31b"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/timeline.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "9ad83194338c517c7caeac5537b3beae5becf471",
+          "mode": "100644",
+          "sha256": "7a4e3f023ac256698337a341c9f441a9b861cb69ed0b671943765cade278813e"
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "name": "Local OS reminders",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Local reminder scheduling/cancellation and privacy/account boundary coordination exist.",
+      "missingFunctionality": "Signed-device delivery, permission/background/timezone/DST and failure recovery qualification.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root reminder tests; native source ledger only, no current OS delivery. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Close device-discovered scheduling/cancellation defects only after authentic traces.",
+      "externalQualificationDependencies": "Apple/native devices and notification qualification.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/notifications/deliver.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ab487b73f270729beb632d53ab700a022aeb64c9",
+          "mode": "100644",
+          "sha256": "224bbc32a955142be3281f1a4954444d251cb93c18121673e881583d1c71dff4"
+        },
+        {
+          "path": "apps/mobile/src/features/notifications/deliver.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "950cd4b5f304b98753871383c017758d727e0a1f",
+          "mode": "100644",
+          "sha256": "0e7f99473b7d34aae69ea28201346fe9df115ddd22b001389e50b423f38dd10b"
+        },
+        {
+          "path": "apps/mobile/src/features/notifications/reminderRecovery16.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "800d805d1ebce043ad6b6b114235f2190a8328e7",
+          "mode": "100644",
+          "sha256": "24e39359175342797187b8f48e43f8341956ac57dbbcf23fc43d462f2fea71df"
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "name": "Standard subscriptions",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Verified subscription/entitlement boundary and conservative unavailable states exist.",
+      "missingFunctionality": "Genuine supported StoreKit/provider purchase, restore, refund/revocation and commercial operations.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root entitlement/refusal tests; payment NOT_RUN. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete authorized native/provider adapters and exact receipt lifecycle; no local paid flags as authority.",
+      "externalQualificationDependencies": "Apple/merchant/provider owners and sandbox qualification.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/subscription/entitlement.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "904ffa885de5ca15fb98a2b7588ee3956710b83c",
+          "mode": "100644",
+          "sha256": "423cdfc7a87406d3a702ec0ed87117f86863a96952e55655a9beb1b6221eb096"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/entitlement.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "4488c10499d1ac3a61645cbfce1282cd6b6651b3",
+          "mode": "100644",
+          "sha256": "88227479773070400a30c0331063f77e23d094da5bd230486abd104bbe69e0b7"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/entitlementActionGuard.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "cca437f34356a515bd6b3d9c8bae69e8fc7ebe9d",
+          "mode": "100644",
+          "sha256": "acbc69376a114822abba37a179ceb38dd04b6e4ff46c7900816fb826536b885a"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/entitlementEvidence.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "30413acca00bc46d7deed663322f60c85414d0a2",
+          "mode": "100644",
+          "sha256": "b9147f3a69b8881347facf3cf09308bd407efc666affcda573d6db248a928254"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/entitlementOrdering.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f2bebcf3c41e24a6d08c3b688480c873fd22793e",
+          "mode": "100644",
+          "sha256": "dc85433ac23f3ebf56f33c8638f4044d87f6ec3aed3c6ec277617bcd1cab6dc5"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/entitlementPublication.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "42879890389e41bf31c18187d3ae62e10bc65a39",
+          "mode": "100644",
+          "sha256": "4878f89d6fae45c3b40c304ad27bfacd8d8bfe2d1aa7db80eefcaa9d62e6bdc0"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/entitlementPurchaseAttribution.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "15883f71762bbc8904a5af1529ffb8f991e444fc",
+          "mode": "100644",
+          "sha256": "f385ab1c5e6c9b186a3e2aa66480c34f846c5b1b825477d8f7105b47aefccbd3"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/store.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "031edc92d8223d2de391ad6db38394ca4a6ad09a",
+          "mode": "100644",
+          "sha256": "8580cc583612e60e0895a2eaa56b83e997d4f230ea147df8da75c07ae590ffa3"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3644e8c61047dcb835e91a41ee287e5bdc7d8482",
+          "mode": "100644",
+          "sha256": "2bbc37fbd900cc560adcb57630b0570e2999b560a335aadb05710829806d4132"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/storefrontCopy.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "7bc77e11b8d3f431c5fb791871d5eddd10e5f083",
+          "mode": "100644",
+          "sha256": "44cc9d3ff4089821e69412f3150c855c0dd7a70e5b91af116df9773a192c263d"
+        }
+      ]
+    },
+    {
+      "id": "F12",
+      "name": "Compliant introductory offer",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Approved Apple-managed offer strategy and current-subscriber terms are retained; unsafe custom reverse grant remains unavailable.",
+      "missingFunctionality": "Actual eligible offer configuration, classification, purchase/restore and pre-charge lifecycle.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Frozen contract/offer refusal regression; no offer qualification. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Implement only approved offer/eligibility interfaces after commercial decision.",
+      "externalQualificationDependencies": "Apple, merchant/provider and counsel.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/subscription/clientPolicy.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ad60a6a633fbb5ccbc1369a5d6e769831d4ff55c",
+          "mode": "100644",
+          "sha256": "d7395ad5ea1d95f26758f681b4315807c0e8f8840ecb0222a50f4f8c824a7ece"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/store.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "031edc92d8223d2de391ad6db38394ca4a6ad09a",
+          "mode": "100644",
+          "sha256": "8580cc583612e60e0895a2eaa56b83e997d4f230ea147df8da75c07ae590ffa3"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3644e8c61047dcb835e91a41ee287e5bdc7d8482",
+          "mode": "100644",
+          "sha256": "2bbc37fbd900cc560adcb57630b0570e2999b560a335aadb05710829806d4132"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/storefrontCopy.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "7bc77e11b8d3f431c5fb791871d5eddd10e5f083",
+          "mode": "100644",
+          "sha256": "44cc9d3ff4089821e69412f3150c855c0dd7a70e5b91af116df9773a192c263d"
+        }
+      ]
+    },
+    {
+      "id": "F13",
+      "name": "Reviewed recommendations",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Recommendation/refusal foundations preserve source boundaries.",
+      "missingFunctionality": "Rights-reviewed recommendations, eligible corpus and operational updates.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root recommendation/refusal regression, no recommendation acceptance. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Connect approved versioned recommendations with explanation and bounded refusal.",
+      "externalQualificationDependencies": "Clinical/content reviewers and rights/operations.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/recommendations/admission.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "24ad54c48dbb8519ae5030e63a2b87294eb715e7",
+          "mode": "100644",
+          "sha256": "41f457e23372c20b95d5bfe723a4077bebfefbf833aaa4cf786e73505a51cf70"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/admission.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ac701e00882d39b33ccba3d6b5a1d3e7a037707e",
+          "mode": "100644",
+          "sha256": "699de9485fa5fed2335fb4b91dbd9f263ae7cd081048c30bb6b4d6fc17bb7934"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/engine.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "b66f6b7c4ecda136ce373c7d72c9379d462e8e9a",
+          "mode": "100644",
+          "sha256": "df0fe0eb470f47ae40d09cbc427de0c1c80081c2b22ca9be7e216dbc881cfb31"
+        }
+      ]
+    },
+    {
+      "id": "F14",
+      "name": "Provider-real safe Ask",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Ask safety/unavailable boundaries exist.",
+      "missingFunctionality": "Provider-real authenticated safe service, reviewed answers, privacy/retention and operator response lifecycle.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root unavailable/safety tests; no paid/API calls. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Build approved backend/provider interfaces and negative lifecycle once authorized; maintain unavailable default.",
+      "externalQualificationDependencies": "Provider, security/clinical/legal and staffed operations.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/ask/gate.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "cc49047960345fda59b4cefe2b7a333e40699bde",
+          "mode": "100644",
+          "sha256": "a914d0973c7b3ebda2f503dee6a59611e6895e1910137496659ed4ec431d1e45"
+        },
+        {
+          "path": "apps/mobile/src/features/ask/gate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "0ae8f0074be2f56e71f24c931e081315d16d4862",
+          "mode": "100644",
+          "sha256": "c79dec034a0aa9190591844b00b0c05aab11f1ca9df67bbf4658310dea126453"
+        },
+        {
+          "path": "apps/mobile/src/features/ask/readiness.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "476b11dd7e597584ebf770f3337007ffe4067df8",
+          "mode": "100644",
+          "sha256": "ecf27217f093e9e5ad9dc818cb30155b0ec709f934406c01700227b8d325dcb7"
+        },
+        {
+          "path": "apps/mobile/src/features/ask/routeContract.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "c176df0a30b34cb9fbc7af2c4c3d08c924cb22d6",
+          "mode": "100644",
+          "sha256": "536c31ee5a14ae6e2319de530a34fd4cdb480155e07b14b70de64a36d101ae07"
+        }
+      ]
+    },
+    {
+      "id": "F15",
+      "name": "Private-safe sharing",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Explicit selected private-safe briefs and local rights export exist; strict owner-bound draft codecs join export.",
+      "missingFunctionality": "Native share residue qualification, original-source professional bridge and durable hosted rights fulfillment.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: localDeviceExport/selectiveCleanup focused tests; professional owner browser uses synthetic fixtures. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete source-authenticated selection/export and tombstone fulfillment adapters; preserve unknown/refused data.",
+      "externalQualificationDependencies": "Native privacy QA, legal retention and DB custody.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/growth/shareAdmission.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "b8cfd9a63efbe2dae93d8502c47a42a2379ee8fe",
+          "mode": "100644",
+          "sha256": "8c9f4e8d16aa5cdd4dd9ef0911b129a700966e2990539f820424d620ea22c58b"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "4db6d477a96457c55b0b6487adc06dbd6f3002c8",
+          "mode": "100644",
+          "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareProjection.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "7222a5810e79c6d3971542532ce203741d3a0eb3",
+          "mode": "100644",
+          "sha256": "592b2da1269714ffa84d8cbb865c0546bbb941cb5428d356e18a86faa636e177"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareProjectionBuilder.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "54784359bc5f5d2dd8c6ab60ce3554a34e952725",
+          "mode": "100644",
+          "sha256": "7196e984750c768a3e1f4fa8b402a558c14af27c037f83b58204e978b7dc53d9"
+        }
+      ]
+    },
+    {
+      "id": "F16",
+      "name": "Commerce and replenishment",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Commerce/replenishment domain and conservative unavailable boundaries remain.",
+      "missingFunctionality": "Actual merchant/provider rails, inventory, orders/refunds and operational fulfillment.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root commerce/refusal regressions; real commerce NOT_RUN. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Implement approved commerce adapters and negative lifecycle after authorized terms.",
+      "externalQualificationDependencies": "Merchant/provider/account and funded operations.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/commerce/admission.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "255ea8ee4dd5bff0c7e12cb377f02b3269ee959d",
+          "mode": "100644",
+          "sha256": "32feaa31a53d5d322da4ca4eb3b38a5968458d04c28df95afdcfe8d4ad96a10d"
+        },
+        {
+          "path": "apps/mobile/src/features/commerce/commerce.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "c970163901b796bf5926b66fc9b240cc2fd34f3c",
+          "mode": "100644",
+          "sha256": "6db2503af9f9cd26612945dfa2e1184dbaa95f63bd1ef0393d6feaa38b9bb76a"
+        },
+        {
+          "path": "apps/mobile/src/features/commerce/commerceRoutes.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "dc5532d04145d67ab797ab85501b5b291f2ff821",
+          "mode": "100644",
+          "sha256": "5944b9d3b150c49ed31e4b111ca50717630813ef4a58211bd6d6de412ea3ff72"
+        },
+        {
+          "path": "apps/mobile/src/features/commerce/consent.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "06d6a3e7478072dfa7e3b2cfb2e2b31840abca14",
+          "mode": "100644",
+          "sha256": "29d6cee0db17a8ccf62b2f62c633a59b57e9f45029dbf1f8f5f5ce351f070226"
+        }
+      ]
+    },
+    {
+      "id": "F17",
+      "name": "Moderated community / Skin Notes",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Skin Notes/community source/refusal foundations exist.",
+      "missingFunctionality": "Real staffed moderation/report/escalation/appeal/deletion service and enforceable permissions.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root community/refusal tests; no staffed moderation evidence. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete moderation tooling/role lifecycle and conservative publication only after operations plan.",
+      "externalQualificationDependencies": "Named moderation lead, legal/privacy and backend owners.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/community/communityRoutes.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ad5b17c215537ac08dc4ea8fa16cf709f6b12800",
+          "mode": "100644",
+          "sha256": "22052d12308649a7ed01e12bc70ff9d5818e96069054a61f3f60b307fefc22d6"
+        },
+        {
+          "path": "apps/mobile/src/features/community/store.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "fc758e38d10a005dd575dcef765cd7e0672c0bd5",
+          "mode": "100644",
+          "sha256": "baa8d38b93f38c04b8555747b6ab427960a062a45fa61ec56adab7158fed3ebf"
+        },
+        {
+          "path": "apps/mobile/src/features/community/store.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ba136e338c738467b084f67c45c9310a5e172d91",
+          "mode": "100644",
+          "sha256": "381749604ec65ba940caf96190cda0b3b72787f3f5bd8927e249455c977526b0"
+        }
+      ]
+    },
+    {
+      "id": "F19",
+      "name": "Widgets and Live Activities",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Signed widget/snapshot and privacy-lifecycle foundations exist; cross-process admission remains constrained.",
+      "missingFunctionality": "Qualified atomic App Group delivery, interactive widgets/Live Activities and real privacy boundary behavior.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root widget lifecycle tests; native ledger NOT_QUALIFIED. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Close authenticated native App Group/readback failures with exact trace; do not use JS tests as cross-process proof.",
+      "externalQualificationDependencies": "Apple entitlement/signing, native/device and security owners.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/widgets/contract.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "aae9f7c2e04f2c9d43d26e9fed15ae9ad80f4599",
+          "mode": "100644",
+          "sha256": "b075df444c5a818a54fc17a5ef862ac847b31db36fadeb23f00cdf2505aafeba"
+        },
+        {
+          "path": "apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "c917ea5ebc9713bdae0c7bd342024e18ad755417",
+          "mode": "100644",
+          "sha256": "2ec44850621de46c3d9281fe83c813ab50b858b7270aa06acd4a1db8ecaa8429"
+        },
+        {
+          "path": "apps/mobile/src/features/widgets/runtimeGate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "4ab330cbaa71b9c774ba5204f183c67545074533",
+          "mode": "100644",
+          "sha256": "942a2d9d0814b66a81c88f7efd3fa6f42728e04668710cd96c3ff19f9be1de62"
+        }
+      ]
+    },
+    {
+      "id": "F20",
+      "name": "Operator, support and administration",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Operator catalog console and content-free support/administrative domain rules exist.",
+      "missingFunctionality": "Complete real privileged operator roles, support tooling, audit/incident/backup and staffed capacity.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 24 catalog tests and professional authority tests; no staffed operation acceptance. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete least-privilege administrative UX/adapters and durable audit/restore protocols after custody.",
+      "externalQualificationDependencies": "Named security/support/release operators and backend role owners.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/catalog-operator-console/src/auth.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3f549a46c74cce326fff5a05c5cdb65adff316b7",
+          "mode": "100644",
+          "sha256": "2cfbd0fe9a6427baad0c5345d72694a952baae16c0fc5f4fa683509eb49b37eb"
+        },
+        {
+          "path": "apps/catalog-operator-console/src/env.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "491eaceb0ca27d0df87377c2400b07c3d1f819ae",
+          "mode": "100644",
+          "sha256": "bfa868fae96a334204f4aa6fe096cab8d37af8f91df88639a9c009b68a9d6ed6"
+        },
+        {
+          "path": "apps/catalog-operator-console/src/main.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "63fb7bcb792fdec404a280cd476b0b007aa30c37",
+          "mode": "100644",
+          "sha256": "e87adb7de97838b57485e3a2ea8a4a80565abab5b30651e18bcb03ea8dcb2720"
+        },
+        {
+          "path": "apps/catalog-operator-console/src/operatorApi.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ea4365b554079a367e63127a80cbd8140829b404",
+          "mode": "100644",
+          "sha256": "c4426d977fbb26da0e61c9b636692de2304ff7995654616c28db2b9694b72ce1"
+        },
+        {
+          "path": "apps/catalog-operator-console/src/sessionTimer.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "4751c5f37a77a3a99faac6618b8edf055d89658d",
+          "mode": "100644",
+          "sha256": "51c1c3a6ce5d970048d71e53c408bbfc5c243e05909d94bb3304f4741ec4a14a"
+        },
+        {
+          "path": "apps/catalog-operator-console/src/sessionWorkEpoch.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "423781da643f6653260223ba02add129fcc0c38d",
+          "mode": "100644",
+          "sha256": "f5cbf16e48c1b8d6ab01d4c6a6aef4a16e03b19245a8e74d9498851a10245954"
+        },
+        {
+          "path": "apps/catalog-operator-console/src/workflow.test.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "9dd4f51371c1e46007f533acf9e20ead5c3196d1",
+          "mode": "100644",
+          "sha256": "d76684e0166e32618aa188c728f9ef575cff4941b01b60ad51a5ccfe2eee0211"
+        }
+      ]
+    },
+    {
+      "id": "V2-C01",
+      "name": "Access/consent/rights",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Current original owner/processing lease and persisted lifecycle authorize draft/record access; withdrawal removes classified draft keys and export enforces owner.",
+      "missingFunctionality": "Genuine hosted account, recovery, consent rights requests and durable restore/delete-wins.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 490 focused privacy tests incl. export/cleanup/admission. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Integrate authorized auth/rights adapters; retain strict stale-owner/epoch refusal and exact readback.",
+      "externalQualificationDependencies": "Security/DB/legal custodians and physical-device privacy testing.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/lib/auth/accountGeneration.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "00afcec330c4875909a69f02cac6ca055a318bc2",
+          "mode": "100644",
+          "sha256": "aa0a702874069f12a968f4e7edbaa1a35ad5ac3487ffea25ac451d69c7553217"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwner.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "e04e8f6302b343c14da71cd8c4975820a5536bee",
+          "mode": "100644",
+          "sha256": "19a80b00e69e3826da7f5bc7856cc166693d405af48aae43df1711b58ab5d20b"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C02",
+      "name": "Formula-aware intake",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Formula-aware bottle observations and manual intake support explicit encrypted saved drafts and exact source review before confirmation.",
+      "missingFunctionality": "Admitted OCR/catalog and complete cross-device formula provenance.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Bottle/manual tests; current manual browser at 375/390/430. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Connect approved intake source and conflict recovery; preserve exact snapshot and operation IDs.",
+      "externalQualificationDependencies": "Rights/native OCR/DB owners.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/catalog/client.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "92d35455de03a871471d3af508f39ca9bdfbb5d4",
+          "mode": "100644",
+          "sha256": "85b771f782010e99cd4061ed331557de73e68a16fb838d92f720f58d042f693e"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/intakeSession.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "6a236737d217aa41da2da1bcf4b09bfa5b590b56",
+          "mode": "100644",
+          "sha256": "51e3eb2a4384da1f128b530867bfc23b13a85f24e69de3ab223eb8356368609c"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/store.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "5fdcef634976a752843930898aee462e64bbe1fb",
+          "mode": "100644",
+          "sha256": "0ad436f703af60d7da0afbfa12cf23d7c722e37650ac03f9360316098bb33e5a"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C03",
+      "name": "Change ledger",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Append-only use/correction history remains. E23 separates raw envelope CAS proof from v5 inner completion/event-predecessor proof; exact readback governs retirement.",
+      "missingFunctionality": "Genuine original-record ingestion, hosted idempotency/tombstones and recoverable unsupported legacy states.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: optionalChangeDraftProof23 and completion/history tests; legacy schema2 refused. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Finish authenticated ingestion and explain bounded proof refusal without rebuilding proofs from current data.",
+      "externalQualificationDependencies": "DB/source custody and security review.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/routine/generate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "b2569993ddfb40491430038e4c54d2f38b94ad35",
+          "mode": "100644",
+          "sha256": "c1df5f975d91d7eb94e8bb7fc8a0e48eb570de41ada27fc4254e8aed1ea3b557"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderStore.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3c856051f03ee1dcbb2dc3e9276298885f2a34b6",
+          "mode": "100644",
+          "sha256": "3b08983c188287434cda96444cfed91d23c3d653952aec2cbf1a2ab92f0d656d"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C04",
+      "name": "Optional exceptions",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Optional add/correct/retract drafts are encrypted, durable, bounded, reviewed and explicitly resumed/refreshed/discarded. Direct Today inventory entry uses original authority/focus generation.",
+      "missingFunctionality": "Native and full navigation accessibility qualification; richer safe handling of unprovable legacy/unknown saves.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 48 mounted cases; current optional browser; 490 privacy subset. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Test/directly improve refusal recovery while preserving exact facts, target hash, revision, original lease and explicit review.",
+      "externalQualificationDependencies": "Native/device and security custodians.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C05",
+      "name": "Current plan/version",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Current intended version, immutable plan hashes and owner responses remain distinct from actual use.",
+      "missingFunctionality": "Exact intended-to-actual application, unshelved resolution and real source ingestion.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Professional 651 tests and synthetic queue/owner journeys. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Build explicit source-bound application/reconciliation UX after bounded domain review. E28 found no admitted original-owner writer; the bridge remains closed rather than synthesizing an owner record.",
+      "externalQualificationDependencies": "Professional/DB/clinical authority.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/routine/generate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "b2569993ddfb40491430038e4c54d2f38b94ad35",
+          "mode": "100644",
+          "sha256": "c1df5f975d91d7eb94e8bb7fc8a0e48eb570de41ada27fc4254e8aed1ea3b557"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderStore.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3c856051f03ee1dcbb2dc3e9276298885f2a34b6",
+          "mode": "100644",
+          "sha256": "3b08983c188287434cda96444cfed91d23c3d653952aec2cbf1a2ab92f0d656d"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C06",
+      "name": "Product decisions",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Product-decision refusal and ordinary-record foundations exist.",
+      "missingFunctionality": "Complete advanced decision engine and atomic three-free quota authority.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root product/entitlement tests; no advanced quota qualification. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Implement bounded decision/quota transaction and explicit failure states without restricting ordinary records.",
+      "externalQualificationDependencies": "Approved clinical sources, genuine entitlement and DB authority.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/ask/gate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "0ae8f0074be2f56e71f24c931e081315d16d4862",
+          "mode": "100644",
+          "sha256": "c79dec034a0aa9190591844b00b0c05aab11f1ca9df67bbf4658310dea126453"
+        },
+        {
+          "path": "apps/mobile/src/features/ask/readiness.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "476b11dd7e597584ebf770f3337007ffe4067df8",
+          "mode": "100644",
+          "sha256": "ecf27217f093e9e5ad9dc818cb30155b0ec709f934406c01700227b8d325dcb7"
+        },
+        {
+          "path": "apps/mobile/src/features/intelligence/engine.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "df6142d2ffd6e4dc3e2db8380b4fc5b4a4258d93",
+          "mode": "100644",
+          "sha256": "1f4d44d4e723e8c6f7eff6f673048b639f053078b377611ffafebc1671e7ec3c"
+        },
+        {
+          "path": "apps/mobile/src/features/recommendations/admission.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ac701e00882d39b33ccba3d6b5a1d3e7a037707e",
+          "mode": "100644",
+          "sha256": "699de9485fa5fed2335fb4b91dbd9f263ae7cd081048c30bb6b4d6fc17bb7934"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C07",
+      "name": "Private progress/capture",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Private photo capture/history/manual comparison remains separate from J01; no automated positive measurement admitted.",
+      "missingFunctionality": "Signed-device image/privacy lifecycle and qualified J01 optical pipeline.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Photo focused regressions; all device/scientific qualifications NOT_RUN. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Close source-authenticated photo recovery/deletion gaps; keep scientific results closed.",
+      "externalQualificationDependencies": "Native/security/rights and J01 G1-G5 reviewers.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "55aafc5dec99fe89dd092e961b389076ef05d555",
+          "mode": "100644",
+          "sha256": "4a5de9b5dd3d49c90b36e1c2d732a7bbbe1d686bec8b9a7d9c8fa09fbdf2a399"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/manualCompare20.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "de15b4c65df9c9367c7b9863806a3efa4f83fad9",
+          "mode": "100644",
+          "sha256": "9280aa154bec1ae5f177cbb2492195b6d5137d51a9c0d69b35c6227f7d7531e5"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C08",
+      "name": "Appointment brief",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Selected appointment/pre-visit records, history/export/offboarding and contradiction refusal exist.",
+      "missingFunctionality": "Genuine original immutable owner-record source adapter and fully connected authorized professional flow.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Professional pre-visit tests; synthetic owner HTTP fixtures. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Implement authenticated original source adapter, scope projection and safe retention/purge.",
+      "externalQualificationDependencies": "Legal retention, professional/DB custody and source rights.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/growth/shareAdmission.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "4db6d477a96457c55b0b6487adc06dbd6f3002c8",
+          "mode": "100644",
+          "sha256": "02adedb821a476eeba4fd2bc06681feeba2008fa1c97ffd4937a39a569dc6327"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C09",
+      "name": "Reminders",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Local reminders honor lifecycle and account cleanup; billing safety reminder remains separate from health-purpose deletion.",
+      "missingFunctionality": "Real permission/delivery/background/cancellation and accessibility behavior.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root notifications/cleanup tests; no native qualification. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Close exact-device lifecycle defects based on real traces.",
+      "externalQualificationDependencies": "Apple/device QA and privacy review.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/notifications/deliver.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "950cd4b5f304b98753871383c017758d727e0a1f",
+          "mode": "100644",
+          "sha256": "0e7f99473b7d34aae69ea28201346fe9df115ddd22b001389e50b423f38dd10b"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C10",
+      "name": "Consumer packaging/billing",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Ordinary private records, subscription refusal and approved offer strategy remain separate from advanced entitlement.",
+      "missingFunctionality": "Real provider authority, quota accounting, compliant offer and purchase/restore lifecycle.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root billing/offer tests; payment gate NOT_RUN. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete verified entitlement/quota integration after owner commercial authorization.",
+      "externalQualificationDependencies": "StoreKit/provider/merchant and Apple.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/subscription/clientPolicy.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "ad60a6a633fbb5ccbc1369a5d6e769831d4ff55c",
+          "mode": "100644",
+          "sha256": "d7395ad5ea1d95f26758f681b4315807c0e8f8840ecb0222a50f4f8c824a7ece"
+        },
+        {
+          "path": "apps/mobile/src/features/subscription/entitlement.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "4488c10499d1ac3a61645cbfce1282cd6b6651b3",
+          "mode": "100644",
+          "sha256": "88227479773070400a30c0331063f77e23d094da5bd230486abd104bbe69e0b7"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C11",
+      "name": "Accessible recovery/IA",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Six generic local recovery rows expose status for bottle, manual, optional, photos, reminders and widgets without private names/counts; draft inventories support explicit actions.",
+      "missingFunctionality": "Whole-app VoiceOver, larger text, contrast, keyboard/focus and error/recovery coverage on actual devices.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Current recovery browser; mounted focus tests; narrow viewport evidence is not full accessibility qualification. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Perform bounded UX/accessibility work and improve explanation of safe refusal; validate latest direct entry with real navigation.",
+      "externalQualificationDependencies": "Native accessibility QA and independent review.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "apps/mobile/src/features/notifications/deliver.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "950cd4b5f304b98753871383c017758d727e0a1f",
+          "mode": "100644",
+          "sha256": "0e7f99473b7d34aae69ea28201346fe9df115ddd22b001389e50b423f38dd10b"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "55aafc5dec99fe89dd092e961b389076ef05d555",
+          "mode": "100644",
+          "sha256": "4a5de9b5dd3d49c90b36e1c2d732a7bbbe1d686bec8b9a7d9c8fa09fbdf2a399"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/manualCompare20.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "de15b4c65df9c9367c7b9863806a3efa4f83fad9",
+          "mode": "100644",
+          "sha256": "9280aa154bec1ae5f177cbb2492195b6d5137d51a9c0d69b35c6227f7d7531e5"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/generate.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "b2569993ddfb40491430038e4c54d2f38b94ad35",
+          "mode": "100644",
+          "sha256": "c1df5f975d91d7eb94e8bb7fc8a0e48eb570de41ada27fc4254e8aed1ea3b557"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderStore.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "3c856051f03ee1dcbb2dc3e9276298885f2a34b6",
+          "mode": "100644",
+          "sha256": "3b08983c188287434cda96444cfed91d23c3d653952aec2cbf1a2ab92f0d656d"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/intakeSession.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "6a236737d217aa41da2da1bcf4b09bfa5b590b56",
+          "mode": "100644",
+          "sha256": "51e3eb2a4384da1f128b530867bfc23b13a85f24e69de3ab223eb8356368609c"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/store.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "5fdcef634976a752843930898aee462e64bbe1fb",
+          "mode": "100644",
+          "sha256": "0ad436f703af60d7da0afbfa12cf23d7c722e37650ac03f9360316098bb33e5a"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountGeneration.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "00afcec330c4875909a69f02cac6ca055a318bc2",
+          "mode": "100644",
+          "sha256": "aa0a702874069f12a968f4e7edbaa1a35ad5ac3487ffea25ac451d69c7553217"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwner.ts",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "e04e8f6302b343c14da71cd8c4975820a5536bee",
+          "mode": "100644",
+          "sha256": "19a80b00e69e3826da7f5bc7856cc166693d405af48aae43df1711b58ab5d20b"
+        },
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "V2-C12",
+      "name": "Support/measurement",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Content-free support/measurement boundaries and local diagnostics exist.",
+      "missingFunctionality": "Staffed support capacity, incident/backup/restore response and privacy-qualified measurement operations.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Root support/refusal tests; operational qualification NOT_RUN. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete bounded support/audit interfaces and operational runbooks after named ownership.",
+      "externalQualificationDependencies": "Support/security/privacy and funded operations.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "P01",
+      "name": "Workspace roles",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Universal role/action and workspace isolation rules require current membership, adult session, AAL2/TOTP and appropriate step-up; roles do not imply client-content access.",
+      "missingFunctionality": "Real verified identity/licence/MFA, membership/seat management and current server authority.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 651 professional domain/client tests; positive browser authority is synthetic. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Connect authorized identity/roster/seat providers and explicit negative lifecycle.",
+      "externalQualificationDependencies": "Professional identity/licence/DB/security owners.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "P02",
+      "name": "Client grants/web",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Practice/client grants bind fields, purpose, versions/epochs, health state, assignment, licence and billing before private plan reads; default real API503.",
+      "missingFunctionality": "Installed trusted backend/custody and genuine grant, session and serial transaction drivers.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Authority/revoked-read ordering tests; real API refusal in professional browser. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Implement approved authenticated adapters without browser/client JSON authority.",
+      "externalQualificationDependencies": "DB/security/legal/professional custodians.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "P03",
+      "name": "Pro plans/templates",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Immutable intended plans and exact owner acknowledgement/decline exist independently of actual routine. E28 adds a practice-only generic role-template library: immutable revisions, dated original history/copy, review/cancel, source-CAS save, encrypted readback, exact retry, terminal retirement and reload. No client record import.",
+      "missingFunctionality": "Template-to-client intended issuance, exact role-to-owned-bottle resolution, unshelved proposals, genuine authority/custody and explicit owner application remain unfinished.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Plan/receipt/capacity tests; synthetic plan browser. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Connect only after genuine current source/roster/grant/serial interfaces exist. Add explicit per-slot mapping and source-bound issue/apply; retain missing-history refusal and default503. Lawful read-only template offboarding remains missing.",
+      "externalQualificationDependencies": "Clinical content, practitioner identity and trusted backend custody.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "P04",
+      "name": "Queue/reconciliation",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Review queue hashes/material revisions and exact intended versions exist; E20 latest explicit owner response projection is source-hash bound, not inferred outcome.",
+      "missingFunctionality": "Real original owner event adapter, named staff assignment/calendar/digest/delivery and operational reconciliation.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 651 professional tests; current queue browser including unknown retry/stale callbacks. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete scoped assignment/reconciliation UX and genuine immutable source adapter; retain unknown-save idempotent retry.",
+      "externalQualificationDependencies": "Practice roster/grants, DB, lawful communications and staff operations.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "P05",
+      "name": "Pre-visit/offboarding",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Selected mixed pre-visit records validate referenced actual-use facts and exact routine provenance; retained history/export/offboarding is distinct from grant access.",
+      "missingFunctionality": "Genuine original source adapter, independent practice copy/retention/purge policy and tombstone-first hosted restore.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Contradiction/row-order tests and current owner browser synthetic fixtures. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Implement authenticated source projection and lawful retention/purge protocol after legal/custody decision.",
+      "externalQualificationDependencies": "Legal, DB and genuine owner/practitioner access.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "P06",
+      "name": "Workspace billing/capacity",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Separate billing/capacity domains gate writes; access denial precedes plan read and receipt/capacity commit remains atomic under local transaction fixture.",
+      "missingFunctionality": "Real provider/serial driver, membership/seats, downgrade notices and capacity administration.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: 651 professional tests; no live payment or commercial operation. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Complete safe billing/admin adapter and negative effective-downgrade lifecycle after authority supplied.",
+      "externalQualificationDependencies": "Merchant/provider, staffed capacity and hosted serial transactions.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "f1532fcb98c468412982388b908695a0dd942008",
+          "mode": "100644",
+          "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+        }
+      ]
+    },
+    {
+      "id": "J01",
+      "name": "Visible pores",
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "implementedBehavior": "Visible Pores is the only Korean assessment in scope. Capture/privacy/retake/unavailable boundaries exist; positive counts, dimensions, scores, diagnosis and change claims stay disabled.",
+      "missingFunctionality": "Authenticated research/rights intake, optics/calibration, person-disjoint frozen evaluation, supported-stratum errors/abstention, longitudinal qualification and signed-device lifecycle.",
+      "existingTestsAndEvidence": "Inherited E27R evidence: Refusal/capture regressions and frozen scope; no positive measurement evidence. Full exact-source root test run passes 8652 tests; this is regression evidence, not full row qualification. See TEST_EVIDENCE_INDEX.md for source/time/scope. Current E28: root8674/582, privacy479/15, type/lint/builds and selected browser receipts; see TEST_EVIDENCE_INDEX. New tests are regression evidence, not qualification.",
+      "remainingCodeWork": "Only bounded refusal/intake work is locally permissible after separate assignment; no fabricated labels, model result or scientific/device validation.",
+      "externalQualificationDependencies": "G1/G2/G3/G5 for single scan and G4 separately for change, scientific/rights/privacy/clinical/device reviewers.",
+      "frozenStatus": "REQUIRED_PENDING",
+      "frozenSourceRefs": [
+        {
+          "path": "docs/v2/mirrors/modules.json",
+          "source_commit": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+          "blob": "d91e71a9322c4ca0678aa6cf854f799469e4d235",
+          "mode": "100644",
+          "sha256": "4f460af7898ce3f21395694f54644a4f4758a966f0936987787d56e6d131f8fa"
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "G97",
+      "status": "FAIL/NO_GO",
+      "owner": "Original Security custodian",
+      "acceptance": "Original rules/pins/tool/secret/OSV/source inventory and exact-source acceptance; expiry 2026-10-21T00:00:00Z unchanged",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Original protected Security/candidate findings remain unwaived; ordinary JS privacy tests do not admit this gate. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Original custodian must review rules/pins/expiry/source inventory and exact-source scanner findings. No scanner rerun/provider credential probe performed."
+    },
+    {
+      "id": "DB",
+      "status": "NOT_ACCEPTED",
+      "owner": "Canonical DB06/DB08/R2B custodian",
+      "acceptance": "DB06/DB08/R2B qualified owner exact-environment admission remains absent; hosted canonical technical success is separate evidence",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Canonical DB06/DB08/R2B custody/acceptance absent. Local serial adapters and historical PostgreSQL rehearsals are distinct. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Custodian admission and genuine production-style serial/restore/deletion evidence."
+    },
+    {
+      "id": "M1-03",
+      "status": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+      "owner": "Independent Brain and protected custodians",
+      "acceptance": "Whole M1-03 acceptance from authentic exact-source Security/DB evidence, not alternate PG rehearsal",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Blocked external Security/DB custody; latest local checkpoint does not alter acceptance. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Independent Brain plus original protected custodians."
+    },
+    {
+      "id": "M2-01",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Independent Brain",
+      "acceptance": "Accepted M1-03 then separate finite implementation authorization; ADR038 corrections remain due",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Not authorized by local engineering or this evidence relay. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Actual accepted M1-03 and a separate finite authorization."
+    },
+    {
+      "id": "G1",
+      "status": "NOT_ACCEPTED",
+      "owner": "Physical iPhone imaging engineer",
+      "acceptance": "Real native pixels, resolving power, capture region/device/light/distance and repeatability evidence; no upscaling-as-detail",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No current native optical/resolving-power qualification. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Real supported-device capture region/light/distance/repeatability."
+    },
+    {
+      "id": "G2",
+      "status": "NOT_ACCEPTED",
+      "owner": "Source-rights counsel, image scientist and statistician",
+      "acceptance": "Authenticated exact J01 dossier, target/rights/consent/annotation and frozen person-disjoint evaluation manifest",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Authenticated J01 research/rights and frozen independent evaluation absent. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Person-disjoint data, rights/consent/annotation/target definition and scientific intake."
+    },
+    {
+      "id": "G3",
+      "status": "NOT_ACCEPTED",
+      "owner": "Independent image scientist and statistician",
+      "acceptance": "Locked single-scan pipeline, independent supported-stratum errors, coverage and honest abstention at each claim granularity",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No qualified single-scan pipeline/errors/coverage/abstention. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Frozen independent per-stratum evaluation; local synthetic tests cannot provide it."
+    },
+    {
+      "id": "G4",
+      "status": "NOT_ACCEPTED",
+      "owner": "Independent longitudinal reviewer",
+      "acceptance": "Separate common-support repeatability/noise/change study; absent now, no pore change/trend",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No qualified longitudinal change/noise/repeatability study. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Separate common-support longitudinal study; no trend/change claim."
+    },
+    {
+      "id": "G5",
+      "status": "NOT_ACCEPTED",
+      "owner": "Privacy/security, clinical/regulatory reviewers and native release operator",
+      "acceptance": "Exact signed build, image lifecycle/zero-egress if claimed, fairness, cosmetic copy, device and operations evidence",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No current exact signed-build image lifecycle/fairness/privacy/claims admission. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Security/privacy/clinical/native independent review and actual devices."
+    },
+    {
+      "id": "RIGHTS",
+      "status": "GATED",
+      "owner": "IP/content/source-rights reviewer",
+      "acceptance": "Exact catalog/code/weights/data/image/text licences and permitted distribution; articles do not supply imaging labels",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Real corpus/code/data/weights/image/text distribution rights not accepted. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Exact-source licences and permitted-use review by rights owners."
+    },
+    {
+      "id": "CLINICAL",
+      "status": "GATED",
+      "owner": "Dermatologist, cosmetic chemist and regulatory counsel",
+      "acceptance": "Exact corpus/claim/country/use review with credentials, conditions and source/build hash; no blanket approval",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No blanket clinical/cosmetic/regulatory acceptance. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Qualified reviewers, exact corpus/claim/country/use/build and conditions."
+    },
+    {
+      "id": "PROVIDER",
+      "status": "NOT_RUN",
+      "owner": "Provider/merchant operator",
+      "acceptance": "Actual supported service and terms, deployment, negative lifecycle, access/recovery and operational evidence",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Real supported backend/professional services deliberately unavailable. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Approved provider/terms/deployment and real negative lifecycle/operations."
+    },
+    {
+      "id": "PAYMENT",
+      "status": "NOT_RUN",
+      "owner": "StoreKit/RevenueCat and workspace billing owners",
+      "acceptance": "Real verified sandbox/native/provider lifecycle and commercial permission; no local paid flag or free quota authority",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No genuine purchase/restore/provider lifecycle executed. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Approved merchant/StoreKit/provider sandbox and commercial permission."
+    },
+    {
+      "id": "MODERATION",
+      "status": "NOT_RUN",
+      "owner": "Named moderation lead",
+      "acceptance": "Actual staffed report/escalation/appeal/deletion coverage and enforceable tooling; no placeholder policy",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No actual staffed moderation qualification. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Named coverage, enforceable reports/escalations/appeals/deletion."
+    },
+    {
+      "id": "OPERATIONS",
+      "status": "NOT_RUN",
+      "owner": "Support/security/release operators",
+      "acceptance": "Named funded coverage, incident, backup/restore/tombstone and capacity evidence before real hosted promises",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No named/funded production incident/support/backup/restore capacity evidence. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Operational owners and authentic tombstone/capacity/incident drills."
+    },
+    {
+      "id": "DEVICE",
+      "status": "NOT_RUN",
+      "owner": "Physical-device QA",
+      "acceptance": "Exact signed supported-iPhone flows, accessibility, photos/reminders/widgets/purchase and cancellation evidence",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Current Windows web tests/builds are not iPhone qualification. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Exact signed supported-device accessibility/photos/reminders/widgets/purchases/cancellation."
+    },
+    {
+      "id": "APPLE",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Apple account/release owner and Apple",
+      "acceptance": "Actual agreements/identity/signing, privacy/offer classification, signed install, App Review; no account mutation authorized here",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "No account/signing/App Review authorization in this relay. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "Owner-controlled agreements/identity/signing/privacy/offers and actual signed install/review."
+    },
+    {
+      "id": "PUBLIC",
+      "status": "NOT_AUTHORIZED",
+      "owner": "Founder after independent Brain review",
+      "acceptance": "All38 required contract rows and all applicable gates satisfied at one exact build, then separate explicit public availability authorization",
+      "admitted": false,
+      "evidence": [],
+      "formalAcceptance": "UNACCEPTED",
+      "readyForIndependentAcceptance": false,
+      "currentEvidence": "Release remains NO_GO; evidence publication is not product availability. E28 ordinary local source/browser tests do not grant this gate.",
+      "remainingDependency": "All38 and applicable gates at one exact build, independent Brain review, then explicit founder release authorization."
+    }
+  ]
+}

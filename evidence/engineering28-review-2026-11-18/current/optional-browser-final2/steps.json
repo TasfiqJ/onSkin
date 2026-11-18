@@ -1,0 +1,1607 @@
+[
+  {
+    "at": "2026-11-18T17:55:30.243Z",
+    "action": "Start actual optional recovery journey",
+    "detail": "375x667"
+  },
+  {
+    "at": "2026-11-18T17:55:42.522Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-18T17:55:43.091Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-18T17:55:43.259Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-18T17:55:43.429Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-18T17:55:43.597Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:55:44.152Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-18T17:55:44.732Z",
+    "action": "Activate control containing",
+    "detail": "Clear skin"
+  },
+  {
+    "at": "2026-11-18T17:55:45.270Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:55:45.825Z",
+    "action": "Activate control",
+    "detail": "Shiny in places"
+  },
+  {
+    "at": "2026-11-18T17:55:46.362Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:46.901Z",
+    "action": "Activate control",
+    "detail": "Rarely"
+  },
+  {
+    "at": "2026-11-18T17:55:47.437Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:47.975Z",
+    "action": "Activate control",
+    "detail": "Often stings, burns, or reddens"
+  },
+  {
+    "at": "2026-11-18T17:55:48.511Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:49.050Z",
+    "action": "Activate control",
+    "detail": "Frequently"
+  },
+  {
+    "at": "2026-11-18T17:55:49.584Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:50.123Z",
+    "action": "Activate control",
+    "detail": "Yes, noticeably"
+  },
+  {
+    "at": "2026-11-18T17:55:50.660Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:51.199Z",
+    "action": "Activate control",
+    "detail": "Weeks or longer"
+  },
+  {
+    "at": "2026-11-18T17:55:51.736Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:52.278Z",
+    "action": "Activate control",
+    "detail": "Fine lines or firmness changes are visible"
+  },
+  {
+    "at": "2026-11-18T17:55:52.815Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:53.354Z",
+    "action": "Activate control",
+    "detail": "A lot over time"
+  },
+  {
+    "at": "2026-11-18T17:55:53.891Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:54.430Z",
+    "action": "Activate control",
+    "detail": "Sometimes burns"
+  },
+  {
+    "at": "2026-11-18T17:55:54.964Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:55.502Z",
+    "action": "Activate control",
+    "detail": "Tone 4"
+  },
+  {
+    "at": "2026-11-18T17:55:56.037Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:56.576Z",
+    "action": "Activate control",
+    "detail": "None that I know of"
+  },
+  {
+    "at": "2026-11-18T17:55:57.112Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:55:57.650Z",
+    "action": "Activate control",
+    "detail": "No"
+  },
+  {
+    "at": "2026-11-18T17:55:58.187Z",
+    "action": "Activate control",
+    "detail": "See my profile"
+  },
+  {
+    "at": "2026-11-18T17:55:58.742Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-18T17:55:58.912Z",
+    "action": "Activate control containing",
+    "detail": "Choose product category"
+  },
+  {
+    "at": "2026-11-18T17:55:59.452Z",
+    "action": "Activate control",
+    "detail": "Cleanser"
+  },
+  {
+    "at": "2026-11-18T17:55:59.988Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T17:56:00.558Z",
+    "action": "Activate control",
+    "detail": "Just opened it"
+  },
+  {
+    "at": "2026-11-18T17:56:01.097Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T17:56:01.669Z",
+    "action": "Activate control",
+    "detail": "Continue with 1 product"
+  },
+  {
+    "at": "2026-11-18T17:56:04.750Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:56:05.304Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T17:56:05.843Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:56:06.382Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T17:56:06.953Z",
+    "action": "Activate control containing",
+    "detail": "Continue with the free plan"
+  },
+  {
+    "at": "2026-11-18T17:56:09.138Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:09.681Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:10.263Z",
+    "action": "Activate control",
+    "detail": "Back to optional changes"
+  },
+  {
+    "at": "2026-11-18T17:56:10.800Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:11.338Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:56:11.877Z",
+    "action": "Enter synthetic value",
+    "detail": "Observed local date"
+  },
+  {
+    "at": "2026-11-18T17:56:12.046Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:56:12.216Z",
+    "action": "Keyboard activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:56:12.528Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:56:14.310Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:14.864Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:15.405Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:56:15.972Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:56:16.510Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:56:18.422Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:18.964Z",
+    "action": "Activate control",
+    "detail": "Correct entry 1"
+  },
+  {
+    "at": "2026-11-18T17:56:19.497Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:56:20.037Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:56:20.208Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:56:20.752Z",
+    "action": "Activate control",
+    "detail": "Cancel draft"
+  },
+  {
+    "at": "2026-11-18T17:56:21.287Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:21.827Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:56:22.366Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:56:22.535Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:56:23.076Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:56:24.912Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:25.450Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:26.025Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:56:26.604Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh changes"
+  },
+  {
+    "at": "2026-11-18T17:56:26.887Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:56:27.416Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:56:27.712Z",
+    "action": "Activate control",
+    "detail": "Retract entry 3"
+  },
+  {
+    "at": "2026-11-18T17:56:28.258Z",
+    "action": "Enter synthetic value",
+    "detail": "Retraction reason"
+  },
+  {
+    "at": "2026-11-18T17:56:28.427Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:56:30.580Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:31.121Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:31.644Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:56:32.211Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:56:32.748Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:56:33.091Z",
+    "action": "Activate control",
+    "detail": "Correct entry 1"
+  },
+  {
+    "at": "2026-11-18T17:56:33.641Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:56:34.178Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:56:34.346Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:56:36.463Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:37.002Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:37.524Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:56:38.078Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:56:38.614Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:56:38.924Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:56:39.475Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:56:40.012Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:56:40.181Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:56:40.736Z",
+    "action": "Activate control",
+    "detail": "Cancel draft"
+  },
+  {
+    "at": "2026-11-18T17:56:41.272Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:41.811Z",
+    "action": "Activate control",
+    "detail": "Review change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:56:42.348Z",
+    "action": "Activate control",
+    "detail": "Keep change draft"
+  },
+  {
+    "at": "2026-11-18T17:56:42.886Z",
+    "action": "Activate control",
+    "detail": "Review change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:56:43.425Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:56:43.741Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:44.333Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:44.604Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:45.175Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:56:45.793Z",
+    "action": "Start actual optional recovery journey",
+    "detail": "390x844"
+  },
+  {
+    "at": "2026-11-18T17:56:48.244Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-18T17:56:48.804Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-18T17:56:48.972Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-18T17:56:49.141Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-18T17:56:49.309Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:56:49.863Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-18T17:56:50.447Z",
+    "action": "Activate control containing",
+    "detail": "Clear skin"
+  },
+  {
+    "at": "2026-11-18T17:56:50.984Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:56:51.542Z",
+    "action": "Activate control",
+    "detail": "Shiny in places"
+  },
+  {
+    "at": "2026-11-18T17:56:52.078Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:56:52.618Z",
+    "action": "Activate control",
+    "detail": "Rarely"
+  },
+  {
+    "at": "2026-11-18T17:56:53.153Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:56:53.694Z",
+    "action": "Activate control",
+    "detail": "Often stings, burns, or reddens"
+  },
+  {
+    "at": "2026-11-18T17:56:54.230Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:56:54.771Z",
+    "action": "Activate control",
+    "detail": "Frequently"
+  },
+  {
+    "at": "2026-11-18T17:56:55.307Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:56:55.845Z",
+    "action": "Activate control",
+    "detail": "Yes, noticeably"
+  },
+  {
+    "at": "2026-11-18T17:56:56.382Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:56:56.919Z",
+    "action": "Activate control",
+    "detail": "Weeks or longer"
+  },
+  {
+    "at": "2026-11-18T17:56:57.456Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:56:57.997Z",
+    "action": "Activate control",
+    "detail": "Fine lines or firmness changes are visible"
+  },
+  {
+    "at": "2026-11-18T17:56:58.521Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:56:59.061Z",
+    "action": "Activate control",
+    "detail": "A lot over time"
+  },
+  {
+    "at": "2026-11-18T17:56:59.584Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:57:00.125Z",
+    "action": "Activate control",
+    "detail": "Sometimes burns"
+  },
+  {
+    "at": "2026-11-18T17:57:00.664Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:57:01.204Z",
+    "action": "Activate control",
+    "detail": "Tone 4"
+  },
+  {
+    "at": "2026-11-18T17:57:01.743Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:57:02.284Z",
+    "action": "Activate control",
+    "detail": "None that I know of"
+  },
+  {
+    "at": "2026-11-18T17:57:02.821Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:57:03.362Z",
+    "action": "Activate control",
+    "detail": "No"
+  },
+  {
+    "at": "2026-11-18T17:57:03.886Z",
+    "action": "Activate control",
+    "detail": "See my profile"
+  },
+  {
+    "at": "2026-11-18T17:57:04.441Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-18T17:57:04.611Z",
+    "action": "Activate control containing",
+    "detail": "Choose product category"
+  },
+  {
+    "at": "2026-11-18T17:57:05.151Z",
+    "action": "Activate control",
+    "detail": "Cleanser"
+  },
+  {
+    "at": "2026-11-18T17:57:05.688Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T17:57:06.257Z",
+    "action": "Activate control",
+    "detail": "Just opened it"
+  },
+  {
+    "at": "2026-11-18T17:57:06.792Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T17:57:07.361Z",
+    "action": "Activate control",
+    "detail": "Continue with 1 product"
+  },
+  {
+    "at": "2026-11-18T17:57:10.455Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:57:11.007Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T17:57:11.543Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:57:12.081Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T17:57:12.647Z",
+    "action": "Activate control containing",
+    "detail": "Continue with the free plan"
+  },
+  {
+    "at": "2026-11-18T17:57:14.656Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:15.191Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:15.753Z",
+    "action": "Activate control",
+    "detail": "Back to optional changes"
+  },
+  {
+    "at": "2026-11-18T17:57:16.296Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:16.835Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:57:17.374Z",
+    "action": "Enter synthetic value",
+    "detail": "Observed local date"
+  },
+  {
+    "at": "2026-11-18T17:57:17.543Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:57:17.712Z",
+    "action": "Keyboard activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:57:18.031Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:57:19.840Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:20.376Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:20.917Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:57:21.483Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:57:22.022Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:57:23.918Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:24.476Z",
+    "action": "Activate control",
+    "detail": "Correct entry 1"
+  },
+  {
+    "at": "2026-11-18T17:57:25.008Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:57:25.547Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:57:25.716Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:57:26.273Z",
+    "action": "Activate control",
+    "detail": "Cancel draft"
+  },
+  {
+    "at": "2026-11-18T17:57:26.807Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:27.344Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:57:27.884Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:57:28.054Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:57:28.593Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:57:30.504Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:31.042Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:31.619Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:57:32.209Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh changes"
+  },
+  {
+    "at": "2026-11-18T17:57:32.496Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:57:33.037Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:57:33.333Z",
+    "action": "Activate control",
+    "detail": "Retract entry 3"
+  },
+  {
+    "at": "2026-11-18T17:57:33.868Z",
+    "action": "Enter synthetic value",
+    "detail": "Retraction reason"
+  },
+  {
+    "at": "2026-11-18T17:57:34.038Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:57:36.149Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:36.687Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:37.225Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:57:37.812Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:57:38.342Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:57:38.687Z",
+    "action": "Activate control",
+    "detail": "Correct entry 1"
+  },
+  {
+    "at": "2026-11-18T17:57:39.236Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:57:39.774Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:57:39.943Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:57:42.085Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:42.622Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:43.159Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:57:43.712Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:57:44.250Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:57:44.560Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:57:45.111Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:57:45.648Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:57:45.817Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:57:46.373Z",
+    "action": "Activate control",
+    "detail": "Cancel draft"
+  },
+  {
+    "at": "2026-11-18T17:57:46.909Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:47.450Z",
+    "action": "Activate control",
+    "detail": "Review change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:57:47.986Z",
+    "action": "Activate control",
+    "detail": "Keep change draft"
+  },
+  {
+    "at": "2026-11-18T17:57:48.526Z",
+    "action": "Activate control",
+    "detail": "Review change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:57:49.062Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:57:49.379Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:49.942Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:50.212Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:50.785Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:57:51.396Z",
+    "action": "Start actual optional recovery journey",
+    "detail": "430x932"
+  },
+  {
+    "at": "2026-11-18T17:57:53.839Z",
+    "action": "Activate control",
+    "detail": "Begin"
+  },
+  {
+    "at": "2026-11-18T17:57:54.400Z",
+    "action": "Enter synthetic value",
+    "detail": "Day of birth"
+  },
+  {
+    "at": "2026-11-18T17:57:54.567Z",
+    "action": "Enter synthetic value",
+    "detail": "Month of birth"
+  },
+  {
+    "at": "2026-11-18T17:57:54.736Z",
+    "action": "Enter synthetic value",
+    "detail": "Year of birth"
+  },
+  {
+    "at": "2026-11-18T17:57:54.890Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:57:55.460Z",
+    "action": "Activate control",
+    "detail": "I agree. Continue"
+  },
+  {
+    "at": "2026-11-18T17:57:56.042Z",
+    "action": "Activate control containing",
+    "detail": "Clear skin"
+  },
+  {
+    "at": "2026-11-18T17:57:56.579Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:57:57.133Z",
+    "action": "Activate control",
+    "detail": "Shiny in places"
+  },
+  {
+    "at": "2026-11-18T17:57:57.669Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:57:58.207Z",
+    "action": "Activate control",
+    "detail": "Rarely"
+  },
+  {
+    "at": "2026-11-18T17:57:58.743Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:57:59.281Z",
+    "action": "Activate control",
+    "detail": "Often stings, burns, or reddens"
+  },
+  {
+    "at": "2026-11-18T17:57:59.817Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:00.354Z",
+    "action": "Activate control",
+    "detail": "Frequently"
+  },
+  {
+    "at": "2026-11-18T17:58:00.890Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:01.428Z",
+    "action": "Activate control",
+    "detail": "Yes, noticeably"
+  },
+  {
+    "at": "2026-11-18T17:58:01.963Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:02.503Z",
+    "action": "Activate control",
+    "detail": "Weeks or longer"
+  },
+  {
+    "at": "2026-11-18T17:58:03.039Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:03.577Z",
+    "action": "Activate control",
+    "detail": "Fine lines or firmness changes are visible"
+  },
+  {
+    "at": "2026-11-18T17:58:04.099Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:04.638Z",
+    "action": "Activate control",
+    "detail": "A lot over time"
+  },
+  {
+    "at": "2026-11-18T17:58:05.174Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:05.712Z",
+    "action": "Activate control",
+    "detail": "Sometimes burns"
+  },
+  {
+    "at": "2026-11-18T17:58:06.248Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:06.787Z",
+    "action": "Activate control",
+    "detail": "Tone 4"
+  },
+  {
+    "at": "2026-11-18T17:58:07.322Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:07.861Z",
+    "action": "Activate control",
+    "detail": "None that I know of"
+  },
+  {
+    "at": "2026-11-18T17:58:08.396Z",
+    "action": "Activate control",
+    "detail": "Next"
+  },
+  {
+    "at": "2026-11-18T17:58:08.935Z",
+    "action": "Activate control",
+    "detail": "No"
+  },
+  {
+    "at": "2026-11-18T17:58:09.455Z",
+    "action": "Activate control",
+    "detail": "See my profile"
+  },
+  {
+    "at": "2026-11-18T17:58:10.011Z",
+    "action": "Enter synthetic value",
+    "detail": "Product name"
+  },
+  {
+    "at": "2026-11-18T17:58:10.179Z",
+    "action": "Activate control",
+    "detail": "Cleanser"
+  },
+  {
+    "at": "2026-11-18T17:58:10.716Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T17:58:11.284Z",
+    "action": "Activate control",
+    "detail": "Just opened it"
+  },
+  {
+    "at": "2026-11-18T17:58:11.820Z",
+    "action": "Activate control",
+    "detail": "Add to shelf"
+  },
+  {
+    "at": "2026-11-18T17:58:12.392Z",
+    "action": "Activate control",
+    "detail": "Continue with 1 product"
+  },
+  {
+    "at": "2026-11-18T17:58:15.320Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:58:15.873Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T17:58:16.414Z",
+    "action": "Activate control",
+    "detail": "Continue"
+  },
+  {
+    "at": "2026-11-18T17:58:16.954Z",
+    "action": "Activate control",
+    "detail": "Not now"
+  },
+  {
+    "at": "2026-11-18T17:58:17.524Z",
+    "action": "Activate control containing",
+    "detail": "Continue with the free plan"
+  },
+  {
+    "at": "2026-11-18T17:58:19.708Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:20.244Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:20.841Z",
+    "action": "Activate control",
+    "detail": "Back to optional changes"
+  },
+  {
+    "at": "2026-11-18T17:58:21.371Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:21.907Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:58:22.442Z",
+    "action": "Enter synthetic value",
+    "detail": "Observed local date"
+  },
+  {
+    "at": "2026-11-18T17:58:22.611Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:58:22.779Z",
+    "action": "Keyboard activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:58:23.104Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:58:24.855Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:25.407Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:25.945Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:58:26.511Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:58:27.040Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:58:28.867Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:29.406Z",
+    "action": "Activate control",
+    "detail": "Correct entry 1"
+  },
+  {
+    "at": "2026-11-18T17:58:29.936Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:58:30.474Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:58:30.643Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:58:31.201Z",
+    "action": "Activate control",
+    "detail": "Cancel draft"
+  },
+  {
+    "at": "2026-11-18T17:58:31.736Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:32.273Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:58:32.812Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:58:32.981Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:58:33.519Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:58:35.246Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:35.798Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:36.364Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:58:36.940Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh changes"
+  },
+  {
+    "at": "2026-11-18T17:58:37.219Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:58:37.747Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:58:38.052Z",
+    "action": "Activate control",
+    "detail": "Retract entry 3"
+  },
+  {
+    "at": "2026-11-18T17:58:38.607Z",
+    "action": "Enter synthetic value",
+    "detail": "Retraction reason"
+  },
+  {
+    "at": "2026-11-18T17:58:38.775Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:58:40.919Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:41.458Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:41.995Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:58:42.568Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:58:43.101Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:58:43.443Z",
+    "action": "Activate control",
+    "detail": "Correct entry 1"
+  },
+  {
+    "at": "2026-11-18T17:58:43.976Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:58:44.514Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:58:44.684Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:58:46.858Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:47.412Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:47.946Z",
+    "action": "Activate control",
+    "detail": "Resume saved change draft"
+  },
+  {
+    "at": "2026-11-18T17:58:48.499Z",
+    "action": "Activate control",
+    "detail": "Review this change"
+  },
+  {
+    "at": "2026-11-18T17:58:49.035Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm and save this change"
+  },
+  {
+    "at": "2026-11-18T17:58:49.340Z",
+    "action": "Activate control",
+    "detail": "Record a change (optional)"
+  },
+  {
+    "at": "2026-11-18T17:58:49.894Z",
+    "action": "Activate control",
+    "detail": "Other personal note"
+  },
+  {
+    "at": "2026-11-18T17:58:50.431Z",
+    "action": "Enter synthetic value",
+    "detail": "Your factual note"
+  },
+  {
+    "at": "2026-11-18T17:58:50.601Z",
+    "action": "Activate control",
+    "detail": "Save change draft on this device"
+  },
+  {
+    "at": "2026-11-18T17:58:51.157Z",
+    "action": "Activate control",
+    "detail": "Cancel draft"
+  },
+  {
+    "at": "2026-11-18T17:58:51.693Z",
+    "action": "Activate control",
+    "detail": "Saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:52.232Z",
+    "action": "Activate control",
+    "detail": "Review change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:58:52.769Z",
+    "action": "Activate control",
+    "detail": "Keep change draft"
+  },
+  {
+    "at": "2026-11-18T17:58:53.292Z",
+    "action": "Activate control",
+    "detail": "Review change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:58:53.828Z",
+    "action": "Keyboard activate control",
+    "detail": "Confirm change draft discard"
+  },
+  {
+    "at": "2026-11-18T17:58:54.149Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:54.736Z",
+    "action": "Keyboard activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:55.006Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:55.571Z",
+    "action": "Activate control",
+    "detail": "Refresh saved change drafts"
+  },
+  {
+    "at": "2026-11-18T17:58:56.147Z",
+    "action": "PASS optional change recovery journeys",
+    "detail": "375x667, 390x844, 430x932"
+  }
+]

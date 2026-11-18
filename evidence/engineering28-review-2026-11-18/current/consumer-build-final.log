@@ -1,0 +1,135 @@
+› [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+
+Static rendering is enabled. Learn more: https://docs.expo.dev/router/web/static-rendering/
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| › [@sentry/react-native/expo] Missing config for organization, project. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/
+ WARN  Attempted to import the module "[LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\node_modules\@noble\hashes\crypto.js" which is not listed in the "exports" of "[LOCAL_USER_HOME]\Documents\ChatGPT\MasterV2Code\c16-candidate\node_modules\@noble\hashes" under the requested subpath "./crypto.js". Falling back to file-based resolution. Consider updating the call site or asking the package maintainer(s) to expose this API.
+λ Bundled 49903ms node_modules\@expo\router-server\node\render.js (2604 modules)
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 51269ms node_modules\expo-router\entry.js (2574 modules)
+
+› web bundles (10):
+_expo/static/css/web-f5eb67fe5b9f2284a50711ea462a4632.css (26KB)
+_expo/static/js/web/ActualRoutinePanel-bb73bff361e9a348f8caab46237a2f56.js (14KB)
+_expo/static/js/web/BottleUseHistory-196f53ef5115a9b0a10f067530d6da22.js (5.4KB)
+_expo/static/js/web/diaryBriefPhoto-946fd40051feefa91d32b614b4cf5b9d.js (4.8KB)
+_expo/static/js/web/DiaryBriefPhotoPreview-418dcaafd7977af55859e95ddd547b1c.js (1.2KB)
+_expo/static/js/web/entry-35655c9f031e1da4368e567a2b76d342.js (6.2MB)
+_expo/static/js/web/index-e7335c8e48b794449f092ef652e9129c.js (897KB)
+_expo/static/js/web/index-f41dc749c1168000b02263781461ff4a.js (46KB)
+_expo/static/js/web/NotificationPreferenceScheduleReconciler-fe1b1c2198bf6ad2841d69ee9028823a.js (1.6KB)
+_expo/static/js/web/planSourceFence44-9ee2edec45abe3811fa960875779e7a3.js (5.5KB)
+
+› Static routes (87):
+/you (22KB)
+/ (index) (22KB)
+/shelf (22KB)
+/today (22KB)
+/_sitemap (18KB)
+/progress (22KB)
+/ask (22KB)
+/shelf/add (22KB)
+/shelf/ocr (22KB)
+/+not-found (18KB)
+/(tabs)/you (22KB)
+/cycle/week (22KB)
+/shelf/[id] (22KB)
+/shelf/scan (22KB)
+/ask/consent (22KB)
+/photos/[id] (22KB)
+/s/[shareId] (22KB)
+/trend/optin (22KB)
+/(tabs)/shelf (22KB)
+/(tabs)/today (22KB)
+/routine/plan (22KB)
+/routine/ramp (22KB)
+/shelf/drafts (22KB)
+/shelf/manual (22KB)
+/shelf/opened (22KB)
+/shelf/search (22KB)
+/community/ask (22KB)
+/photos/review (22KB)
+/progress/[id] (22KB)
+/shelf/archive (22KB)
+/cycle/recovery (22KB)
+/cycle/settings (22KB)
+/onboarding/age (22KB)
+/paywall/upsell (22KB)
+/photos/capture (22KB)
+/progress/about (22KB)
+/routine/streak (22KB)
+/shelf/no-match (22KB)
+/trend/fairness (22KB)
+/(tabs)/progress (22KB)
+/commerce/stacks (22KB)
+/community (22KB)
+/cycle/procedure (22KB)
+/onboarding/quiz (22KB)
+/paywall/reoffer (22KB)
+/paywall/success (22KB)
+/paywall/winback (22KB)
+/progress/review (22KB)
+/routine/records (22KB)
+/routine/reorder (22KB)
+/routine/widgets (22KB)
+/settings/timing (22KB)
+/shelf/replenish (22KB)
+/commerce/consent (22KB)
+/cycle/disruption (22KB)
+/onboarding/goals (22KB)
+/progress/capture (22KB)
+/settings/privacy (22KB)
+/conflict/[ruleId] (22KB)
+/cycle/why-tonight (22KB)
+/onboarding/reveal (22KB)
+/paywall/downgrade (22KB)
+/routine/tolerance (22KB)
+/cycle/phased-intro (22KB)
+/onboarding/account (22KB)
+/onboarding/consent (22KB)
+/onboarding/paywall (22KB)
+/routine/adaptation (22KB)
+/community/note/[id] (22KB)
+/onboarding/products (22KB)
+/shelf/intake-drafts (22KB)
+/onboarding/analyzing (22KB)
+/recommendations/[id] (22KB)
+/routine/welcome-back (22KB)
+/commerce/transparency (22KB)
+/commerce/stack/[slug] (22KB)
+/recommendations (22KB)
+/settings/skin-profile (22KB)
+/settings/subscription (22KB)
+/shelf/formula-history (22KB)
+/settings/beta-feedback (22KB)
+/settings/notifications (22KB)
+/shelf/catalog-recovery (22KB)
+/share/conflict/[ruleId] (22KB)
+/onboarding/notifications (22KB)
+/community/people-like-you (22KB)
+/recommendations/preferences (22KB)
+
+Exported: [LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/ENGINEERING28_EVIDENCE/build/consumer
