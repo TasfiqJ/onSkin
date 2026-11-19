@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-19T20:50:51.779953+00:00",
+  "payloadCommit": "56fcaae76c7113dd9a0b29688d53e8314b0d98da",
+  "payloadManifestSha256": "b597e96e79c8c9a399953cd71bf108f36fa242d6b50319f8f16a5d779a39d337",
+  "files": [
+    {
+      "path": "FINAL_INDEX.md",
+      "bytes": 4363,
+      "sha256": "51b119e346fa8e8a26e7994b08fa2c639cfc4cc8ea9ebdb32a833ab733ebad9b"
+    },
+    {
+      "path": "REMOTE_VERIFICATION.json",
+      "bytes": 189355,
+      "sha256": "fca55e373d617c165f4f55face4366957844f069b84da5579940d55dbf4110f1"
+    }
+  ],
+  "manifestExcludesItself": true
+}
