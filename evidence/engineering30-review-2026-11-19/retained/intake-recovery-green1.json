@@ -1,0 +1,40 @@
+{
+  "label": "intake-recovery-green1",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/manualIntakeDraftUI21.test.ts",
+    "src/features/shelf/compactManual46.test.ts",
+    "src/features/shelf/manualDraftRecovery.campaign26.test.ts"
+  ],
+  "before": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "4bfc09387f5793a3950be8644f334201fb9ada4efa03d24bf155fdb7e21b9718"
+  },
+  "start": "2026-11-19T19:41:54.218720+00:00",
+  "freeBytesBefore": 157489799168,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 1,
+  "after": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "4bfc09387f5793a3950be8644f334201fb9ada4efa03d24bf155fdb7e21b9718"
+  },
+  "end": "2026-11-19T19:41:59.562916+00:00",
+  "freeBytesAfter": 157489725440,
+  "logBytes": 3129,
+  "logSha256": "76cad6f3cabdfd8cb01d11dbe4d5b91ff895ff6754e95e3d4da2c3f78298101f"
+}

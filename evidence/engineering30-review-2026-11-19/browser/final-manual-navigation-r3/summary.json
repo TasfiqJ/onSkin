@@ -1,0 +1,42 @@
+{
+  "surface": "actual Expo web; isolated synthetic development identity, invented text",
+  "sourceGitSha": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+  "sourceFiles": {
+    "apps/mobile/src/app/shelf/manual.tsx": "9eb9f63db49d2483f595829d367e251d7fe2b9b9e0257de62c09c5345cc4e1ad",
+    "apps/mobile/src/features/shelf/IntakeContext.tsx": "ea11fb111e0fd709c42ee844c56f18274abbddd7533dc140a91b16338a61d93e",
+    "apps/mobile/src/lib/accessibility/modalBackground.ts": "499ed23aa2420d2472cea5e9d9f72d42616f4c87eecd231237c316645354ab5b",
+    "scripts/e2e/manual-intake-recovery.mjs": "e6e4e27e07e2312f2aeee78d8398cd527bc521be387bc3267158f9fda779450d"
+  },
+  "scenarios": [
+    {
+      "width": 375,
+      "height": 667,
+      "routeRemovalRecovery": "pass",
+      "openingBack": "pass",
+      "explicitSave": "pass",
+      "keyboard": "pass",
+      "cancelClear": "pass",
+      "presetBackRecovery": "pass",
+      "freshPreset": "pass",
+      "categoryFocusContainment": "pass",
+      "categoryBackgroundAxIsolation": "pass",
+      "categoryEscapeAndSelectionFocusReturn": "pass"
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "routeRemovalRecovery": "pass",
+      "openingBack": "pass",
+      "explicitSave": "pass",
+      "keyboard": "pass",
+      "cancelClear": "pass",
+      "presetBackRecovery": "pass",
+      "freshPreset": "pass",
+      "categoryFocusContainment": "pass",
+      "categoryBackgroundAxIsolation": "pass",
+      "categoryEscapeAndSelectionFocusReturn": "pass"
+    }
+  ],
+  "verdict": "pass",
+  "pageErrors": []
+}

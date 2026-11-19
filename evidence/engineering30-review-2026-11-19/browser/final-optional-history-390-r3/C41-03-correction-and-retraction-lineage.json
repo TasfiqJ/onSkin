@@ -1,0 +1,124 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 Good morning. 1 step left in your morning routine. Shelf projection · no actual routine applied. Review and apply to record version-bound use. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Factual notes you choose to record, separate from check-offs. These are your reports, not a diagnosis or an app observation. Saved change drafts Show current observations All recorded history · 4 matching entries. Corrections and retractions retain the original record. 2026-11-18 · Used something different Earlier observation Owner reported · Entry 1 · Recorded 2026-11-19T20:38:33.700Z Synthetic41: I used a different cleanser. Event 12214f97-752d-4a88-b282-905376392794 Correct entry 1 Retract entry 1 2026-11-18 · Other personal note Current observation Correction of entry 1 · Entry 2 · Recorded 2026-11-19T20:38:36.346Z Synthetic41 correction: I used my usual cleanser. Event 02643d12-5290-474f-a835-caccb9d73593 Correct entry 2 Retract entry 2 2026-11-19 · No change to report Retracted observation Owner reported · Entry 3 · Recorded 2026-11-19T20:38:38.043Z Event 2a0c752c-9ddd-4a84-8d40-1e7f5eacb274 Correct entry 3 Retract entry 3 2026-11-19 · Other personal note Retraction record Retraction of entry 3 · Entry 4 · Recorded 2026-11-19T20:38:39.893Z Synthetic41: I retract that no-change report. Event 40356aea-d5ab-42a8-ae84-c6cefd0db217 Correct entry 4 Retract entry 4 Saved on this device and read back. Record a change (optional) Refresh changes Local to this device; notes are not sent with check-offs. Clearing local data removes this history. Uninstalling or losing the encryption key may lose it. Local exports may include it; exported copies cannot be revoked and cannot be imported here. ✦ A few honest suggestions 2 things we’d gently suggest › Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retract entry 3",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": -35
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Correct entry 4",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 242
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retract entry 4",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 306
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Record a change (optional)",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 414
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Refresh changes",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 482
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 699
+    },
+    {
+      "disabled": false,
+      "height": 61.89,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 84.85,
+      "x": 25.77,
+      "y": 762.93
+    },
+    {
+      "disabled": false,
+      "height": 61.66,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 84.54,
+      "x": 110.46,
+      "y": 763.35
+    },
+    {
+      "disabled": false,
+      "height": 61.66,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 84.54,
+      "x": 195,
+      "y": 763.35
+    },
+    {
+      "disabled": false,
+      "height": 61.66,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 84.54,
+      "x": 279.54,
+      "y": 763.35
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8386/today?routine=AM",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

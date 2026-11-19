@@ -1,0 +1,59 @@
+{
+  "path": "/shelf/opened",
+  "text": "x\nAdd by hand\nThe floor under every other path. This always works, even fully offline.\nSaved draft revision 2. Review these original values before continuing.\nSave intake draft on this device\nSaved intake drafts\nPRODUCT NAME\nBRAND\nCATEGORY\nCleanser\n▾\nBARCODE (OPTIONAL)\nEAN-8\nUPC-E\nINGREDIENTS · optional, we’ll find the actives\nOn the next step, record PAO only when it is printed beside the open-jar symbol. Otherwise leave it unknown.\nContinue\n◴\nx\nWhen did you open it?\nChoose the state that matches this package. A PAO clock starts only after your choice.\nReview product and opening choices\n  Synthetic durable intake   ·   Synthetic original brand  \nCategory: Cleanser. Barcode: 96385074 (EAN-8).\nBarcode to save: 96385074. This does not verify a catalog match or product identity.\nIngredients as entered: Aqua,\n  Glycerin; synthetic intake .\nIngredient entries to save: Aqua, Glycerin, Synthetic Intake. Local parsing: partial. Parsing does not confirm the printed label, formula, safety or clinical suitability.\nAdding saves an owner-entered Shelf product. It does not apply a routine or record product use.\nOpening: 2026-10-01. PAO: 17 months (from label).\nSaved intake revision 2. Review before adding.\nSave intake draft on this device\nJust opened it\nClock starts today\n✓\nPick a date\n2026-10-01\nExact opened date\n2 weeks ago\n1 month ago\n3 months ago\n6 months ago\nNot opened yet\nNo PAO clock; add a printed date if the pack has one\nPAO: 17 months after opening\nfrom label · tap to change\n✎\nChoose the months printed beside the open-jar symbol.\n3 mo\n6 mo\n9 mo\n12 mo\n18 mo\n24 mo\nAnother value printed on the label\nUse value\nEnter whole months from 1 to 120 exactly as printed.\nNot on label\nAdd to shelf",
+  "width": 390,
+  "height": 844,
+  "overflow": 0,
+  "inputs": [
+    {
+      "label": "Quick Find saved products",
+      "value": ""
+    },
+    {
+      "label": "Product name",
+      "value": "  Synthetic durable intake  "
+    },
+    {
+      "label": "Brand",
+      "value": "  Synthetic original brand  "
+    },
+    {
+      "label": "Barcode, optional",
+      "value": "96385074"
+    },
+    {
+      "label": "Ingredients",
+      "value": "Aqua,\n  Glycerin; synthetic intake "
+    },
+    {
+      "label": "Exact opened date",
+      "value": "2026-10-01"
+    },
+    {
+      "label": "PAO months printed on label",
+      "value": "17"
+    }
+  ],
+  "choices": [
+    {
+      "label": "Eight-digit barcode type, EAN-8",
+      "checked": "true"
+    },
+    {
+      "label": "Eight-digit barcode type, UPC-E",
+      "checked": "false"
+    },
+    {
+      "label": "Just opened it",
+      "checked": "false"
+    },
+    {
+      "label": "Pick a date",
+      "checked": "true"
+    },
+    {
+      "label": "Not opened yet",
+      "checked": "false"
+    }
+  ]
+}

@@ -1,0 +1,269 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 Good morning. 1 step left in your morning routine. Shelf projection · no actual routine applied. Review and apply to record version-bound use. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Record a change (optional) Open your private recorded changes or start a factual note. This is separate from check-offs. Saved change drafts ✦ A few honest suggestions 2 things we’d gently suggest › Saved bottle drafts Saved intake drafts Shelf 3 products ＋ Add QUICK FIND · SAVED PRODUCTS Clear 0 of 3 saved products · Expiring All Actives Expiring Printed or reviewed PAO dates, soonest first. Compare saved products Prepare appointment brief Interaction guidance is unavailable We won't show a compatibility result for these products until that review is complete. FIRST ROUTINE Explore a routine from your Shelf. For 3 saved products. The next screen checks access to the full routine builder. Missing steps stay visible, not invented. Shelf keeps your product list instead of making you remember it. Products awaiting reviewed order or timing stay out of a routine. Your saved records remain available. Build my routine No products match this filter. Unknown dates aren’t included. Add a product Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Review actual routine version and recorded use",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 124
+    },
+    {
+      "disabled": false,
+      "height": 72,
+      "hitOk": false,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 247
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Record a change (optional)",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 400
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Saved change drafts",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 516
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Saved bottle drafts",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 0
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Saved intake drafts",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 56
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 267.94,
+      "y": 120
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Quick Find saved products",
+      "role": "input",
+      "selected": false,
+      "width": 268.61,
+      "x": 24,
+      "y": 220
+    },
+    {
+      "disabled": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Clear Quick Find",
+      "role": "button",
+      "selected": false,
+      "width": 50.39,
+      "x": 300.61,
+      "y": 221
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Compare saved products",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 400
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Prepare appointment brief",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 456
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 106.25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": true,
+      "width": 81.55,
+      "x": 187.35,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 4,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Review actual routine version and recorded use",
+        "role": "button",
+        "selected": false,
+        "width": 327,
+        "x": 24,
+        "y": 124
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 72,
+        "hitOk": false,
+        "label": "Mineral SPF 50",
+        "role": "checkbox",
+        "selected": false,
+        "width": 285,
+        "x": 45,
+        "y": 247
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Record a change (optional)",
+        "role": "button",
+        "selected": false,
+        "width": 293,
+        "x": 41,
+        "y": 400
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Saved change drafts",
+        "role": "button",
+        "selected": false,
+        "width": 293,
+        "x": 41,
+        "y": 516
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8388/shelf",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

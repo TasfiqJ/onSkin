@@ -1,0 +1,36 @@
+{
+  "label": "lifecycle-browser-working4",
+  "command": [
+    "node",
+    "scripts/e2e/manual-intake-drafts21.mjs"
+  ],
+  "before": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+  },
+  "start": "2026-11-19T20:00:46.244853+00:00",
+  "freeBytesBefore": 157338517504,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {
+    "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\lifecycle-browser-working4",
+    "ONSKIN_INTAKE_LIFECYCLE30": "1"
+  },
+  "exit": 1,
+  "after": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+  },
+  "end": "2026-11-19T20:02:27.276360+00:00",
+  "freeBytesAfter": 157299056640,
+  "logBytes": 4843,
+  "logSha256": "863f2c195a8fcdb1acf75c98d8a67586e46f22de2d51147d37ce03ccd81ab125"
+}

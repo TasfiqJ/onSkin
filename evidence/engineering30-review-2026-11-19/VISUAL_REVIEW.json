@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-19T20:44:43.870692+00:00",
+  "source": {
+    "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+    "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "selected": [
+    {
+      "path": "final-lifecycle-browser-r3/375x667-large-text-discard-dialog.png",
+      "bytes": 59931,
+      "sha256": "e1da9e8313346e7f4f93cd107c27c11e2257af7827898ac1ddf4015e660756e5"
+    },
+    {
+      "path": "final-lifecycle-browser-r3/430x932-actual-saved-product-use.png",
+      "bytes": 78237,
+      "sha256": "15ad12c823d8979e17c095d099b94e2df7914c1360afe4e0d3b36a17c4f4ad1f"
+    },
+    {
+      "path": "daily-original-375/FAILURE.png",
+      "bytes": 76750,
+      "sha256": "12eaff271d4894f417a27dffd57330f1f8db24e088cb93384c6a95f8c98b59b7"
+    },
+    {
+      "path": "lifecycle-browser-working2/FAILURE.png",
+      "bytes": 47044,
+      "sha256": "244cee188cc2adf0fce7b6e5ba1ff2d9e767ad4063eff929a7f55104dcbb426e"
+    }
+  ],
+  "observed": [
+    "Final large body/control text scrolls inside the discard dialog; current Keep control remains visible and focusable. Header text is not claimed globally scaled.",
+    "Final actual routine/history visibly distinguishes apply from owner-recorded use, with corrected bottle observation retained at check-off.",
+    "Original disabled Add failure visibly has no selected opening state.",
+    "Earlier conflict dialog occluded the refresh status; the corrected connected run retires that dialog and exposes refresh."
+  ],
+  "limits": "Selected local screenshots inspected; full original PNGs remain local by hash. Actual keyboard, geometry, AX exclusion, no-overflow, canonical state and reload assertions are in browser receipts. No native VoiceOver or device claim."
+}

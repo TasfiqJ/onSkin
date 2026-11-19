@@ -1,0 +1,2972 @@
+[
+  {
+    "label": "canceled-discard-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "079001075edd6e9f3342b9b03cd35481675a5dae901c4e7f9b6a5034a93e12d3"
+    },
+    "start": "2026-11-19T19:47:09.422795+00:00",
+    "freeBytesBefore": 157453795328,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "079001075edd6e9f3342b9b03cd35481675a5dae901c4e7f9b6a5034a93e12d3"
+    },
+    "end": "2026-11-19T19:47:15.372062+00:00",
+    "freeBytesAfter": 157453193216,
+    "logBytes": 11051,
+    "logSha256": "e2b8d84651ffec0b2277df0a93372020e389e501753c9de4d7687cd4cb743059"
+  },
+  {
+    "label": "canceled-discard-green2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "37eacf397d1282ddef94152874876de8261763916007620e969a48aaba8d3768"
+    },
+    "start": "2026-11-19T19:47:24.624799+00:00",
+    "freeBytesBefore": 157453189120,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "37eacf397d1282ddef94152874876de8261763916007620e969a48aaba8d3768"
+    },
+    "end": "2026-11-19T19:47:30.601758+00:00",
+    "freeBytesAfter": 157453189120,
+    "logBytes": 353,
+    "logSha256": "e6ff71c91543bf9e2b9c8422f30637e8740d10d76bac8207ce922c0426ac228f"
+  },
+  {
+    "label": "canceled-discard-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "cfd42c8201b516416cc15e000e190ffc21154ecccf21d5995733f4ec9093f7ac"
+    },
+    "start": "2026-11-19T19:46:38.359439+00:00",
+    "freeBytesBefore": 157453811712,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "cfd42c8201b516416cc15e000e190ffc21154ecccf21d5995733f4ec9093f7ac"
+    },
+    "end": "2026-11-19T19:46:44.324624+00:00",
+    "freeBytesAfter": 157453791232,
+    "logBytes": 27360,
+    "logSha256": "5a9dcc1844685c22a32ba7f18d382121d23345dfdbd6129a3a6ac48a21f82a1a"
+  },
+  {
+    "label": "changed-lint-working3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/app/shelf/manual.tsx",
+      "src/app/shelf/opened.tsx",
+      "src/app/shelf/intake-drafts.tsx",
+      "src/features/shelf/IntakeDecisionDialog.tsx",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7c9164a4bf94588e51b013bfee4d6c1803cdff5b7474639ac69c43c0f376463f"
+    },
+    "start": "2026-11-19T19:52:54.695969+00:00",
+    "freeBytesBefore": 157401747456,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7c9164a4bf94588e51b013bfee4d6c1803cdff5b7474639ac69c43c0f376463f"
+    },
+    "end": "2026-11-19T19:53:01.941483+00:00",
+    "freeBytesAfter": 157401747456,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "cross-owner-prepared-working-430",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--cross-owner"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M docs/ENGINEERING30_REPORT.md\n M scripts/e2e/manual-intake-lifecycle30.mjs\n M scripts/e2e/onboarding-first-session.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "dc18c47361f736b51bfcd5d135e3d191c16828b3a70e57bfaac248ce58e1a06c"
+    },
+    "start": "2026-11-19T20:18:22.093828+00:00",
+    "freeBytesBefore": 157108187136,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M docs/ENGINEERING30_REPORT.md\n M scripts/e2e/manual-intake-lifecycle30.mjs\n M scripts/e2e/onboarding-first-session.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "dc18c47361f736b51bfcd5d135e3d191c16828b3a70e57bfaac248ce58e1a06c"
+    },
+    "end": "2026-11-19T20:20:00.648293+00:00",
+    "freeBytesAfter": 157091192832,
+    "logBytes": 635,
+    "logSha256": "4e08dbe1b3e306ad1c7a0e66a953c0bab07a5371b43480494d548bcfe58c1d69"
+  },
+  {
+    "label": "daily-corrected-375",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7adb9619fa0fba08bb0b031c84bbad209d2e2f8714b7679a84013cb732bfac88"
+    },
+    "start": "2026-11-19T19:38:25.595236+00:00",
+    "freeBytesBefore": 157527715840,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\daily-corrected-375",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8385",
+      "ONBOARDING_E2E_DEBUG_PORT": "9485"
+    },
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7adb9619fa0fba08bb0b031c84bbad209d2e2f8714b7679a84013cb732bfac88"
+    },
+    "end": "2026-11-19T19:39:41.479440+00:00",
+    "freeBytesAfter": 157490024448,
+    "logBytes": 145,
+    "logSha256": "d92766a061bbc41a70fa217672d63c182ed4149dfb7b373899323a022913b51e"
+  },
+  {
+    "label": "daily-final-375-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:34:13.937637+00:00",
+    "freeBytesBefore": 156857868288,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\daily-final-375-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8385",
+      "ONBOARDING_E2E_DEBUG_PORT": "9485"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:37:24.405260+00:00",
+    "freeBytesAfter": 155696705536,
+    "logBytes": 144,
+    "logSha256": "c03719c379d1cb88718653698181f1df00f6f3d1a0ee8a018e3f2f699deb81be"
+  },
+  {
+    "label": "daily-final-375",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:08:11.104557+00:00",
+    "freeBytesBefore": 157165514752,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\daily-final-375",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8385",
+      "ONBOARDING_E2E_DEBUG_PORT": "9485"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:09:30.244585+00:00",
+    "freeBytesAfter": 157114183680,
+    "logBytes": 141,
+    "logSha256": "a3006b306b863c228f89a9ae47fca468c88e99667a0f981343f6408739035aba"
+  },
+  {
+    "label": "daily-final-390-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:34:13.937637+00:00",
+    "freeBytesBefore": 156857868288,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\daily-final-390-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+      "ONBOARDING_E2E_PORT": "8386",
+      "ONBOARDING_E2E_DEBUG_PORT": "9486"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:37:25.174581+00:00",
+    "freeBytesAfter": 155689656320,
+    "logBytes": 144,
+    "logSha256": "88cdb1cf64060b9a8281f8c0425fa5a1fa4fa67c1569761ffc3f8ca8d662b8a0"
+  },
+  {
+    "label": "daily-final-430-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:34:13.937637+00:00",
+    "freeBytesBefore": 156857868288,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\daily-final-430-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+      "ONBOARDING_E2E_PORT": "8387",
+      "ONBOARDING_E2E_DEBUG_PORT": "9487"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:37:25.764722+00:00",
+    "freeBytesAfter": 155680722944,
+    "logBytes": 144,
+    "logSha256": "d1e2ad21e57e6ef63abd28173a7797183335f9e1fe25dc38539332f2dcf3179e"
+  },
+  {
+    "label": "daily-original-375",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T19:36:19.659265+00:00",
+    "freeBytesBefore": 157541212160,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\daily-original-375",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8385",
+      "ONBOARDING_E2E_DEBUG_PORT": "9485"
+    },
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T19:37:46.354067+00:00",
+    "freeBytesAfter": 157529042944,
+    "logBytes": 588,
+    "logSha256": "ab04f29aed325fdffda12ba51ae8fdd53c5bec66a3a27d94f7d085c1ca8feab8"
+  },
+  {
+    "label": "discard-conflict-focus-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/formulaHistoryJourney.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+    },
+    "start": "2026-11-19T19:57:37.994253+00:00",
+    "freeBytesBefore": 157367914496,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+    },
+    "end": "2026-11-19T19:57:45.984678+00:00",
+    "freeBytesAfter": 157371846656,
+    "logBytes": 402,
+    "logSha256": "1cccdfb3b139b3c416022917693b218c0837318dcfc853fea4d0ddb10bbc4b75"
+  },
+  {
+    "label": "discard-conflict-focus-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "878410da377af71baae572b9889dd3a8fc44158c36b87ad81da7699b2264f5cf"
+    },
+    "start": "2026-11-19T19:57:31.256790+00:00",
+    "freeBytesBefore": 157367955456,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "878410da377af71baae572b9889dd3a8fc44158c36b87ad81da7699b2264f5cf"
+    },
+    "end": "2026-11-19T19:57:37.352393+00:00",
+    "freeBytesAfter": 157367910400,
+    "logBytes": 102775,
+    "logSha256": "3a24ca1d9cf2e89b81c50592f592ecd2f3e2c1115d7dc124d2a95a82ed58976b"
+  },
+  {
+    "label": "driver-opening-green",
+    "command": [
+      "node",
+      "--test",
+      "scripts/e2e/manual-opening-choice30.test.mjs"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7adb9619fa0fba08bb0b031c84bbad209d2e2f8714b7679a84013cb732bfac88"
+    },
+    "start": "2026-11-19T19:38:24.634188+00:00",
+    "freeBytesBefore": 157527851008,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7adb9619fa0fba08bb0b031c84bbad209d2e2f8714b7679a84013cb732bfac88"
+    },
+    "end": "2026-11-19T19:38:24.978833+00:00",
+    "freeBytesAfter": 157527846912,
+    "logBytes": 815,
+    "logSha256": "cd6c7910d41ae60bd46a48f26d314734dae8dd2bc9cb4ea90a690edb445dca67"
+  },
+  {
+    "label": "final-consumer-authority-r2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutine",
+      "src/features/today/optionalChange",
+      "src/features/today/optionalHistoryRecovery15.test.ts",
+      "src/lib/storage/privateKVCommitFence28.test.ts",
+      "src/features/retainedRecovery",
+      "src/lib/consent",
+      "src/lib/auth/localAccountIsolation.test.ts"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:24:04.853308+00:00",
+    "freeBytesBefore": 151020285952,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:24:17.789426+00:00",
+    "freeBytesAfter": 150997938176,
+    "logBytes": 570,
+    "logSha256": "33e685b1912946b7a575662e2d94e5edee480088f9cd332ced117e4cdb7f17c7"
+  },
+  {
+    "label": "final-consumer-authority-r3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutine",
+      "src/features/today/optionalChange",
+      "src/features/today/optionalHistoryRecovery15.test.ts",
+      "src/lib/storage/privateKVCommitFence28.test.ts",
+      "src/features/retainedRecovery",
+      "src/lib/consent",
+      "src/lib/auth/localAccountIsolation.test.ts"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:33:23.222012+00:00",
+    "freeBytesBefore": 156859420672,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:33:31.234337+00:00",
+    "freeBytesAfter": 156859293696,
+    "logBytes": 568,
+    "logSha256": "48579c6328759977fbec91d2fbd8e076a633cb0a58f093593d1300f7b7962ec3"
+  },
+  {
+    "label": "final-consumer-authority",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutine",
+      "src/features/today/optionalChange",
+      "src/features/today/optionalHistoryRecovery15.test.ts",
+      "src/lib/storage/privateKVCommitFence28.test.ts",
+      "src/features/retainedRecovery",
+      "src/lib/consent",
+      "src/lib/auth/localAccountIsolation.test.ts"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:06:01.404717+00:00",
+    "freeBytesBefore": 157336465408,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:06:13.389051+00:00",
+    "freeBytesAfter": 157301284864,
+    "logBytes": 569,
+    "logSha256": "9b2020572462cb948eec271a79c13a49543a2840cd500087629aae36e06d93b1"
+  },
+  {
+    "label": "final-consumer-build-r2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "expo",
+      "export",
+      "--platform",
+      "web",
+      "--output-dir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\build\\consumer-07b08d9b"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:24:27.442640+00:00",
+    "freeBytesBefore": 150992486400,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:25:33.791957+00:00",
+    "freeBytesAfter": 153404178432,
+    "logBytes": 6299,
+    "logSha256": "fa8542b4b4a1f45a6462ab9a40af86541af6eddf409b1ada2463a0f8649ff3a8"
+  },
+  {
+    "label": "final-consumer-build-r3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "expo",
+      "export",
+      "--platform",
+      "web",
+      "--output-dir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\build\\consumer-final3"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:32:20.085585+00:00",
+    "freeBytesBefore": 156929519616,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:33:13.574697+00:00",
+    "freeBytesAfter": 156855513088,
+    "logBytes": 6067,
+    "logSha256": "1cc567ebc7406a5a5ef38fa3627156b3f82fda9faa4c8897d7fbfbe492cc92a7"
+  },
+  {
+    "label": "final-consumer-build",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "expo",
+      "export",
+      "--platform",
+      "web",
+      "--output-dir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\build\\consumer-e471655b"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:07:14.378153+00:00",
+    "freeBytesBefore": 157262970880,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:08:12.814892+00:00",
+    "freeBytesAfter": 157153689600,
+    "logBytes": 6362,
+    "logSha256": "a9c49ec580d6be9e89b761184aab3889b210b058733b3eaf8ba40abd9988dc34"
+  },
+  {
+    "label": "final-cross-owner-375-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--cross-owner"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:39:14.209165+00:00",
+    "freeBytesBefore": 155532804096,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-cross-owner-375-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8388",
+      "ONBOARDING_E2E_DEBUG_PORT": "9488"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:42:02.484542+00:00",
+    "freeBytesAfter": 156650672128,
+    "logBytes": 137,
+    "logSha256": "93c553c54a21f9beaec00eb551979c49fd287488a19cf4b2e75a445d51eb060f"
+  },
+  {
+    "label": "final-cross-owner-430-r2",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--cross-owner"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:11:57.467499+00:00",
+    "freeBytesBefore": 157109420032,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-cross-owner-430-r2",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+      "ONBOARDING_E2E_PORT": "8390",
+      "ONBOARDING_E2E_DEBUG_PORT": "9490"
+    },
+    "exit": 1,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:12:47.254346+00:00",
+    "freeBytesAfter": 157084909568,
+    "logBytes": 499,
+    "logSha256": "03f92d6b654c91192ea2b748ae40b10e5e0cf1a9c8f8e59a770391eeeb5cc694"
+  },
+  {
+    "label": "final-cross-owner-430-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--cross-owner"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:23:07.119845+00:00",
+    "freeBytesBefore": 157205196800,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-cross-owner-430-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+      "ONBOARDING_E2E_PORT": "8390",
+      "ONBOARDING_E2E_DEBUG_PORT": "9490"
+    },
+    "exit": 1,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:25:14.518907+00:00",
+    "freeBytesAfter": 151028727808,
+    "logBytes": 534,
+    "logSha256": "05f83e126fae5019034f1805f5efcf92236c4835cc2de41c713995c6612ede5f"
+  },
+  {
+    "label": "final-cross-owner-430-r4",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--cross-owner"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:39:16.628651+00:00",
+    "freeBytesBefore": 155594096640,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-cross-owner-430-r4",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+      "ONBOARDING_E2E_PORT": "8390",
+      "ONBOARDING_E2E_DEBUG_PORT": "9490"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:42:04.075342+00:00",
+    "freeBytesAfter": 156650663936,
+    "logBytes": 137,
+    "logSha256": "e067b76351ddbf024d0430a4eb4e60a128db63876f4c1546a61bf25fca655275"
+  },
+  {
+    "label": "final-cross-owner-430",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--cross-owner"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:08:11.104557+00:00",
+    "freeBytesBefore": 157165514752,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-cross-owner-430",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+      "ONBOARDING_E2E_PORT": "8390",
+      "ONBOARDING_E2E_DEBUG_PORT": "9490"
+    },
+    "exit": 1,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:10:25.168506+00:00",
+    "freeBytesAfter": 157111820288,
+    "logBytes": 348,
+    "logSha256": "dfd38e5694bd2d2f24a4e1636c452ee43a6ad8a384c48a46b18fd5f753c74792"
+  },
+  {
+    "label": "final-driver-regressions-r2",
+    "command": [
+      "node",
+      "--test",
+      "scripts/e2e/manual-opening-choice30.test.mjs",
+      "scripts/e2e/onboarding-first-session35.test.mjs",
+      "scripts/e2e/retained-safety-assertions.test.mjs",
+      "scripts/e2e/optional-change41.test.mjs",
+      "scripts/e2e/owned-bottle-formula38.test.mjs",
+      "scripts/e2e/formula-driver-coverage46.test.mjs",
+      "scripts/e2e/cat04-catalog-recovery-audit.test.mjs"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:23:41.119514+00:00",
+    "freeBytesBefore": 157028720640,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:23:43.560856+00:00",
+    "freeBytesAfter": 156989399040,
+    "logBytes": 32229,
+    "logSha256": "4920fd66e97764f98d9f89f1bb18a6c514160bf29268291d3aa08deb0c1b0983"
+  },
+  {
+    "label": "final-driver-regressions-r3",
+    "command": [
+      "node",
+      "--test",
+      "scripts/e2e/manual-opening-choice30.test.mjs",
+      "scripts/e2e/onboarding-first-session35.test.mjs",
+      "scripts/e2e/retained-safety-assertions.test.mjs",
+      "scripts/e2e/optional-change41.test.mjs",
+      "scripts/e2e/owned-bottle-formula38.test.mjs",
+      "scripts/e2e/formula-driver-coverage46.test.mjs",
+      "scripts/e2e/cat04-catalog-recovery-audit.test.mjs"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:33:51.492551+00:00",
+    "freeBytesBefore": 156858503168,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:33:53.179482+00:00",
+    "freeBytesAfter": 156852445184,
+    "logBytes": 32234,
+    "logSha256": "3e791d62a618b317c7978ca60e765107935634ca1c8cf7ebd39ab82036f19425"
+  },
+  {
+    "label": "final-driver-regressions",
+    "command": [
+      "node",
+      "--test",
+      "scripts/e2e/manual-opening-choice30.test.mjs",
+      "scripts/e2e/onboarding-first-session35.test.mjs",
+      "scripts/e2e/retained-safety-assertions.test.mjs",
+      "scripts/e2e/optional-change41.test.mjs",
+      "scripts/e2e/owned-bottle-formula38.test.mjs",
+      "scripts/e2e/formula-driver-coverage46.test.mjs",
+      "scripts/e2e/cat04-catalog-recovery-audit.test.mjs"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:06:40.364227+00:00",
+    "freeBytesBefore": 157271343104,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:06:42.190956+00:00",
+    "freeBytesAfter": 157263900672,
+    "logBytes": 32230,
+    "logSha256": "6a5efed6b4f63186e0694f5421df95dd720ce5854bb93d9837842b60668cd3e5"
+  },
+  {
+    "label": "final-lifecycle-browser-r2",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:22:56.322333+00:00",
+    "freeBytesBefore": 157079900160,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-lifecycle-browser-r2",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:29:01.652970+00:00",
+    "freeBytesAfter": 156951244800,
+    "logBytes": 14855,
+    "logSha256": "d985c63a6e08a352b68e11b2489038a50f69409ed69abab82e8192ff1d066f27"
+  },
+  {
+    "label": "final-lifecycle-browser-r3",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:34:13.938138+00:00",
+    "freeBytesBefore": 156857868288,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-lifecycle-browser-r3",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:41:40.021369+00:00",
+    "freeBytesAfter": 153796554752,
+    "logBytes": 14855,
+    "logSha256": "d985c63a6e08a352b68e11b2489038a50f69409ed69abab82e8192ff1d066f27"
+  },
+  {
+    "label": "final-lifecycle-browser",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:05:27.268189+00:00",
+    "freeBytesBefore": 157295763456,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-lifecycle-browser",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:10:50.321662+00:00",
+    "freeBytesAfter": 157110018048,
+    "logBytes": 14709,
+    "logSha256": "8aa140b393348ab95daea737699e9277f32d922c6c39f0841cfa577c3ad66690"
+  },
+  {
+    "label": "final-lint-r2",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:22:56.322333+00:00",
+    "freeBytesBefore": 157079900160,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:25:07.979851+00:00",
+    "freeBytesAfter": 150941855744,
+    "logBytes": 1536,
+    "logSha256": "528c6ceb024c842c5e620ac4701fdd77e6b159d44510c9b063a05d186d9e9d27"
+  },
+  {
+    "label": "final-lint-r3",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:31:18.633272+00:00",
+    "freeBytesBefore": 156929617920,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:32:19.772070+00:00",
+    "freeBytesAfter": 156929527808,
+    "logBytes": 1535,
+    "logSha256": "51c569b87813f16bdf5f85c5df65426a1fc99cd0c847a1980cb8936c8b280865"
+  },
+  {
+    "label": "final-lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:05:27.268189+00:00",
+    "freeBytesBefore": 157295763456,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:06:49.618335+00:00",
+    "freeBytesAfter": 157264347136,
+    "logBytes": 1536,
+    "logSha256": "e5718b6f42bf263c6af0a352bc21df0ab0a35ef5234a79b5563e4a5655181cda"
+  },
+  {
+    "label": "final-manual-navigation-r3",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-recovery.mjs",
+      "--evidence",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-manual-navigation-r3"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:39:15.240456+00:00",
+    "freeBytesBefore": 155605856256,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:41:20.905765+00:00",
+    "freeBytesAfter": 148101681152,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-manual-navigation",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-recovery.mjs",
+      "--evidence",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-manual-navigation"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:25:19.015624+00:00",
+    "freeBytesBefore": 151020548096,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:26:42.209255+00:00",
+    "freeBytesAfter": 154217668608,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-manual-recovery-r2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/manualIntakeDrafts.test.ts",
+      "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+      "src/features/shelf/compactManual46.test.ts",
+      "src/features/shelf/intakeRecovery.campaign25.test.ts",
+      "src/features/shelf/confirmedDestructive28.test.ts",
+      "src/features/shelf/postDispatchCommit28.test.ts",
+      "src/features/shelf/formulaHistoryJourney.test.ts"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:24:04.877328+00:00",
+    "freeBytesBefore": 151020109824,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:24:25.675263+00:00",
+    "freeBytesAfter": 150996774912,
+    "logBytes": 707,
+    "logSha256": "cabad16ee4b0e7610aaed40f452c31bb5015fca405437783442c4df11d6f0bd1"
+  },
+  {
+    "label": "final-manual-recovery-r3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/manualIntakeDrafts.test.ts",
+      "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+      "src/features/shelf/compactManual46.test.ts",
+      "src/features/shelf/intakeRecovery.campaign25.test.ts",
+      "src/features/shelf/confirmedDestructive28.test.ts",
+      "src/features/shelf/postDispatchCommit28.test.ts",
+      "src/features/shelf/formulaHistoryJourney.test.ts"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:33:31.525647+00:00",
+    "freeBytesBefore": 156859285504,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:33:46.526786+00:00",
+    "freeBytesAfter": 156858740736,
+    "logBytes": 704,
+    "logSha256": "4e3e8a114b32ab051f329e9ae6b4084e7cd1f152a67a5e8eeb7d370320462147"
+  },
+  {
+    "label": "final-manual-recovery",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/manualIntakeDrafts.test.ts",
+      "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+      "src/features/shelf/compactManual46.test.ts",
+      "src/features/shelf/intakeRecovery.campaign25.test.ts",
+      "src/features/shelf/confirmedDestructive28.test.ts",
+      "src/features/shelf/postDispatchCommit28.test.ts",
+      "src/features/shelf/formulaHistoryJourney.test.ts"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:06:11.914747+00:00",
+    "freeBytesBefore": 157292175360,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:06:30.674492+00:00",
+    "freeBytesAfter": 157271584768,
+    "logBytes": 706,
+    "logSha256": "3b078b3410bfb472d2212e1f7f2f9798e32a63719e8304e4d5fc357525325ac9"
+  },
+  {
+    "label": "final-optional-history-375-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--optional-change41",
+      "--optional-history-recovery15"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:37:24.731741+00:00",
+    "freeBytesBefore": 155696697344,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-optional-history-375-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8385",
+      "ONBOARDING_E2E_DEBUG_PORT": "9485"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:39:13.892999+00:00",
+    "freeBytesAfter": 155532812288,
+    "logBytes": 155,
+    "logSha256": "610547b8544877fadb30288edb7fdde6dcba7a6e72d671892e74a93669b3db73"
+  },
+  {
+    "label": "final-optional-history-390-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--optional-change41",
+      "--optional-history-recovery15"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:37:25.507830+00:00",
+    "freeBytesBefore": 155684831232,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-optional-history-390-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+      "ONBOARDING_E2E_PORT": "8386",
+      "ONBOARDING_E2E_DEBUG_PORT": "9486"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:39:14.819949+00:00",
+    "freeBytesAfter": 155605975040,
+    "logBytes": 155,
+    "logSha256": "ba0d8df6234773e119c1721006182e0109e073ebc2c4c9bdf82b00316a357b6c"
+  },
+  {
+    "label": "final-optional-history-430-r3",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--optional-change41",
+      "--optional-history-recovery15"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:37:26.209161+00:00",
+    "freeBytesBefore": 155672547328,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\final-optional-history-430-r3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+      "ONBOARDING_E2E_PORT": "8387",
+      "ONBOARDING_E2E_DEBUG_PORT": "9487"
+    },
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:39:16.242782+00:00",
+    "freeBytesAfter": 155594104832,
+    "logBytes": 155,
+    "logSha256": "fbd3d0c3542e133e0300d207d43557200f9181f79e88c03f54be8048536a98bf"
+  },
+  {
+    "label": "final-privacy-r2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/privateKV.test.ts",
+      "src/lib/storage/privateKVContentKey.test.ts",
+      "src/lib/storage/privateKVReadOnly25.test.ts",
+      "src/lib/storage/privateKVCreation28.test.ts",
+      "src/lib/consent/healthDataWriteAdmission.test.ts",
+      "src/lib/consent/healthProcessingEpoch.test.ts",
+      "src/lib/auth/accountGeneration.test.ts",
+      "src/lib/auth/localAccountIsolation.test.ts",
+      "src/features/today/optionalChangeDraftProof23.test.ts",
+      "src/features/photos/photoDeleteR3.integration.test.ts",
+      "src/features/photos/encryptedStorage.test.ts",
+      "src/features/settings/localDeviceExport.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/retainedRecovery/localRecoveryDrafts25.test.ts",
+      "src/features/today/optionalChangeNavigation28.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:24:04.858312+00:00",
+    "freeBytesBefore": 151020285952,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:24:18.259534+00:00",
+    "freeBytesAfter": 151003996160,
+    "logBytes": 1120,
+    "logSha256": "fcdda5babfe83f91c604cd47816c430b861fcd7a475abcfff4ca8a73d86af06d"
+  },
+  {
+    "label": "final-privacy-r3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/privateKV.test.ts",
+      "src/lib/storage/privateKVContentKey.test.ts",
+      "src/lib/storage/privateKVReadOnly25.test.ts",
+      "src/lib/storage/privateKVCreation28.test.ts",
+      "src/lib/consent/healthDataWriteAdmission.test.ts",
+      "src/lib/consent/healthProcessingEpoch.test.ts",
+      "src/lib/auth/accountGeneration.test.ts",
+      "src/lib/auth/localAccountIsolation.test.ts",
+      "src/features/today/optionalChangeDraftProof23.test.ts",
+      "src/features/photos/photoDeleteR3.integration.test.ts",
+      "src/features/photos/encryptedStorage.test.ts",
+      "src/features/settings/localDeviceExport.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/retainedRecovery/localRecoveryDrafts25.test.ts",
+      "src/features/today/optionalChangeNavigation28.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:33:15.159194+00:00",
+    "freeBytesBefore": 156855304192,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:33:22.903854+00:00",
+    "freeBytesAfter": 156859494400,
+    "logBytes": 1117,
+    "logSha256": "e3860b50e6a3b2cf6c8b364beb35c787d5c83c72c2b5b6ba709887c0da2ebdf8"
+  },
+  {
+    "label": "final-privacy",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/privateKV.test.ts",
+      "src/lib/storage/privateKVContentKey.test.ts",
+      "src/lib/storage/privateKVReadOnly25.test.ts",
+      "src/lib/storage/privateKVCreation28.test.ts",
+      "src/lib/consent/healthDataWriteAdmission.test.ts",
+      "src/lib/consent/healthProcessingEpoch.test.ts",
+      "src/lib/auth/accountGeneration.test.ts",
+      "src/lib/auth/localAccountIsolation.test.ts",
+      "src/features/today/optionalChangeDraftProof23.test.ts",
+      "src/features/photos/photoDeleteR3.integration.test.ts",
+      "src/features/photos/encryptedStorage.test.ts",
+      "src/features/settings/localDeviceExport.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/retainedRecovery/localRecoveryDrafts25.test.ts",
+      "src/features/today/optionalChangeNavigation28.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:05:52.024677+00:00",
+    "freeBytesBefore": 157380681728,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:06:05.831771+00:00",
+    "freeBytesAfter": 157307961344,
+    "logBytes": 1120,
+    "logSha256": "3ac282ff80f9a2f5f8fd974c5dc3398115cc372c842d99fc19b74ff5b106e898"
+  },
+  {
+    "label": "final-professional-authority-r2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:25:28.297840+00:00",
+    "freeBytesBefore": 150991089664,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:25:33.706807+00:00",
+    "freeBytesAfter": 153404207104,
+    "logBytes": 328,
+    "logSha256": "26eb8aee6788745d8f8e12c85d5528e81b32b45edde7ccdf3e1be1adcf941d9f"
+  },
+  {
+    "label": "final-professional-authority-r3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:33:46.829239+00:00",
+    "freeBytesBefore": 156858732544,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:33:51.202487+00:00",
+    "freeBytesAfter": 156858511360,
+    "logBytes": 328,
+    "logSha256": "d0abc498f8a37fa5f2708c63809fe79a73e1797293756dbf56458eef37491993"
+  },
+  {
+    "label": "final-professional-authority",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "test"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:07:14.384928+00:00",
+    "freeBytesBefore": 157262970880,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:07:19.313342+00:00",
+    "freeBytesAfter": 157262520320,
+    "logBytes": 328,
+    "logSha256": "0572b59b3c41fb9456cea2edca4bdee8fc9fa1d8e22c1dd9406c26a3be8d37bd"
+  },
+  {
+    "label": "final-professional-build-r2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "build",
+      "--",
+      "--outDir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\build\\professional-07b08d9b"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:24:37.817063+00:00",
+    "freeBytesBefore": 150985564160,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:24:38.984880+00:00",
+    "freeBytesAfter": 150984691712,
+    "logBytes": 1023,
+    "logSha256": "4a19a395ae467b5221e4a6041fe8463f5ef6d8ba1a95c34d30ab8a5a61566f53"
+  },
+  {
+    "label": "final-professional-build-r3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "build",
+      "--",
+      "--outDir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\build\\professional-final3"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:33:13.897057+00:00",
+    "freeBytesBefore": 156855504896,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:33:14.851932+00:00",
+    "freeBytesAfter": 156858449920,
+    "logBytes": 1011,
+    "logSha256": "6609d7a1480448714ac4a02e26a440f1e9f477e4635824f29cda71c8500460ff"
+  },
+  {
+    "label": "final-professional-build",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "build",
+      "--",
+      "--outDir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\build\\professional-e471655b"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:07:14.378153+00:00",
+    "freeBytesBefore": 157262970880,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:07:15.654905+00:00",
+    "freeBytesAfter": 157262643200,
+    "logBytes": 1023,
+    "logSha256": "e08302c8db6072a7f32ec4a1e4558f998da1faf6365124238ccdf3975f0325c9"
+  },
+  {
+    "label": "final-root-tests-r2",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force",
+      "--concurrency=1"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:21:25.233126+00:00",
+    "freeBytesBefore": 157081886720,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:22:16.023103+00:00",
+    "freeBytesAfter": 157080121344,
+    "logBytes": 688007,
+    "logSha256": "6e23a475f9457b6edff2d3d480781be4dff0433acf4ae3839e3be909d6ab974f"
+  },
+  {
+    "label": "final-root-tests-r3",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force",
+      "--concurrency=1"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:30:06.458095+00:00",
+    "freeBytesBefore": 156950843392,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:30:56.774377+00:00",
+    "freeBytesAfter": 156949168128,
+    "logBytes": 694323,
+    "logSha256": "d69ebd15f9e02bc8633cb4f69cae3ddf664ae7225103a40c308659f96b744e6d"
+  },
+  {
+    "label": "final-root-tests",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force",
+      "--concurrency=1"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:04:14.764204+00:00",
+    "freeBytesBefore": 157298159616,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:05:05.451072+00:00",
+    "freeBytesAfter": 157296300032,
+    "logBytes": 684853,
+    "logSha256": "3ece55e314e3fdfb431ca262add71a3dccebd08d1d0ae4917840c05348bec707"
+  },
+  {
+    "label": "final-typecheck-r2",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:22:56.322333+00:00",
+    "freeBytesBefore": 157079900160,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+      "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:23:41.630956+00:00",
+    "freeBytesAfter": 157028315136,
+    "logBytes": 1552,
+    "logSha256": "b87dca18b5617bbd634122df7c0e00145a61a72f6ed6693f78173dc7eca15c09"
+  },
+  {
+    "label": "final-typecheck-r3",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:30:57.075072+00:00",
+    "freeBytesBefore": 156949159936,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+      "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:31:18.318777+00:00",
+    "freeBytesAfter": 156929626112,
+    "logBytes": 1552,
+    "logSha256": "f60e7a77c0d22adb188251a9e548e491090c169bfc2a980a21867d5de7245e76"
+  },
+  {
+    "label": "final-typecheck",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-19T20:05:27.268189+00:00",
+    "freeBytesBefore": 157295763456,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-19T20:06:05.530081+00:00",
+    "freeBytesAfter": 157308919808,
+    "logBytes": 1551,
+    "logSha256": "4ac9729c917505ccc4ce7b948efe8cadcbe9d703934676449fc39ca389262c2e"
+  },
+  {
+    "label": "focused-recovery-working3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/compactManual46.test.ts",
+      "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+      "src/features/shelf/intakeRecovery.campaign25.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7c9164a4bf94588e51b013bfee4d6c1803cdff5b7474639ac69c43c0f376463f"
+    },
+    "start": "2026-11-19T19:52:48.111552+00:00",
+    "freeBytesBefore": 157401751552,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "7c9164a4bf94588e51b013bfee4d6c1803cdff5b7474639ac69c43c0f376463f"
+    },
+    "end": "2026-11-19T19:52:54.102396+00:00",
+    "freeBytesAfter": 157401747456,
+    "logBytes": 507,
+    "logSha256": "17159d7fc67d3366cda8b0a5f7c663fe5bf849647fdf72a71235adc38cfc209e"
+  },
+  {
+    "label": "formula-existing-isolated",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/formulaHistoryJourney.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+    },
+    "start": "2026-11-19T19:56:47.339860+00:00",
+    "freeBytesBefore": 157367865344,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+    },
+    "end": "2026-11-19T19:56:55.326880+00:00",
+    "freeBytesAfter": 157367271424,
+    "logBytes": 353,
+    "logSha256": "956e213b96a864eff9f34e18358a420af13a5b358a8167644b95ed5c9feeaa02"
+  },
+  {
+    "label": "intake-browser-working1",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "41e0fb6a5e76171e45fa680ac8a347b6143539f7791491811bc46c01bfb16224"
+    },
+    "start": "2026-11-19T19:43:58.660234+00:00",
+    "freeBytesBefore": 157487792128,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\intake-browser-working1"
+    },
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "41e0fb6a5e76171e45fa680ac8a347b6143539f7791491811bc46c01bfb16224"
+    },
+    "end": "2026-11-19T19:46:15.165194+00:00",
+    "freeBytesAfter": 157453754368,
+    "logBytes": 5668,
+    "logSha256": "cf619470258406f21c9da0a2d3c874f3bc2389158e2ee6c2c8759dea818dcfb7"
+  },
+  {
+    "label": "intake-held-authority",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8402e65b05ae6b30b8a4f2742f61b90eb3d95a3d90f86b1d22d54441205d24ac"
+    },
+    "start": "2026-11-19T19:47:52.087057+00:00",
+    "freeBytesBefore": 157453053952,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8402e65b05ae6b30b8a4f2742f61b90eb3d95a3d90f86b1d22d54441205d24ac"
+    },
+    "end": "2026-11-19T19:47:58.167789+00:00",
+    "freeBytesAfter": 157453053952,
+    "logBytes": 353,
+    "logSha256": "3b08890dfea5cbaa2a9a5c76223300a705146c479a3ceb5a3edd65cbded7640d"
+  },
+  {
+    "label": "intake-recovery-green1",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/compactManual46.test.ts",
+      "src/features/shelf/manualDraftRecovery.campaign26.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "4bfc09387f5793a3950be8644f334201fb9ada4efa03d24bf155fdb7e21b9718"
+    },
+    "start": "2026-11-19T19:41:54.218720+00:00",
+    "freeBytesBefore": 157489799168,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "4bfc09387f5793a3950be8644f334201fb9ada4efa03d24bf155fdb7e21b9718"
+    },
+    "end": "2026-11-19T19:41:59.562916+00:00",
+    "freeBytesAfter": 157489725440,
+    "logBytes": 3129,
+    "logSha256": "76cad6f3cabdfd8cb01d11dbe4d5b91ff895ff6754e95e3d4da2c3f78298101f"
+  },
+  {
+    "label": "intake-recovery-green2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/compactManual46.test.ts",
+      "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+      "src/features/shelf/manualIntakeDrafts.test.ts",
+      "src/features/shelf/intakeRecovery.campaign25.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "fb1dbd676529635cc1df61b0db4b323e373899eaa25d958c07adc204ba3a2ee2"
+    },
+    "start": "2026-11-19T19:43:21.632164+00:00",
+    "freeBytesBefore": 157489029120,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "fb1dbd676529635cc1df61b0db4b323e373899eaa25d958c07adc204ba3a2ee2"
+    },
+    "end": "2026-11-19T19:43:27.280775+00:00",
+    "freeBytesAfter": 157489025024,
+    "logBytes": 553,
+    "logSha256": "48e3ee9ef4ffba7f137adde04360f10d76c8714f5a1d30dcb069e201413db7b1"
+  },
+  {
+    "label": "intake-recovery-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "677b6e3fd2b695c2e212bf5030cc2234806512382b6ff8418d7cf4640d381de7"
+    },
+    "start": "2026-11-19T19:40:25.488302+00:00",
+    "freeBytesBefore": 157490008064,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "677b6e3fd2b695c2e212bf5030cc2234806512382b6ff8418d7cf4640d381de7"
+    },
+    "end": "2026-11-19T19:40:30.076333+00:00",
+    "freeBytesAfter": 157489999872,
+    "logBytes": 5884,
+    "logSha256": "63c3152237c4d712ccbb3d2c861f001722fe79a3ddbc3715d6b6234d58170338"
+  },
+  {
+    "label": "lifecycle-browser-large-text-red",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/manual-intake-lifecycle30.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "a1ec789afa95e3b27112a8cdb2a10681e333b72240dfca6bb2613db72e1079a8"
+    },
+    "start": "2026-11-19T20:15:01.912690+00:00",
+    "freeBytesBefore": 157083099136,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\lifecycle-browser-large-text-red",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 1,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/manual-intake-lifecycle30.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "a1ec789afa95e3b27112a8cdb2a10681e333b72240dfca6bb2613db72e1079a8"
+    },
+    "end": "2026-11-19T20:16:44.353252+00:00",
+    "freeBytesAfter": 157108748288,
+    "logBytes": 4668,
+    "logSha256": "5bde61ee18cdeb8a59eea094a5ad288d9b683245bcf69e032ea809bbf9313dd1"
+  },
+  {
+    "label": "lifecycle-browser-working1",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "start": "2026-11-19T19:49:26.160668+00:00",
+    "freeBytesBefore": 157453086720,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\lifecycle-browser-working1",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "end": "2026-11-19T19:51:55.663604+00:00",
+    "freeBytesAfter": 157401681920,
+    "logBytes": 4557,
+    "logSha256": "09ffbd4d7d99f0892560e071eb7620c7959defc6d5ce01004f7ec96b4cdd2167"
+  },
+  {
+    "label": "lifecycle-browser-working2",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+    },
+    "start": "2026-11-19T19:54:26.698842+00:00",
+    "freeBytesBefore": 157401366528,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\lifecycle-browser-working2",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+    },
+    "end": "2026-11-19T19:57:00.453995+00:00",
+    "freeBytesAfter": 157368168448,
+    "logBytes": 4260,
+    "logSha256": "575f5bb17a8b0c7a7f613982e4db67e3cb0fb64b488e727a4caea6061e71e90e"
+  },
+  {
+    "label": "lifecycle-browser-working3",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+    },
+    "start": "2026-11-19T19:58:14.278479+00:00",
+    "freeBytesBefore": 157371772928,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\lifecycle-browser-working3",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+    },
+    "end": "2026-11-19T20:00:22.876042+00:00",
+    "freeBytesAfter": 157338988544,
+    "logBytes": 4143,
+    "logSha256": "47e72e9a27014fbc360ca383b45dfa47af9548f1797b4b4132c078333124e83c"
+  },
+  {
+    "label": "lifecycle-browser-working4",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+    },
+    "start": "2026-11-19T20:00:46.244853+00:00",
+    "freeBytesBefore": 157338517504,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\lifecycle-browser-working4",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/formulaHistoryJourney.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "075188a19edaf56361991021e34bf957b3d452eea53a4836a6a17ac040701f35"
+    },
+    "end": "2026-11-19T20:02:27.276360+00:00",
+    "freeBytesAfter": 157299056640,
+    "logBytes": 4843,
+    "logSha256": "863f2c195a8fcdb1acf75c98d8a67586e46f22de2d51147d37ce03ccd81ab125"
+  },
+  {
+    "label": "mobile-types-working",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "fb1dbd676529635cc1df61b0db4b323e373899eaa25d958c07adc204ba3a2ee2"
+    },
+    "start": "2026-11-19T19:43:27.895144+00:00",
+    "freeBytesBefore": 157488414720,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "fb1dbd676529635cc1df61b0db4b323e373899eaa25d958c07adc204ba3a2ee2"
+    },
+    "end": "2026-11-19T19:43:44.109662+00:00",
+    "freeBytesAfter": 157488320512,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "root-lint-working",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "start": "2026-11-19T19:49:45.294074+00:00",
+    "freeBytesBefore": 157526048768,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "end": "2026-11-19T19:51:00.578794+00:00",
+    "freeBytesAfter": 157402533888,
+    "logBytes": 14158,
+    "logSha256": "de0f61937f34bf59c8afa312d13d125fab05874f5ab8157af2545ab805478a50"
+  },
+  {
+    "label": "root-tests-working",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "start": "2026-11-19T19:49:45.423649+00:00",
+    "freeBytesBefore": 157525577728,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "end": "2026-11-19T19:50:05.857824+00:00",
+    "freeBytesAfter": 157454581760,
+    "logBytes": 190975,
+    "logSha256": "cae8fb694eb5e894f61b30b4948098accc873afd9238a5718438f79ca991c32e"
+  },
+  {
+    "label": "root-tests-working2",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force",
+      "--concurrency=1"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+    },
+    "start": "2026-11-19T19:54:26.698842+00:00",
+    "freeBytesBefore": 157401366528,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+    },
+    "end": "2026-11-19T19:55:34.298843+00:00",
+    "freeBytesAfter": 157374246912,
+    "logBytes": 705078,
+    "logSha256": "419147ce8a58a1a438d0f43e2a129cba1917f46d4c486ff3a0532a3a9f95b3f1"
+  },
+  {
+    "label": "root-types-working",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "start": "2026-11-19T19:49:45.393165+00:00",
+    "freeBytesBefore": 157525688320,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+      "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+      "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+      "diffSha256": "c377a5c0f598a547ad718d22137aeb9dd4fb6ce14784b001a2a09dccdd4e8ce3"
+    },
+    "end": "2026-11-19T19:50:26.656024+00:00",
+    "freeBytesAfter": 157408739328,
+    "logBytes": 1552,
+    "logSha256": "722a60698c334233a6d3e1b0aa6cfd6db00c3c2d1add6788b40f40876a18808d"
+  },
+  {
+    "label": "second-driver-focused",
+    "command": [
+      "node",
+      "--test",
+      "scripts/e2e/onboarding-first-session35.test.mjs",
+      "scripts/e2e/retained-safety-assertions.test.mjs"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M docs/ENGINEERING30_REPORT.md\n M scripts/e2e/manual-intake-lifecycle30.mjs\n M scripts/e2e/onboarding-first-session.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "15d567c35303173ae5f7347a2b5a9c5599717fb80c1381c8a489771ac5a686e0"
+    },
+    "start": "2026-11-19T20:20:47.893573+00:00",
+    "freeBytesBefore": 157082431488,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M docs/ENGINEERING30_REPORT.md\n M scripts/e2e/manual-intake-lifecycle30.mjs\n M scripts/e2e/onboarding-first-session.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "15d567c35303173ae5f7347a2b5a9c5599717fb80c1381c8a489771ac5a686e0"
+    },
+    "end": "2026-11-19T20:20:48.260099+00:00",
+    "freeBytesAfter": 157082415104,
+    "logBytes": 15122,
+    "logSha256": "50fca58199ccbe00878961025d9bd3b77b81f2be83ad21b4736e00b8d52fe6f1"
+  },
+  {
+    "label": "second-source-focused",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts"
+    ],
+    "before": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M docs/ENGINEERING30_REPORT.md\n M scripts/e2e/manual-intake-lifecycle30.mjs\n M scripts/e2e/onboarding-first-session.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "15d567c35303173ae5f7347a2b5a9c5599717fb80c1381c8a489771ac5a686e0"
+    },
+    "start": "2026-11-19T20:20:41.207862+00:00",
+    "freeBytesBefore": 157082435584,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "e471655b25e99a5a8c953a3c9ba82127b466e73a",
+      "tree": "5472d9120bd446ccd553373fea796e287c48af72",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M docs/ENGINEERING30_REPORT.md\n M scripts/e2e/manual-intake-lifecycle30.mjs\n M scripts/e2e/onboarding-first-session.mjs",
+      "indexSha256": "24e725fb8574789061eb164e0be25b2f848cebb0f98b09f03ec6b17a0afa8765",
+      "diffSha256": "15d567c35303173ae5f7347a2b5a9c5599717fb80c1381c8a489771ac5a686e0"
+    },
+    "end": "2026-11-19T20:20:47.292332+00:00",
+    "freeBytesAfter": 157082435584,
+    "logBytes": 353,
+    "logSha256": "96abaa68d16b07a9efdf8d48118c5e2ad656bb969040531b1139f90b9b4d918d"
+  }
+]

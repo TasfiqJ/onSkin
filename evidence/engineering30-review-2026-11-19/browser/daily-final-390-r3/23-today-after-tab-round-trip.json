@@ -1,0 +1,575 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 Good morning. 1 step left in your morning routine. Shelf projection · no actual routine applied. Review and apply to record version-bound use. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Record a change (optional) Open your private recorded changes or start a factual note. This is separate from check-offs. Saved change drafts ✦ A few honest suggestions 2 things we’d gently suggest › Tonight · Cycling night 1 Exfoliation night › Private storage Your timeline could not open. Private photo storage could not confirm a complete timeline. Recovery work may be unfinished. Try again when your phone's secure storage is available. It is still unavailable. A complete timeline has not been confirmed. Try again Saved bottle drafts Saved intake drafts Shelf 3 products ＋ Add QUICK FIND · SAVED PRODUCTS Clear 3 of 3 saved products All Actives Expiring Everything on your shelf, ordered by supported tracked dates. Compare saved products Prepare appointment brief Interaction guidance is unavailable We won't show a compatibility result for these products until that review is complete. FIRST ROUTINE Explore a routine from your Shelf. For 3 saved products. The next screen checks access to the full routine builder. Missing steps stay visible, not invented. Shelf keeps your product list instead of making you remember it. Products awaiting reviewed order or timing stay out of a routine. Your saved records remain available. Build my routine Mineral SPF 50 Sunscreen (SPF) · opened Nov · Date unknown Date unknown Glycolic 7% toner Toner / essence · opened Nov · Date unknown Date unknown Retinol 0.3% serum Retinol / retinoid serum · opened Nov · Date unknown Date unknown Add a product You ACCOUNT Guest (not saved) Create SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE ROUTINE Streak & adherence > Weekly check-in > Recent changes > FOR YOU Pregnancy & breastfeeding Review your routine safety setting. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Progress photo storage Encrypted on this device. Cloud backup is not available in this build. Device only REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > YOUR RECORDS Revisit saved routines or prepare a factual brief. Both remain available without Pro or active Shelf products. Review and save routine records > View saved routine history Edit morning record order Ordinary edits are free. Source changes still require review. > Edit evening record order Edit saved order without opening paid routine intelligence. > Streak and check-off history Your recorded history remains free. > Prepare appointment brief HELP Local recovery Check device records and find each feature’s recovery controls. > Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Pauses health use; starts clearing health data on this device. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using Layerwell and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to request and read your export. > YOUR DATA Export my data Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, Progress notes, and pending or terminal shelf and completion sync records. Photo files and thumbnails stay encrypted here; share images individually from Progress. Delete account Progress photos stay encrypted here unless you share one. No ads. No data sales. Layerwell gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist. Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Review actual routine version and recorded use",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 124
+    },
+    {
+      "disabled": false,
+      "height": 122,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "selected": false,
+      "width": 296,
+      "x": 47,
+      "y": 259
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Record a change (optional)",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 466
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Saved change drafts",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 582
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 667
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Try again",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 412
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Saved bottle drafts",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 0
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Saved intake drafts",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 56
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 282.94,
+      "y": 120
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Quick Find saved products",
+      "role": "input",
+      "selected": false,
+      "width": 283.61,
+      "x": 24,
+      "y": 220
+    },
+    {
+      "disabled": true,
+      "height": 48,
+      "hitOk": false,
+      "label": "Clear Quick Find",
+      "role": "button",
+      "selected": false,
+      "width": 50.39,
+      "x": 315.61,
+      "y": 221
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Compare saved products",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 420
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Prepare appointment brief",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 476
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Create an account",
+      "role": "button",
+      "selected": false,
+      "width": 81.23,
+      "x": 263.77,
+      "y": 92
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Manage subscription. Free plan",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 210
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Your plan",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 328
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Edit the order",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 376
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Retinoid ramp",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 424
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Streak & adherence",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 550
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Weekly check-in",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 598
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Recent changes",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 646
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 24.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 195,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 18,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Try again",
+        "role": "button",
+        "selected": false,
+        "width": 334,
+        "x": 28,
+        "y": 412
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Saved bottle drafts",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 0
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Saved intake drafts",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 56
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Add a product to your shelf",
+        "role": "button",
+        "selected": false,
+        "width": 83.06,
+        "x": 282.94,
+        "y": 120
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Quick Find saved products",
+        "role": "input",
+        "selected": false,
+        "width": 283.61,
+        "x": 24,
+        "y": 220
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "All",
+        "role": "button",
+        "selected": false,
+        "width": 57.19,
+        "x": 24,
+        "y": 312
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Actives",
+        "role": "button",
+        "selected": false,
+        "width": 90.88,
+        "x": 91.19,
+        "y": 312
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Expiring",
+        "role": "button",
+        "selected": false,
+        "width": 96.73,
+        "x": 192.06,
+        "y": 312
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Compare saved products",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 420
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Prepare appointment brief",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 476
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Create an account",
+        "role": "button",
+        "selected": false,
+        "width": 81.23,
+        "x": 263.77,
+        "y": 92
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Manage subscription. Free plan",
+        "role": "button",
+        "selected": false,
+        "width": 300,
+        "x": 45,
+        "y": 210
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Your plan",
+        "role": "button",
+        "selected": false,
+        "width": 300,
+        "x": 45,
+        "y": 328
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Edit the order",
+        "role": "button",
+        "selected": false,
+        "width": 300,
+        "x": 45,
+        "y": 376
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Retinoid ramp",
+        "role": "button",
+        "selected": false,
+        "width": 300,
+        "x": 45,
+        "y": 424
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Streak & adherence",
+        "role": "button",
+        "selected": false,
+        "width": 300,
+        "x": 45,
+        "y": 550
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Weekly check-in",
+        "role": "button",
+        "selected": false,
+        "width": 300,
+        "x": 45,
+        "y": 598
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Recent changes",
+        "role": "button",
+        "selected": false,
+        "width": 300,
+        "x": 45,
+        "y": 646
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8386/today",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

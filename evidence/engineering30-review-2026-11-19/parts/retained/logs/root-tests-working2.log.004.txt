@@ -1,0 +1,479 @@
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/notifications/NotificationResponseHost.test.ts > NotificationResponseHost > does not subscribe on web and removes the native listener on unmount
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test:  ✓ src/features/notifications/NotificationResponseHost.test.ts (6 tests) 31ms
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/shelf/useShelf.test.ts (6 tests) 37ms
+@layerwell/mobile:test: stderr | src/features/subscription/StoreTransactionNoticeHost.test.ts > StoreTransactionNoticeHost > does not let the initial read overwrite a newer journal refresh
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/widgets/widgetViews.test.ts (16 tests) 41ms
+@layerwell/mobile:test: stderr | src/features/subscription/StoreTransactionNoticeHost.test.ts > StoreTransactionNoticeHost > does not carry action feedback into a later attention notice
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/subscription/StoreTransactionNoticeHost.test.ts (2 tests) 39ms
+@layerwell/mobile:test:  ✓ src/features/shelf/formulaVersion38.test.ts (25 tests) 49ms
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps ordinary route removal blocked after false purge and retries memory without deleting twice
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/shelf/productOpeningRecovery.test.ts > unopened product quick action through the real detail route > announces write failure and allows a successful retry
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/shelf/productOpeningRecovery.test.ts > unopened product quick action through the real detail route > joins no duplicate write while the first tap is pending
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/shelf/productOpeningRecovery.test.ts (2 tests) 41ms
+@layerwell/mobile:test:  ✓ src/features/scheduler/projection.test.ts (11 tests) 33ms
+@layerwell/mobile:test:  ✓ src/features/review/prompt.test.ts (17 tests) 30ms
+@layerwell/mobile:test: stderr | src/features/scheduler/CyclePersistenceGate.test.ts > cycle persistence gate presentation > keeps the existing closed professional-review surface in control
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/scheduler/CyclePersistenceGate.test.ts > cycle persistence gate presentation > never mounts an editor while the authoritative read is loading
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/scheduler/CyclePersistenceGate.test.ts > cycle persistence gate presentation > shows read failure and invokes reload without mounting an empty editor
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/scheduler/CyclePersistenceGate.test.ts > cycle persistence gate presentation > does not treat retained data on an errored query as readiness
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/scheduler/CyclePersistenceGate.test.ts > cycle persistence gate presentation > mounts children only after the read has succeeded
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/scheduler/CyclePersistenceGate.test.ts (5 tests) 35ms
+@layerwell/mobile:test:  ✓ src/lib/offline/shelfMirrorQueue.test.ts (11 tests) 28ms
+@layerwell/mobile:test:  ✓ src/features/community/claimsafety.test.ts (87 tests) 28ms
+@layerwell/mobile:test:  ✓ src/features/photos/manualCompare20.test.ts (12 tests) 30ms
+@layerwell/mobile:test: stderr | src/components/navigation/dockAccessibility.test.ts > measures wrapped enlarged labels and returns to normal height with matching scene reserve
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/components/navigation/dockAccessibility.test.ts > retains all four tab identities and PM colors while reserving the safe area
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/components/navigation/dockAccessibility.test.ts (2 tests) 32ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/recommendationRoutes.test.ts (11 tests) 30ms
+@layerwell/mobile:test:  ✓ src/lib/analytics/track.test.ts (24 tests) 39ms
+@layerwell/mobile:test:  ✓ src/features/photos/claimsafety.test.ts (117 tests) 31ms
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > forced lock removal purges immediately and the old completion cannot navigate or borrow a new authority
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/scheduler/useCycle.test.ts > useCycle closed-admission publication > keeps admitted cadence visible while withholding stale event recovery
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/scheduler/useCycle.test.ts > useCycle closed-admission publication > preserves stale stored recovery, pause, and skip bytes but publishes only neutral state
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/scheduler/useCycle.test.ts (2 tests) 29ms
+@layerwell/mobile:test: stderr | src/features/subscription/freeRecordGate.test.ts > renders free photo records without consulting or inventing absent entitlement
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/subscription/freeRecordGate.test.ts > renders free photo records without consulting or inventing expired entitlement
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/subscription/claimsafety.test.ts (102 tests) 34ms
+@layerwell/mobile:test: stderr | src/features/subscription/freeRecordGate.test.ts > renders free photo records without consulting or inventing unavailable entitlement
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/subscription/freeRecordGate.test.ts (4 tests) 29ms
+@layerwell/mobile:test: stderr | src/features/subscription/freeRecordGate.test.ts > continues to withhold paid intelligence when provider authority is unknown
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/today/localCompletionAccess.t1.test.ts (28 tests) 30ms
+@layerwell/mobile:test:  ✓ src/features/photos/timeline.test.ts (12 tests) 27ms
+@layerwell/mobile:test:  ✓ src/features/trend/claimsafety.test.ts (45 tests) 29ms
+@layerwell/mobile:test:  ✓ src/features/native/camera/labelPhotoLifecycle.test.ts (12 tests) 29ms
+@layerwell/mobile:test:  ✓ src/features/subscription/storeTransactionNoticeContracts.test.ts (5 tests) 262ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionClientState.test.ts (23 tests) 31ms
+@layerwell/mobile:test:  ✓ src/lib/consent/withdrawal.test.ts (10 tests) 31ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/engine.test.ts (44 tests) 33ms
+@layerwell/mobile:test:  ✓ src/features/shelf/appointmentBriefRecords.test.ts (7 tests) 27ms
+@layerwell/mobile:test:  ✓ src/features/routine/scheduleContract.test.ts (1 test) 29ms
+@layerwell/mobile:test:  ✓ src/features/ask/routeContract.test.ts (12 tests) 31ms
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps a memory-only retry reachable even when mutation readback and the source gate fail
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/lib/auth/SessionBoundaryGate.test.ts > owns repeated rejected retry events, hides private children, and opens only after Auth commits
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/recommendations/engine.test.ts (42 tests) 30ms
+@layerwell/mobile:test:  ✓ src/lib/auth/SessionBoundaryGate.test.ts (1 test) 24ms
+@layerwell/mobile:test:  ✓ src/features/native/camera/labelPhotoStartup.test.ts (10 tests) 30ms
+@layerwell/mobile:test:  ✓ src/features/routine/rampStore.test.ts (10 tests) 28ms
+@layerwell/mobile:test:  ✓ src/features/today/todayRoute.test.ts (7 tests) 21ms
+@layerwell/mobile:test:  ✓ src/features/notifications/claimsafety.test.ts (46 tests) 26ms
+@layerwell/mobile:test:  ✓ src/features/today/optionalChange41.test.ts (24 tests) 33ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/healthConsentStore.test.ts (20 tests) 38ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/ageGateStore.test.ts (23 tests) 23ms
+@layerwell/mobile:test:  ✓ src/features/shelf/catalogLookupRecovery.test.ts (5 tests) 26ms
+@layerwell/mobile:test:  ✓ src/features/widgets/nativeLifecycleBridge.test.ts (12 tests) 23ms
+@layerwell/mobile:test:  ✓ src/lib/auth/localAccountIsolation.test.ts (15 tests) 29ms
+@layerwell/mobile:test:  ✓ src/features/photos/progressDetailUX.c08b2.test.ts (45 tests) 43893ms
+@layerwell/mobile:test:      ✓ retires canceled delete confirmation and close callbacks before a later dialog can act  1151ms
+@layerwell/mobile:test:      ✓ retires obsolete saved status and history after a refreshed same-text successor without discarding a draft  1911ms
+@layerwell/mobile:test:      ✓ rechecks the exact saved revision before discarding a draft, and retires changed review callbacks  1096ms
+@layerwell/mobile:test:      ✓ requires another review for a same-text successor before rebasing a draft  1102ms
+@layerwell/mobile:test:      ✓ keeps the draft when confirmation cannot reread storage and retires that review callback  961ms
+@layerwell/mobile:test:      ✓ fences duplicate adoption reads and ignores their late result after a newer edit  1040ms
+@layerwell/mobile:test:      ✓ retires removed editor callbacks while the same-owner storage recovery gate is visible  1086ms
+@layerwell/mobile:test:      ✓ reads immutable note corrections explicitly, preserves an unsaved draft and hides stale history on later edits  698ms
+@layerwell/mobile:test:      ✓ cancels a pending history read, refuses its late result and retains explicit retry and draft  1102ms
+@layerwell/mobile:test:      ✓ retired note history controls cannot read a later owner or regrant  588ms
+@layerwell/mobile:test:      ✓ keeps temporary image cleanup retry above a failed storage gate, never resends and coalesces duplicate retries  1085ms
+@layerwell/mobile:test:      ✓ does not publish a late cleanup outcome or reuse a cleanup callback after lock retirement  1085ms
+@layerwell/mobile:test:      ✓ retires canceled share confirmation and prevents old cancel controls from retiring a successor  1210ms
+@layerwell/mobile:test:      ✓ executes a current local note mutation offline rather than pausing until reconnect  853ms
+@layerwell/mobile:test:      ✓ executes a current local reference mutation offline rather than pausing until reconnect  714ms
+@layerwell/mobile:test:      ✓ executes a current local delete mutation offline rather than pausing until reconnect  838ms
+@layerwell/mobile:test:      ✓ shows Saving until a durable note write succeeds, then restores that note after remount  1083ms
+@layerwell/mobile:test:      ✓ coalesces repeated blur/save requests to the latest later edit while one note is pending  1230ms
+@layerwell/mobile:test:      ✓ retires the opened-note brief capability when the existing Diary lock closes  510ms
+@layerwell/mobile:test:      ✓ does not let a delayed saved-note read failure relabel a later successful save  962ms
+@layerwell/mobile:test:      ✓ retires a saved-text review and its old discard callback after a successful retry  884ms
+@layerwell/mobile:test:      ✓ reviews a newer saved note after refusal and keeps the local draft until an explicit recovery choice  1024ms
+@layerwell/mobile:test:      ✓ retains the newest draft on failure, ignores implicit blur retry, and explicitly retries the latest text  1444ms
+@layerwell/mobile:test:      ✓ keeps the unsaved draft across a failed refetch and the existing storage Retry gate  714ms
+@layerwell/mobile:test:      ✓ does not save a stale rendered note callback after close/regrant or owner replacement  1054ms
+@layerwell/mobile:test:      ✓ carries accepted authority in mutation variables instead of inheriting changed React Query observer options  465ms
+@layerwell/mobile:test:      ✓ emits reference haptic/analytics only after successful current persistence  573ms
+@layerwell/mobile:test:      ✓ shows a recoverable reference failure without any success effects  607ms
+@layerwell/mobile:test:      ✓ rejects a captured reference action after owner loss and suppresses a late success under the new owner  852ms
+@layerwell/mobile:test:      ✓ runs one local deletion and waits for successful sensitive-memory purge before leaving detail  835ms
+@layerwell/mobile:test:      ✓ keeps a visible usable delete retry after metadata persistence failure  836ms
+@layerwell/mobile:test:      ✓ retains a visible recovery path when encrypted files cleanup needs retry  589ms
+@layerwell/mobile:test:      ✓ retains a visible recovery path when decoded memory cleanup needs retry  681ms
+@layerwell/mobile:test:      ✓ purges at forced health teardown without late navigation or later-owner continuation  1004ms
+@layerwell/mobile:test:      ✓ cancels retained and in-flight photo snapshots so a deleted image cannot republish later  1055ms
+@layerwell/mobile:test:      ✓ keeps a dirty note on native Back and leaves only after explicit discard  930ms
+@layerwell/mobile:test:      ✓ saves a dirty note before dispatching the original exit exactly once  714ms
+@layerwell/mobile:test:      ✓ rejects old save-and-leave callbacks after Keep editing or lock retirement  2327ms
+@layerwell/mobile:test:      ✓ does not discard or cancel an accepted write, and Keep editing cancels only the exit intent  931ms
+@layerwell/mobile:test:      ✓ keeps a failed save and generic exit recovery visible through a failed source refetch  1385ms
+@layerwell/mobile:test:      ✓ does not let dirty-note recovery trap the existing deletion or lock boundary  724ms
+@layerwell/mobile:test:      ✓ blocks captured Back and native/replacement removal through store and memory awaits, then releases exactly once  1350ms
+@layerwell/mobile:test:      ✓ keeps ordinary route removal blocked after false purge and retries memory without deleting twice  838ms
+@layerwell/mobile:test:      ✓ forced lock removal purges immediately and the old completion cannot navigate or borrow a new authority  931ms
+@layerwell/mobile:test:      ✓ keeps a memory-only retry reachable even when mutation readback and the source gate fail  838ms
+@layerwell/mobile:test:  ✓ src/features/native/ocr/transcript.test.ts (7 tests) 27ms
+@layerwell/mobile:test:  ✓ src/features/catalog/ingredientParser.test.ts (8 tests) 23ms
+@layerwell/mobile:test:  ✓ src/features/healthConsent/remote.test.ts (11 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/subscription/p1SubscriptionClient.test.ts (109 tests) 27ms
+@layerwell/mobile:test:  ✓ src/features/widgets/nativeOutboxModel.test.ts (13 tests) 24ms
+@layerwell/mobile:test:  ✓ src/features/commerce/claimsafety.test.ts (54 tests) 25ms
+@layerwell/mobile:test:  ✓ src/features/navigation/sheetRouteContracts.test.ts (5 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/notifications/store.test.ts (10 tests) 24ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionForeignOwnerPreservation.test.ts (6 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlementPublication.test.ts (41 tests) 23ms
+@layerwell/mobile:test:  ✓ src/lib/auth/apple.test.ts (17 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/notifications/sentStore.test.ts (12 tests) 20ms
+@layerwell/mobile:test:  ✓ src/features/shelf/shareAppointmentBrief.test.ts (12 tests) 22ms
+@layerwell/mobile:test:  ✓ src/lib/auth/appleCredentialLifecycle.test.ts (14 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/shelf/archiveProducts.test.ts (3 tests) 23ms
+@layerwell/mobile:test:  ✓ src/features/photos/timelapse.test.ts (4 tests) 22ms
+@layerwell/mobile:test:  ✓ src/lib/query/queryDateBoundaryCore.test.ts (16 tests) 45ms
+@layerwell/mobile:test:  ✓ src/features/settings/serverDataExportContract.test.ts (7 tests) 21ms
+@layerwell/mobile:test:  ✓ src/lib/diagnostics/localDiagnostics.test.ts (6 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/subscription/directPaywallPolicy.test.ts (10 tests) 21ms
+@layerwell/mobile:test:  ✓ src/lib/applock/store.test.ts (22 tests) 25ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/store.test.ts (12 tests) 23ms
+@layerwell/mobile:test:  ✓ src/features/community/communityRoutes.test.ts (9 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/ask/store.test.ts (14 tests) 21ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountGeneration.test.ts (15 tests) 24ms
+@layerwell/mobile:test:  ✓ src/features/ask/stressHistoryFixture.test.ts (10 tests) 20ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountPublicationAuthProviderContracts.test.ts (5 tests) 22ms
+@layerwell/mobile:test:  ✓ src/lib/consent/consent.test.ts (8 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/photos/progressCaptureRouteBoundary.test.ts (8 tests) 20ms
+@layerwell/mobile:test:  ✓ src/lib/legal/storeMetadata.test.ts (27 tests) 20ms
+@layerwell/mobile:test:  ✓ src/features/widgets/contract.test.ts (16 tests) 21ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/conflictChoiceIntegration.test.ts (7 tests) 22ms
+@layerwell/mobile:test:  ✓ src/features/subscription/clientEntitlementRuntime.test.ts (3 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/notifications/onboarding.test.ts (9 tests) 20ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoNoteSaveCoordinator.test.ts (15 tests) 19ms
+@layerwell/mobile:test:  ✓ src/lib/supabase/remoteRequestGate.test.ts (8 tests) 18ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/overrides.test.ts (9 tests) 20ms
+@layerwell/mobile:test:  ✓ src/features/widgets/nativeLifecycleContract.test.ts (7 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionRecoveryGate.test.ts (6 tests) 24ms
+@layerwell/mobile:test:  ✓ src/lib/supabase/largeSecureStoreCrypto.test.ts (7 tests) 18ms
+@layerwell/mobile:test:  ✓ src/features/native/ocr/nativeAdapter.test.ts (7 tests) 18ms
+@layerwell/mobile:test:  ✓ src/features/routine/planHistory45.test.ts (26 tests) 20ms
+@layerwell/mobile:test:  ✓ src/lib/consent/withdrawalE2EFixture.test.ts (13 tests) 18ms
+@layerwell/mobile:test:  ✓ src/lib/consent/healthDataWriteAdmission.test.ts (10 tests) 19ms
+@layerwell/mobile:test:  ✓ src/features/subscription/serverContracts.test.ts (2 tests) 19ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountDeletionCompletion.test.ts (7 tests) 20ms
+@layerwell/mobile:test:  ✓ src/features/streak/streak.test.ts (16 tests) 15ms
+@layerwell/mobile:test:  ✓ src/features/subscription/p1PurchasePreflight.test.ts (29 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/healthConsent/lifecycleStore.test.ts (8 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/scheduler/customCycle.test.ts (14 tests) 15ms
+@layerwell/mobile:test:  ✓ src/lib/navigation/externalOpen.test.ts (8 tests) 18ms
+@layerwell/mobile:test:  ✓ src/features/subscription/successAdmission.test.ts (22 tests) 18ms
+@layerwell/mobile:test:  ✓ src/features/subscription/useEntitlementPublication.test.ts (5 tests) 16ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountSessionIsolationContracts.test.ts (2 tests) 18ms
+@layerwell/mobile:test:  ✓ src/features/photos/analyzePhotoLighting.test.ts (7 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/ask/intent.test.ts (19 tests) 18ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/serverSkinProfile.test.ts (29 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/nativeAgeAssuranceContract.test.ts (8 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/commerce/commerceRoutes.test.ts (5 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/scheduler/cadence.test.ts (57 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/healthConsent/pendingIntent.test.ts (5 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoThumbnail.test.ts (6 tests) 17ms
+@layerwell/mobile:test:  ✓ src/lib/auth/sessionInvalidation.test.ts (7 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizContract.test.ts (4 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/routine/activationAnalytics.test.ts (9 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/notifications/applyPreferences.test.ts (6 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/shelf/freshness.test.ts (13 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/routine/cadenceRouteAdmission.test.ts (5 tests) 20ms
+@layerwell/mobile:test:  ✓ src/features/subscription/conflictQuota.test.ts (9 tests) 15ms
+@layerwell/mobile:test:  ✓ src/features/notifications/permission.test.ts (25 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/native/ocr/analytics.test.ts (20 tests) 15ms
+@layerwell/mobile:test:  ✓ src/features/trend/fairnessPrivacyGate.test.ts (2 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareProjection.test.ts (26 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/today/routineProjection.test.ts (11 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/community/reactionStore.test.ts (7 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/photos/sensitiveImageCoordinator.test.ts (6 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizScoring.test.ts (10 tests) 15ms
+@layerwell/mobile:test:  ✓ src/lib/iap/revenuecat.test.ts (6 tests) 15ms
+@layerwell/mobile:test:  ✓ src/lib/auth/devLocalResetCoordinator.test.ts (5 tests) 15ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/healthConsent.test.ts (5 tests) 19ms
+@layerwell/mobile:test:  ✓ src/lib/observability/scrub.test.ts (5 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/shelf/scanLog.test.ts (5 tests) 15ms
+@layerwell/mobile:test:  ✓ src/lib/accessibility/inlineDialogFocus.test.ts (9 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/review/sourceContract.test.ts (2 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/community/shareNote.test.ts (6 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/photos/qualityProvenance.test.ts (1 test) 10ms
+@layerwell/mobile:test:  ✓ src/features/routine/reviewGate.test.ts (12 tests) 13ms
+@layerwell/mobile:test:  ✓ src/lib/navigation/safeBack.test.ts (11 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/photos/captureAnalysis.test.ts (14 tests) 13ms
+@layerwell/mobile:test:  ✓ src/lib/auth/revokedCredentialActivity.test.ts (5 tests) 15ms
+@layerwell/mobile:test:  ✓ src/lib/auth/appleCredentialAuthProviderContracts.test.ts (5 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/catalog/analytics.test.ts (29 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/settings/applyPrivacyChoice.test.ts (4 tests) 13ms
+@layerwell/mobile:test:  ✓ src/lib/auth/google.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts (1 test) 14ms
+@layerwell/mobile:test:  ✓ src/lib/analytics/postHogPersistenceCleanup.test.ts (4 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/catalog/normalization.test.ts (6 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/routine/orderRoutes.test.ts (4 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/ask/consent.test.ts (4 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/streak/milestoneStore.test.ts (6 tests) 15ms
+@layerwell/mobile:test:  ✓ src/features/widgets/ownerAuthority.test.ts (8 tests) 14ms
+@layerwell/mobile:test:  ✓ src/lib/consent/dependentConsentLease.test.ts (6 tests) 17ms
+@layerwell/mobile:test:  ✓ src/features/commerce/consent.test.ts (5 tests) 15ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlement.test.ts (20 tests) 16ms
+@layerwell/mobile:test:  ✓ src/lib/consent/dependentConsentLocal.test.ts (4 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/photos/captureAnalysisCoordinator.test.ts (2 tests) 12ms
+@layerwell/mobile:test:  ✓ src/lib/growth/attribution.test.ts (7 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/trend/trendRoutes.test.ts (4 tests) 13ms
+@layerwell/mobile:test:  ✓ src/lib/observability/operationTiming.test.ts (5 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/native/ocr/reviewState.test.ts (6 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/subscription/lifecycle.test.ts (8 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/routine/routineSequencingCorpus.v1.test.ts (5 tests) 16ms
+@layerwell/mobile:test:  ✓ src/features/trend/useTrend.test.ts (4 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/fit.test.ts (13 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/pregnancySafety.test.ts (10 tests) 15ms
+@layerwell/mobile:test:  ✓ src/features/native/camera/barcode.test.ts (11 tests) 13ms
+@layerwell/mobile:test:  ✓ src/features/community/community.test.ts (10 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/nativeAgeAssuranceAdapter.test.ts (4 tests) 12ms
+@layerwell/mobile:test:  ✓ src/lib/observability/safeLog.test.ts (4 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/catalog/reportPresentation.test.ts (6 tests) 11ms
+@layerwell/mobile:test:  ✓ src/lib/consent/dependentConsentContract.test.ts (3 tests) 12ms
+@layerwell/mobile:test:  ✓ src/lib/analytics/publicationGate.test.ts (6 tests) 11ms
+@layerwell/mobile:test:  ✓ src/lib/auth/authDerivedCleanupRequired.test.ts (6 tests) 12ms
+@layerwell/mobile:test:  ✓ src/lib/applock/interactionLifecycle.test.ts (12 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/routine/firstInsight.test.ts (11 tests) 10ms
+@layerwell/mobile:test:  ✓ src/lib/observability/sentry.test.ts (2 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoDeleteRetrySingleFlight.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/concentration.test.ts (7 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/notifications/policy.test.ts (14 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/healthConsent/dependentConsentCleanup.test.ts (1 test) 12ms
+@layerwell/mobile:test:  ✓ src/features/today/useToday.test.ts (11 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/goalAdmission.test.ts (9 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/commerce/store.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/photos/timelapsePlayback.test.ts (7 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/community/consent.test.ts (3 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/catalog/obf.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/photos/applyCaptureConsent.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/healthConsent/activationInterlock.test.ts (9 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/subscription/dismissPaywall.test.ts (5 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/notifications/BehaviouralTriggers.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/shelf/barcodeScanSession.test.ts (11 tests) 11ms
+@layerwell/mobile:test:  ✓ src/lib/iap/revenuecatOperationBarrier.test.ts (3 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/community/store.test.ts (5 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoDeleteRemoteCleanup.web.test.ts (3 tests) 11ms
+@layerwell/mobile:test:  ✓ src/lib/legal/phase3LaunchGates.test.ts (3 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/consentCopy.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/catalog/searchRenderDiagnostics.test.ts (5 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlementEvidence.test.ts (6 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/subscription/storefrontCopy.test.ts (5 tests) 10ms
+@layerwell/mobile:test:  ✓ src/lib/auth/firstSessionE2E.test.ts (8 tests) 12ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/accountConsent.test.ts (2 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/ask/historyWindow.test.ts (10 tests) 11ms
+@layerwell/mobile:test:  ✓ src/lib/storage/privateBoolean.test.ts (6 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/settings/youRenderDiagnostics.test.ts (4 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/shelf/analytics.test.ts (1 test) 9ms
+@layerwell/mobile:test:  ✓ src/features/catalog/reportOperation.test.ts (3 tests) 11ms
+@layerwell/mobile:test:  ✓ src/lib/storage/privateDataAvailabilityGate.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/lib/consent/dependentConsentRecoveryStore.test.ts (4 tests) 12ms
+@layerwell/mobile:test:  ✓ src/lib/auth/emailChangeSourceContract.test.ts (9 tests) 14ms
+@layerwell/mobile:test:  ✓ src/features/photos/consent.test.ts (3 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/shelf/IntakeContext.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/review/policy.test.ts (8 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/admission.test.ts (10 tests) 10ms
+@layerwell/mobile:test:  ✓ src/lib/accessibility/modalBackground.test.ts (7 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/shelf/appointmentBrief.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/AgePolicyGate.test.ts (10 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlementActionGuard.test.ts (4 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/replenishment.test.ts (7 tests) 9ms
+@layerwell/mobile:test:  ✓ src/lib/analytics/postHogPersistenceSourceContract.test.ts (2 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/subscription/paidActionOutcome.test.ts (5 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/growth/universalLinkConfig.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/trend/store.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/applyPreferences.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/lib/navigation/appSettings.test.ts (5 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/routine/cycleAnchor.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/ask/gate.test.ts (10 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/notifications/contract.test.ts (10 tests) 11ms
+@layerwell/mobile:test:  ✓ src/lib/applock/preferenceDecision.test.ts (12 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/trend/applyConsentChoice.test.ts (4 tests) 11ms
+@layerwell/mobile:test:  ✓ src/features/shelf/savedProductComparison.test.ts (6 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoAccountBoundary.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/streak/milestones.test.ts (8 tests) 10ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountDeletionBarrierAuthProviderContracts.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionNotice.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/photos/progressCaptureAuthority.test.ts (3 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/shelf/freshnessMigration.test.ts (6 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlementOrdering.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/ocrRenderDiagnostics.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/native/ocr/nativeAdapterFallback.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareLandingRoute.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/accountAppleAuthContracts.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/shelf/shelfRenderDiagnostics.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/ask/applyConsentChoice.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/launch/phase8.test.ts (5 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/growth/cardCopy.test.ts (5 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/ask/renderDiagnostics.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/lib/brand.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoDeleteOutboxMigration.test.ts (6 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/growth/ConflictShareCard.test.ts (15 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionBarrier.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/tags.test.ts (4 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/commerce/attribution.test.ts (6 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/ageGate.test.ts (6 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/photos/timelapseFocus.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareCard.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/applock/singleFlight.test.ts (2 tests) 9ms
+@layerwell/mobile:test:  ✓ src/lib/auth/appleSignInAuthProviderContracts.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/searchQuery.test.ts (6 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/searchRequestCoordinator.test.ts (4 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/notifications/notificationDeliveryOutboxMigration.test.ts (5 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/photos/PhotoImage.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/photos/sensitiveImageDiskCache.test.ts (1 test) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/recoveryReport.test.ts (4 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/quality.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/commerce/commerce.test.ts (6 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/errors/userFacing.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/shelf/shelfScanOutboxMigration.test.ts (6 tests) 9ms
+@layerwell/mobile:test:  ✓ src/features/settings/youDataRightsState.test.ts (4 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/native/ocr/accessibility.test.ts (9 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/commerce/disclosureOperation.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/lib/observability/startupInstrumentation.test.ts (1 test) 8ms
+@layerwell/mobile:test:  ✓ src/lib/storage/privateStringSet.test.ts (3 tests) 10ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/conflictIdentity.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/shelf/categories.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoQueryCacheDiagnostics.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/catalog/ocrReview.test.ts (5 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/widgets/runtimeGate.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/auth/appleCredentialQuarantine.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/RecommendationsTeaser.test.ts (1 test) 8ms
+@layerwell/mobile:test:  ✓ src/components/ui/ToggleSwitch.test.ts (1 test) 7ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareLinks.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/routine/sequenceComparison.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/shelf/quickFind.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/subscription/priceDisplay.test.ts (4 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/auth/sessionBoundary.test.ts (7 tests) 7ms
+@layerwell/mobile:test:  ✓ src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/recommendationOutboxMigration.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/lib/accessibility/pseudoLocalization.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlementPurchaseAttribution.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/components/launch/DeferredSurface.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/plans.test.ts (6 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/gatedRoutes.test.ts (5 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/today/useRoutineClock.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/theme/stateTokens.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/growth/publicLinkAdmission.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/photos/quality.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/useRecommendations.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/auth/emailCodeRecovery.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/nativeAgeAssuranceAdapterFallback.test.ts (1 test) 7ms
+@layerwell/mobile:test:  ✓ src/features/shelf/addSubmissionAttempt.test.ts (1 test) 7ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/productCategories.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareAdmission.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/conflictChoiceOutboxMigration.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/components/ui/Chip.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionRecoveryE2E.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/photos/progressImageDemand.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/routine/useProgress.test.ts (1 test) 7ms
+@layerwell/mobile:test:  ✓ src/features/notifications/notificationOutboxMigration.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizCompletion.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/accessibility/useReduceMotionPreference.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/today/cycleCompletion.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountUpgradeE2E.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareProjectionBuilder.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/lib/iap/revenuecatTrialEligibility.test.ts (2 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizSelection.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/navigation/tabBar.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/restoreFeedback.test.ts (2 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/subscription/cancelIntent.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/scheduler.test.ts (5 tests) 5ms
+@layerwell/mobile:test:  ✓ src/lib/auth/firstSessionE2EAuthProviderContracts.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/accountRouteLifecycle.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/components/ui/RouteIconButton.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/lib/navigation/externalUrl.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/trend/trend.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/lib/iap/revenuecatWinBackTerms.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/subscription/useEntitlementEvidenceContracts.test.ts (2 tests) 6ms
+@layerwell/mobile:test:  ✓ src/components/ui/OptionCard.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/features/shelf/paoProvenance.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/scheduler/useCycleAnalytics.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/features/subscription/winBackOfferingPolicy.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/photos/compareAccessibility.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/components/ui/StripedThumb.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizCopy.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/presentation.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/lib/applock/privacyState.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/components/ui/Screen.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/features/shelf/labels.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/features/subscription/winBackCommercialState.test.ts (2 tests) 3ms
+@layerwell/mobile:test:  ✓ src/features/photos/sensitiveImagePolicy.test.ts (2 tests) 3ms
+@layerwell/mobile:test:  ✓ src/features/notifications/replenishmentOptInMigration.test.ts (1 test) 3ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionRecoveryOwnerProofContracts.test.ts (1 test) 3ms
+@layerwell/mobile:test:  ✓ src/features/ask/groundedDelivery.test.ts (2 tests) 3ms
+@layerwell/mobile:test: 
+@layerwell/mobile:test: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  FAIL  src/features/shelf/formulaHistoryJourney.test.ts > resumes only explicitly after remount, reviews saved source, and confirms the saved transcription
+@layerwell/mobile:test: AssertionError: expected true not to be true // Object.is equality
+@layerwell/mobile:test:  ❯ press src/features/shelf/formulaHistoryJourney.test.ts:15:121
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ❯ src/features/shelf/formulaHistoryJourney.test.ts:40:9
+@layerwell/mobile:test: 
+@layerwell/mobile:test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+@layerwell/mobile:test: 
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  Test Files  1 failed | 555 passed (556)
+@layerwell/mobile:test:       Tests  1 failed | 8003 passed (8004)
+@layerwell/mobile:test:    Start at  14:54:34
+@layerwell/mobile:test:    Duration  59.41s (transform 54.18s, setup 0ms, import 140.87s, tests 369.78s, environment 129ms)
+@layerwell/mobile:test: 
+@layerwell/mobile:test: npm error Lifecycle script `test` failed with error:
+@layerwell/mobile:test: npm error code 1
+@layerwell/mobile:test: npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+@layerwell/mobile:test: npm error workspace @layerwell/mobile@0.1.0
+@layerwell/mobile:test: npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+@layerwell/mobile:test: npm error command failed
+@layerwell/mobile:test: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run
+ ERROR  @layerwell/mobile#test: command (<HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile) C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js run test exited (1)
+
+ Tasks:    2 successful, 3 total
+Cached:    0 cached, 3 total
+  Time:    1m6.804s 
+Failed:    @layerwell/mobile#test
+
+ ERROR  run failed: command  exited (1)

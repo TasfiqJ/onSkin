@@ -1,0 +1,4 @@
+Error: Old-owner operation did not reject at its authority boundary.
+    at assertCrossOwnerRaceOutcomes (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/retained-safety-assertions.mjs:62:11)
+    at crossOwnerFlow (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:1163:3)
+    at async run (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:1990:7)

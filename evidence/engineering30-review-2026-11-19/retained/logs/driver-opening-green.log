@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: manual setup scrolls before touching and requires actual reviewed opening state
+ok 1 - manual setup scrolls before touching and requires actual reviewed opening state
+  ---
+  duration_ms: 1.2239
+  type: 'test'
+  ...
+# Subtest: manual setup preserves scrollTextIntoView refusal
+ok 2 - manual setup preserves scrollTextIntoView refusal
+  ---
+  duration_ms: 0.7182
+  type: 'test'
+  ...
+# Subtest: manual setup preserves clickByText refusal
+ok 3 - manual setup preserves clickByText refusal
+  ---
+  duration_ms: 0.1192
+  type: 'test'
+  ...
+# Subtest: manual setup preserves waitForText refusal
+ok 4 - manual setup preserves waitForText refusal
+  ---
+  duration_ms: 0.578
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 73.7259

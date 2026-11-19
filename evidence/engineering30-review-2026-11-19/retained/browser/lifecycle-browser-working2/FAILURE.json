@@ -1,0 +1,9 @@
+{
+  "path": "/shelf/intake-drafts",
+  "text": "Saved intake drafts\nIncomplete products you explicitly saved, encrypted on this device. Resume lets you review the original entries and opening choices before adding a product. Only saved revisions survive a reload. Privacy withdrawal or clearing local data removes these drafts.\nBack to Shelf\nRefresh saved intake drafts\nThis saved revision changed. Refresh and select the current draft before resuming or discarding.\nDiscard this saved intake revision?\nIncomplete product · saved revision 1.\nDiscard only this saved revision? Unsaved edits are not included. Any product already added to Shelf stays on Shelf.\nKeep intake draft\nConfirm intake draft discard",
+  "width": 375,
+  "height": 667,
+  "overflow": 0,
+  "inputs": [],
+  "choices": []
+}

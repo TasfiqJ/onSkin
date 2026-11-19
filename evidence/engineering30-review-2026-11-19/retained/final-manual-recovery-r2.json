@@ -1,0 +1,45 @@
+{
+  "label": "final-manual-recovery-r2",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/manualIntakeDraftUI21.test.ts",
+    "src/features/shelf/manualIntakeDrafts.test.ts",
+    "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+    "src/features/shelf/compactManual46.test.ts",
+    "src/features/shelf/intakeRecovery.campaign25.test.ts",
+    "src/features/shelf/confirmedDestructive28.test.ts",
+    "src/features/shelf/postDispatchCommit28.test.ts",
+    "src/features/shelf/formulaHistoryJourney.test.ts"
+  ],
+  "before": {
+    "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+    "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-19T20:24:04.877328+00:00",
+  "freeBytesBefore": 151020109824,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "07b08d9bb01f652b910e4c7337c3fb4a770802aa",
+    "tree": "16b2f89859f5d0ac593556eae62dd08304123725",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "1db655520d59fbb506b837b28920765cf4263dde72692ba5d121485d0ba7252f",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-19T20:24:25.675263+00:00",
+  "freeBytesAfter": 150996774912,
+  "logBytes": 707,
+  "logSha256": "cabad16ee4b0e7610aaed40f452c31bb5015fca405437783442c4df11d6f0bd1"
+}

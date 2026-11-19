@@ -1,0 +1,35 @@
+{
+  "label": "intake-browser-working1",
+  "command": [
+    "node",
+    "scripts/e2e/manual-intake-drafts21.mjs"
+  ],
+  "before": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "41e0fb6a5e76171e45fa680ac8a347b6143539f7791491811bc46c01bfb16224"
+  },
+  "start": "2026-11-19T19:43:58.660234+00:00",
+  "freeBytesBefore": 157487792128,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {
+    "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\intake-browser-working1"
+  },
+  "exit": 0,
+  "after": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "41e0fb6a5e76171e45fa680ac8a347b6143539f7791491811bc46c01bfb16224"
+  },
+  "end": "2026-11-19T19:46:15.165194+00:00",
+  "freeBytesAfter": 157453754368,
+  "logBytes": 5668,
+  "logSha256": "cf619470258406f21c9da0a2d3c874f3bc2389158e2ee6c2c8759dea818dcfb7"
+}

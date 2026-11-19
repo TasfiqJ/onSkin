@@ -1,0 +1,13 @@
+
+> @layerwell/professional-web@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/professional-web
+
+
+ Test Files  21 passed (21)
+      Tests  688 passed (688)
+   Start at  15:25:29
+   Duration  4.09s (transform 4.56s, setup 0ms, import 6.56s, tests 9.25s, environment 5ms)
+

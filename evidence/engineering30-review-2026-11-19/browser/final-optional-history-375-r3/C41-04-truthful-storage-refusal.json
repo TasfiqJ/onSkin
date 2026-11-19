@@ -1,0 +1,113 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 Good morning. 1 step left in your morning routine. Shelf projection · no actual routine applied. Review and apply to record version-bound use. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Factual notes you choose to record, separate from check-offs. These are your reports, not a diagnosis or an app observation. 2026-11-18 · Used something different Earlier observation Owner reported · Entry 1 · Recorded 2026-11-19T20:38:33.162Z Synthetic41: I used a different cleanser. Event a058f4cd-e2b3-45d0-ac58-ae2620b4ec55 2026-11-18 · Other personal note Current observation Correction of entry 1 · Entry 2 · Recorded 2026-11-19T20:38:35.775Z Synthetic41 correction: I used my usual cleanser. Event 0cfaaf0c-1485-4d1f-9502-1dcb90a6565d 2026-11-19 · No change to report Retracted observation Owner reported · Entry 3 · Recorded 2026-11-19T20:38:37.474Z Event 973fb761-0dba-4b47-a4b1-0be571781bd8 2026-11-19 · Other personal note Retraction record Retraction of entry 3 · Entry 4 · Recorded 2026-11-19T20:38:39.341Z Synthetic41: I retract that no-change report. Event 9638d22f-1480-4e75-aeeb-fdb084b41a89 Draft change Previous entries stay recorded. Only confirmation appends history. Save a draft explicitly to keep incomplete text after reload. This working draft is not saved for recovery. Save change draft on this device Observed local date (YYYY-MM-DD) Other personal note: Synthetic41 private storage failure retry. Confirm this owner-reported event for 2026-11-19. A correction or retraction appends history. Storage did not confirm this save. It may already be recorded. Retry the same confirmation or refresh changes to check. Confirm and save this change Cancel draft Refresh changes Local to this device; notes are not sent with check-offs. Clearing local data removes this history. Uninstalling or losing the encryption key may lose it. Local exports may include it; exported copies cannot be revoked and cannot be imported here. ✦ A few honest suggestions 2 things we’d gently suggest › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Save change draft on this device",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": -39
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Observed local date",
+      "role": "input",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 65
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Confirm and save this change",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 377
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Cancel draft",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 445
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Refresh changes",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 513
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 81.55,
+      "x": 24.85,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 106.25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 187.5,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8385/today?routine=AM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

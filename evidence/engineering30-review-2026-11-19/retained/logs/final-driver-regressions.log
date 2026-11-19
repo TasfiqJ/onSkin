@@ -1,0 +1,1012 @@
+TAP version 13
+# Subtest: CAT04 audit matrix covers every deterministic lane at all required web viewports
+ok 1 - CAT04 audit matrix covers every deterministic lane at all required web viewports
+  ---
+  duration_ms: 2.0673
+  type: 'test'
+  ...
+# Subtest: fixture groups force local deterministic data and avoid inherited live catalog settings
+ok 2 - fixture groups force local deterministic data and avoid inherited live catalog settings
+  ---
+  duration_ms: 0.4921
+  type: 'test'
+  ...
+# Subtest: each fresh fixture profile passes the real age, explicit-consent, and activation gates
+ok 3 - each fresh fixture profile passes the real age, explicit-consent, and activation gates
+  ---
+  duration_ms: 0.5973
+  type: 'test'
+  ...
+# Subtest: browser page and CDP targets stay bound to the requested loopback processes
+ok 4 - browser page and CDP targets stay bound to the requested loopback processes
+  ---
+  duration_ms: 0.75
+  type: 'test'
+  ...
+# Subtest: extended recovery lanes exercise wrong matches, retry dedupe, guards, and barcode normalization
+ok 5 - extended recovery lanes exercise wrong matches, retry dedupe, guards, and barcode normalization
+  ---
+  duration_ms: 0.5102
+  type: 'test'
+  ...
+# Subtest: offline fixture permits its bounded unresolved lookup without hiding other network hangs
+ok 6 - offline fixture permits its bounded unresolved lookup without hiding other network hangs
+  ---
+  duration_ms: 0.2431
+  type: 'test'
+  ...
+# Subtest: browser failure classification ignores only local Expo dev HMR refusal noise
+ok 7 - browser failure classification ignores only local Expo dev HMR refusal noise
+  ---
+  duration_ms: 0.4934
+  type: 'test'
+  ...
+# Subtest: report lanes prove disclosure and explicit confirmation before transport
+ok 8 - report lanes prove disclosure and explicit confirmation before transport
+  ---
+  duration_ms: 0.207
+  type: 'test'
+  ...
+# Subtest: runner records the honest queued-recovery limitation instead of faking a ready cycle
+ok 9 - runner records the honest queued-recovery limitation instead of faking a ready cycle
+  ---
+  duration_ms: 0.3201
+  type: 'test'
+  ...
+# Subtest: interaction audit includes non-button controls used by opened-date recovery
+ok 10 - interaction audit includes non-button controls used by opened-date recovery
+  ---
+  duration_ms: 0.4465
+  type: 'test'
+  ...
+# Subtest: interaction geometry distinguishes safe scroll edges from unsafe clipping
+ok 11 - interaction geometry distinguishes safe scroll edges from unsafe clipping
+  ---
+  duration_ms: 0.4323
+  type: 'test'
+  ...
+# Subtest: interaction geometry uses padding-box clips and rejects excluded routes
+ok 12 - interaction geometry uses padding-box clips and rejects excluded routes
+  ---
+  duration_ms: 0.2164
+  type: 'test'
+  ...
+# Subtest: browser control is bounded and turns setup failures into machine-readable failures
+ok 13 - browser control is bounded and turns setup failures into machine-readable failures
+  ---
+  duration_ms: 0.1575
+  type: 'test'
+  ...
+# Subtest: browser-event policy fails closed on console, page, HTTP, remote, and network errors
+ok 14 - browser-event policy fails closed on console, page, HTTP, remote, and network errors
+  ---
+  duration_ms: 0.4096
+  type: 'test'
+  ...
+# Subtest: intentional canceled local requests and console warnings are not mislabeled as failures
+ok 15 - intentional canceled local requests and console warnings are not mislabeled as failures
+  ---
+  duration_ms: 0.1227
+  type: 'test'
+  ...
+# Subtest: runner emits machine-readable evidence and explicitly withholds native-device proof
+ok 16 - runner emits machine-readable evidence and explicitly withholds native-device proof
+  ---
+  duration_ms: 0.3356
+  type: 'test'
+  ...
+# Subtest: diagnostic log sanitizer redacts host paths before artifact inventory
+ok 17 - diagnostic log sanitizer redacts host paths before artifact inventory
+  ---
+  duration_ms: 0.98
+  type: 'test'
+  ...
+# Subtest: runner binds evidence to full source SHA and inventories every completed artifact deterministically
+ok 18 - runner binds evidence to full source SHA and inventories every completed artifact deterministically
+  ---
+  duration_ms: 65.4778
+  type: 'test'
+  ...
+# Subtest: runner rejects nonignored untracked source before mutating evidence
+ok 19 - runner rejects nonignored untracked source before mutating evidence
+  ---
+  duration_ms: 186.3064
+  type: 'test'
+  ...
+# Subtest: package commands wire the audit and its no-server contract suite
+ok 20 - package commands wire the audit and its no-server contract suite
+  ---
+  duration_ms: 0.3713
+  type: 'test'
+  ...
+# Subtest: formula selector returns only the exact current active target
+ok 21 - formula selector returns only the exact current active target
+  ---
+  duration_ms: 1.7141
+  type: 'test'
+  ...
+# Subtest: formula selector refuses wrong route
+ok 22 - formula selector refuses wrong route
+  ---
+  duration_ms: 1.3649
+  type: 'test'
+  ...
+# Subtest: formula selector refuses background document
+ok 23 - formula selector refuses background document
+  ---
+  duration_ms: 1.076
+  type: 'test'
+  ...
+# Subtest: formula selector refuses missing accessible control
+ok 24 - formula selector refuses missing accessible control
+  ---
+  duration_ms: 0.2935
+  type: 'test'
+  ...
+# Subtest: formula selector refuses duplicate accessible controls
+ok 25 - formula selector refuses duplicate accessible controls
+  ---
+  duration_ms: 0.2603
+  type: 'test'
+  ...
+# Subtest: formula selector refuses absent target
+ok 26 - formula selector refuses absent target
+  ---
+  duration_ms: 0.235
+  type: 'test'
+  ...
+# Subtest: formula selector refuses retired target
+ok 27 - formula selector refuses retired target
+  ---
+  duration_ms: 0.2719
+  type: 'test'
+  ...
+# Subtest: formula selector refuses wrong accessible role
+ok 28 - formula selector refuses wrong accessible role
+  ---
+  duration_ms: 0.2004
+  type: 'test'
+  ...
+# Subtest: formula selector refuses changed accessible name
+ok 29 - formula selector refuses changed accessible name
+  ---
+  duration_ms: 0.3995
+  type: 'test'
+  ...
+# Subtest: formula selector refuses disabled target
+ok 30 - formula selector refuses disabled target
+  ---
+  duration_ms: 0.9101
+  type: 'test'
+  ...
+# Subtest: formula selector refuses offscreen or clipped target
+ok 31 - formula selector refuses offscreen or clipped target
+  ---
+  duration_ms: 0.3248
+  type: 'test'
+  ...
+# Subtest: formula selector refuses occluded target
+ok 32 - formula selector refuses occluded target
+  ---
+  duration_ms: 0.2055
+  type: 'test'
+  ...
+# Subtest: formula selector refuses nonfinite horizontal coordinate
+ok 33 - formula selector refuses nonfinite horizontal coordinate
+  ---
+  duration_ms: 0.1813
+  type: 'test'
+  ...
+# Subtest: formula selector refuses nonfinite vertical coordinate
+ok 34 - formula selector refuses nonfinite vertical coordinate
+  ---
+  duration_ms: 0.1856
+  type: 'test'
+  ...
+# Subtest: formula feedback requires one visible alert
+ok 35 - formula feedback requires one visible alert
+  ---
+  duration_ms: 0.2385
+  type: 'test'
+  ...
+# Subtest: formula feedback refuses missing alert
+ok 36 - formula feedback refuses missing alert
+  ---
+  duration_ms: 0.2315
+  type: 'test'
+  ...
+# Subtest: formula feedback refuses duplicate alerts
+ok 37 - formula feedback refuses duplicate alerts
+  ---
+  duration_ms: 0.1556
+  type: 'test'
+  ...
+# Subtest: formula feedback refuses hidden, clipped or occluded alert
+ok 38 - formula feedback refuses hidden, clipped or occluded alert
+  ---
+  duration_ms: 0.149
+  type: 'test'
+  ...
+# Subtest: formula feedback refuses absent receipt
+ok 39 - formula feedback refuses absent receipt
+  ---
+  duration_ms: 0.2664
+  type: 'test'
+  ...
+# Subtest: formula touch rechecks authority and fresh target before ordered start/end
+ok 40 - formula touch rechecks authority and fresh target before ordered start/end
+  ---
+  duration_ms: 399.9021
+  type: 'test'
+  ...
+# Subtest: formula touch refuses retired authority at guard 1
+ok 41 - formula touch refuses retired authority at guard 1
+  ---
+  duration_ms: 0.8685
+  type: 'test'
+  ...
+# Subtest: formula touch refuses retired authority at guard 2
+ok 42 - formula touch refuses retired authority at guard 2
+  ---
+  duration_ms: 183.9723
+  type: 'test'
+  ...
+# Subtest: formula touch refuses a target occluded after scrolling without sending an event
+ok 43 - formula touch refuses a target occluded after scrolling without sending an event
+  ---
+  duration_ms: 184.6817
+  type: 'test'
+  ...
+# Subtest: formula touch propagates inspect failure without sending an event
+ok 44 - formula touch propagates inspect failure without sending an event
+  ---
+  duration_ms: 0.2858
+  type: 'test'
+  ...
+# Subtest: formula touch propagates record failure without sending an event
+ok 45 - formula touch propagates record failure without sending an event
+  ---
+  duration_ms: 183.6878
+  type: 'test'
+  ...
+# Subtest: formula touch never succeeds after touchStart dispatch failure
+ok 46 - formula touch never succeeds after touchStart dispatch failure
+  ---
+  duration_ms: 184.8516
+  type: 'test'
+  ...
+# Subtest: formula touch never succeeds after touchEnd dispatch failure
+ok 47 - formula touch never succeeds after touchEnd dispatch failure
+  ---
+  duration_ms: 184.5318
+  type: 'test'
+  ...
+# Subtest: manual setup scrolls before touching and requires actual reviewed opening state
+ok 48 - manual setup scrolls before touching and requires actual reviewed opening state
+  ---
+  duration_ms: 1.9644
+  type: 'test'
+  ...
+# Subtest: manual setup preserves scrollTextIntoView refusal
+ok 49 - manual setup preserves scrollTextIntoView refusal
+  ---
+  duration_ms: 0.8406
+  type: 'test'
+  ...
+# Subtest: manual setup preserves clickByText refusal
+ok 50 - manual setup preserves clickByText refusal
+  ---
+  duration_ms: 0.2242
+  type: 'test'
+  ...
+# Subtest: manual setup preserves waitForText refusal
+ok 51 - manual setup preserves waitForText refusal
+  ---
+  duration_ms: 0.9148
+  type: 'test'
+  ...
+# Subtest: Diary recovery accepts the existing truthful incomplete-storage refusal
+ok 52 - Diary recovery accepts the existing truthful incomplete-storage refusal
+  ---
+  duration_ms: 1.7649
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses old unconditional unchanged claim
+ok 53 - Diary recovery refuses old unconditional unchanged claim
+  ---
+  duration_ms: 0.3725
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses missing incomplete-history warning
+ok 54 - Diary recovery refuses missing incomplete-history warning
+  ---
+  duration_ms: 0.097
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses missing recovery explanation
+ok 55 - Diary recovery refuses missing recovery explanation
+  ---
+  duration_ms: 0.1119
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses paid timeline gate
+ok 56 - Diary recovery refuses paid timeline gate
+  ---
+  duration_ms: 0.1324
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses paid upsell
+ok 57 - Diary recovery refuses paid upsell
+  ---
+  duration_ms: 0.1411
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses absent retry
+ok 58 - Diary recovery refuses absent retry
+  ---
+  duration_ms: 0.1251
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses blocked retry
+ok 59 - Diary recovery refuses blocked retry
+  ---
+  duration_ms: 0.0911
+  type: 'test'
+  ...
+# Subtest: Diary recovery refuses disabled retry
+ok 60 - Diary recovery refuses disabled retry
+  ---
+  duration_ms: 0.2697
+  type: 'test'
+  ...
+# Subtest: saved OFF requires the visible Continue tap before waiting for Account
+ok 61 - saved OFF requires the visible Continue tap before waiting for Account
+  ---
+  duration_ms: 1.5309
+  type: 'test'
+  ...
+# Subtest: saved OFF with explicit delivery uncertainty uses its acknowledged fallback
+ok 62 - saved OFF with explicit delivery uncertainty uses its acknowledged fallback
+  ---
+  duration_ms: 0.3402
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses auto-advance to Account before any navigation
+ok 63 - reminder continuation refuses auto-advance to Account before any navigation
+  ---
+  duration_ms: 0.3302
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses unrelated route before any navigation
+ok 64 - reminder continuation refuses unrelated route before any navigation
+  ---
+  duration_ms: 0.2104
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses missing route before any navigation
+ok 65 - reminder continuation refuses missing route before any navigation
+  ---
+  duration_ms: 0.1493
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses OFF was not persisted before any navigation
+ok 66 - reminder continuation refuses OFF was not persisted before any navigation
+  ---
+  duration_ms: 0.1116
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses persistence is unknown before any navigation
+ok 67 - reminder continuation refuses persistence is unknown before any navigation
+  ---
+  duration_ms: 0.1791
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses string persistence marker before any navigation
+ok 68 - reminder continuation refuses string persistence marker before any navigation
+  ---
+  duration_ms: 0.1225
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses old owner before any navigation
+ok 69 - reminder continuation refuses old owner before any navigation
+  ---
+  duration_ms: 0.1691
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses unknown owner before any navigation
+ok 70 - reminder continuation refuses unknown owner before any navigation
+  ---
+  duration_ms: 0.8662
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses consent bypass before any navigation
+ok 71 - reminder continuation refuses consent bypass before any navigation
+  ---
+  duration_ms: 0.1253
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses unknown consent before any navigation
+ok 72 - reminder continuation refuses unknown consent before any navigation
+  ---
+  duration_ms: 0.1149
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses unsaved choice copy before any navigation
+ok 73 - reminder continuation refuses unsaved choice copy before any navigation
+  ---
+  duration_ms: 0.2138
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses initial soft ask before any navigation
+ok 74 - reminder continuation refuses initial soft ask before any navigation
+  ---
+  duration_ms: 0.0831
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses save failed before any navigation
+ok 75 - reminder continuation refuses save failed before any navigation
+  ---
+  duration_ms: 0.0632
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses missing Continue before any navigation
+ok 76 - reminder continuation refuses missing Continue before any navigation
+  ---
+  duration_ms: 0.0683
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses disabled Continue before any navigation
+ok 77 - reminder continuation refuses disabled Continue before any navigation
+  ---
+  duration_ms: 0.064
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses blocked Continue before any navigation
+ok 78 - reminder continuation refuses blocked Continue before any navigation
+  ---
+  duration_ms: 0.0899
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses uncertainty without its explicit action before any navigation
+ok 79 - reminder continuation refuses uncertainty without its explicit action before any navigation
+  ---
+  duration_ms: 0.0948
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses fallback action without explicit uncertainty before any navigation
+ok 80 - reminder continuation refuses fallback action without explicit uncertainty before any navigation
+  ---
+  duration_ms: 0.0728
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses uncertainty fallback is disabled before any navigation
+ok 81 - reminder continuation refuses uncertainty fallback is disabled before any navigation
+  ---
+  duration_ms: 0.0656
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses uncertainty fallback is blocked before any navigation
+ok 82 - reminder continuation refuses uncertainty fallback is blocked before any navigation
+  ---
+  duration_ms: 0.1287
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses uncertainty without persisted OFF before any navigation
+ok 83 - reminder continuation refuses uncertainty without persisted OFF before any navigation
+  ---
+  duration_ms: 0.1116
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses uncertainty after owner retirement before any navigation
+ok 84 - reminder continuation refuses uncertainty after owner retirement before any navigation
+  ---
+  duration_ms: 0.1018
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses uncertainty after consent withdrawal before any navigation
+ok 85 - reminder continuation refuses uncertainty after consent withdrawal before any navigation
+  ---
+  duration_ms: 0.0995
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses missing controls before any navigation
+ok 86 - reminder continuation refuses missing controls before any navigation
+  ---
+  duration_ms: 0.1015
+  type: 'test'
+  ...
+# Subtest: reminder continuation refuses malformed choice before any navigation
+ok 87 - reminder continuation refuses malformed choice before any navigation
+  ---
+  duration_ms: 0.0938
+  type: 'test'
+  ...
+# Subtest: a failed durable read remains a failure and never taps Continue
+ok 88 - a failed durable read remains a failure and never taps Continue
+  ---
+  duration_ms: 0.3504
+  type: 'test'
+  ...
+# Subtest: a refused Continue tap never proceeds to the Account route assertion
+ok 89 - a refused Continue tap never proceeds to the Account route assertion
+  ---
+  duration_ms: 0.2221
+  type: 'test'
+  ...
+# Subtest: a missing Account arrival cannot be published as successful continuation
+ok 90 - a missing Account arrival cannot be published as successful continuation
+  ---
+  duration_ms: 0.249
+  type: 'test'
+  ...
+# Subtest: free first-session receipt requires exactly the three products under current authority
+ok 91 - free first-session receipt requires exactly the three products under current authority
+  ---
+  duration_ms: 0.2096
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses old owner
+ok 92 - free first-session receipt refuses old owner
+  ---
+  duration_ms: 0.0896
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses unknown owner
+ok 93 - free first-session receipt refuses unknown owner
+  ---
+  duration_ms: 0.0552
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses consent bypass
+ok 94 - free first-session receipt refuses consent bypass
+  ---
+  duration_ms: 0.0485
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses unknown consent
+ok 95 - free first-session receipt refuses unknown consent
+  ---
+  duration_ms: 0.0529
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses forged Pro authority
+ok 96 - free first-session receipt refuses forged Pro authority
+  ---
+  duration_ms: 0.0474
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses unknown paid authority
+ok 97 - free first-session receipt refuses unknown paid authority
+  ---
+  duration_ms: 0.0468
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses coerced free authority
+ok 98 - free first-session receipt refuses coerced free authority
+  ---
+  duration_ms: 0.0479
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses a missing product
+ok 99 - free first-session receipt refuses a missing product
+  ---
+  duration_ms: 0.0482
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses another owner product
+ok 100 - free first-session receipt refuses another owner product
+  ---
+  duration_ms: 0.0545
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses duplicated products
+ok 101 - free first-session receipt refuses duplicated products
+  ---
+  duration_ms: 0.1134
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses an extra product
+ok 102 - free first-session receipt refuses an extra product
+  ---
+  duration_ms: 0.0842
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses missing products
+ok 103 - free first-session receipt refuses missing products
+  ---
+  duration_ms: 0.0857
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses malformed products
+ok 104 - free first-session receipt refuses malformed products
+  ---
+  duration_ms: 0.0937
+  type: 'test'
+  ...
+# Subtest: free first-session receipt refuses malformed receipt
+ok 105 - free first-session receipt refuses malformed receipt
+  ---
+  duration_ms: 0.0821
+  type: 'test'
+  ...
+# Subtest: owned Shelf lifecycle rechecks authority, sends genuine CDP start/end, and awaits exact owned ID
+ok 106 - owned Shelf lifecycle rechecks authority, sends genuine CDP start/end, and awaits exact owned ID
+  ---
+  duration_ms: 1.6914
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses retired owner before any touch
+ok 107 - owned Shelf refuses retired owner before any touch
+  ---
+  duration_ms: 0.278
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses withdrawn consent before any touch
+ok 108 - owned Shelf refuses withdrawn consent before any touch
+  ---
+  duration_ms: 0.1763
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses false Pro before any touch
+ok 109 - owned Shelf refuses false Pro before any touch
+  ---
+  duration_ms: 0.1879
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses unknown paid status before any touch
+ok 110 - owned Shelf refuses unknown paid status before any touch
+  ---
+  duration_ms: 0.2003
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses OFF unconfirmed before any touch
+ok 111 - owned Shelf refuses OFF unconfirmed before any touch
+  ---
+  duration_ms: 0.1839
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses absent epoch before any touch
+ok 112 - owned Shelf refuses absent epoch before any touch
+  ---
+  duration_ms: 0.2603
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses malformed epoch before any touch
+ok 113 - owned Shelf refuses malformed epoch before any touch
+  ---
+  duration_ms: 0.1927
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses old product identity before any touch
+ok 114 - owned Shelf refuses old product identity before any touch
+  ---
+  duration_ms: 0.3113
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses owner switch after scroll before touching
+ok 115 - owned Shelf refuses owner switch after scroll before touching
+  ---
+  duration_ms: 0.4772
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses consent withdrawal after scroll before touching
+ok 116 - owned Shelf refuses consent withdrawal after scroll before touching
+  ---
+  duration_ms: 0.3085
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses same-owner regrant after scroll before touching
+ok 117 - owned Shelf refuses same-owner regrant after scroll before touching
+  ---
+  duration_ms: 0.3231
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses owner epoch switch after scroll before touching
+ok 118 - owned Shelf refuses owner epoch switch after scroll before touching
+  ---
+  duration_ms: 0.3107
+  type: 'test'
+  ...
+# Subtest: owned Shelf refuses previous product after switch after scroll before touching
+ok 119 - owned Shelf refuses previous product after switch after scroll before touching
+  ---
+  duration_ms: 0.358
+  type: 'test'
+  ...
+# Subtest: deactivated route cannot trigger a Shelf touch
+ok 120 - deactivated route cannot trigger a Shelf touch
+  ---
+  duration_ms: 0.359
+  type: 'test'
+  ...
+# Subtest: occlusion that appears after scrolling is recorded and refuses touch
+ok 121 - occlusion that appears after scrolling is recorded and refuses touch
+  ---
+  duration_ms: 0.6453
+  type: 'test'
+  ...
+# Subtest: touch dispatch failure does not publish product arrival
+ok 122 - touch dispatch failure does not publish product arrival
+  ---
+  duration_ms: 0.5301
+  type: 'test'
+  ...
+# Subtest: a wrong product route after the touch remains a failed browser outcome
+ok 123 - a wrong product route after the touch remains a failed browser outcome
+  ---
+  duration_ms: 0.4858
+  type: 'test'
+  ...
+# Subtest: first actual check-off after optional notes accepts confirmed absent prior completion bytes
+ok 124 - first actual check-off after optional notes accepts confirmed absent prior completion bytes
+  ---
+  duration_ms: 1.1528
+  type: 'test'
+  ...
+# Subtest: later actual check-off preserves every existing original completion event
+ok 125 - later actual check-off preserves every existing original completion event
+  ---
+  duration_ms: 6.8451
+  type: 'test'
+  ...
+# Subtest: unsupported completion evidence never substitutes for confirmed absence
+ok 126 - unsupported completion evidence never substitutes for confirmed absence
+  ---
+  duration_ms: 0.2535
+  type: 'test'
+  ...
+# Subtest: unsupported completion evidence never substitutes for confirmed absence
+ok 127 - unsupported completion evidence never substitutes for confirmed absence
+  ---
+  duration_ms: 0.1979
+  type: 'test'
+  ...
+# Subtest: unsupported completion evidence never substitutes for confirmed absence
+ok 128 - unsupported completion evidence never substitutes for confirmed absence
+  ---
+  duration_ms: 0.2845
+  type: 'test'
+  ...
+# Subtest: shared collapsed heading cannot substitute for explicitly expanded optional history
+ok 129 - shared collapsed heading cannot substitute for explicitly expanded optional history
+  ---
+  duration_ms: 1.0821
+  type: 'test'
+  ...
+# Subtest: already expanded optional history is not toggled into a new draft
+ok 130 - already expanded optional history is not toggled into a new draft
+  ---
+  duration_ms: 0.29
+  type: 'test'
+  ...
+# Subtest: optional history entry preserves read failure
+ok 131 - optional history entry preserves read failure
+  ---
+  duration_ms: 0.6408
+  type: 'test'
+  ...
+# Subtest: optional history entry preserves open failure
+ok 132 - optional history entry preserves open failure
+  ---
+  duration_ms: 0.5326
+  type: 'test'
+  ...
+# Subtest: optional history entry preserves wait failure
+ok 133 - optional history entry preserves wait failure
+  ---
+  duration_ms: 0.6018
+  type: 'test'
+  ...
+# Subtest: browser readback decisions accept exact owner immutable lineage and confirmed empty
+ok 134 - browser readback decisions accept exact owner immutable lineage and confirmed empty
+  ---
+  duration_ms: 0.4413
+  type: 'test'
+  ...
+# Subtest: browser readback refuses wrong owner
+ok 135 - browser readback refuses wrong owner
+  ---
+  duration_ms: 0.8126
+  type: 'test'
+  ...
+# Subtest: browser readback refuses duplicate ID
+ok 136 - browser readback refuses duplicate ID
+  ---
+  duration_ms: 0.346
+  type: 'test'
+  ...
+# Subtest: browser readback refuses changed original text
+ok 137 - browser readback refuses changed original text
+  ---
+  duration_ms: 0.9533
+  type: 'test'
+  ...
+# Subtest: browser readback refuses wrong target
+ok 138 - browser readback refuses wrong target
+  ---
+  duration_ms: 0.8752
+  type: 'test'
+  ...
+# Subtest: browser readback refuses wrong observed date
+ok 139 - browser readback refuses wrong observed date
+  ---
+  duration_ms: 0.3861
+  type: 'test'
+  ...
+# Subtest: browser readback refuses missing event
+ok 140 - browser readback refuses missing event
+  ---
+  duration_ms: 0.1772
+  type: 'test'
+  ...
+# Subtest: browser readback refuses wrong revision predecessor
+ok 141 - browser readback refuses wrong revision predecessor
+  ---
+  duration_ms: 0.1611
+  type: 'test'
+  ...
+# Subtest: browser readback refuses machine observation substitution
+ok 142 - browser readback refuses machine observation substitution
+  ---
+  duration_ms: 0.3733
+  type: 'test'
+  ...
+# Subtest: network evidence contains metadata only and refuses note content in body or URL
+ok 143 - network evidence contains metadata only and refuses note content in body or URL
+  ---
+  duration_ms: 0.5485
+  type: 'test'
+  ...
+# Subtest: real foreground exact accessible button owns its touch
+ok 144 - real foreground exact accessible button owns its touch
+  ---
+  duration_ms: 812.505
+  type: 'test'
+  ...
+# Subtest: real DOM refuses missing control
+ok 145 - real DOM refuses missing control
+  ---
+  duration_ms: 18.1834
+  type: 'test'
+  ...
+# Subtest: real DOM refuses hidden control
+ok 146 - real DOM refuses hidden control
+  ---
+  duration_ms: 16.5608
+  type: 'test'
+  ...
+# Subtest: real DOM refuses retired aria-hidden screen
+ok 147 - real DOM refuses retired aria-hidden screen
+  ---
+  duration_ms: 18.0178
+  type: 'test'
+  ...
+# Subtest: real DOM refuses inert screen
+ok 148 - real DOM refuses inert screen
+  ---
+  duration_ms: 17.2008
+  type: 'test'
+  ...
+# Subtest: real DOM refuses transparent screen
+ok 149 - real DOM refuses transparent screen
+  ---
+  duration_ms: 17.5709
+  type: 'test'
+  ...
+# Subtest: real DOM refuses pointer-disabled screen
+ok 150 - real DOM refuses pointer-disabled screen
+  ---
+  duration_ms: 16.5014
+  type: 'test'
+  ...
+# Subtest: real DOM refuses wrong accessible role
+ok 151 - real DOM refuses wrong accessible role
+  ---
+  duration_ms: 15.4237
+  type: 'test'
+  ...
+# Subtest: real DOM refuses partial accessible name
+ok 152 - real DOM refuses partial accessible name
+  ---
+  duration_ms: 14.3093
+  type: 'test'
+  ...
+# Subtest: real ambiguous duplicate accessible names refuse
+ok 153 - real ambiguous duplicate accessible names refuse
+  ---
+  duration_ms: 14.9762
+  type: 'test'
+  ...
+# Subtest: real disabled confirmation refuses
+ok 154 - real disabled confirmation refuses
+  ---
+  duration_ms: 15.0754
+  type: 'test'
+  ...
+# Subtest: real wrong route refuses even with matching control
+ok 155 - real wrong route refuses even with matching control
+  ---
+  duration_ms: 17.3283
+  type: 'test'
+  ...
+# Subtest: real opaque overlay refuses occult confirmation
+ok 156 - real opaque overlay refuses occult confirmation
+  ---
+  duration_ms: 17.3243
+  type: 'test'
+  ...
+# Subtest: real clipped button refuses
+ok 157 - real clipped button refuses
+  ---
+  duration_ms: 15.2081
+  type: 'test'
+  ...
+# Subtest: real below-fold control refuses until its actual container scrolls
+ok 158 - real below-fold control refuses until its actual container scrolls
+  ---
+  duration_ms: 62.4717
+  type: 'test'
+  ...
+# Subtest: real text input requires the exact accessible textbox identity
+ok 159 - real text input requires the exact accessible textbox identity
+  ---
+  duration_ms: 16.8659
+  type: 'test'
+  ...
+# Subtest: owner or revision retirement between inspection and touch sends no event
+ok 160 - owner or revision retirement between inspection and touch sends no event
+  ---
+  duration_ms: 196.511
+  type: 'test'
+  ...
+# Subtest: real accessible status alert must be visible after confirmation
+ok 161 - real accessible status alert must be visible after confirmation
+  ---
+  duration_ms: 14.9117
+  type: 'test'
+  ...
+# Subtest: real matching error text below the fold cannot masquerade as visible feedback
+ok 162 - real matching error text below the fold cannot masquerade as visible feedback
+  ---
+  duration_ms: 14.9625
+  type: 'test'
+  ...
+# Subtest: real matching status under a modal cannot masquerade as visible feedback
+ok 163 - real matching status under a modal cannot masquerade as visible feedback
+  ---
+  duration_ms: 14.8688
+  type: 'test'
+  ...
+# Subtest: uncaught errors fail even when their text includes a normally allowed environment warning
+ok 164 - uncaught errors fail even when their text includes a normally allowed environment warning
+  ---
+  duration_ms: 1.1105
+  type: 'test'
+  ...
+# Subtest: a visible overlay fails independently of DOM recovery copy and missing exception events
+ok 165 - a visible overlay fails independently of DOM recovery copy and missing exception events
+  ---
+  duration_ms: 0.3019
+  type: 'test'
+  ...
+# Subtest: a recovery summary cannot pass with obsolete or false completion flags
+ok 166 - a recovery summary cannot pass with obsolete or false completion flags
+  ---
+  duration_ms: 0.457
+  type: 'test'
+  ...
+# Subtest: old-owner race refusal must be typed, complete, and attributable to authority closure
+ok 167 - old-owner race refusal must be typed, complete, and attributable to authority closure
+  ---
+  duration_ms: 0.9392
+  type: 'test'
+  ...
+1..167
+# tests 167
+# suites 0
+# pass 167
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1546.2826

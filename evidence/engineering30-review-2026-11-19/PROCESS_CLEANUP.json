@@ -1,0 +1,7 @@
+{
+  "observedAt": "2026-11-19T20:43:59.2937327Z",
+  "matchedOwnedProcesses": [],
+  "freeBytes": 156649017344,
+  "listeningTestPorts": [],
+  "note": "Read-only observation after every owned driver completed cleanup; unrelated existing services untouched."
+}

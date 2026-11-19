@@ -1,0 +1,40 @@
+{
+  "label": "daily-original-375",
+  "command": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--daily-loop"
+  ],
+  "before": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-19T19:36:19.659265+00:00",
+  "freeBytesBefore": 157541212160,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {
+    "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING30_EVIDENCE_20261119\\daily-original-375",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+    "ONBOARDING_E2E_PORT": "8385",
+    "ONBOARDING_E2E_DEBUG_PORT": "9485"
+  },
+  "exit": 1,
+  "after": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-19T19:37:46.354067+00:00",
+  "freeBytesAfter": 157529042944,
+  "logBytes": 588,
+  "logSha256": "ab04f29aed325fdffda12ba51ae8fdd53c5bec66a3a27d94f7d085c1ca8feab8"
+}

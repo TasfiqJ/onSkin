@@ -1,0 +1,134 @@
+
+> layerwell@0.1.0 lint
+> turbo run lint --force
+
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/professional-web, @layerwell/types, @onskin/decode-uri-component-compat
+   • Running lint in 5 packages
+   • Remote caching disabled, using shared worktree cache
+
+@layerwell/mobile:lint: cache bypass, force executing 4f852f2e427df54e
+@layerwell/catalog-operator-console:lint: cache bypass, force executing 0f61292ed4a54b2c
+@layerwell/professional-web:lint: cache bypass, force executing 0b401f2ed41847b5
+@layerwell/types:lint: cache bypass, force executing fb61ed92ed9eabc2
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: > @layerwell/mobile@0.1.0 lint
+@layerwell/mobile:lint: > eslint . --max-warnings=0
+@layerwell/mobile:lint: 
+@layerwell/professional-web:lint: 
+@layerwell/professional-web:lint: > @layerwell/professional-web@0.1.0 lint
+@layerwell/professional-web:lint: > tsc --noEmit
+@layerwell/professional-web:lint: 
+@layerwell/catalog-operator-console:lint: 
+@layerwell/catalog-operator-console:lint: > @layerwell/catalog-operator-console@0.1.0 lint
+@layerwell/catalog-operator-console:lint: > tsc --noEmit
+@layerwell/catalog-operator-console:lint: 
+@layerwell/types:lint: 
+@layerwell/types:lint: > @layerwell/types@0.1.0 lint
+@layerwell/types:lint: > echo "(no lint configured for @layerwell/types)"
+@layerwell/types:lint: 
+@layerwell/types:lint: "(no lint configured for @layerwell/types)"
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\manual.tsx
+@layerwell/mobile:lint:   194:99  error  Error: Cannot access variable before it is declared
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: `setExitIntent` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\manual.tsx:194:99
+@layerwell/mobile:lint:   192 |     focused.current = true; focusGeneration.current += 1;
+@layerwell/mobile:lint:   193 |     setRenderedFocus(focusGeneration.current);
+@layerwell/mobile:lint: > 194 |     return () => { focused.current = false; focusGeneration.current += 1; exitRef.current = null; setExitIntent(null); };
+@layerwell/mobile:lint:       |                                                                                                   ^^^^^^^^^^^^^ `setExitIntent` accessed before it is declared
+@layerwell/mobile:lint:   195 |   }, []));
+@layerwell/mobile:lint:   196 |   useEffect(() => {
+@layerwell/mobile:lint:   197 |     mounted.current = true;
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\manual.tsx:273:22
+@layerwell/mobile:lint:   271 |   const [draftMessage, setDraftMessage] = useState<string | null>(null);
+@layerwell/mobile:lint:   272 |   type ExitIntent = { form: ManualIntakeForm; focus: number };
+@layerwell/mobile:lint: > 273 |   const [exitIntent, setExitIntent] = useState<ExitIntent | null>(null);
+@layerwell/mobile:lint:       |                      ^^^^^^^^^^^^^ `setExitIntent` is declared here
+@layerwell/mobile:lint:   274 |   const exitRef = useRef<ExitIntent | null>(null);
+@layerwell/mobile:lint:   275 |   const frozenAttempt = recovery.saved?.fields.attempted != null;
+@layerwell/mobile:lint:   276 |   const savedFormMatches = recovery.saved !== null && sameManualIntakeForm(recovery.saved.fields.form, form);  react-hooks/immutability
+@layerwell/mobile:lint:   383:5   error  Error: This value cannot be modified
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: Modifying a value previously passed as an argument to a hook is not allowed. Consider moving the modification before calling the hook.
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\manual.tsx:383:5
+@layerwell/mobile:lint:   381 |   function leave(intent: ExitIntent) {
+@layerwell/mobile:lint:   382 |     if (!currentExit(intent)) return;
+@layerwell/mobile:lint: > 383 |     exitRef.current = null; setExitIntent(null); continued.current = true;
+@layerwell/mobile:lint:       |     ^^^^^^^ `exitRef` cannot be modified
+@layerwell/mobile:lint:   384 |     clear(); backOrReplace(router, APP_SHELF_ROUTE);
+@layerwell/mobile:lint:   385 |   }
+@layerwell/mobile:lint:   386 |   function keepEditing() {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/immutability
+@layerwell/mobile:lint:   388:5   error  Error: This value cannot be modified
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: Modifying a value previously passed as an argument to a hook is not allowed. Consider moving the modification before calling the hook.
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\manual.tsx:388:5
+@layerwell/mobile:lint:   386 |   function keepEditing() {
+@layerwell/mobile:lint:   387 |     if (!exitIntent || !currentExit(exitIntent)) return;
+@layerwell/mobile:lint: > 388 |     exitRef.current = null; setExitIntent(null);
+@layerwell/mobile:lint:       |     ^^^^^^^ `exitRef` cannot be modified
+@layerwell/mobile:lint:   389 |   }
+@layerwell/mobile:lint:   390 |   function requestCancel() {
+@layerwell/mobile:lint:   391 |     if (!canAct() || draftFlight.current || formRef.current !== form || exitRef.current || pickerSessionRef.current) return;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/immutability
+@layerwell/mobile:lint:   393:5   error  Error: This value cannot be modified
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: Modifying a value previously passed as an argument to a hook is not allowed. Consider moving the modification before calling the hook.
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\manual.tsx:393:5
+@layerwell/mobile:lint:   391 |     if (!canAct() || draftFlight.current || formRef.current !== form || exitRef.current || pickerSessionRef.current) return;
+@layerwell/mobile:lint:   392 |     const intent = { form, focus: focusGeneration.current };
+@layerwell/mobile:lint: > 393 |     exitRef.current = intent;
+@layerwell/mobile:lint:       |     ^^^^^^^ `exitRef` cannot be modified
+@layerwell/mobile:lint:   394 |     if (!name && !brand && !barcode && !ingredients && !category && !recovery.saved) { leave(intent); return; }
+@layerwell/mobile:lint:   395 |     Keyboard.dismiss(); setExitIntent(intent);
+@layerwell/mobile:lint:   396 |   }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/immutability
+@layerwell/mobile:lint:   398:47  error  Error: Cannot access refs during render
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\manual.tsx:398:47
+@layerwell/mobile:lint:   396 |   }
+@layerwell/mobile:lint:   397 |
+@layerwell/mobile:lint: > 398 |   const decisionOpen = exitIntent !== null && canAct();
+@layerwell/mobile:lint:       |                                               ^^^^^^ This function accesses a ref value
+@layerwell/mobile:lint:   399 |
+@layerwell/mobile:lint:   400 |   return (
+@layerwell/mobile:lint:   401 |     <Screen edges={['top', 'bottom']}>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/refs
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\opened.tsx
+@layerwell/mobile:lint:   247:3   warning  React Hook useEffect contains a call to 'setRecovery'. Without a list of dependencies, this can lead to an infinite chain of updates. To fix this, pass [isManual, isCurrent, sessionId, isSessionCurrent, opening, retainManualRecovery, draft] as a second argument to the useEffect Hook                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/exhaustive-deps
+@layerwell/mobile:lint:   481:47  error    Error: Cannot access refs during render
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\app\shelf\opened.tsx:481:47
+@layerwell/mobile:lint:   479 |   }
+@layerwell/mobile:lint:   480 |
+@layerwell/mobile:lint: > 481 |   const decisionOpen = exitIntent !== null && isCurrent();
+@layerwell/mobile:lint:       |                                               ^^^^^^^^^ This function accesses a ref value
+@layerwell/mobile:lint:   482 |   return <View className="flex-1">
+@layerwell/mobile:lint:   483 |     <View ref={setBackground} className="flex-1" aria-hidden={decisionOpen || undefined}
+@layerwell/mobile:lint:   484 |       accessibilityElementsHidden={decisionOpen} importantForAccessibility={decisionOpen ? 'no-hide-descendants' : 'auto'}>  react-hooks/refs
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: ✖ 7 problems (6 errors, 1 warning)
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: npm error Lifecycle script `lint` failed with error:
+@layerwell/mobile:lint: npm error code 1
+@layerwell/mobile:lint: npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+@layerwell/mobile:lint: npm error workspace @layerwell/mobile@0.1.0
+@layerwell/mobile:lint: npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+@layerwell/mobile:lint: npm error command failed
+@layerwell/mobile:lint: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint . --max-warnings=0
+ ERROR  @layerwell/mobile#lint: command (<HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile) C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js run lint exited (1)
+
+ Tasks:    3 successful, 4 total
+Cached:    0 cached, 4 total
+  Time:    1m13.791s 
+Failed:    @layerwell/mobile#lint
+
+ ERROR  run failed: command  exited (1)

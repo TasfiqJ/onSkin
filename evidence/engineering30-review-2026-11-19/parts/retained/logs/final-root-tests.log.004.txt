@@ -1,0 +1,245 @@
+@layerwell/mobile:test:  ✓ src/components/ui/Chip.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/catalog/recoveryReport.test.ts (4 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountDeletionBarrierAuthProviderContracts.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/searchQuery.test.ts (6 tests) 9ms
+@layerwell/mobile:test: stderr | src/features/scheduler/cycleReadiness.plan.test.ts > PLAN-R4 authority-scoped Start UI and committed capture > current Start keeps the confirmed-config exception and navigates once for duplicate taps
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/lib/auth/appleSignInAuthProviderContracts.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionRecoveryE2E.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/native/ocr/accessibility.test.ts (9 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareLandingRoute.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/shelf/quickFind.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/useRecommendations.test.ts (5 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/today/useRoutineClock.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/photos/PhotoImage.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/observability/startupInstrumentation.test.ts (1 test) 11ms
+@layerwell/mobile:test:  ✓ src/features/widgets/runtimeGate.test.ts (5 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/photos/sensitiveImageDiskCache.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/features/commerce/commerce.test.ts (6 tests) 7ms
+@layerwell/mobile:test:  ✓ src/lib/auth/appleCredentialQuarantine.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlementPurchaseAttribution.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/scheduler/cycleReadiness.plan.test.ts (52 tests) 32836ms
+@layerwell/mobile:test:      ✓ Plan: plan proof succeeds before ramp; no cap-derived UI until persisted read  445ms
+@layerwell/mobile:test:      ✓ Plan: retained ramp error is unavailable; authoritative retry waits for config too  740ms
+@layerwell/mobile:test:      ✓ Plan: intentionally closed cadence preserves neutral daily/withheld UX  355ms
+@layerwell/mobile:test:      ✓ Plan: no cycle-relevant products do not depend on unrelated pending ramp/config  370ms
+@layerwell/mobile:test:      ✓ Plan: old ramp retry cannot unlock successor ownerUserId with warm cache  739ms
+@layerwell/mobile:test:      ✓ Plan: old ramp retry cannot unlock successor accountGeneration with warm cache  692ms
+@layerwell/mobile:test:      ✓ Plan: old ramp retry cannot unlock successor epoch with warm cache  693ms
+@layerwell/mobile:test:      ✓ Plan: old ramp retry cannot unlock successor generation with warm cache  708ms
+@layerwell/mobile:test:      ✓ Today PM: plan proof succeeds before ramp; no cap-derived UI until persisted read  385ms
+@layerwell/mobile:test:      ✓ Today PM: retained ramp error is unavailable; authoritative retry waits for config too  677ms
+@layerwell/mobile:test:      ✓ Today PM: old ramp retry cannot unlock successor ownerUserId with warm cache  692ms
+@layerwell/mobile:test:      ✓ Today PM: old ramp retry cannot unlock successor accountGeneration with warm cache  679ms
+@layerwell/mobile:test:      ✓ Today PM: old ramp retry cannot unlock successor epoch with warm cache  708ms
+@layerwell/mobile:test:      ✓ Today PM: old ramp retry cannot unlock successor generation with warm cache  693ms
+@layerwell/mobile:test:      ✓ Today AM: plan proof succeeds before ramp; no cap-derived UI until persisted read  369ms
+@layerwell/mobile:test:      ✓ Today AM: retained ramp error is unavailable; authoritative retry waits for config too  709ms
+@layerwell/mobile:test:      ✓ Today AM: old ramp retry cannot unlock successor ownerUserId with warm cache  741ms
+@layerwell/mobile:test:      ✓ Today AM: old ramp retry cannot unlock successor accountGeneration with warm cache  676ms
+@layerwell/mobile:test:      ✓ Today AM: old ramp retry cannot unlock successor epoch with warm cache  742ms
+@layerwell/mobile:test:      ✓ Today AM: old ramp retry cannot unlock successor generation with warm cache  663ms
+@layerwell/mobile:test:      ✓ PlanScreen/ramp: rejects captured action before query observer notification  369ms
+@layerwell/mobile:test:      ✓ PlanScreen/config: rejects captured action before query observer notification  462ms
+@layerwell/mobile:test:      ✓ TodayScreen/ramp: rejects captured action before query observer notification  477ms
+@layerwell/mobile:test:      ✓ TodayScreen/config: rejects captured action before query observer notification  464ms
+@layerwell/mobile:test:      ✓ Today completion read-back remains reachable and independent during ramp failure  539ms
+@layerwell/mobile:test:      ✓ cycle retry cannot clear an independent T1 recovery latch  431ms
+@layerwell/mobile:test:      ✓ Today rechecks cycle readiness after preparatory cancellation and before persistence  463ms
+@layerwell/mobile:test:      ✓ an in-flight Start cannot navigate after a ramp refetch failure  586ms
+@layerwell/mobile:test:      ✓ PlanScreen: old cycled action cannot inherit a newly closed-cadence bypass  338ms
+@layerwell/mobile:test:      ✓ TodayScreen: old cycled action cannot inherit a newly closed-cadence bypass  355ms
+@layerwell/mobile:test:      ✓ pending Start confirmed cannot fail or unlock successor ownerUserId  1017ms
+@layerwell/mobile:test:      ✓ pending Start rejected cannot fail or unlock successor ownerUserId  1051ms
+@layerwell/mobile:test:      ✓ a prior failed Start does not supply Try again to successor ownerUserId  539ms
+@layerwell/mobile:test:      ✓ pending Start confirmed cannot fail or unlock successor accountGeneration  1077ms
+@layerwell/mobile:test:      ✓ pending Start rejected cannot fail or unlock successor accountGeneration  1066ms
+@layerwell/mobile:test:      ✓ a prior failed Start does not supply Try again to successor accountGeneration  601ms
+@layerwell/mobile:test:      ✓ pending Start confirmed cannot fail or unlock successor epoch  1081ms
+@layerwell/mobile:test:      ✓ pending Start rejected cannot fail or unlock successor epoch  1097ms
+@layerwell/mobile:test:      ✓ a prior failed Start does not supply Try again to successor epoch  587ms
+@layerwell/mobile:test:      ✓ pending Start confirmed cannot fail or unlock successor generation  1050ms
+@layerwell/mobile:test:      ✓ pending Start rejected cannot fail or unlock successor generation  971ms
+@layerwell/mobile:test:      ✓ a prior failed Start does not supply Try again to successor generation  602ms
+@layerwell/mobile:test:      ✓ unmounted pending Start confirmed cannot navigate or publish view feedback  799ms
+@layerwell/mobile:test:      ✓ same-authority remount retains its own pending Start after old confirmed settlement  941ms
+@layerwell/mobile:test:      ✓ unmounted pending Start rejected cannot navigate or publish view feedback  818ms
+@layerwell/mobile:test:      ✓ same-authority remount retains its own pending Start after old rejected settlement  924ms
+@layerwell/mobile:test:      ✓ current Start keeps the confirmed-config exception and navigates once for duplicate taps  447ms
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > saves a dirty note before dispatching the original exit exactly once
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/growth/shareCard.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/settings/youDataRightsState.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/tags.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/priceDisplay.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/commerce/attribution.test.ts (6 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/subscription/entitlementOrdering.test.ts (5 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizCompletion.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/RecommendationsTeaser.test.ts (1 test) 8ms
+@layerwell/mobile:test:  ✓ src/features/shelf/categories.test.ts (3 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/ocrReview.test.ts (5 tests) 9ms
+@layerwell/mobile:test:  ✓ src/lib/errors/userFacing.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/shelf/freshnessMigration.test.ts (6 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/growth/publicLinkAdmission.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/components/ui/ToggleSwitch.test.ts (1 test) 7ms
+@layerwell/mobile:test:  ✓ src/components/launch/DeferredSurface.test.ts (2 tests) 8ms
+@layerwell/mobile:test:  ✓ src/features/catalog/quality.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/gatedRoutes.test.ts (5 tests) 6ms
+@layerwell/mobile:test:  ✓ src/theme/stateTokens.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/photos/photoQueryCacheDiagnostics.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/routine/sequenceComparison.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/subscription/plans.test.ts (6 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/conflictIdentity.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareProjectionBuilder.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/photos/quality.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/photos/progressImageDemand.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/conflictChoiceOutboxMigration.test.ts (3 tests) 6ms
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > rejects old save-and-leave callbacks after Keep editing or lock retirement
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/growth/shareLinks.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/lib/auth/sessionBoundary.test.ts (7 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/nativeAgeAssuranceAdapterFallback.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/features/navigation/tabBar.test.ts (2 tests) 6ms
+@layerwell/mobile:test:  ✓ src/lib/accessibility/pseudoLocalization.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/lib/auth/emailCodeRecovery.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/lib/auth/accountUpgradeE2E.test.ts (2 tests) 6ms
+@layerwell/mobile:test:  ✓ src/lib/accessibility/useReduceMotionPreference.test.ts (4 tests) 8ms
+@layerwell/mobile:test:  ✓ src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/shelf/addSubmissionAttempt.test.ts (1 test) 7ms
+@layerwell/mobile:test:  ✓ src/lib/navigation/externalUrl.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/routine/useProgress.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/features/recommendations/recommendationOutboxMigration.test.ts (3 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/notifications/notificationOutboxMigration.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizSelection.test.ts (2 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/commerce/disclosureOperation.test.ts (2 tests) 7ms
+@layerwell/mobile:test:  ✓ src/features/photos/compareAccessibility.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/growth/shareAdmission.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/subscription/cancelIntent.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/lib/auth/firstSessionE2EAuthProviderContracts.test.ts (4 tests) 7ms
+@layerwell/mobile:test:  ✓ src/components/ui/OptionCard.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/features/trend/trend.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/features/scheduler/useCycleAnalytics.test.ts (1 test) 6ms
+@layerwell/mobile:test:  ✓ src/features/today/cycleCompletion.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/subscription/restoreFeedback.test.ts (2 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/subscription/useEntitlementEvidenceContracts.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/features/shelf/paoProvenance.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/subscription/winBackOfferingPolicy.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/accountRouteLifecycle.test.ts (4 tests) 6ms
+@layerwell/mobile:test:  ✓ src/lib/iap/revenuecatTrialEligibility.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/components/ui/RouteIconButton.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/lib/iap/revenuecatWinBackTerms.test.ts (3 tests) 6ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/scheduler.test.ts (5 tests) 6ms
+@layerwell/mobile:test:  ✓ src/components/ui/Screen.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/features/intelligence/presentation.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/quizCopy.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/components/ui/StripedThumb.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/features/onboarding/productCategories.test.ts (1 test) 5ms
+@layerwell/mobile:test:  ✓ src/features/shelf/labels.test.ts (2 tests) 5ms
+@layerwell/mobile:test:  ✓ src/lib/applock/privacyState.test.ts (2 tests) 4ms
+@layerwell/mobile:test:  ✓ src/features/subscription/winBackCommercialState.test.ts (2 tests) 3ms
+@layerwell/mobile:test:  ✓ src/features/notifications/replenishmentOptInMigration.test.ts (1 test) 4ms
+@layerwell/mobile:test:  ✓ src/features/ask/groundedDelivery.test.ts (2 tests) 3ms
+@layerwell/mobile:test:  ✓ src/features/photos/sensitiveImagePolicy.test.ts (2 tests) 3ms
+@layerwell/mobile:test:  ✓ src/features/settings/accountDeletionRecoveryOwnerProofContracts.test.ts (1 test) 3ms
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > does not discard or cancel an accepted write, and Keep editing cancels only the exit intent
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps a failed save and generic exit recovery visible through a failed source refetch
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > does not let dirty-note recovery trap the existing deletion or lock boundary
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > blocks captured Back and native/replacement removal through store and memory awaits, then releases exactly once
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps ordinary route removal blocked after false purge and retries memory without deleting twice
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > forced lock removal purges immediately and the old completion cannot navigate or borrow a new authority
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test: stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps a memory-only retry reachable even when mutation readback and the source gate fail
+@layerwell/mobile:test: react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  ✓ src/features/photos/progressDetailUX.c08b2.test.ts (45 tests) 41633ms
+@layerwell/mobile:test:      ✓ retires canceled delete confirmation and close callbacks before a later dialog can act  1105ms
+@layerwell/mobile:test:      ✓ retires obsolete saved status and history after a refreshed same-text successor without discarding a draft  1772ms
+@layerwell/mobile:test:      ✓ rechecks the exact saved revision before discarding a draft, and retires changed review callbacks  1092ms
+@layerwell/mobile:test:      ✓ requires another review for a same-text successor before rebasing a draft  1046ms
+@layerwell/mobile:test:      ✓ keeps the draft when confirmation cannot reread storage and retires that review callback  970ms
+@layerwell/mobile:test:      ✓ fences duplicate adoption reads and ignores their late result after a newer edit  1077ms
+@layerwell/mobile:test:      ✓ retires removed editor callbacks while the same-owner storage recovery gate is visible  985ms
+@layerwell/mobile:test:      ✓ reads immutable note corrections explicitly, preserves an unsaved draft and hides stale history on later edits  724ms
+@layerwell/mobile:test:      ✓ cancels a pending history read, refuses its late result and retains explicit retry and draft  1063ms
+@layerwell/mobile:test:      ✓ retired note history controls cannot read a later owner or regrant  586ms
+@layerwell/mobile:test:      ✓ keeps temporary image cleanup retry above a failed storage gate, never resends and coalesces duplicate retries  1034ms
+@layerwell/mobile:test:      ✓ does not publish a late cleanup outcome or reuse a cleanup callback after lock retirement  1063ms
+@layerwell/mobile:test:      ✓ retires canceled share confirmation and prevents old cancel controls from retiring a successor  1203ms
+@layerwell/mobile:test:      ✓ executes a current local note mutation offline rather than pausing until reconnect  800ms
+@layerwell/mobile:test:      ✓ executes a current local reference mutation offline rather than pausing until reconnect  682ms
+@layerwell/mobile:test:      ✓ executes a current local delete mutation offline rather than pausing until reconnect  721ms
+@layerwell/mobile:test:      ✓ shows Saving until a durable note write succeeds, then restores that note after remount  973ms
+@layerwell/mobile:test:      ✓ coalesces repeated blur/save requests to the latest later edit while one note is pending  1126ms
+@layerwell/mobile:test:      ✓ retires the opened-note brief capability when the existing Diary lock closes  432ms
+@layerwell/mobile:test:      ✓ does not let a delayed saved-note read failure relabel a later successful save  908ms
+@layerwell/mobile:test:      ✓ retires a saved-text review and its old discard callback after a successful retry  959ms
+@layerwell/mobile:test:      ✓ reviews a newer saved note after refusal and keeps the local draft until an explicit recovery choice  955ms
+@layerwell/mobile:test:      ✓ retains the newest draft on failure, ignores implicit blur retry, and explicitly retries the latest text  1449ms
+@layerwell/mobile:test:      ✓ keeps the unsaved draft across a failed refetch and the existing storage Retry gate  694ms
+@layerwell/mobile:test:      ✓ does not save a stale rendered note callback after close/regrant or owner replacement  1034ms
+@layerwell/mobile:test:      ✓ carries accepted authority in mutation variables instead of inheriting changed React Query observer options  480ms
+@layerwell/mobile:test:      ✓ emits reference haptic/analytics only after successful current persistence  587ms
+@layerwell/mobile:test:      ✓ shows a recoverable reference failure without any success effects  570ms
+@layerwell/mobile:test:      ✓ rejects a captured reference action after owner loss and suppresses a late success under the new owner  819ms
+@layerwell/mobile:test:      ✓ runs one local deletion and waits for successful sensitive-memory purge before leaving detail  867ms
+@layerwell/mobile:test:      ✓ keeps a visible usable delete retry after metadata persistence failure  814ms
+@layerwell/mobile:test:      ✓ retains a visible recovery path when encrypted files cleanup needs retry  538ms
+@layerwell/mobile:test:      ✓ retains a visible recovery path when decoded memory cleanup needs retry  692ms
+@layerwell/mobile:test:      ✓ purges at forced health teardown without late navigation or later-owner continuation  1094ms
+@layerwell/mobile:test:      ✓ cancels retained and in-flight photo snapshots so a deleted image cannot republish later  989ms
+@layerwell/mobile:test:      ✓ keeps a dirty note on native Back and leaves only after explicit discard  922ms
+@layerwell/mobile:test:      ✓ saves a dirty note before dispatching the original exit exactly once  727ms
+@layerwell/mobile:test:      ✓ rejects old save-and-leave callbacks after Keep editing or lock retirement  1434ms
+@layerwell/mobile:test:      ✓ does not discard or cancel an accepted write, and Keep editing cancels only the exit intent  981ms
+@layerwell/mobile:test:      ✓ keeps a failed save and generic exit recovery visible through a failed source refetch  968ms
+@layerwell/mobile:test:      ✓ does not let dirty-note recovery trap the existing deletion or lock boundary  722ms
+@layerwell/mobile:test:      ✓ blocks captured Back and native/replacement removal through store and memory awaits, then releases exactly once  1330ms
+@layerwell/mobile:test:      ✓ keeps ordinary route removal blocked after false purge and retries memory without deleting twice  845ms
+@layerwell/mobile:test:      ✓ forced lock removal purges immediately and the old completion cannot navigate or borrow a new authority  937ms
+@layerwell/mobile:test:      ✓ keeps a memory-only retry reachable even when mutation readback and the source gate fail  858ms
+@layerwell/mobile:test: 
+@layerwell/mobile:test:  Test Files  556 passed (556)
+@layerwell/mobile:test:       Tests  8004 passed (8004)
+@layerwell/mobile:test:    Start at  15:04:20
+@layerwell/mobile:test:    Duration  43.42s (transform 27.59s, setup 0ms, import 86.11s, tests 282.41s, environment 103ms)
+@layerwell/mobile:test: 
+@layerwell/catalog-operator-console:test: cache bypass, force executing 69c7ab0d975043c2
+@layerwell/catalog-operator-console:test: 
+@layerwell/catalog-operator-console:test: > @layerwell/catalog-operator-console@0.1.0 test
+@layerwell/catalog-operator-console:test: > vitest run
+@layerwell/catalog-operator-console:test: 
+@layerwell/catalog-operator-console:test: 
+@layerwell/catalog-operator-console:test:  RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/catalog-operator-console
+@layerwell/catalog-operator-console:test: 
+@layerwell/catalog-operator-console:test:  ✓ src/sessionWorkEpoch.test.ts (2 tests) 4ms
+@layerwell/catalog-operator-console:test:  ✓ src/sessionTimer.test.ts (2 tests) 4ms
+@layerwell/catalog-operator-console:test:  ✓ src/workflow.test.ts (4 tests) 6ms
+@layerwell/catalog-operator-console:test:  ✓ src/env.test.ts (4 tests) 7ms
+@layerwell/catalog-operator-console:test:  ✓ src/operatorApi.test.ts (6 tests) 38ms
+@layerwell/catalog-operator-console:test:  ✓ src/auth.test.ts (2 tests) 6ms
+@layerwell/catalog-operator-console:test:  ✓ vite.config.test.ts (4 tests) 7ms
+@layerwell/catalog-operator-console:test: 
+@layerwell/catalog-operator-console:test:  Test Files  7 passed (7)
+@layerwell/catalog-operator-console:test:       Tests  24 passed (24)
+@layerwell/catalog-operator-console:test:    Start at  15:05:04
+@layerwell/catalog-operator-console:test:    Duration  469ms (transform 316ms, setup 0ms, import 774ms, tests 72ms, environment 1ms)
+@layerwell/catalog-operator-console:test: 
+
+ Tasks:    3 successful, 3 total
+Cached:    0 cached, 3 total
+  Time:    49.996s 
+

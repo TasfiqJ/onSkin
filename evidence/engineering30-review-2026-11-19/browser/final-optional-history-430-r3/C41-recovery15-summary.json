@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "staleOpeningRefused": true,
+  "conflictDraftRetained": true,
+  "explicitRefreshDoesNotSubmit": true,
+  "newReviewRequired": true,
+  "originalHistoryAndCheckoffsPreserved": true,
+  "conflictStatus": {
+    "explicitUserScroll": true,
+    "visibleBeforeScroll": false,
+    "visibleAfterScroll": true,
+    "automaticStatusReveal": false,
+    "nativeAccessibilityQualified": false
+  },
+  "concurrentWrites": "synthetic negative through real owner-bound encrypted append",
+  "revision": 8
+}

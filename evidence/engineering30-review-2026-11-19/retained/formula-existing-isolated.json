@@ -1,0 +1,38 @@
+{
+  "label": "formula-existing-isolated",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/formulaHistoryJourney.test.ts"
+  ],
+  "before": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+  },
+  "start": "2026-11-19T19:56:47.339860+00:00",
+  "freeBytesBefore": 157367865344,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/shelf/intake-drafts.tsx\n M apps/mobile/src/app/shelf/manual.tsx\n M apps/mobile/src/app/shelf/opened.tsx\n M apps/mobile/src/features/shelf/compactManual46.test.ts\n M apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts\n M apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/manual-intake-drafts21.mjs\n M scripts/e2e/manual-intake-recovery.mjs\n M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx\n?? docs/e2e-bug-reports/2026-11-19-manual-intake-recovery.md\n?? scripts/e2e/manual-intake-lifecycle30.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "8f1a7327ed8129e0e77973852e59e690072777ffd45fe9b7e2c85e12195ddba3"
+  },
+  "end": "2026-11-19T19:56:55.326880+00:00",
+  "freeBytesAfter": 157367271424,
+  "logBytes": 353,
+  "logSha256": "956e213b96a864eff9f34e18358a420af13a5b358a8167644b95ed5c9feeaa02"
+}

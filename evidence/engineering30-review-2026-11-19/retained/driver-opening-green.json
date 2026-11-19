@@ -1,0 +1,34 @@
+{
+  "label": "driver-opening-green",
+  "command": [
+    "node",
+    "--test",
+    "scripts/e2e/manual-opening-choice30.test.mjs"
+  ],
+  "before": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "7adb9619fa0fba08bb0b031c84bbad209d2e2f8714b7679a84013cb732bfac88"
+  },
+  "start": "2026-11-19T19:38:24.634188+00:00",
+  "freeBytesBefore": 157527851008,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/onboarding-first-session.mjs\n M scripts/e2e/retained-daily-loop.mjs\n?? scripts/e2e/manual-opening-choice30.mjs\n?? scripts/e2e/manual-opening-choice30.test.mjs",
+    "indexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+    "diffSha256": "7adb9619fa0fba08bb0b031c84bbad209d2e2f8714b7679a84013cb732bfac88"
+  },
+  "end": "2026-11-19T19:38:24.978833+00:00",
+  "freeBytesAfter": 157527846912,
+  "logBytes": 815,
+  "logSha256": "cd6c7910d41ae60bd46a48f26d314734dae8dd2bc9cb4ea90a690edb445dca67"
+}

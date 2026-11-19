@@ -1,0 +1,524 @@
+{
+  "at": "2026-11-19T20:31:00.930802+00:00",
+  "source": {
+    "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+    "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "requirements": [
+    {
+      "id": "F01",
+      "name": "Brand and legal identity",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "External public identity",
+      "remaining": "Cleared brand, seller, jurisdiction and owned public destinations require founder/counsel evidence.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F02",
+      "name": "Accounts, age, privacy and consent",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Adult/consent/private recovery works locally; genuine auth/linking, hosted lifecycle/erasure and native rights qualification remain.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F03",
+      "name": "Full Shelf intake",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local manual journey advanced",
+      "remaining": "Encrypted incomplete drafts, guarded leave, exact resume/review/Add, readback, formula correction/use/deletion are connected. Real catalog/OCR/barcode/camera admission and native custody remain unavailable.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F04",
+      "name": "Rights-reviewed catalog",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "External content authority plus incomplete integration",
+      "remaining": "No authentic rights-reviewed catalog serving chain or genuine reviewer operations is admitted.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F05",
+      "name": "Reviewed conflict guidance",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Positive guidance gated",
+      "remaining": "Exact clinical/cosmetic/legal corpus and positive serving receipts remain absent.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F06",
+      "name": "Version-aware routine builder",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Exact saved intake product is explicitly applied through the free actual-routine route; lawful professional intended-to-actual ingestion remains a separately authorized missing integration.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F07",
+      "name": "Today and adherence",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Separate visible keyboard check-off binds the actual version/product/formula; original immutable-event ingress, real hosted convergence/deletion-win and device qualification remain.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F08",
+      "name": "Cycle, ramp and recovery",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Positive cadence gated",
+      "remaining": "Reviewed cadence/recovery evaluator, copy and clinical/cosmetic admission remain unavailable.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F09",
+      "name": "Private photo diary and comparison",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Private Diary/history/manual comparison/refusal remain; native capture/custody and authenticated orphan/conflict recovery remain outstanding.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F10",
+      "name": "Local OS reminders",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local source, device qualification absent",
+      "remaining": "Local timing/preferences/recovery exist; real supported-iPhone permission, scheduling, delivery and cleanup are unqualified.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F11",
+      "name": "Standard subscriptions",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Store/provider blocked",
+      "remaining": "Real signed purchase/restore/lapse/refund and merchant lifecycle are not established.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F12",
+      "name": "Compliant introductory offer",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Apple offer blocked",
+      "remaining": "Approved Apple-managed eligibility/configuration/terms lifecycle remains absent; custom reverse grants stay closed.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F13",
+      "name": "Reviewed recommendations",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial foundations",
+      "remaining": "Authentic catalog/rules/review provenance and delivered professional response linkage remain missing.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F14",
+      "name": "Provider-real safe Ask",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Provider-real Ask missing",
+      "remaining": "Safe local refusal exists; grounded approved provider, abuse/rate controls and incident operations remain absent.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F15",
+      "name": "Private-safe sharing",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local private-sharing source, external qualification absent",
+      "remaining": "Selected factual briefs/rights exports exist; native handoff, temp cleanup and qualified privacy/rights remain outstanding.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F16",
+      "name": "Commerce and replenishment",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Production commerce missing",
+      "remaining": "Admission stays closed; approved partners, lawful recipient flows and genuine transaction/replenishment operations remain absent.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F17",
+      "name": "Moderated community / Skin Notes",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Moderated service missing",
+      "remaining": "No qualified staffed moderation, publication and escalation operation is established.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F19",
+      "name": "Widgets and Live Activities",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Native lifecycle unqualified",
+      "remaining": "Widget/Live Activity privacy foundations exist; exact signed-device lifecycle and native delivery remain unqualified.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "F20",
+      "name": "Operator, support and administration",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial operations foundations",
+      "remaining": "Operator/support/admin guards exist; authentic owner administration, staffing and restore/purge operations remain incomplete.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C01",
+      "name": "Access/consent/rights",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Owner/consent/rights fences preserved; authentic ingress/account portability and hosted rights operations remain absent.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C02",
+      "name": "Formula-aware intake",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local formula intake advanced",
+      "remaining": "Raw versus parsed entries and barcode normalization are disclosed; explicit synthetic owner label correction preserves original and exact formula-at-use. Native OCR/catalog authority remains unavailable.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C03",
+      "name": "Change ledger",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local immutable history advanced",
+      "remaining": "Bottle corrections retain original source identity and use binds the exact version. Genuine original-owner immutable source ingress remains missing.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C04",
+      "name": "Optional exceptions",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local source, separate qualification",
+      "remaining": "Optional factual exceptions/drafts/corrections remain distinct from use; device and genuine custody qualification remain.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C05",
+      "name": "Current plan/version",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Explicit local actual version and no-use apply are connected; authenticated intended-to-actual source application remains missing.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C06",
+      "name": "Product decisions",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Owned-product decisions and truthful source restrictions exist; genuine reviewed recommendation/professional source bridges remain incomplete.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C07",
+      "name": "Private progress/capture",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Private progress/capture refusal and manual comparison exist; physical/native and authenticated media-recovery qualification remain.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C08",
+      "name": "Appointment brief",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial local implementation",
+      "remaining": "Selected factual appointment briefs exist; original professional/owner record custody and real handoff remain incomplete.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C09",
+      "name": "Reminders",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local source, device qualification absent",
+      "remaining": "Reminder choices are separate from OS delivery; real supported-device lifecycle remains unqualified.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C10",
+      "name": "Consumer packaging/billing",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Packaging/billing blocked",
+      "remaining": "Genuine provider billing and approved commercial packaging remain unqualified.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C11",
+      "name": "Accessible recovery/IA",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Local intake accessibility/recovery advanced",
+      "remaining": "Named multi-draft actions, live verification, contained keyboard focus, Escape/return, conflict retirement, explicit leave/retry and browser text-pressure checks. Whole-product/native VoiceOver/Dynamic Type remain unqualified.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "V2-C12",
+      "name": "Support/measurement",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Partial support foundations",
+      "remaining": "Content-minimized diagnostics exist; named funded support, measurement and incident/restore drills remain absent.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "P01",
+      "name": "Workspace roles",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Authority foundations, production absent",
+      "remaining": "Real identities/licences/MFA/membership and authenticated session provisioning remain missing; default503 preserved.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "P02",
+      "name": "Client grants/web",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Grant foundations, production absent",
+      "remaining": "Scoped owner grants/revocation exist in domain; real directory/session/serial custody services remain absent.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "P03",
+      "name": "Pro plans/templates",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Template/source mapping candidate",
+      "remaining": "Exact practice template revisions/mapping exist locally with synthetic positives; authentic professional custody, unshelved authority and lawful intended-to-actual transaction remain missing.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "P04",
+      "name": "Queue/reconciliation",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Queue/reconciliation foundations",
+      "remaining": "Original material-event ingress, staffing/assignment/coverage and genuine delivered response linkage remain incomplete.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "P05",
+      "name": "Pre-visit/offboarding",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Offboarding/previsit blocked on custody policy",
+      "remaining": "Original immutable owner source, approved retention/custodian policy and tombstone-first hosted restore/purge remain missing; retired template access remains refused.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "P06",
+      "name": "Workspace billing/capacity",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Billing/capacity foundations",
+      "remaining": "Real provider/merchant/serial driver, seat administration and funded operational capacity remain absent.",
+      "acceptance": "UNACCEPTED"
+    },
+    {
+      "id": "J01",
+      "name": "Visible pores",
+      "frozenStatus": "REQUIRED_PENDING",
+      "complete": false,
+      "ownerAdmitted": false,
+      "observationalLocalStatus": "Positive scientific qualification absent",
+      "remaining": "Visible Pores only. No admitted measurement/score/change pipeline; authenticated rights/research/optics/calibration/evaluation and G1-G5 remain unaccepted.",
+      "acceptance": "UNACCEPTED"
+    }
+  ],
+  "gates": [
+    {
+      "id": "G97",
+      "frozenStatus": "FAIL/NO_GO",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Original rules/pins/tool/secret/OSV/source inventory and exact-source acceptance; expiry 2026-10-21T00:00:00Z unchanged"
+    },
+    {
+      "id": "DB",
+      "frozenStatus": "NOT_ACCEPTED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "DB06/DB08/R2B qualified owner exact-environment admission remains absent; hosted canonical technical success is separate evidence"
+    },
+    {
+      "id": "M1-03",
+      "frozenStatus": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Whole M1-03 acceptance from authentic exact-source Security/DB evidence, not alternate PG rehearsal"
+    },
+    {
+      "id": "M2-01",
+      "frozenStatus": "NOT_AUTHORIZED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Accepted M1-03 then separate finite implementation authorization; ADR038 corrections remain due"
+    },
+    {
+      "id": "G1",
+      "frozenStatus": "NOT_ACCEPTED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Real native pixels, resolving power, capture region/device/light/distance and repeatability evidence; no upscaling-as-detail"
+    },
+    {
+      "id": "G2",
+      "frozenStatus": "NOT_ACCEPTED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Authenticated exact J01 dossier, target/rights/consent/annotation and frozen person-disjoint evaluation manifest"
+    },
+    {
+      "id": "G3",
+      "frozenStatus": "NOT_ACCEPTED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Locked single-scan pipeline, independent supported-stratum errors, coverage and honest abstention at each claim granularity"
+    },
+    {
+      "id": "G4",
+      "frozenStatus": "NOT_ACCEPTED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Separate common-support repeatability/noise/change study; absent now, no pore change/trend"
+    },
+    {
+      "id": "G5",
+      "frozenStatus": "NOT_ACCEPTED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Exact signed build, image lifecycle/zero-egress if claimed, fairness, cosmetic copy, device and operations evidence"
+    },
+    {
+      "id": "RIGHTS",
+      "frozenStatus": "GATED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Exact catalog/code/weights/data/image/text licences and permitted distribution; articles do not supply imaging labels"
+    },
+    {
+      "id": "CLINICAL",
+      "frozenStatus": "GATED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Exact corpus/claim/country/use review with credentials, conditions and source/build hash; no blanket approval"
+    },
+    {
+      "id": "PROVIDER",
+      "frozenStatus": "NOT_RUN",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Actual supported service and terms, deployment, negative lifecycle, access/recovery and operational evidence"
+    },
+    {
+      "id": "PAYMENT",
+      "frozenStatus": "NOT_RUN",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Real verified sandbox/native/provider lifecycle and commercial permission; no local paid flag or free quota authority"
+    },
+    {
+      "id": "MODERATION",
+      "frozenStatus": "NOT_RUN",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Actual staffed report/escalation/appeal/deletion coverage and enforceable tooling; no placeholder policy"
+    },
+    {
+      "id": "OPERATIONS",
+      "frozenStatus": "NOT_RUN",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Named funded coverage, incident, backup/restore/tombstone and capacity evidence before real hosted promises"
+    },
+    {
+      "id": "DEVICE",
+      "frozenStatus": "NOT_RUN",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Exact signed supported-iPhone flows, accessibility, photos/reminders/widgets/purchase and cancellation evidence"
+    },
+    {
+      "id": "APPLE",
+      "frozenStatus": "NOT_AUTHORIZED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "Actual agreements/identity/signing, privacy/offer classification, signed install, App Review; no account mutation authorized here"
+    },
+    {
+      "id": "PUBLIC",
+      "frozenStatus": "NOT_AUTHORIZED",
+      "admitted": false,
+      "acceptance": "UNACCEPTED",
+      "remaining": "All38 required contract rows and all applicable gates satisfied at one exact build, then separate explicit public availability authorization"
+    }
+  ],
+  "release": "NO_GO",
+  "frozenRecordsModified": false,
+  "prioritization": "Complete locally authorized manual intake/recovery and exact saved-product use first. Next local campaign should extend cross-journey accessible recovery and explicit source review. Production ingress/identity/custody/intended apply requires separate authorization; no integration or native acceptance is inferred."
+}

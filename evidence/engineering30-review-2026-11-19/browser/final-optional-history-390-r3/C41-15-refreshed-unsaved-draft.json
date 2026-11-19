@@ -1,0 +1,113 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 Good morning. Morning routine complete. Shelf projection · no actual routine applied. Review and apply to record version-bound use. Morning routine 1 of 1 Recorded - cannot undo Mineral SPF 50 Always the last morning step. Reapply through the day. For your next visit Morning check-offs saved on this device. Come back after 5 PM for your evening routine. If you’d like, review your week or choose reminder options. Review this week → Reminder options → Your optional change notes Factual notes you choose to record, separate from check-offs. These are your reports, not a diagnosis or an app observation. 2026-11-18 · Used something different Earlier observation Owner reported · Entry 1 · Recorded 2026-11-19T20:38:33.700Z Synthetic41: I used a different cleanser. Event 12214f97-752d-4a88-b282-905376392794 2026-11-18 · Other personal note Earlier observation Correction of entry 1 · Entry 2 · Recorded 2026-11-19T20:38:36.346Z Synthetic41 correction: I used my usual cleanser. Event 02643d12-5290-474f-a835-caccb9d73593 2026-11-19 · No change to report Retracted observation Owner reported · Entry 3 · Recorded 2026-11-19T20:38:38.043Z Event 2a0c752c-9ddd-4a84-8d40-1e7f5eacb274 2026-11-19 · Other personal note Retraction record Retraction of entry 3 · Entry 4 · Recorded 2026-11-19T20:38:39.893Z Synthetic41: I retract that no-change report. Event 40356aea-d5ab-42a8-ae84-c6cefd0db217 2026-11-19 · Other personal note Current observation Owner reported · Entry 5 · Recorded 2026-11-19T20:38:43.261Z Synthetic41 private storage failure retry. Event 92b2aeed-6053-4d29-a1ba-38031b7cabc4 2026-11-18 · Other personal note Earlier observation Correction of entry 1 · Entry 6 · Recorded 2026-11-19T20:38:43.754Z Synthetic15 unseen concurrent correction. Event 45fa9e68-f4d1-4051-ba60-8198547d8a99 2026-11-18 · Other personal note Current observation Owner reported · Entry 7 · Recorded 2026-11-19T20:38:46.816Z Synthetic15 separately saved concurrent note. Event 3623c25a-85f3-4a42-a22d-e7b5a421e87f 2026-11-18 · Other personal note Current observation Correction of entry 1 · Entry 8 · Recorded 2026-11-19T20:38:48.463Z Synthetic15 retained draft after conflict. Event 9c1e7ce6-b743-468b-ada0-aba4d2595d0d Draft change Previous entries stay recorded. Only confirmation appends history. Save a draft explicitly to keep incomplete text after reload. This working draft is not saved for recovery. Save change draft on this device Observed local date (YYYY-MM-DD) Skipped a step Used something different Irritation or uncertain reaction I noticed Other personal note No change to report Your factual note Up to 2,000 characters / 6,000 UTF-8 bytes. Record only what you noticed. Draft kept. Current history was read. Review your change again before saving; nothing new was submitted. Review this change Cancel draft Refresh changes Local to this device; notes are not sent with check-offs. Clearing local data removes this history. Uninstalling or losing the encryption key may lose it. Local exports may include it; exported copies cannot be revoked and cannot be imported here. ✦ A few honest suggestions 2 things we’d gently suggest › Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 120,
+      "hitOk": true,
+      "label": "Your factual note",
+      "role": "textarea",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 26
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Review this change",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 306
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Cancel draft",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 374
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Refresh changes",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 442
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 659
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 24.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 195,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8386/today?routine=AM",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

@@ -1,0 +1,205 @@
++const model=()=>({sourceHash:'a'.repeat(64),writeAvailable:mode!=='readonly',grantVersion:1,grantEpoch:1,events:mode==='empty'?[]:[event],
++ plans:mode==='empty'?[]:[{planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,sequence:1}],acknowledgements:[],responses:mode==='empty'?[]:ownerResponses,rows:mode==='empty'?[]:log});
++const scopeText=()=>cdp.value(`document.querySelector('#reconciliation').innerText`);
++const checkOverflow=async()=>{const ok=await cdp.value('document.documentElement.scrollWidth <= innerWidth');overflow.push(ok);assert(ok,'horizontal overflow');};
++async function fill(label,value){const point=await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label='+${JSON.stringify(JSON.stringify(label))}+']');if(!n)return null;n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);assert(point,`Missing ${label}`);await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await cdp.send('Input.insertText',{text:value});}
++async function choose(value){await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label="Next review state"]');n.scrollIntoView({block:'center'});n.focus();})()`);await keyboard('Home','Home',36);const options=await cdp.value(`Array.from(document.querySelector('#reconciliation [aria-label="Next review state"]').options).map(o=>o.value)`);for(let i=0;i<options.indexOf(value);i++)await keyboard('ArrowDown','ArrowDown',40);await keyboard('Enter');assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Next review state"]').value`)===value,'Select keyboard state');}
++async function filter(label,value){
++ await cdp.value(`(()=>{const n=[...document.querySelectorAll('#reconciliation select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();})()`);
++ const options=await cdp.value(`Array.from([...document.querySelectorAll('#reconciliation select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}).options).map(o=>o.value)`);
++ assert(options.includes(value),'Filter option exists');await keyboard('Home','Home',36);for(let i=0;i<options.indexOf(value);i++)await keyboard('ArrowDown','ArrowDown',40);await keyboard('Enter');
++ assert(await cdp.value(`document.activeElement.getAttribute('aria-label')===${JSON.stringify(label)}&&document.activeElement.value===${JSON.stringify(value)}`),'Filter keyboard selection and focus');
++}
++try{
++ // Fixture compilation/import must succeed before a server can be owned.
++ server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++ server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++ await poll(async()=>(await fetch(origin)).ok,'Vite unavailable',20000);
++ assert((await fetch(`${origin}/api/professional/reconciliation`,{method:'POST'})).status===503,'Real queue must refuse');
++ browser=spawn(browserPath,['--headless=new','--disable-gpu','--no-first-run',`--remote-debugging-port=${debugPort}`,`--user-data-dir=${mkdtempSync(path.join(tmpdir(),'onskin-queue-'))}`,'about:blank'],{windowsHide:true,stdio:'ignore'});
++ const tabs=await poll(async()=>(await(await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(t=>t.type==='page'),'Chrome unavailable');cdp=new Client(tabs[0].webSocketDebuggerUrl);
++ await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});await cdp.send('Page.navigate',{url:origin});await text('Practice connection');await poll(()=>cdp.value(`!!document.querySelector('#reconciliation button')`),'Queue mount');assert(await cdp.value('scrollY===0'),'Mount stole scroll');
++ await click('Load current review records');await text('Review queue unavailable');await screenshot('real-unavailable');
++ await cdp.send('Fetch.enable',{patterns:[{urlPattern:`${origin}/api/professional/reconciliation`,requestStage:'Request'}]});
++ cdp.onEvent=async e=>{if(e.method!=='Fetch.requestPaused')return;const {requestId,request}=e.params;const input=JSON.parse(request.postData);sent.push(input);if(mode==='hold'){held=requestId;return;}
++  let status=200;let response={kind:input.kind,context:'synthetic-queue-context',model:model()};
++  try{if(input.kind==='save'){const c=input.command;log=c.kind==='enqueue'?await enqueueMaterial(log,authority,event,c.caseId,now):await transitionCase(log,authority,{caseId:c.caseId,expectedHash:c.expectedHash,next:c.next,reason:c.reason,communication:c.communication,changedPlanHash:c.changedPlanHash,acknowledgement:null,nonAcknowledgementReason:c.nonAcknowledgementReason},now);response.model=model();}
++   if(mode==='unknown'&&input.kind==='save'){status=503;response={status:'unavailable',private:'NEVER_RENDER_PRIVATE_BODY'};mode='normal';}
++   if(mode==='changed'){status=409;response={private:'NEVER_RENDER_PRIVATE_BODY'};}if(mode==='denied'){status=403;response={private:'NEVER_RENDER_PRIVATE_BODY'};}
++   if(mode==='forged')response.model={...model(),unexpected:'NEVER_RENDER_PRIVATE_BODY'};
++  }catch{status=409;response={status:'changed'};}
++  await cdp.send('Fetch.fulfillRequest',{requestId,responseCode:status,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:mode==='cacheable'?'public,max-age=3600':'no-store'}],body:Buffer.from(JSON.stringify(response)).toString('base64')}).catch(()=>{});
++ };
++ await click('Load current review records');await text('Review owner record 1');assert(await cdp.value(`document.activeElement===document.querySelector('#reconciliation h2')`),'Load focus');
++ await click('Review owner record 1');await text(event.detail);await text('Exact intended version: 1');await screenshot('event-review');await checkOverflow();
++ await cdp.value(`globalThis.__retiredQueueConfirm=[...document.querySelectorAll('#reconciliation button')].find(b=>b.textContent==='Confirm review record').onclick`);await click('Cancel review');const count=sent.length;await cdp.value('__retiredQueueConfirm()');await delay(100);assert(sent.length===count,'Canceled callback submitted');
++ await click('Review owner record 1');mode='unknown';await click('Confirm review record');await text('Review save outcome unknown');const original=JSON.stringify(sent.at(-1));await click('Retry identical review save');await text('Review revision saved');assert(JSON.stringify(sent.at(-1))===original&&log.length===1,'Unknown retry duplicated');
++ await click('Open case 1 history');await text(event.detail);await fill('Reason for this decision','SYNTHETIC exact event reviewed');await choose('in_review');await click('Review decision before saving');await screenshot('decision-review');await click('Confirm review record');await text('Review revision saved');assert(log.length===2,'Decision append');
++ await click('Open case 1 history');await choose('awaiting_client_ack');await fill('Reason for this decision','SYNTHETIC intended version needs owner response');await filter('Changed intended version',event.planHash);
++ await click('Review decision before saving');await text('No explicit response recorded');await click('Confirm review record');await text('Review revision saved');
++ ownerResponses=[{id:'33333333-3333-4333-8333-333333333333',contentHash:'c'.repeat(64),planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,kind:'declined',recordedAt:now}];
++ await click('Load current review records');await text('Open case 1 history');await click('Open case 1 history');await text('Latest recorded owner response to intended version 1: Declined');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Recorded owner acknowledgement"]').options.length`)===1,'Decline offered as acknowledgement');await screenshot('owner-declined');await checkOverflow();
++ await choose('resolved');await fill('Reason for this decision','SYNTHETIC factual resolution');await fill('Communication already provided (record only)','SYNTHETIC prior contact recorded; no message sent');await fill('Reason for closing without exact acknowledgement','SYNTHETIC exact version declined; no actual use inferred');
++ await click('Review decision before saving');await text('Latest recorded owner response to intended version 1: Declined');await click('Confirm review record');await text('Review revision saved');assert(log.length===4&&log.at(-1).state==='resolved','Closure');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await screenshot('history');await checkOverflow();await click('Back to queue; discard draft');
++ const beforeFilters=sent.length;await filter('Filter cases by recorded state','open');await text('No current cases match these filters.');
++ assert(!(await scopeText()).includes('Open case 1 history'),'Closed history misclassified as open');await screenshot('filter-open-empty');
++ await filter('Filter cases by recorded state','resolved');await text('Open case 1 history');
++ await filter('Filter material records by kind','concern_reported');await text('No shared material records match this filter.');await text('No current cases match these filters.');
++ await filter('Filter material records by kind','product_started');await text('Open case 1 history');assert(sent.length===beforeFilters,'Display filter read or wrote private records');
++ await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await click('Back to queue; discard draft');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Filter cases by recorded state"]').value==='resolved'&&document.querySelector('#reconciliation [aria-label="Filter material records by kind"]').value==='product_started'`),'History return lost filters');
++ await checkOverflow();await screenshot('filtered-history-return');
++ await cdp.value(`new BroadcastChannel('onskin-professional-session').postMessage('retired')`);await poll(async()=>(await scopeText()).includes('Current assigned practitioner'),'Session retirement');assert(!(await scopeText()).includes(event.detail),'Session retained text');
++ mode='readonly';await click('Load current review records');await text('Read-only:');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await click('Back to queue; discard draft');
++ for(const branch of ['changed','denied','forged','cacheable']){mode=branch;await click('Load current review records');await text(branch==='changed'?'Review records changed':'Review queue unavailable');assert(!(await scopeText()).includes('NEVER_RENDER_PRIVATE_BODY'),'Private error rendered');}
++ mode='empty';await click('Load current review records');await text('No current shared material events');await text('No current cases.');
++ mode='hold';await click('Load current review records');await poll(()=>held,'Held read');await click('Clear review screen');await cdp.send('Fetch.fulfillRequest',{requestId:held,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'}],body:Buffer.from(JSON.stringify({kind:'source',context:'retired',model:model()})).toString('base64')}).catch(()=>{});await delay(100);assert(!(await scopeText()).includes(event.detail),'Late read republished');
++ mode='normal';await click('Load current review records');await text('Open case 1 history');await keyboard('Tab');assert(await cdp.value('document.activeElement?.tagName')==='SELECT','Keyboard navigation');await checkOverflow();await screenshot('final');assert(!cdp.events.some(e=>e.method==='Runtime.exceptionThrown'),'Browser exception');const ax=await cdp.send('Accessibility.getFullAXTree');
++ writeFileSync(path.join(evidence,'summary.json'),JSON.stringify({surface:'Actual Vite UI; real API503; domain-generated HTTP positives explicitly synthetic',width,height,eventReviewCancel:true,retiredCallback:true,unknownExactRetry:true,encryptedIntegration:'separate source tests',decisionAndClosure:true,historyReadback:true,stateAndKindFilters:true,filterEmptyAndHistoryReturn:true,filterKeyboardFocus:true,readOnly:true,sessionRetirement:true,changedDeniedForgedCacheable:true,empty:true,lateClear:true,keyboard:true,focus:true,startupTop:true,overflow,commands:sent.map(i=>i.kind),axRoles:ax.nodes.filter(n=>!n.ignored).map(n=>n.role?.value)},null,2));console.log(`PASS queue ${width}x${height}`);
++}catch(error){if(cdp)await screenshot('failure').catch(()=>{});throw error;}
++finally{writeFileSync(path.join(evidence,'server.log'),serverLog);cdp?.ws.close();for(const child of[browser,server])if(child?.pid){if(process.platform==='win32')await new Promise(resolve=>spawn('taskkill',['/pid',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'}).once('exit',resolve));else child.kill();}}
+diff --git a/scripts/e2e/retained-daily-loop.mjs b/scripts/e2e/retained-daily-loop.mjs
+index f7a0f564b37c57ce6eb71c23d1ed65e73f3ecbc9..6d3e40f1ffe3304044793e8c0d8f6eb424c57c7e 100644
+--- a/scripts/e2e/retained-daily-loop.mjs
++++ b/scripts/e2e/retained-daily-loop.mjs
+@@ -1,4 +1,5 @@
+ import assert from 'node:assert/strict';
++import { chooseManualUnopened30 } from './manual-opening-choice30.mjs';
+ 
+ // Runs inside the maintained fresh-profile onboarding harness. No authority,
+ // consent, entitlement, corpus receipt, or local completion is fabricated here.
+@@ -56,7 +57,7 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
+   await clickByText(client, 'Category, Moisturiser (tube)');
+   await clickByText(client, 'Continue');
+   await waitForText(client, 'Not opened yet');
+-  await clickByText(client, 'Not opened yet');
++  await chooseManualUnopened30({ client, scrollTextIntoView, clickByText, waitForText });
+   await scrollTextIntoView(client, 'Add to shelf');
+   await clickByText(client, 'Add to shelf');
+   await waitForText(client, 'M102 synthetic moisturizer');
+diff --git a/scripts/e2e/template-mapping29.mjs b/scripts/e2e/template-mapping29.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..25d0f501093e1ee4ce29bd69e27400829e3de326
+--- /dev/null
++++ b/scripts/e2e/template-mapping29.mjs
+@@ -0,0 +1,119 @@
++// Real local UI/API/domain/encryption; ALL trust, keys and serial driver are
++// explicitly synthetic. No original-owner ingestion or live admission follows.
++import assert from 'node:assert/strict';
++import { spawn, execFileSync } from 'node:child_process';
++import { createRequire } from 'node:module';
++import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath, pathToFileURL } from 'node:url';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const repo = fileURLToPath(new URL('../../', import.meta.url));
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const { createServer } = await import(pathToFileURL(require.resolve('vite')).href);
++const out = path.resolve(process.env.ONSKIN_MAPPING_EVIDENCE ?? path.join(repo, '../ENGINEERING29_EVIDENCE/mapping-browser'));
++mkdirSync(out, { recursive: false });
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
++const port = await b.findAvailablePort(4336), debugPort = await b.findAvailablePort(9466), origin = `http://localhost:${port}`;
++const root = path.join(repo, 'apps/professional-web');
++const browserPath = process.env.BROWSER_PATH ?? 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
++assert(existsSync(browserPath));
++const git = (...args) => execFileSync('git', args, { cwd: repo, encoding: 'utf8', windowsHide: true }).trim();
++const receipt = { start: new Date().toISOString(), head: git('rev-parse', 'HEAD'), tree: git('rev-parse', 'HEAD^{tree}'), status: git('status', '--porcelain=v1'),
++  surface: 'Actual local Edge and source UI/API/domain/encrypted repository; synthetic trust/key/serial ports only', viewports: [], requests: [], blocked: [], interceptionErrors: [], pass: false };
++let server, browser, client, f, handler, context, loseNext = false, denied = false;
++const submitted = [], responses = [];
++async function wait(work) { for (let n = 0; n < 100; n++) { try { if (await work()) return; } catch {} await delay(100); } throw new Error('Local browser readiness timeout'); }
++async function capture(name) {
++  const state = await b.evaluate(client, `({text:document.querySelector('#practitioner-plan').innerText,focus:document.activeElement?.textContent,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),persisted:JSON.stringify([Object.entries(localStorage),Object.entries(sessionStorage)])})`);
++  assert.equal(state.overflow, 0); assert(!/Recorded cleanser|Recorded cream|Generic roles/.test(state.persisted)); json(name + '.json', state);
++  const shot = await client.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++}
++const text = expected => b.waitForCondition(client, `document.querySelector('#practitioner-plan').innerText.includes(${JSON.stringify(expected)})`, 10000, expected);
++const click = label => b.clickByText(client, label);
++async function keyboard(label) {
++  const result = await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();const r=n.getBoundingClientRect();return {focused:document.activeElement===n,height:r.height,visible:r.y>=0&&r.bottom<=innerHeight}})()`);
++  assert(result.focused && result.height >= 44 && result.visible);
++  for (const type of ['keyDown', 'keyUp']) await client.send('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, ...(type === 'keyDown' ? { text: '\r' } : {}) });
++}
++async function choose(label, value) {
++  const found = await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practitioner-plan select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();const index=[...n.options].findIndex(o=>o.value===${JSON.stringify(value)});return {index,height:n.getBoundingClientRect().height,focused:document.activeElement===n}})()`);
++  assert(found.index >= 0 && found.height >= 44 && found.focused);
++  await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Home', code: 'Home', windowsVirtualKeyCode: 36 });
++  await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Home', code: 'Home', windowsVirtualKeyCode: 36 });
++  // Each native selection change rerenders and retires the old select. Focus
++  // its fresh replacement before the next keyboard step.
++  for (let n = 0; n < found.index; n++) {
++    await b.evaluate(client, `[...document.querySelectorAll('#practitioner-plan select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}).focus()`);
++    await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'ArrowDown', code: 'ArrowDown', windowsVirtualKeyCode: 40 });
++    await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'ArrowDown', code: 'ArrowDown', windowsVirtualKeyCode: 40 });
++  }
++  assert.equal(await b.evaluate(client, `[...document.querySelectorAll('#practitioner-plan select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}).value`), value);
++}
++async function begin() { await click('Load assigned client products'); await text('Compose intended sequence'); await click('Choose a practice template revision'); await text('Choose an exact template revision'); await click('Map Generic roles revision 1'); await text('Map ordered template roles'); }
++async function map() { await choose('am role 1: cleanser', 'product:bottle-a'); await choose('am role 2: moisturizer', 'omit'); await choose('pm role 1: moisturizer', 'product:bottle-b'); await click('Review mapped intended sequence'); await text('Review intended sequence before issuing'); }
++try {
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true } }); await server.listen();
++  assert.equal((await fetch(origin + '/api/professional/practitioner-plan', { method: 'POST' })).status, 503); await server.close();
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true }, plugins: [{ name: 'synthetic-mapping-browser-only', enforce: 'pre',
++    configureServer(s) { s.middlewares.use('/api/professional/practitioner-plan', async (req, res) => {
++      try {
++        const chunks = []; for await (const chunk of req) chunks.push(chunk); const body = Buffer.concat(chunks), input = JSON.parse(body.toString()); submitted.push(input);
++        f.controls.loseCommitReply = loseNext && input.kind === 'issue'; if (f.controls.loseCommitReply) loseNext = false;
++        const response = denied ? new Response('{"status":"unavailable"}', { status: 503, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }) :
++          await handler(new Request(origin + '/api/professional/practitioner-plan', { method: req.method, headers: req.headers, body }));
++        f.controls.loseCommitReply = false; const reply = await response.text(); responses.push({ status: response.status, reply });
++        res.writeHead(response.status, Object.fromEntries(response.headers)); res.end(reply);
++      } catch (error) { responses.push({ fixtureError: String(error) }); res.writeHead(503, { 'Cache-Control': 'no-store' }); res.end(); }
++    }); } }] });
++  const { templateMappingFixture29 } = await server.ssrLoadModule('/src/test/templateMappingFixture29.ts');
++  const { createPractitionerApi } = await server.ssrLoadModule('/src/practitionerApi.ts');
++  const { practiceTemplates } = await server.ssrLoadModule('/src/templateService.ts');
++  await server.listen();
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-mapping29-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  json('owned-processes.json', { browserPid: browser.pid, appPort: port, debugPort });
++  await wait(async () => (await fetch(`http://127.0.0.1:${debugPort}/json/version`)).ok); client = await b.connectToPage(debugPort, origin);
++  await client.send('Page.enable'); await client.send('Runtime.enable'); await client.send('Network.enable');
++  await client.send('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
++  client.ws.addEventListener('message', event => { const m = JSON.parse(event.data); if (m.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = m.params, url = new URL(request.url);
++    if (url.origin === origin) { receipt.requests.push({ method: request.method, path: url.pathname }); void client.send('Fetch.continueRequest', { requestId }).catch(error => receipt.interceptionErrors.push(String(error))); }
++    else { receipt.blocked.push(url.origin); void client.send('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' }).catch(error => receipt.interceptionErrors.push(String(error))); }
++  });
++  for (const [width, height] of [[375, 667], [390, 844], [430, 932]]) {
++    f = await templateMappingFixture29(); context = 'synthetic-session';
++    await practiceTemplates(f.repository, 'synthetic', 'practice-a', { id: crypto.randomUUID(), templateId: f.templates[0].templateId,
++      expectedHeadHash: f.templates[0].contentHash, kind: 'revise', title: 'Later generic roles', am: ['other'], pm: [], confirmed: true });
++    handler = createPractitionerApi({ origin, repository: f.repository, authenticate: async () => ({ token: 'synthetic', workspaceId: 'practice-a', ownerId: 'client-a', context, grantVersion: 1, grantEpoch: 1 }) });
++    await client.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false }); await client.send('Page.navigate', { url: origin });
++    denied = true; await click('Load assigned client products'); await text('Practitioner editor unavailable'); await capture(width + '-unavailable'); denied = false;
++    await begin(); await click('Review mapped intended sequence'); await text('Unshelved and unresolved roles cannot be issued');
++    await choose('am role 1: cleanser', 'unshelved'); await capture(width + '-unshelved');
++    await choose('am role 1: cleanser', 'product:bottle-a'); await choose('am role 2: moisturizer', 'product:bottle-a'); await choose('pm role 1: moisturizer', 'product:bottle-b');
++    await click('Review mapped intended sequence'); await text('A product can appear only once per phase'); await capture(width + '-duplicate');
++    await choose('am role 2: moisturizer', 'omit'); await click('Review mapped intended sequence'); await text('Review intended sequence before issuing'); await capture(width + '-review');
++    assert(await b.evaluate(client, `document.activeElement===document.querySelector('#practitioner-plan h2')`));
++    await b.evaluate(client, `globalThis.__oldMappingIssue=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent==='Issue this intended version').onclick`);
++    await click('Return to draft'); const before = submitted.length; await b.evaluate(client, 'globalThis.__oldMappingIssue()'); assert.equal(submitted.length, before);
++    await click('Review mapped intended sequence'); loseNext = true; await keyboard('Issue this intended version'); await text('Issuance outcome unknown'); const first = submitted.at(-1); await capture(width + '-unknown');
++    await keyboard('Retry identical issuance request'); await text('Intended version issued'); assert.deepEqual(submitted.at(-1), first);
++    const plans = await f.repository.transaction({ workspaceId: 'practice-a', ownerId: 'client-a' }, tx => tx.plans('client-a', 'practice-a'));
++    assert.equal(plans.length, 1); assert.equal(plans[0].templateOrigin.revision, 1); assert.equal(plans[0].templateOrigin.revisionId, f.templates[0].id);
++    assert(!f.bytes().includes('Recorded cleanser')); json(width + '-retained-intended.json', plans);
++    await client.send('Page.reload'); await begin(); await map();
++    await f.replaceProducts([]); await keyboard('Issue this intended version'); await text('Review current client records again'); await capture(width + '-source-changed');
++    await f.replaceProducts([{ productId: 'bottle-a', name: 'Recorded cleanser' }, { productId: 'bottle-b', name: 'Recorded cream' }]);
++    await begin(); await map(); await practiceTemplates(f.repository, 'synthetic', 'practice-a', { id: crypto.randomUUID(), templateId: f.templates[0].templateId,
++      expectedHeadHash: (await practiceTemplates(f.repository, 'synthetic', 'practice-a')).at(-1).contentHash, kind: 'retire', confirmed: true });
++    await keyboard('Issue this intended version'); await text('Review current client records again'); await capture(width + '-retired-template');
++    await click('Clear practitioner draft'); await click('Load assigned client products'); await text('Compose intended sequence'); await click('Choose a practice template revision'); await text('No active practice template revisions');
++    await click('Keep draft without a template'); await text('Compose intended sequence');
++    f.mutate(a => ({ ...a, licence: null })); await click('Choose a practice template revision'); await text('Practitioner editor unavailable'); await capture(width + '-retired-licence');
++    receipt.viewports.push({ width, height, pass: true });
++  }
++  receipt.pass = true;
++} catch (error) { json('FAILURE-TRACE.json', { message: String(error), stack: error.stack }); if (client) await capture('failure-state').catch(() => {}); process.exitCode = 1;
++} finally { json('responses.json', responses); json('submitted-commands.json', submitted); client?.close(); await b.stopProcessBestEffort(browser); await server?.close(); receipt.end = new Date().toISOString(); receipt.ownedBrowserAndServerStopped = true; json('summary.json', receipt); }
++console.log(JSON.stringify(receipt));

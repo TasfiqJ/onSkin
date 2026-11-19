@@ -1,0 +1,213 @@
+{
+  "startedAt": "2026-11-19T20:34:14.017Z",
+  "surface": "Actual local Expo web in Edge; synthetic local owner and storage only",
+  "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+  "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+  "status": "",
+  "sourceSha256": {
+    "scripts/e2e/manual-intake-drafts21.mjs": "da9637cbc5b05b0e6a1f44b01628e95fdc0bffdd13898ec1346a342600b93a04",
+    "scripts/e2e/manual-intake-lifecycle30.mjs": "45e388f7a51f5e3a54f2381e1c93ea81573930bab0032547f5acd42405ee810b",
+    "apps/mobile/src/features/shelf/IntakeDecisionDialog.tsx": "c1d5e43f62f9bf7fabd6c3504cda5652cfd4b9e839c8a6faf4e02e1bc028fadb",
+    "apps/mobile/src/app/shelf/manual.tsx": "9eb9f63db49d2483f595829d367e251d7fe2b9b9e0257de62c09c5345cc4e1ad",
+    "apps/mobile/src/app/shelf/opened.tsx": "e13e0a23900178620ec5448836caf6178ee5a0d5377e18ee6da7d015514973ee",
+    "apps/mobile/src/app/shelf/intake-drafts.tsx": "8014ea6672f6c7cbd10d19eab4550096df2eff24d02d0821c111130a4d1cb8f3",
+    "apps/mobile/src/features/shelf/IntakeContext.tsx": "ea11fb111e0fd709c42ee844c56f18274abbddd7533dc140a91b16338a61d93e",
+    "apps/mobile/src/features/shelf/manualIntakeDraftCodec.ts": "53ef816b0fdf7462f463b09c5786b69770efb4e0da0a4723ef8072739a753fe9",
+    "apps/mobile/src/features/shelf/manualIntakeDraftStore.ts": "91d21c5ef7d69a1a29b24da8d3d417c6627087453131135eb3edf3349217c2ad",
+    "apps/mobile/src/features/shelf/manualIntakeSubmission.ts": "2159053120827efaf0ca5be9073b692cf2308584dc53a43e89e0b8b5cb16acf3",
+    "apps/mobile/src/features/shelf/store.ts": "23078dbc2637ed8e0377b506451e52a8eace8d487739b72e8aa8322e62bbf073"
+  },
+  "userDataDir": "<HOME>\\AppData\\Local\\Temp\\onskin-e21-intake-8d4aOv",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "explicitAgeConsent": true,
+      "firstCiphertext": {
+        "bytes": 2985,
+        "sha256": "681b52a846e44098cb54f678f3eb8a1cdd4ade05c944c8c7d4191742a44daaf6"
+      },
+      "openingCiphertext": {
+        "bytes": 3025,
+        "sha256": "24a181f8487d47a1f8eff0d52f76c91421d11fe9c525f0c7846e78a9dc75e860"
+      },
+      "originalRawValuesRecovered": true,
+      "unsavedEditNotRestored": true,
+      "openingChoicesRecovered": true,
+      "explicitResumeAndReview": true,
+      "oneCanonicalShelfProductAfterReload": true,
+      "exactDraftRetired": true,
+      "incompleteDraftSaved": true,
+      "discardReviewCancelConfirm": true,
+      "unavailableIsNotEmpty": true,
+      "unsupportedIsNotEmpty": true,
+      "sourcePreservedAndExplicitlyRefreshed": true,
+      "secondTabRefusedBeforePrivateReads": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 301,
+        "h": 56,
+        "y": 117,
+        "hit": true
+      },
+      "discardGeometry": {
+        "focus": true,
+        "w": 303,
+        "h": 56,
+        "y": 415,
+        "hit": true
+      },
+      "connectedLifecycle": {
+        "productId": "33aef500-d3d2-41af-b7c7-03fdfdacd0f0",
+        "formulaHistoryOriginalPreserved": true,
+        "exactFormulaAtUse": "owned38:2498546ef767578c6470b91b4bad9bf3a28e0b558b359fd7654cbeffafc4c0df",
+        "actualVersionId": "d3599c91-7ad4-4dab-b90e-fb012c217ba2",
+        "actualUseId": "5ed7cf52-a75a-4a10-944a-121fd91c05a6",
+        "applyRecordedNoUse": true,
+        "visibleKeyboardCheckoff": true,
+        "encryptedReloadExact": true,
+        "deletionNoIntakeResurrection": true,
+        "syntheticOwnerAndTranscriptionOnly": true
+      },
+      "leaveRecovery": {
+        "failedSaveStayed": true,
+        "explicitRetrySavedBeforeLeave": true,
+        "unknownWriteReconciledByExactResume": true,
+        "multipleDraftNamesUnique": true,
+        "staleRevisionPreserved": true,
+        "cancelAndExactDiscard": true,
+        "textScale2": true
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "explicitAgeConsent": true,
+      "firstCiphertext": {
+        "bytes": 2985,
+        "sha256": "5b108b07485e0f6866bc51b0a3d94e9667901669b1fdb371c533ae44293d44cc"
+      },
+      "openingCiphertext": {
+        "bytes": 3025,
+        "sha256": "2b717e94ee3837cdff92878b4ba87d2bed48d71550e63cc960d74453baf54e88"
+      },
+      "originalRawValuesRecovered": true,
+      "unsavedEditNotRestored": true,
+      "openingChoicesRecovered": true,
+      "explicitResumeAndReview": true,
+      "oneCanonicalShelfProductAfterReload": true,
+      "exactDraftRetired": true,
+      "incompleteDraftSaved": true,
+      "discardReviewCancelConfirm": true,
+      "unavailableIsNotEmpty": true,
+      "unsupportedIsNotEmpty": true,
+      "sourcePreservedAndExplicitlyRefreshed": true,
+      "secondTabRefusedBeforePrivateReads": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 316,
+        "h": 56,
+        "y": 185,
+        "hit": true
+      },
+      "discardGeometry": {
+        "focus": true,
+        "w": 318,
+        "h": 56,
+        "y": 503.5,
+        "hit": true
+      },
+      "connectedLifecycle": {
+        "productId": "31a9e825-8717-493a-8515-d5e29074bc74",
+        "formulaHistoryOriginalPreserved": true,
+        "exactFormulaAtUse": "owned38:4eb5f46c56a8f5e223f993b97a119dffafe4c6c4d2cbfd97ee2ee9d8d9fb7147",
+        "actualVersionId": "3ca267e5-8fad-438e-a072-e5fc7fee3342",
+        "actualUseId": "c7f20bdc-f4a7-43fa-b493-3e599c5be922",
+        "applyRecordedNoUse": true,
+        "visibleKeyboardCheckoff": true,
+        "encryptedReloadExact": true,
+        "deletionNoIntakeResurrection": true,
+        "syntheticOwnerAndTranscriptionOnly": true
+      },
+      "leaveRecovery": {
+        "failedSaveStayed": true,
+        "explicitRetrySavedBeforeLeave": true,
+        "unknownWriteReconciledByExactResume": true,
+        "multipleDraftNamesUnique": true,
+        "staleRevisionPreserved": true,
+        "cancelAndExactDiscard": true,
+        "textScale2": false
+      }
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "explicitAgeConsent": true,
+      "firstCiphertext": {
+        "bytes": 2985,
+        "sha256": "8683013be809f22322d54773ab22962d32d0560df7b6ff9a15bd0a0747d1208c"
+      },
+      "openingCiphertext": {
+        "bytes": 3025,
+        "sha256": "d6b133c43c3704f04c7c1efe4eecc7c78a6a49334e599cd6a1a3730b93f98ee1"
+      },
+      "originalRawValuesRecovered": true,
+      "unsavedEditNotRestored": true,
+      "openingChoicesRecovered": true,
+      "explicitResumeAndReview": true,
+      "oneCanonicalShelfProductAfterReload": true,
+      "exactDraftRetired": true,
+      "incompleteDraftSaved": true,
+      "discardReviewCancelConfirm": true,
+      "unavailableIsNotEmpty": true,
+      "unsupportedIsNotEmpty": true,
+      "sourcePreservedAndExplicitlyRefreshed": true,
+      "secondTabRefusedBeforePrivateReads": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 356,
+        "h": 56,
+        "y": 185,
+        "hit": true
+      },
+      "discardGeometry": {
+        "focus": true,
+        "w": 358,
+        "h": 56,
+        "y": 547.5,
+        "hit": true
+      },
+      "connectedLifecycle": {
+        "productId": "118bf13a-bfb4-4b9e-b8b3-eb3b97fdf56d",
+        "formulaHistoryOriginalPreserved": true,
+        "exactFormulaAtUse": "owned38:528df1a99f9d1da767b97cceea1032ac145933e6e1d93c97a3ae56d1bdf110ab",
+        "actualVersionId": "a6162648-06a8-4715-992b-4c722e045183",
+        "actualUseId": "60369689-6c3b-42ff-ab0d-dfd7c486b7ab",
+        "applyRecordedNoUse": true,
+        "visibleKeyboardCheckoff": true,
+        "encryptedReloadExact": true,
+        "deletionNoIntakeResurrection": true,
+        "syntheticOwnerAndTranscriptionOnly": true
+      },
+      "leaveRecovery": {
+        "failedSaveStayed": true,
+        "explicitRetrySavedBeforeLeave": true,
+        "unknownWriteReconciledByExactResume": true,
+        "multipleDraftNamesUnique": true,
+        "staleRevisionPreserved": true,
+        "cancelAndExactDiscard": true,
+        "textScale2": false
+      }
+    }
+  ],
+  "blockedRemoteRequests": [],
+  "pass": true,
+  "excluded": [
+    "native builds and devices",
+    "real owners and provider services",
+    "hosted CI",
+    "paid operations",
+    "release acceptance"
+  ],
+  "endedAt": "2026-11-19T20:41:32.197Z"
+}
