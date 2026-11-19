@@ -1,0 +1,40 @@
+{
+  "surface": "Actual Vite UI; real API503; positive HTTP responses explicitly synthetic",
+  "width": 375,
+  "height": 667,
+  "twoVersionIndex": true,
+  "exactOlderReview": true,
+  "backAndCancel": true,
+  "staleDownloadRefused": true,
+  "selectedDownload": true,
+  "changedSourceRefused": true,
+  "deniedExport": true,
+  "forgedResponseRefused": true,
+  "empty": true,
+  "lateCancelledIndexRefused": true,
+  "keyboard": true,
+  "focus": true,
+  "startupTop": true,
+  "overflow": [
+    true,
+    true
+  ],
+  "commands": [
+    "history",
+    "history-review",
+    "history",
+    "history-review",
+    "history-export",
+    "history",
+    "history-review",
+    "history-export",
+    "history",
+    "history-review",
+    "history-export",
+    "history",
+    "history",
+    "history"
+  ],
+  "originalSummarySha256": "a5a7e8fa71f04e3d4707a083cde41d78253f619a79838e4be3294f6b74fb09d5",
+  "axRolesOmitted": true
+}

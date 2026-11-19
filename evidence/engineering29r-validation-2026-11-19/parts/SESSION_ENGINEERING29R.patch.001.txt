@@ -1,0 +1,197 @@
+diff --git a/scripts/e2e/onboarding-first-session.mjs b/scripts/e2e/onboarding-first-session.mjs
+index 672727297c365e3b9379522c19df35ccb779f236..c2ab2b172a5e64442b526717f6784cf019c13a7b 100644
+--- a/scripts/e2e/onboarding-first-session.mjs
++++ b/scripts/e2e/onboarding-first-session.mjs
+@@ -107,6 +107,17 @@ export function assertFreeFirstSession35(receipt, expectedNames) {
+   'Free journey did not preserve the exact synthetic Shelf products.');
+ }
+ 
++export function assertFreeDiaryRecovery29R(snapshot) {
++  assert(snapshot.bodyText.includes('Your timeline could not open.') &&
++    snapshot.bodyText.includes("Private photo storage could not confirm a complete timeline. Recovery work may be unfinished. Try again when your phone's secure storage is available.") &&
++    !snapshot.bodyText.includes('Your photos and notes were not changed.') &&
++    !snapshot.bodyText.includes('Unlock your private photo timeline.') &&
++    !snapshot.bodyText.includes('Subscribe to Pro') &&
++    snapshot.controls.some(control => control.label === 'Try again' && control.role === 'button' &&
++      control.hitOk === true && control.disabled === false),
++  'Free private Diary did not preserve truthful native-storage recovery.');
++}
++
+ // A mounted background tab is not a foreground control, even when its own
+ // computed style and rectangle look visible. This runs in the real document.
+ export function shelfTargetExpression37(name, { scroll = false, label = null } = {}) {
+@@ -1985,11 +1996,7 @@ async function run() {
+     // filesystem/key port, so its honest result is retryable storage refusal.
+     await waitForText(client, 'Your timeline could not open.', 30_000);
+     const progressAfterOnboarding = await captureStep(client, '21-progress-after-onboarding', { assertClean: false });
+-    assert(progressAfterOnboarding.bodyText.includes('Your photos and notes were not changed.') &&
+-      !progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
+-      !progressAfterOnboarding.bodyText.includes('Subscribe to Pro') &&
+-      progressAfterOnboarding.controls.some(control => control.label === 'Try again' && control.hitOk && !control.disabled),
+-    'Free private Diary did not preserve truthful native-storage recovery.');
++    assertFreeDiaryRecovery29R(progressAfterOnboarding);
+     await clickByText(client, 'Try again');
+     await waitForText(client, 'Your timeline could not open.', 30_000);
+     await captureStep(client, '21a-free-diary-storage-retry', { assertClean: false });
+diff --git a/scripts/e2e/onboarding-first-session35.test.mjs b/scripts/e2e/onboarding-first-session35.test.mjs
+index f84fa4e268566218b6be369f5b2403a7fe84b360..f30d384640cdab2e16fe238b14219db25586d188 100644
+--- a/scripts/e2e/onboarding-first-session35.test.mjs
++++ b/scripts/e2e/onboarding-first-session35.test.mjs
+@@ -2,11 +2,35 @@ import assert from 'node:assert/strict';
+ import test from 'node:test';
+ 
+ import {
++  assertFreeDiaryRecovery29R,
+   assertFreeFirstSession35,
+   continueAfterReminderChoice35,
+   tapOwnedShelfProduct37,
+ } from './onboarding-first-session.mjs';
+ 
++const diaryRecovery29R = {
++  url: 'http://localhost:8285/progress',
++  bodyText: "Private storage Your timeline could not open. Private photo storage could not confirm a complete timeline. Recovery work may be unfinished. Try again when your phone's secure storage is available.",
++  controls: [{ label: 'Try again', role: 'button', hitOk: true, disabled: false }],
++};
++
++test('Diary recovery accepts the existing truthful incomplete-storage refusal', () => {
++  assert.doesNotThrow(() => assertFreeDiaryRecovery29R(diaryRecovery29R));
++});
++
++for (const [reason, replacement] of [
++  ['old unconditional unchanged claim', { bodyText: 'Your photos and notes were not changed.' }],
++  ['missing incomplete-history warning', { bodyText: diaryRecovery29R.bodyText.replace('Recovery work may be unfinished.', '') }],
++  ['missing recovery explanation', { bodyText: 'Your timeline could not open.' }],
++  ['paid timeline gate', { bodyText: diaryRecovery29R.bodyText + ' Unlock your private photo timeline.' }],
++  ['paid upsell', { bodyText: diaryRecovery29R.bodyText + ' Subscribe to Pro' }],
++  ['absent retry', { controls: [] }],
++  ['blocked retry', { controls: [{ ...diaryRecovery29R.controls[0], hitOk: false }] }],
++  ['disabled retry', { controls: [{ ...diaryRecovery29R.controls[0], disabled: true }] }],
++]) test(`Diary recovery refuses ${reason}`, () => {
++  assert.throws(() => assertFreeDiaryRecovery29R({ ...diaryRecovery29R, ...replacement }));
++});
++
+ // Source-level checks of the actual driver decisions with synthetic boundary
+ // IO. These do not replace the separate real Chrome/Expo journey receipts.
+ const savedCopy = 'Reminders are off. Your choice was saved.';
+diff --git a/scripts/e2e/optional-change41.mjs b/scripts/e2e/optional-change41.mjs
+index d90d47b5fc37626cdf745bf559fd5de70af1e8f4..f55e678a0a21c321dab3c868f0f690bd75416502 100644
+--- a/scripts/e2e/optional-change41.mjs
++++ b/scripts/e2e/optional-change41.mjs
+@@ -4,6 +4,20 @@ import { readFileSync } from 'node:fs';
+ import { setTimeout as delay } from 'node:timers/promises';
+ import { assertFormulaMessageVisible38, formulaControlExpression38, formulaMessageExpression38, selectFormulaControl38, touchFormulaControl38 } from './owned-bottle-formula38.mjs';
+ 
++export async function ensureOptionalHistory41({ readEntry, open, waitExpanded }) {
++  if ((await readEntry()).expanded !== true) {
++    await open();
++    await waitExpanded();
++  }
++}
++
++export function assertOptionalJournal41(before, after) {
++  const prior = before === null ? [] : before.sync.journal;
++  assert.ok(Array.isArray(prior) && Array.isArray(after?.sync?.journal), 'Unsupported original completion journal.');
++  assert.ok(after.sync.journal.length >= prior.length, 'Original remote journal was lost.');
++  for (const event of prior) assert.ok(after.sync.journal.some(current => JSON.stringify(current) === JSON.stringify(event)));
++}
++
+ export function assertOptionalHistory41(snapshot, { revision, owner, original = null, target = null } = {}) {
+   assert.equal(snapshot?.revision, revision, 'Wrong optional change revision.');
+   assert.equal(snapshot?.events?.length, revision, 'History count disagrees with revision.');
+@@ -124,13 +138,17 @@ export async function runOptionalChange41(io) {
+     }
+     throw new Error('Actual Back/tab controls did not reach Today.');
+   };
++  const expandedHistory = `[...document.querySelectorAll('[role="button"],button')].some(n=>
++    !n.closest('[aria-hidden="true"],[inert]') && n.getClientRects().length &&
++    (n.getAttribute('aria-label')==='Refresh changes'||n.textContent.trim()==='Refresh changes'))`;
+   const waitReady = async () => {
+     await waitForText(client, 'Record a change (optional)', 60_000);
+-    if (!(await evaluate(client, `document.body.innerText.includes('Your optional change notes')`))) {
+-      await touch('Record a change (optional)');
+-      await waitForText(client, 'Your optional change notes', 60_000);
+-      await waitForText(client, 'Record a change (optional)', 60_000);
+-    }
++    await ensureOptionalHistory41({
++      readEntry: async () => ({ expanded: await evaluate(client, expandedHistory) }),
++      open: () => touch('Record a change (optional)'),
++      waitExpanded: () => waitForCondition(client, expandedHistory, 60_000, 'expanded optional history'),
++    });
++    await waitForText(client, 'Record a change (optional)', 60_000);
+   };
+   const acceptRelaunch = async () => {
+     await waitForText(client, 'Record a change (optional)', 60_000);
+@@ -153,6 +171,7 @@ export async function runOptionalChange41(io) {
+     persistedOwnerAndEpochVerified: true, developmentPreviewOnly: true });
+   const initial = await receipt('beforeAnyNote');
+   assertOptionalHistory41(initial.snapshot, { revision: 0, owner: initial.owner });
++  await waitForText(client, 'Nothing recorded');
+   assert.ok((await evaluate(client, 'document.body.innerText')).includes('Nothing recorded'));
+   await touch('Record a change (optional)'); await touch('Other personal note'); await field('Your factual note', 'Synthetic canceled private draft41.');
+   await capture('01-explicit-draft'); await touch('Cancel draft');
+@@ -230,8 +249,7 @@ export async function runOptionalChange41(io) {
+     await waitForCondition(client, `document.querySelector('[role="checkbox"][aria-label='+${JSON.stringify(JSON.stringify(checkbox))}+']')?.getAttribute('aria-checked') === 'true'`, 30_000, 'original later check-off readback');
+     const afterCheckoff = await receipt('originalCheckoffAfterV4');
+     assert.deepEqual(afterCheckoff.snapshot.events, retried.snapshot.events, 'Original check-off changed notes.');
+-    assert.ok(afterCheckoff.core.sync.journal.length >= initial.core.sync.journal.length, 'Original remote journal was lost.');
+-    for (const prior of initial.core.sync.journal) assert.ok(afterCheckoff.core.sync.journal.some((event) => JSON.stringify(event) === JSON.stringify(prior)));
++    assertOptionalJournal41(initial.core, afterCheckoff.core);
+     laterCheckoff = 'ACTUAL_VISIBLE_CHECKBOX_PRESERVED_NOTES';
+   }
+   let recovery15 = null;
+diff --git a/scripts/e2e/optional-change41.test.mjs b/scripts/e2e/optional-change41.test.mjs
+index f12ae1c21cecd78cfaa1252a4e0635e0412f9659..a7bff15d831e90c1ec0ba635525d09dd54b41a0a 100644
+--- a/scripts/e2e/optional-change41.test.mjs
++++ b/scripts/e2e/optional-change41.test.mjs
+@@ -1,6 +1,50 @@
+ import assert from 'node:assert/strict';
+ import test from 'node:test';
+-import { assertNoChangeNetwork41, assertOptionalHistory41 } from './optional-change41.mjs';
++import { assertNoChangeNetwork41, assertOptionalHistory41, ensureOptionalHistory41, assertOptionalJournal41 } from './optional-change41.mjs';
++
++test('first actual check-off after optional notes accepts confirmed absent prior completion bytes', () => {
++  assert.doesNotThrow(() => assertOptionalJournal41(null, { sync: { journal: [{ id: 'actual-first-step' }] } }));
++});
++
++test('later actual check-off preserves every existing original completion event', () => {
++  const event = { id: 'original', completed: true };
++  assert.doesNotThrow(() => assertOptionalJournal41({ sync: { journal: [event] } }, { sync: { journal: [event, { id: 'later' }] } }));
++  assert.throws(() => assertOptionalJournal41({ sync: { journal: [event] } }, { sync: { journal: [] } }));
++  assert.throws(() => assertOptionalJournal41({ sync: { journal: [event] } }, { sync: { journal: [{ ...event, completed: false }] } }));
++});
++
++for (const [before, after] of [[{}, {sync:{journal:[]}}], [null, null], [null, {sync:{journal:'unsupported'}}]]) {
++  test('unsupported completion evidence never substitutes for confirmed absence', () => {
++    assert.throws(() => assertOptionalJournal41(before, after));
++  });
++}
++
++test('shared collapsed heading cannot substitute for explicitly expanded optional history', async () => {
++  const events = [];
++  await ensureOptionalHistory41({
++    readEntry: async () => ({ heading: true, expanded: false }),
++    open: async () => { events.push('open'); },
++    waitExpanded: async () => { events.push('expanded'); },
++  });
++  assert.deepEqual(events, ['open', 'expanded']);
++});
++
++test('already expanded optional history is not toggled into a new draft', async () => {
++  await ensureOptionalHistory41({
++    readEntry: async () => ({ heading: true, expanded: true }),
++    open: async () => { assert.fail('Expanded history was toggled'); },
++    waitExpanded: async () => { assert.fail('No new entry was requested'); },
++  });
++});
++
++for (const phase of ['read', 'open', 'wait']) test(`optional history entry preserves ${phase} failure`, async () => {
++  const failure = new Error('Synthetic entry refusal: ' + phase);
++  await assert.rejects(() => ensureOptionalHistory41({
++    readEntry: async () => { if (phase === 'read') throw failure; return { heading: true, expanded: false }; },
++    open: async () => { if (phase === 'open') throw failure; },
++    waitExpanded: async () => { if (phase === 'wait') throw failure; },
++  }), error => error === failure);
++});
+ 
+ const original = { id: '41000000-0000-4000-8000-000000000001', ownerUserId: 'synthetic-a', observedOn: '2026-11-01',
+   revision: 1, expectedRevision: 0, actor: 'owner', basis: 'owner_reported', kind: 'note', text: 'Synthetic statement.', targetEventId: null };

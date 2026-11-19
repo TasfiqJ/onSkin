@@ -1,0 +1,620 @@
+{
+  "beforeAnyNote": {
+    "version": null,
+    "revision": 0,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "completionSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events": []
+  },
+  "firstExplicitSave": {
+    "version": 4,
+    "revision": 1,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "57b2fd39c823b08c7e5fe667a0bf636a751665cd8c63c587a19a0a981ff31c82",
+    "completionSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      }
+    ]
+  },
+  "immutableCorrection": {
+    "version": 4,
+    "revision": 2,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "1800edec01705938785e33f6b1822117b51eaf59ece9a927bb666d64d8b8b8cb",
+    "completionSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      }
+    ]
+  },
+  "affirmativeNoChange": {
+    "version": 4,
+    "revision": 3,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "8f0b01e0310764b90798b704a0cde9b14a69869ea57cb892ef8edf6ffb6f6bac",
+    "completionSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      }
+    ]
+  },
+  "appendRetraction": {
+    "version": 4,
+    "revision": 4,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "b77f4b448a90b7351dd69799d49791d0e619cb08c6e403ad95d35cee395282a5",
+    "completionSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      },
+      {
+        "id": "c06ad84a-a869-40a9-bc2e-48fc2d00710d",
+        "category": "personal_note",
+        "kind": "retraction",
+        "targetEventId": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:14.678Z",
+        "contentHash": "e4031382bd216862d7c24550a9566dedb5eb31b06d2a95fd6e8ce9284d966ebf",
+        "revision": 4
+      }
+    ]
+  },
+  "duplicateRetrySingleEvent": {
+    "version": 4,
+    "revision": 5,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "8621bb7f5150d5ec47ae996b1147538dfad6e2ef22951b206479af9fa7c11008",
+    "completionSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      },
+      {
+        "id": "c06ad84a-a869-40a9-bc2e-48fc2d00710d",
+        "category": "personal_note",
+        "kind": "retraction",
+        "targetEventId": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:14.678Z",
+        "contentHash": "e4031382bd216862d7c24550a9566dedb5eb31b06d2a95fd6e8ce9284d966ebf",
+        "revision": 4
+      },
+      {
+        "id": "f03cd171-0362-4a93-bb23-f7681fd654ae",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:18.329Z",
+        "contentHash": "12db6056946e240e0cea06ec05982ca2c447e41505e18895a94a90c9768a90ca",
+        "revision": 5
+      }
+    ]
+  },
+  "originalCheckoffAfterV4": {
+    "version": 4,
+    "revision": 5,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "f18a8c6eb25bb98ed96d27ae9769026527851f5a317edffb12a0d0e57d41753b",
+    "completionSha256": "e1e24877286d4c37fe68a26f3b4fd551e3dadeb6480fd15b7f8bd055f6bb950e",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      },
+      {
+        "id": "c06ad84a-a869-40a9-bc2e-48fc2d00710d",
+        "category": "personal_note",
+        "kind": "retraction",
+        "targetEventId": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:14.678Z",
+        "contentHash": "e4031382bd216862d7c24550a9566dedb5eb31b06d2a95fd6e8ce9284d966ebf",
+        "revision": 4
+      },
+      {
+        "id": "f03cd171-0362-4a93-bb23-f7681fd654ae",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:18.329Z",
+        "contentHash": "12db6056946e240e0cea06ec05982ca2c447e41505e18895a94a90c9768a90ca",
+        "revision": 5
+      }
+    ]
+  },
+  "recovery15ExplicitReviewedSave": {
+    "version": 4,
+    "revision": 8,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "82c48b212ccee533c7f95394bb6a8a4f3349fb2e82dab6404380bc4f8da0d172",
+    "completionSha256": "e1e24877286d4c37fe68a26f3b4fd551e3dadeb6480fd15b7f8bd055f6bb950e",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      },
+      {
+        "id": "c06ad84a-a869-40a9-bc2e-48fc2d00710d",
+        "category": "personal_note",
+        "kind": "retraction",
+        "targetEventId": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:14.678Z",
+        "contentHash": "e4031382bd216862d7c24550a9566dedb5eb31b06d2a95fd6e8ce9284d966ebf",
+        "revision": 4
+      },
+      {
+        "id": "f03cd171-0362-4a93-bb23-f7681fd654ae",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:18.329Z",
+        "contentHash": "12db6056946e240e0cea06ec05982ca2c447e41505e18895a94a90c9768a90ca",
+        "revision": 5
+      },
+      {
+        "id": "85180d73-97c1-4037-8252-b7233d6db2b7",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:18.886Z",
+        "contentHash": "8f29001a7831627c34a680a97c241927b3640ab34c8c0c680ed1b418dbedb4b4",
+        "revision": 6
+      },
+      {
+        "id": "b85935d4-3087-4456-9e1c-48b99f3fad19",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:22.124Z",
+        "contentHash": "3bc9648fbe5771b65c24d61c8a1702d9ceabe5bdf96d7358dadb933d6840b931",
+        "revision": 7
+      },
+      {
+        "id": "7c30dd2b-2795-4ba2-985d-299f305f1423",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:23.808Z",
+        "contentHash": "049ffa1fcfa6567dff7251d9cb050dda4057ecb56d730fb188f116d968b24ae1",
+        "revision": 8
+      }
+    ]
+  },
+  "beforeNavigation": {
+    "version": 4,
+    "revision": 8,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "82c48b212ccee533c7f95394bb6a8a4f3349fb2e82dab6404380bc4f8da0d172",
+    "completionSha256": "e1e24877286d4c37fe68a26f3b4fd551e3dadeb6480fd15b7f8bd055f6bb950e",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      },
+      {
+        "id": "c06ad84a-a869-40a9-bc2e-48fc2d00710d",
+        "category": "personal_note",
+        "kind": "retraction",
+        "targetEventId": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:14.678Z",
+        "contentHash": "e4031382bd216862d7c24550a9566dedb5eb31b06d2a95fd6e8ce9284d966ebf",
+        "revision": 4
+      },
+      {
+        "id": "f03cd171-0362-4a93-bb23-f7681fd654ae",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:18.329Z",
+        "contentHash": "12db6056946e240e0cea06ec05982ca2c447e41505e18895a94a90c9768a90ca",
+        "revision": 5
+      },
+      {
+        "id": "85180d73-97c1-4037-8252-b7233d6db2b7",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:18.886Z",
+        "contentHash": "8f29001a7831627c34a680a97c241927b3640ab34c8c0c680ed1b418dbedb4b4",
+        "revision": 6
+      },
+      {
+        "id": "b85935d4-3087-4456-9e1c-48b99f3fad19",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:22.124Z",
+        "contentHash": "3bc9648fbe5771b65c24d61c8a1702d9ceabe5bdf96d7358dadb933d6840b931",
+        "revision": 7
+      },
+      {
+        "id": "7c30dd2b-2795-4ba2-985d-299f305f1423",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:23.808Z",
+        "contentHash": "049ffa1fcfa6567dff7251d9cb050dda4057ecb56d730fb188f116d968b24ae1",
+        "revision": 8
+      }
+    ]
+  },
+  "actualBackRefreshReenterReload": {
+    "version": 4,
+    "revision": 8,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "82c48b212ccee533c7f95394bb6a8a4f3349fb2e82dab6404380bc4f8da0d172",
+    "completionSha256": "e1e24877286d4c37fe68a26f3b4fd551e3dadeb6480fd15b7f8bd055f6bb950e",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      },
+      {
+        "id": "c06ad84a-a869-40a9-bc2e-48fc2d00710d",
+        "category": "personal_note",
+        "kind": "retraction",
+        "targetEventId": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:14.678Z",
+        "contentHash": "e4031382bd216862d7c24550a9566dedb5eb31b06d2a95fd6e8ce9284d966ebf",
+        "revision": 4
+      },
+      {
+        "id": "f03cd171-0362-4a93-bb23-f7681fd654ae",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:18.329Z",
+        "contentHash": "12db6056946e240e0cea06ec05982ca2c447e41505e18895a94a90c9768a90ca",
+        "revision": 5
+      },
+      {
+        "id": "85180d73-97c1-4037-8252-b7233d6db2b7",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:18.886Z",
+        "contentHash": "8f29001a7831627c34a680a97c241927b3640ab34c8c0c680ed1b418dbedb4b4",
+        "revision": 6
+      },
+      {
+        "id": "b85935d4-3087-4456-9e1c-48b99f3fad19",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:22.124Z",
+        "contentHash": "3bc9648fbe5771b65c24d61c8a1702d9ceabe5bdf96d7358dadb933d6840b931",
+        "revision": 7
+      },
+      {
+        "id": "7c30dd2b-2795-4ba2-985d-299f305f1423",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:23.808Z",
+        "contentHash": "049ffa1fcfa6567dff7251d9cb050dda4057ecb56d730fb188f116d968b24ae1",
+        "revision": 8
+      }
+    ]
+  },
+  "genuineOwnerReloadAfterDenial": {
+    "version": 4,
+    "revision": 8,
+    "owner": "local-device-unclaimed",
+    "sourceProof": "82c48b212ccee533c7f95394bb6a8a4f3349fb2e82dab6404380bc4f8da0d172",
+    "completionSha256": "e1e24877286d4c37fe68a26f3b4fd551e3dadeb6480fd15b7f8bd055f6bb950e",
+    "events": [
+      {
+        "id": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "category": "used_different",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:08.400Z",
+        "contentHash": "026bc6957845f08a685d979d9d581987ceff235cd9fb151a2cb6e9d26753a697",
+        "revision": 1
+      },
+      {
+        "id": "afcefa48-45f2-405f-9726-5365165b7e6c",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:11.101Z",
+        "contentHash": "5b582e2950de8bed45bfdebab2783d174b6b6492e18f60aa79c476d0b9d337b0",
+        "revision": 2
+      },
+      {
+        "id": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "category": "no_change",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:12.774Z",
+        "contentHash": "8083a36351f6390ac4804953b4849da1c236260dcd5cdcd4b6fa945a452da138",
+        "revision": 3
+      },
+      {
+        "id": "c06ad84a-a869-40a9-bc2e-48fc2d00710d",
+        "category": "personal_note",
+        "kind": "retraction",
+        "targetEventId": "70b3db05-2057-47f9-b8e7-8372533c8235",
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:14.678Z",
+        "contentHash": "e4031382bd216862d7c24550a9566dedb5eb31b06d2a95fd6e8ce9284d966ebf",
+        "revision": 4
+      },
+      {
+        "id": "f03cd171-0362-4a93-bb23-f7681fd654ae",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-19",
+        "recordedAt": "2026-11-19T17:13:18.329Z",
+        "contentHash": "12db6056946e240e0cea06ec05982ca2c447e41505e18895a94a90c9768a90ca",
+        "revision": 5
+      },
+      {
+        "id": "85180d73-97c1-4037-8252-b7233d6db2b7",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:18.886Z",
+        "contentHash": "8f29001a7831627c34a680a97c241927b3640ab34c8c0c680ed1b418dbedb4b4",
+        "revision": 6
+      },
+      {
+        "id": "b85935d4-3087-4456-9e1c-48b99f3fad19",
+        "category": "personal_note",
+        "kind": "note",
+        "targetEventId": null,
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:22.124Z",
+        "contentHash": "3bc9648fbe5771b65c24d61c8a1702d9ceabe5bdf96d7358dadb933d6840b931",
+        "revision": 7
+      },
+      {
+        "id": "7c30dd2b-2795-4ba2-985d-299f305f1423",
+        "category": "personal_note",
+        "kind": "correction",
+        "targetEventId": "559b9ef3-0b26-4a46-bcd0-c36791e2ab62",
+        "observedOn": "2026-11-18",
+        "recordedAt": "2026-11-19T17:13:23.808Z",
+        "contentHash": "049ffa1fcfa6567dff7251d9cb050dda4057ecb56d730fb188f116d968b24ae1",
+        "revision": 8
+      }
+    ]
+  }
+}

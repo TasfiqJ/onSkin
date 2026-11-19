@@ -1,0 +1,61 @@
+[
+  {
+    "logical": "CUMULATIVE_PR48_TO_FINAL.patch",
+    "bytes": 3707692,
+    "sha256": "7360a481bbc7a253ba9bd08e2882688302b63d7967062913f9199044f1fc34e9",
+    "parts": [
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.001.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.002.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.003.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.004.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.005.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.006.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.007.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.008.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.009.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.010.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.011.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.012.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.013.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.014.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.015.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.016.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.017.txt"
+    ],
+    "originalRawSha256": "7360a481bbc7a253ba9bd08e2882688302b63d7967062913f9199044f1fc34e9",
+    "derivedHomePathSanitization": false
+  },
+  {
+    "logical": "SESSION_ENGINEERING29R.patch",
+    "bytes": 12409,
+    "sha256": "cb955a36d7625bc7ea265a9af0af39d2b742bd84b0619af04b35f1c4fa954464",
+    "parts": [
+      "parts/SESSION_ENGINEERING29R.patch.001.txt"
+    ],
+    "originalRawSha256": "cb955a36d7625bc7ea265a9af0af39d2b742bd84b0619af04b35f1c4fa954464",
+    "derivedHomePathSanitization": false
+  },
+  {
+    "logical": "COMMIT_ANCESTRY_WITNESS.json",
+    "bytes": 107599,
+    "sha256": "d5f9ae93c078c1c6c813b597f934a8e6f4a2a692b4ea3a1be9e8fc2596f00ddf",
+    "parts": [
+      "parts/COMMIT_ANCESTRY_WITNESS.json.001.txt"
+    ],
+    "originalRawSha256": "d5f9ae93c078c1c6c813b597f934a8e6f4a2a692b4ea3a1be9e8fc2596f00ddf",
+    "derivedHomePathSanitization": false
+  },
+  {
+    "logical": "logs/root-tests.log",
+    "bytes": 691079,
+    "sha256": "578c4df97bec7afb4106dc26bca5b05a2c58e9c5fb5b64515dbf514af8c647d3",
+    "parts": [
+      "parts/logs/root-tests.log.001.txt",
+      "parts/logs/root-tests.log.002.txt",
+      "parts/logs/root-tests.log.003.txt",
+      "parts/logs/root-tests.log.004.txt"
+    ],
+    "originalRawSha256": "9a3451e5cd022c666b3f23f83b79584ca6e5947f955f829783608212c90705a7",
+    "derivedHomePathSanitization": true
+  }
+]

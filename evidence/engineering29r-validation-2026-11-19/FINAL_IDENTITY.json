@@ -1,0 +1,23 @@
+{
+  "observedAt": "2026-11-19T17:17:10.513467+00:00",
+  "source": {
+    "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+    "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "freeBytes": 157625724928,
+  "startHead": "b29e731097984be98f5b06024d11255dbb732809",
+  "startTree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+  "sourceRepairCommits": [
+    "db5f6ed1acacdb9e8dafb28615913f818891cd8b",
+    "68dc086743f6c7f8b2ea8706aa973b27328b7814"
+  ],
+  "productRuntimeChanged": false,
+  "sourceIndexPreservedSinceCommit": true,
+  "activeIndexSha256": "2d34b4ecafc28359e2fa973aab14f811985c34fe237ddf9ffb4af6066bedab57",
+  "priorFinal2FilesUnchanged": true,
+  "priorQueueSummariesUnchanged": true,
+  "status": "COMPLETE_VALIDATED_CHECKPOINT",
+  "productAcceptance": "All38/all18 UNACCEPTED; release NO_GO"
+}

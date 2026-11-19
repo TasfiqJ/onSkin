@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "message": "The expression evaluated to a falsy value:\n\n  assert.ok((await evaluate(client, 'document.body.innerText')).includes('Nothing recorded'))\n",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

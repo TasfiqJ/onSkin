@@ -1,0 +1,101 @@
+[
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 418,
+      "width": 348,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 418,
+      "width": 348,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 418,
+      "width": 348,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 418,
+      "width": 348,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Storage did not confirm this save. It may already be recorded. Retry the same confirmation or refresh changes to check.",
+    "rect": {
+      "left": 41,
+      "top": 402,
+      "width": 348,
+      "height": 72
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 322,
+      "width": 348,
+      "height": 24
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Recorded history changed. Refresh changes and review the current entries before editing. Nothing was submitted.",
+    "rect": {
+      "left": 41,
+      "top": 337,
+      "width": 348,
+      "height": 72
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "History changed. Your draft is kept. Refresh changes and review the current history before saving again; an earlier unconfirmed attempt may already be recorded.",
+    "rect": {
+      "left": 41,
+      "top": 370,
+      "width": 348,
+      "height": 96
+    },
+    "visible": true
+  },
+  {
+    "matches": 1,
+    "text": "Saved on this device and read back.",
+    "rect": {
+      "left": 41,
+      "top": 322,
+      "width": 348,
+      "height": 24
+    },
+    "visible": true
+  }
+]

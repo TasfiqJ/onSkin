@@ -1,0 +1,153 @@
+{
+  "startedAt": "2026-11-19T17:12:43.468Z",
+  "surface": "Actual local Expo web in Edge; synthetic local owner and storage only",
+  "head": "68dc086743f6c7f8b2ea8706aa973b27328b7814",
+  "tree": "613b11c549f4a46901c2ba819fb3db5a3d40ba61",
+  "status": "",
+  "sourceSha256": {
+    "scripts/e2e/optional-change-drafts21.mjs": "3470d7bdd5cda060864998dfded98a7625f238595bcc778ccc4e917dfa311f11",
+    "apps/mobile/src/features/today/OptionalChangePanel41.tsx": "a50d0ecfff72c37090ddee10a21d6c1a306f8827aa430fdeeae8f06c9869989f",
+    "apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx": "116fd8043b497d279548ae677ffaddb82e321cf08344b43891468cf4981d540d",
+    "apps/mobile/src/features/today/optionalChangeDraftCodec.ts": "d774ce71b86ad83c0fa96a70a122da67226ed6ea157b2122664b9988e778731b",
+    "apps/mobile/src/features/today/optionalChangeDraftStore.ts": "d6f914316def002ba0d14e8b51b64ff1dd2b8e478216cde3082925f206a3ab0e",
+    "apps/mobile/src/features/today/completionsStore.ts": "4d39315b17a9c07a12cbe3e90ce65a3f6a2beea7cbc56acfba4a44ee8715817b",
+    "apps/mobile/src/features/today/optionalChange41.ts": "92b5b4ed021bbb4e6452d6087ca78ba4dcbe2d09cdf4473fd204d4bf0243752e",
+    "apps/mobile/src/features/today/optionalChangeJournal41.ts": "7bfc842dd3a0024ad16c53fa5cffa04c5766ecb997e2df3e94cfe726f4bfdbf1"
+  },
+  "userDataDir": "<USER_HOME>\\AppData\\Local\\Temp\\onskin-e21-change-y7jHnn",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "explicitAgeConsent": true,
+      "noteCiphertext": {
+        "bytes": 1797,
+        "sha256": "0a9d53f7f1651942d154c02795927d5b9c19253564e4415e20a0c1df3f1816ec"
+      },
+      "originalTextRecovered": true,
+      "unsavedEditNotRestored": true,
+      "notesCorrectionsRetractionsRecovered": true,
+      "explicitRefreshAndReviewRequired": true,
+      "exactTargetsPreserved": true,
+      "earlierRetainedEventCorrectionAllowed": true,
+      "noDuplicateEventId": true,
+      "originalCompletionAndActualRoutineUnchanged": true,
+      "savedDraftsRetiredAfterCanonicalReadback": true,
+      "discardReviewCancelConfirm": true,
+      "unavailableAndUnsupportedNeverEmpty": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 293,
+        "h": 56,
+        "y": 257,
+        "hit": true
+      },
+      "confirmGeometry": {
+        "focus": true,
+        "w": 293,
+        "h": 56,
+        "y": 257,
+        "hit": true
+      },
+      "discardGeometry": {
+        "focus": true,
+        "w": 259,
+        "h": 76,
+        "y": 247,
+        "hit": true
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "explicitAgeConsent": true,
+      "noteCiphertext": {
+        "bytes": 1797,
+        "sha256": "472f3947aa49fad312a56def9037cd20fc20362a823fa2c8c33f8bb557ce292f"
+      },
+      "originalTextRecovered": true,
+      "unsavedEditNotRestored": true,
+      "notesCorrectionsRetractionsRecovered": true,
+      "explicitRefreshAndReviewRequired": true,
+      "exactTargetsPreserved": true,
+      "earlierRetainedEventCorrectionAllowed": true,
+      "noDuplicateEventId": true,
+      "originalCompletionAndActualRoutineUnchanged": true,
+      "savedDraftsRetiredAfterCanonicalReadback": true,
+      "discardReviewCancelConfirm": true,
+      "unavailableAndUnsupportedNeverEmpty": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 308,
+        "h": 56,
+        "y": 346,
+        "hit": true
+      },
+      "confirmGeometry": {
+        "focus": true,
+        "w": 308,
+        "h": 56,
+        "y": 346,
+        "hit": true
+      },
+      "discardGeometry": {
+        "focus": true,
+        "w": 274,
+        "h": 56,
+        "y": 428,
+        "hit": true
+      }
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "explicitAgeConsent": true,
+      "noteCiphertext": {
+        "bytes": 1797,
+        "sha256": "69faf747c68168d5f7e60a73afcf9533d14e61392db35f4c03a2c16915c5194c"
+      },
+      "originalTextRecovered": true,
+      "unsavedEditNotRestored": true,
+      "notesCorrectionsRetractionsRecovered": true,
+      "explicitRefreshAndReviewRequired": true,
+      "exactTargetsPreserved": true,
+      "earlierRetainedEventCorrectionAllowed": true,
+      "noDuplicateEventId": true,
+      "originalCompletionAndActualRoutineUnchanged": true,
+      "savedDraftsRetiredAfterCanonicalReadback": true,
+      "discardReviewCancelConfirm": true,
+      "unavailableAndUnsupportedNeverEmpty": true,
+      "saveGeometry": {
+        "focus": true,
+        "w": 348,
+        "h": 56,
+        "y": 390,
+        "hit": true
+      },
+      "confirmGeometry": {
+        "focus": true,
+        "w": 348,
+        "h": 56,
+        "y": 390,
+        "hit": true
+      },
+      "discardGeometry": {
+        "focus": true,
+        "w": 314,
+        "h": 56,
+        "y": 390,
+        "hit": true
+      }
+    }
+  ],
+  "blockedRemoteRequests": [],
+  "pass": true,
+  "excluded": [
+    "native builds and devices",
+    "real owners and provider services",
+    "hosted CI",
+    "paid operations",
+    "release acceptance"
+  ],
+  "endedAt": "2026-11-19T17:16:30.578Z"
+}

@@ -1,0 +1,135 @@
+[
+  {
+    "boundary": "actual-document-reload",
+    "relaunch": true,
+    "previous": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 1,
+      "identityGeneration": 0
+    },
+    "current": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "noActiveDraft": true
+  },
+  {
+    "boundary": "actual-You-tab",
+    "relaunch": false,
+    "previous": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "current": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "noActiveDraft": true
+  },
+  {
+    "boundary": "actual-browser-Back",
+    "relaunch": false,
+    "previous": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "current": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "noActiveDraft": true
+  },
+  {
+    "boundary": "actual-browser-Forward",
+    "relaunch": false,
+    "previous": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "current": {
+      "generation": 2,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "noActiveDraft": true
+  },
+  {
+    "boundary": "actual-Today-tab-reentry",
+    "relaunch": false,
+    "previous": {
+      "generation": 2,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "current": {
+      "generation": 2,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "noActiveDraft": true
+  },
+  {
+    "boundary": "actual-document-reload",
+    "relaunch": true,
+    "previous": {
+      "generation": 2,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "current": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "noActiveDraft": true
+  },
+  {
+    "boundary": "actual-document-reload",
+    "relaunch": true,
+    "previous": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "current": {
+      "generation": 1,
+      "epoch": 1,
+      "ownerBinding": "68a599ce876163d1654d41ffd732496fdc327e61f194947410a9201781d321f0",
+      "accountGeneration": 0,
+      "identityGeneration": 0
+    },
+    "noActiveDraft": true
+  }
+]

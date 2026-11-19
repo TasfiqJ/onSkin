@@ -1,0 +1,20 @@
+{
+  "preparationCorrections": [
+    {
+      "step": "Read-only publication preflight",
+      "failure": "Repository metadata URL with trailing slash returned404",
+      "resolution": "Corrected URL; retained initial failure JSON and successful preflight."
+    },
+    {
+      "step": "Unpublished report template update",
+      "failure": "A patch context did not match; a subsequent Python3.9 write_text call rejected its newline argument before writing",
+      "resolution": "Created a fresh V2 report template; no source or original run evidence was changed."
+    },
+    {
+      "step": "Derived source-screen section count",
+      "failure": "An initial derived count subtracted changed sections that were absent in the old cumulative patch",
+      "resolution": "Retained prior metadata; V2 counts actual equal sections and preserves every section hash. Exact patch bytes and tree proofs were unaffected."
+    }
+  ],
+  "policy": "Original command logs/receipts, failed browser runs, raw source patches, ancestry and previous derived versions remain local. Final published selection uses reviewed corrected metadata. No failure was converted into a successful receipt."
+}

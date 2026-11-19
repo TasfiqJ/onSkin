@@ -1,0 +1,12 @@
+{
+  "currentPatchSha256": "7360a481bbc7a253ba9bd08e2882688302b63d7967062913f9199044f1fc34e9",
+  "matches": [
+    {
+      "kind": "email",
+      "matchSha256": "a1d5d4103d619e71d41f4d8e96798978615d95d0ed9f31a860b4524840fd8ccf",
+      "alreadyInScreenedEngineering29Patch": true
+    }
+  ],
+  "novelCredentialOrEmailMatches": [],
+  "review": "All matches are exact values already in the screened Engineering29 patch. New source consists only of recovery/entry/journal assertion changes and synthetic regressions. No credential liveness probes."
+}

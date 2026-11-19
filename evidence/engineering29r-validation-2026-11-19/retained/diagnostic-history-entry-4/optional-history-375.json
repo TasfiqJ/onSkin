@@ -1,0 +1,45 @@
+{
+  "label": "optional-history-375",
+  "command": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--optional-change41",
+    "--optional-history-recovery15"
+  ],
+  "cwd": "<USER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-19T17:02:51.779893+00:00",
+  "before": {
+    "head": "db5f6ed1acacdb9e8dafb28615913f818891cd8b",
+    "tree": "89964371551d58c49edec132b8465f742c55874c",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/optional-change41.mjs\n M scripts/e2e/optional-change41.test.mjs",
+    "workingDiffSha256": "dcb899541e26f78b59b09b143fc74f7fab08d3407367c638b28108b7596610cb"
+  },
+  "freeBytesBefore": 158008832000,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "environmentOverrides": {
+    "EXPO_OFFLINE": "1",
+    "EXPO_UNSTABLE_HEADLESS": "1",
+    "EXPO_NO_DOTENV": "1",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1",
+    "ONBOARDING_E2E_EVIDENCE_DIR": "<USER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING29R_EVIDENCE_20261119\\diagnostic-history-entry-4\\optional-history-375",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+    "ONBOARDING_E2E_PORT": "8285",
+    "ONBOARDING_E2E_DEBUG_PORT": "9385"
+  },
+  "end": "2026-11-19T17:04:25.664781+00:00",
+  "after": {
+    "head": "db5f6ed1acacdb9e8dafb28615913f818891cd8b",
+    "tree": "89964371551d58c49edec132b8465f742c55874c",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/optional-change41.mjs\n M scripts/e2e/optional-change41.test.mjs",
+    "workingDiffSha256": "dcb899541e26f78b59b09b143fc74f7fab08d3407367c638b28108b7596610cb"
+  },
+  "exit": 0,
+  "freeBytesAfter": 157982064640,
+  "logBytes": 174,
+  "logSha256": "b8efee70865c07c208a8ad00739611a4e687a23193cc92d62cffa121e4ec28ea"
+}

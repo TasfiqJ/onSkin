@@ -1,0 +1,5 @@
+Error: Clickable text is disabled: Add to shelf
+    at assert (file:///<USER_HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:76:25)
+    at clickByText (file:///<USER_HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:725:3)
+    at async dailyLoopFlow (file:///<USER_HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/retained-daily-loop.mjs:61:3)
+    at async run (file:///<USER_HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:2026:7)

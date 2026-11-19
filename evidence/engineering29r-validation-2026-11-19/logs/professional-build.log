@@ -1,0 +1,18 @@
+
+> @layerwell/professional-web@0.1.0 build
+> vite build --outDir <USER_HOME>\Documents\ChatGPT\MasterV2Code\ENGINEERING29R_EVIDENCE_20261119\final-68dc0867\build\professional
+
+vite v8.1.6 building client environment for production...
+[2Ktransforming...✓ 22 modules transformed.
+
+(!) outDir <USER_HOME>\Documents\ChatGPT\MasterV2Code\ENGINEERING29R_EVIDENCE_20261119\final-68dc0867\build\professional is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+rendering chunks...
+computing gzip size...
+../../../ENGINEERING29R_EVIDENCE_20261119/final-68dc0867/build/professional/_headers                     0.39 kB
+../../../ENGINEERING29R_EVIDENCE_20261119/final-68dc0867/build/professional/index.html                   1.92 kB │ gzip:  0.86 kB
+../../../ENGINEERING29R_EVIDENCE_20261119/final-68dc0867/build/professional/assets/index-CO6eptI9.css    1.81 kB │ gzip:  0.74 kB
+../../../ENGINEERING29R_EVIDENCE_20261119/final-68dc0867/build/professional/assets/index-CtZ1hqw0.js   104.57 kB │ gzip: 27.44 kB
+
+✓ built in 66ms

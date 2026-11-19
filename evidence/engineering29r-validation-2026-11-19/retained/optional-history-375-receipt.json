@@ -1,0 +1,42 @@
+{
+  "label": "optional-history-375",
+  "command": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--optional-change41"
+  ],
+  "cwd": "<USER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\c16-candidate",
+  "start": "2026-11-19T16:36:41.481946+00:00",
+  "before": {
+    "head": "b29e731097984be98f5b06024d11255dbb732809",
+    "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "freeBytesBefore": 158526132224,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "environmentOverrides": {
+    "EXPO_OFFLINE": "1",
+    "EXPO_UNSTABLE_HEADLESS": "1",
+    "EXPO_NO_DOTENV": "1",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1",
+    "ONBOARDING_E2E_EVIDENCE_DIR": "<USER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING29R_EVIDENCE_20261119\\optional-history-375",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+    "ONBOARDING_E2E_PORT": "8285",
+    "ONBOARDING_E2E_DEBUG_PORT": "9385"
+  },
+  "end": "2026-11-19T16:37:34.364173+00:00",
+  "after": {
+    "head": "b29e731097984be98f5b06024d11255dbb732809",
+    "tree": "bb63940c79e1fde4c946c8162f401baeac2b90c1",
+    "branch": "stage/m1-native-runtime47",
+    "status": ""
+  },
+  "exit": 1,
+  "freeBytesAfter": 158503268352,
+  "logBytes": 420,
+  "logSha256": "b8444da4353a6bed6f27fa99845643302037b8d00043217b89b6406acb14807a"
+}
