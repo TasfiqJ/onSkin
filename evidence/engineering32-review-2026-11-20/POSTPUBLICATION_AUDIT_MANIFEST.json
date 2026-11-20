@@ -1,0 +1,10 @@
+{
+  "files": [
+    {
+      "path": "POSTPUBLICATION_AUDIT.json",
+      "bytes": 4918,
+      "sha256": "2e56ab6a766cbdc3a5367e678c1e79902ac42647016768b734b6992253f87186"
+    }
+  ],
+  "manifestExcludesItself": true
+}
