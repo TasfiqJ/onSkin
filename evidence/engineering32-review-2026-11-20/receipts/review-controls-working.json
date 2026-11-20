@@ -1,0 +1,41 @@
+{
+  "label": "review-controls-working",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/actualRoutineJourney.test.ts",
+    "src/features/routine/routineDecisionRecovery32.test.ts",
+    "src/features/settings/localPrivateDataKeys.test.ts",
+    "--maxWorkers=2"
+  ],
+  "before": {
+    "head": "550f4c8e08a76288e25e7873a88b634f31d4dfd1",
+    "tree": "7725567d72f17bcc73902bd19d058460c6cd1b40",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+    "indexSha256": "8b9c772e98139d7771476b32c19edb8c9410f36ea52fb5c8e84714909e6ee0d7",
+    "diffSha256": "a7ee5d4ce72d1a50fd3b83c28110387ea6cbbd1d39b7c8d0ae0f8e469ad686b7"
+  },
+  "start": "2026-11-20T15:11:57.499465+00:00",
+  "freeBytesBefore": 147888668672,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 1,
+  "after": {
+    "head": "550f4c8e08a76288e25e7873a88b634f31d4dfd1",
+    "tree": "7725567d72f17bcc73902bd19d058460c6cd1b40",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+    "indexSha256": "8b9c772e98139d7771476b32c19edb8c9410f36ea52fb5c8e84714909e6ee0d7",
+    "diffSha256": "a7ee5d4ce72d1a50fd3b83c28110387ea6cbbd1d39b7c8d0ae0f8e469ad686b7"
+  },
+  "end": "2026-11-20T15:12:06.674721+00:00",
+  "freeBytesAfter": 147888730112,
+  "logBytes": 8778,
+  "logSha256": "ad553bc142399673abccee426d97aadf84d4b6406d5952591f4d21bcc1088b3c"
+}

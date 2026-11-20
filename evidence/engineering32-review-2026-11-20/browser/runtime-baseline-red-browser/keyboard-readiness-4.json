@@ -1,0 +1,11 @@
+{
+  "label": "Prepare appointment brief",
+  "first": {
+    "focus": false,
+    "height": 56,
+    "y": 390,
+    "hit": true
+  },
+  "viewportHeight": 932,
+  "reason": "Wait for actual focus ownership/hit testing after platform modal transition; geometry assertions unchanged."
+}

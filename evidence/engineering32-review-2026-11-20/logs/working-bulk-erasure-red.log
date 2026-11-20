@@ -1,0 +1,19 @@
+{"sourceSha256":"2c94e710b7ea9afef32327f3b44caafdbb959c38236c12c1c5431ec0edf6c02a","settledBeforeOtherErasure":true,"slowErasureFinished":true}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Cleanup must retain its fence until every dispatched erasure settles, including after another rejection
+
+true !== false
+
+    at file:///<HOME>/Documents/ChatGPT/MasterV2Code/ENGINEERING32_EVIDENCE_20261120/bulk_erasure_probe32.mjs:16:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.21.0

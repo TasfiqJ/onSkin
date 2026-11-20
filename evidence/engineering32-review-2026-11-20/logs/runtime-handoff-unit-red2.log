@@ -1,0 +1,41 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/lib/storage/webRuntimeHandoff32.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+ ❯ src/lib/storage/webRuntimeHandoff32.test.ts (1 test | 1 failed) 8ms
+   × waits for a closing document once, without another UI action or private access before the callback 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/storage/webRuntimeHandoff32.test.ts > waits for a closing document once, without another UI action or private access before the callback
+AssertionError: expected 'occupied' to be 'checking' // Object.is equality
+
+Expected: "checking"
+Received: "occupied"
+
+ ❯ src/lib/storage/webRuntimeHandoff32.test.ts:17:32
+     15|   admission.retry(); await Promise.resolve();
+     16|   expect(storage.getItem).not.toHaveBeenCalled();
+     17|   expect(admission.snapshot()).toBe('checking');
+       |                                ^
+     18|   grant?.(); await Promise.resolve(); await Promise.resolve();
+     19|   expect(admission.snapshot()).toBe('admitted');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  09:28:12
+   Duration  409ms (transform 32ms, setup 0ms, import 60ms, tests 8ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/lib/storage/webRuntimeHandoff32.test.ts --maxWorkers=2

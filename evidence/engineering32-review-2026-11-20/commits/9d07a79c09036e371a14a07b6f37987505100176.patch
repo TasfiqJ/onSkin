@@ -1,0 +1,43 @@
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+index 76594e221bede234667a533b52559745efb76737..b8405298e19215b8535a6335864c33d543cd78a3 100644
+--- a/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+@@ -47,7 +47,7 @@ export function decodeRoutineDecision(value: unknown, owner: string): RoutineDec
+   const request = row(command.request, ['id','createdAt','expectedParentHash']);
+   const expectedParentHash = request.expectedParentHash === null && kind === 'apply' ? null : digest(request.expectedParentHash);
+   const accepted = Object.freeze({ id: uuid(request.id), createdAt: instant(request.createdAt), expectedParentHash });
+-  if (kind === 'clear') return Object.freeze({ kind, request: { ...accepted, expectedParentHash: expectedParentHash! } });
++  if (kind === 'clear') return Object.freeze({ kind, request: Object.freeze({ ...accepted, expectedParentHash: expectedParentHash! }) });
+   const facts = row(command.facts, ['source','sourceHash','activeProductIds','am','pm']);
+   const activeIds = facts.activeProductIds;
+   const checked = decodePlanHistoryVersion45({ id: accepted.id, sequence: 1, createdAt: accepted.createdAt, sourceHash: facts.sourceHash, am: facts.am, pm: facts.pm }, 1);
+diff --git a/scripts/e2e/durable-routine32.mjs b/scripts/e2e/durable-routine32.mjs
+index c3af1fee959806dbcd042f7c56dc7f5eaa27c1d9..9f6e5d7f7709b47af1515eff06e36fa5fea4ea34 100644
+--- a/scripts/e2e/durable-routine32.mjs
++++ b/scripts/e2e/durable-routine32.mjs
+@@ -6,6 +6,8 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   const mods = `${moduleExpression}const recovery=mod('/features/routine/routineDecisionRecoveryStore.ts');const lease=mod('/lib/consent/healthDataWriteAdmission.ts').captureHealthDataWriteLease();`;
+   const rows = () => evaluate(`(async()=>{${mods}return (await recovery.loadRoutineDecisions(lease)).decisions})()`);
+   const rawEvidence = () => evaluate(`(async()=>{${moduleExpression}return mod('/lib/storage/privateAsyncStorage.web.ts').default.getItem('layerwell.routineDecisionRecovery.v1')})()`);
++  const rawModule=`const entry=[...__r.getModules().values()].find(row=>(row.verboseName??'').replaceAll('\\\\','/').endsWith('/lib/storage/privateAsyncStorage.web.ts'));const raw=entry.publicModule.exports.default;`;
++  const withdrawn = () => b.waitForCondition(getClient(),`[...document.querySelectorAll('div[dir="auto"]')].some(node=>node.textContent.replace(/\\s+/g,' ').includes('Status: withdrawn. Local cleanup complete.')&&node.getClientRects().length&&!node.closest('[inert],[aria-hidden="true"]'))`,30000,'visible withdrawn status and complete local cleanup');
+   const navigate = async route => { await evaluate(`(()=>{${moduleExpression}mod('/node_modules/expo-router/build/exports.js').router.push(${JSON.stringify(route)});return true})()`); await b.waitForPath(getClient(),route); };
+   const fault = async (method,afterCommit) => evaluate(`(()=>{${moduleExpression}const original=store[${JSON.stringify(method)}];store[${JSON.stringify(method)}]=async(...args)=>{store[${JSON.stringify(method)}]=original;globalThis.__original32=${JSON.stringify(method)}==='applyCurrentActualRoutine'?args[2]:${JSON.stringify(method)}==='clearCurrentActualRoutine'?args[1]:args[3];${afterCommit?'await original(...args);':''}throw Error('SYNTHETIC32_ACK_LOST')};return true})()`);
+   const openSaved = async commandId => {
+@@ -69,12 +71,12 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   await navigate('/you');
+   const withdrawLabel=await evaluate(`[...document.querySelectorAll('[role="button"]')].find(node=>node.getAttribute('aria-label')?.startsWith('Withdraw health-data consent'))?.getAttribute('aria-label')`);
+   assert(withdrawLabel); await keyboard(withdrawLabel,height);
+-  await keyboard('Withdraw health consent',height); await text('Status: withdrawn.');
+-  const removed=await evaluate(`(async()=>{${moduleExpression}const raw=mod('/lib/storage/privateAsyncStorage.web.ts').default;return {recovery:await raw.getItem('layerwell.routineDecisionRecovery.v1')===null,ledger:await raw.getItem('layerwell.completions.v1')===null}})()`);
++  await keyboard('Withdraw health consent',height); await withdrawn();
++  const removed=await evaluate(`(async()=>{${rawModule}return {recovery:await raw.getItem('layerwell.routineDecisionRecovery.v1')===null,ledger:await raw.getItem('layerwell.completions.v1')===null}})()`);
+   assert(removed.recovery&&removed.ledger); await capture(id+'-withdrawal-erased');
+   await restart();
+-  await b.waitForCondition(getClient(),`document.body.innerText.includes('Status: withdrawn.')||document.body.innerText.includes('Health features are paused')`,30000,'withdrawal remains closed after process restart');
+-  const afterWithdrawal=await evaluate(`(async()=>{${moduleExpression}const raw=mod('/lib/storage/privateAsyncStorage.web.ts').default;return {recovery:await raw.getItem('layerwell.routineDecisionRecovery.v1')===null,ledger:await raw.getItem('layerwell.completions.v1')===null}})()`);
++  await withdrawn();
++  const afterWithdrawal=await evaluate(`(async()=>{${rawModule}return {recovery:await raw.getItem('layerwell.routineDecisionRecovery.v1')===null,ledger:await raw.getItem('layerwell.completions.v1')===null}})()`);
+   assert(afterWithdrawal.recovery&&afterWithdrawal.ledger);
+   record(id+'-withdrawal-restart-summary.json',{actualPrivacyUi:true,removed,afterWithdrawal,noOriginalCommandsResurrected:true});
+   return {pass:true,processRestart:true,exactApplyId:original.id,exactClearId:clear.id,exactRetractionId:retraction.id,

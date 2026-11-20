@@ -1,0 +1,21 @@
+{
+  "reason": "Retained prior replacement failure: a reused screen coordinate landed on paid UI during PM duplicate touches. Preserve duplicate presses but bind/reach/hit-test the same original checkbox for each press; record content-free target provenance. The earlier run lacked enough point provenance for a complete historical attribution.",
+  "changes": [
+    "Same backend fault/readback fix as version1",
+    "Bind both real touch presses to one original DOM checkbox; verify actual hit target and date/phase before each; no navigation recovery or entitlement fabrication",
+    "Compare routine-order ciphertext through its real adapter at paid refusals",
+    "All original journal/duplicate/reload/day/phase/paid assertions and timeouts unchanged; a new 10-second target-readiness bound precedes touch"
+  ],
+  "files": [
+    {
+      "path": "onboarding-first-session.mjs",
+      "bytes": 120443,
+      "sha256": "836a7e8486322277337f48c7258889e876f365bb29d16c1dcae6ec40f8a812c8"
+    },
+    {
+      "path": "retained-daily-loop.mjs",
+      "bytes": 13585,
+      "sha256": "b00d071f786f209527961d6adb67c523dd4bc0faa33773cdbc312d531994860b"
+    }
+  ]
+}

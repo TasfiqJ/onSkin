@@ -1,0 +1,20 @@
+{
+  "reason": "Retained failed 375px old fixture injected localStorage, while the real ledger moved to the strict adapter. Retarget only the refusal/readback fixture; preserve every UI/recovery/offline/duplicate/phase/paid-boundary assertion and timeout.",
+  "changes": [
+    "Resolve source imports/repository from external evidence path",
+    "Inject ledger write rejection through actual privateAsyncStorage.web.ts setItem",
+    "Read/compare actual raw ciphertext through the same adapter; reminder localStorage fixture unchanged"
+  ],
+  "files": [
+    {
+      "path": "onboarding-first-session.mjs",
+      "sourceSha256": "c73ede74fce5a2d5c917644baf879dece798feffa2572cc80a0a721db77cae24",
+      "derivedSha256": "836a7e8486322277337f48c7258889e876f365bb29d16c1dcae6ec40f8a812c8"
+    },
+    {
+      "path": "retained-daily-loop.mjs",
+      "sourceSha256": "e531fb20ea03e404cf49180975199529c8d033bfdae78c7738479f4588f828f5",
+      "derivedSha256": "5cba70a7c6f6301311aab933f58f98c9d657f8629da41e4fc38bd5ef8f9a12e7"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "key": "layerwell.shelf.v1",
+      "present": false,
+      "readable": true,
+      "decryptedPresent": false
+    },
+    {
+      "key": "layerwell.skinprofile.v1",
+      "present": false,
+      "readable": true,
+      "decryptedPresent": false
+    },
+    {
+      "key": "layerwell.conflict.overrides",
+      "present": false,
+      "readable": true,
+      "decryptedPresent": false
+    },
+    {
+      "key": "layerwell.routineOrder.v1",
+      "present": false,
+      "readable": true,
+      "decryptedPresent": false
+    },
+    {
+      "key": "layerwell.healthDataCollectionConsent.v1",
+      "present": true,
+      "readable": true,
+      "decryptedPresent": true
+    }
+  ],
+  "profileStatus": "missing",
+  "sourceAvailable": false,
+  "sourceError": "PLAN_SOURCE44_UNAVAILABLE"
+}

@@ -1,0 +1,20 @@
+
+> @layerwell/mobile@0.1.0 lint
+> eslint . --max-warnings=0
+
+
+<HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\features\settings\localPrivateDataKeys.test.ts
+   9:49  warning  '<HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\features\settings\localPrivateDataKeys.ts' imported multiple times  import/no-duplicates
+  18:8   warning  '<HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\features\settings\localPrivateDataKeys.ts' imported multiple times  import/no-duplicates
+
+✖ 2 problems (0 errors, 2 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+
+ESLint found too many warnings (maximum: 0).
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint . --max-warnings=0

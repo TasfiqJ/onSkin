@@ -1,0 +1,385 @@
+diff --git a/apps/mobile/src/features/routine/SavedRoutineDecisions.tsx b/apps/mobile/src/features/routine/SavedRoutineDecisions.tsx
+index 569b613b6b159df4fca36d997b493d5cffdec930..93d245774c1c2c509eb2603b7e760424a8125b82 100644
+--- a/apps/mobile/src/features/routine/SavedRoutineDecisions.tsx
++++ b/apps/mobile/src/features/routine/SavedRoutineDecisions.tsx
+@@ -50,8 +50,8 @@ export function SavedRoutineDecisions({ lease, onChanged }: { lease: HealthDataW
+       if (action === 'acknowledge') {
+         if (!recorded) return;
+         await acknowledgeRoutineDecision(lease, accepted, assertCurrent); assertCurrent();
+-        setRows(previous => previous?.filter(row => row !== accepted) ?? null); close(accepted);
+-        setFeedback('Exact saved outcome acknowledged. Only its recovery evidence was retired; routine and original use history are unchanged.');
++        const retained = await loadRoutineDecisions(lease); assertCurrent(); setRows(retained.decisions); close(accepted);
++        setFeedback('Exact saved outcome acknowledged. Original evidence remains encrypted for inspection until purpose cleanup; routine and original use history are unchanged.');
+       } else {
+         if (action === 'retry') { await retrySavedRoutineDecision(lease, accepted, assertCurrent); assertCurrent(); await onChanged(); assertCurrent(); }
+         const outcome = await inspectSavedRoutineDecision(lease, accepted, assertCurrent); assertCurrent();
+@@ -69,6 +69,7 @@ export function SavedRoutineDecisions({ lease, onChanged }: { lease: HealthDataW
+     {rows?.length === 0 ? <Text>No unresolved original routine decisions were found in the readable recovery collection. This does not establish a missing operation outcome.</Text> : null}
+     {rows?.map((saved, index) => <View key={saved.command.request.id} className="gap-2">
+       <Text>{saved.command.kind} decision {index + 1}. Original command: {saved.command.request.id}</Text>
++      {saved.acknowledged ? <Text>Acknowledged original evidence, kept for inspection. Retrying an acknowledged decision is unavailable.</Text> : null}
+       <Button label={`Review saved ${saved.command.kind} decision ${index + 1}`} disabled={working} onPress={() => {
+         if (flight.current || !currentRender()) return; ++epoch.current; chosen.current = saved; setSelected(saved); setRecorded(false); setFeedback(null);
+       }} />
+@@ -91,8 +92,8 @@ export function SavedRoutineDecisions({ lease, onChanged }: { lease: HealthDataW
+           </> : null}
+           {'expectedParentHash' in selected.command.request ? <Text>Original predecessor: {selected.command.request.expectedParentHash ?? 'no earlier applied version'}</Text> : null}
+           <Button label="Inspect original routine decision" disabled={working} onPress={() => void act('inspect', selected)} />
+-          <Button label="Retry this original routine decision" disabled={working || recorded} onPress={() => void act('retry', selected)} />
+-          {recorded ? <Button label="Acknowledge exact saved routine outcome" disabled={working} onPress={() => void act('acknowledge', selected)} /> : null}
++          <Button label="Retry this original routine decision" disabled={working || recorded || selected.acknowledged} onPress={() => void act('retry', selected)} />
++          {recorded && !selected.acknowledged ? <Button label="Acknowledge exact saved routine outcome" disabled={working} onPress={() => void act('acknowledge', selected)} /> : null}
+           <Button label="Close original routine decision" variant="ghost" onPress={() => close(selected)} />
+           {feedback ? <Text accessibilityLiveRegion="polite">{feedback}</Text> : null}
+         </ScrollView>
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+index 120dbcacaad030e8b822fe5f1e3f5cf550cd8939..c9f9e7c5d7c581ed7d3f1028180ca72087ae937f 100644
+--- a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
++++ b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+@@ -14,7 +14,7 @@ import { localDateString } from '@/features/today/useToday';
+ import { collectLocalDeviceExportData } from '@/features/settings/localDeviceExport';
+ import { capturePlanSource44 } from './planSourceFence44';
+ import { acknowledgeRoutineDecision, inspectSavedRoutineDecision, loadRoutineDecisions, prepareRoutineDecision, retrySavedRoutineDecision } from './routineDecisionRecoveryStore';
+-import { ROUTINE_DECISION_KEY as KEY, decodeRoutineDecisions, makeSavedRoutineDecision, routineDecisionHash, type RoutineDecision } from './routineDecisionRecoveryCodec';
++import { ROUTINE_DECISION_KEY as KEY, ROUTINE_DECISION_LIMIT, decodeRoutineDecisions, makeSavedRoutineDecision, routineDecisionHash, type RoutineDecision } from './routineDecisionRecoveryCodec';
+ vi.mock('expo-file-system/legacy', () => ({ documentDirectory: null, cacheDirectory: null }));
+ vi.mock('@/features/notifications/deliver', () => ({ scheduleTrialReminder: async () => {}, waitForHealthNotificationOperationsToSettle: async () => {} }));
+ vi.mock('@/features/notifications/nativeMutation', () => ({ clearNativeNotificationsForAccountIsolation: async () => {} }));
+@@ -58,7 +58,7 @@ it('inspection after commit/ack loss is byte-identical and acknowledgement is a
+   await expect(acknowledgeRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow(); ports26.failWrite=null;
+   expect((await loadRoutineDecisions(f.lease)).decisions).toEqual([f.saved]);
+   await acknowledgeRoutineDecision(f.lease,f.saved,guard);
+-  expect((await loadRoutineDecisions(f.lease)).decisions).toHaveLength(0);
++  expect((await loadRoutineDecisions(f.lease)).decisions[0]).toMatchObject({command:f.command,acknowledged:true});
+   expect(ports26.bytes.get(LEDGER)).toBe(bytes.get(LEDGER)); expect(ports26.bytes.get(CONTENT_KEY)).toBe(bytes.get(CONTENT_KEY));
+ });
+ it('not-found remains unknown and cannot acknowledge or retire the only command evidence',async()=>{
+@@ -154,7 +154,7 @@ it('refuses unsupported nested fields, conflicting IDs and bounded capacity with
+   expect(()=>decodeRoutineDecisions(JSON.stringify({...parsed,schemaVersion:2}),'synthetic-first-value-a',25)).toThrow();
+   expect(()=>makeSavedRoutineDecision({...f.command,extra:true} as RoutineDecision,f.saved.consentHash,'synthetic-first-value-a')).toThrow();
+   await expect(prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,createdAt:'2020-01-01T00:00:00.000Z'}},guard)).rejects.toThrow();
+-  for(let i=1;i<20;i++) await prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,id:randomUUID()}},guard);
++  for(let i=1;i<ROUTINE_DECISION_LIMIT;i++) await prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,id:randomUUID()}},guard);
+   const before=new Map(ports26.bytes); await expect(prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,id:randomUUID()}},guard)).rejects.toThrow('CAPACITY');
+   expect(ports26.bytes).toEqual(before); expect(routineDecisionHash((await loadRoutineDecisions(f.lease)).decisions[0])).toBe(routineDecisionHash(f.saved));
+ });
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+index 7a4bad158c93f9d6d52456ed63604598a0b53981..76594e221bede234667a533b52559745efb76737 100644
+--- a/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+@@ -6,14 +6,14 @@ import { decodeActualRoutineUseEvidence, type ActualRoutineCorrection } from './
+ import type { PlanSourceSnapshot44 } from './planSourceFence44';
+ 
+ export const ROUTINE_DECISION_KEY = 'layerwell.routineDecisionRecovery.v1';
+-export const ROUTINE_DECISION_LIMIT = 20;
++export const ROUTINE_DECISION_LIMIT = 100;
+ export const ROUTINE_DECISION_INVALID = 'ROUTINE_DECISION_INVALID';
+ export const ROUTINE_DECISION_CONFLICT = 'ROUTINE_DECISION_CONFLICT';
+ export type RoutineDecision = ActualRoutineCorrection | Readonly<{
+   kind: 'apply'; facts: PlanSourceSnapshot44;
+   request: { id: string; createdAt: string; expectedParentHash: string | null };
+ }>;
+-export type SavedRoutineDecision = Readonly<{ command: RoutineDecision; consentHash: string; contentHash: string }>;
++export type SavedRoutineDecision = Readonly<{ command: RoutineDecision; consentHash: string; acknowledged: boolean; contentHash: string }>;
+ export type RoutineDecisionCollection = Readonly<{
+   schemaVersion: 1; purpose: 'uncertain_local_actual_routine'; ownerUserId: string; processingEpoch: number;
+   decisions: readonly SavedRoutineDecision[];
+@@ -58,8 +58,9 @@ export function decodeRoutineDecision(value: unknown, owner: string): RoutineDec
+   return Object.freeze({ kind, request: accepted, facts: Object.freeze({ source: 'local', sourceHash: checked.sourceHash,
+     activeProductIds: Object.freeze([...activeIds]) as readonly string[], am: checked.am, pm: checked.pm }) });
+ }
+-export function makeSavedRoutineDecision(command: RoutineDecision, consentHash: string, owner: string): SavedRoutineDecision {
+-  const body = { command: decodeRoutineDecision(command, owner), consentHash: digest(consentHash) };
++export function makeSavedRoutineDecision(command: RoutineDecision, consentHash: string, owner: string, acknowledged = false): SavedRoutineDecision {
++  if (typeof acknowledged !== 'boolean') invalid();
++  const body = { command: decodeRoutineDecision(command, owner), consentHash: digest(consentHash), acknowledged };
+   return Object.freeze({ ...body, contentHash: routineDecisionHash(body) });
+ }
+ export function decodeRoutineDecisions(raw: string | null, ownerUserId: string, processingEpoch?: number): RoutineDecisionCollection {
+@@ -75,8 +76,8 @@ export function decodeRoutineDecisions(raw: string | null, ownerUserId: string,
+       !Number.isSafeInteger(collection.processingEpoch) || (collection.processingEpoch as number) < 0 ||
+       (processingEpoch !== undefined && collection.processingEpoch !== processingEpoch) || !Array.isArray(collection.decisions) || collection.decisions.length > ROUTINE_DECISION_LIMIT) invalid();
+   const decisions = collection.decisions.map(value => {
+-    const entry = row(value, ['command','consentHash','contentHash']);
+-    const saved = makeSavedRoutineDecision(entry.command as RoutineDecision, entry.consentHash as string, ownerUserId);
++    const entry = row(value, ['command','consentHash','acknowledged','contentHash']);
++    const saved = makeSavedRoutineDecision(entry.command as RoutineDecision, entry.consentHash as string, ownerUserId, entry.acknowledged as boolean);
+     if (saved.contentHash !== digest(entry.contentHash)) invalid();
+     return saved;
+   });
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+index 8ca95466ab80dde62031f9520568af649990b376..fc730647aed8d411ff98b6167c0d1eabdd90ca1c 100644
+--- a/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+@@ -75,8 +75,9 @@ export async function inspectSavedRoutineDecision(lease: HealthDataWriteLease, e
+   const ledger = await getActualRoutineSnapshot(lease); guard();
+   return inspectRoutineDecision(ledger, saved.command);
+ }
+-/** Separate acknowledgement. An exact recorded event must still exist under a
+- * reserved ledger read; not-found/conflicting/unsupported evidence is retained. */
++/** Separate acknowledgement. Retain original evidence even after a positive
++ * read: the legacy ledger's browser readback is not a durable disk commit.
++ * Only purpose/full cleanup retires these bounded records. */
+ export async function acknowledgeRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void): Promise<void> {
+   const accepted = JSON.parse(JSON.stringify(expected)) as SavedRoutineDecision;
+   const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
+@@ -85,7 +86,8 @@ export async function acknowledgeRoutineDecision(lease: HealthDataWriteLease, ex
+     const ledger = actualRoutineSnapshotFromBytes(values.get(COMPLETION_KEY) ?? null, lease.ownerUserId);
+     const outcome = inspectRoutineDecision(ledger, found.command);
+     if (outcome.kind !== 'recorded_current' && outcome.kind !== 'recorded_historical') throw Error(ROUTINE_DECISION_CONFLICT);
+-    return JSON.stringify({ ...saved, decisions: saved.decisions.filter(row => row.command.request.id !== found.command.request.id) });
++    const acknowledged = makeSavedRoutineDecision(found.command, found.consentHash, lease.ownerUserId, true);
++    return JSON.stringify({ ...saved, decisions: saved.decisions.map(row => row === found ? acknowledged : row) });
+   }, guard, undefined, undefined, authorization(lease), guard);
+   guard();
+ }
+@@ -94,6 +96,7 @@ export async function acknowledgeRoutineDecision(lease: HealthDataWriteLease, ex
+ export async function retrySavedRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void): Promise<void> {
+   const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
+   const saved = exact(await loadRoutineDecisions(lease), expected); guard();
++  if (saved.acknowledged) throw Error('ROUTINE_DECISION_ACKNOWLEDGED_INSPECT_ONLY');
+   const command = saved.command;
+   if (command.kind === 'apply') {
+     const fresh = await capturePlanSource44(lease); guard();
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
+index 34c27aaab72d994a81dba01c6b576e61da864659..aec0044d9a68924f5401d308a479878e8b4fa29a 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
+@@ -6,6 +6,7 @@ import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanup
+ import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+ import { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteAdmission';
+ import { PRIVATE_WEB_RUNTIME_LOCK } from '@/lib/storage/webRuntimeAdmission';
++import { LOCAL_PRIVATE_BROWSER_DATABASES } from './localPrivateDataKeys';
+ 
+ import {
+   LOCAL_PRIVATE_CONTROL_KEYS,
+@@ -104,6 +105,11 @@ describe('local private data registry', () => {
+     // Web Locks names carry no persisted bytes and must not be erased as data.
+     expect(registered.has(PRIVATE_WEB_RUNTIME_LOCK)).toBe(false);
+     discovered.delete(PRIVATE_WEB_RUNTIME_LOCK);
++    for (const database of LOCAL_PRIVATE_BROWSER_DATABASES) {
++      expect(database.ciphertextKeys.every(key => registered.has(key))).toBe(true);
++      // Database names are inventoried locations, not AsyncStorage row names.
++      discovered.delete(database.name);
++    }
+ 
+     expect([...discovered].sort()).toEqual([...registered].sort());
+   });
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+index 829ad58cfcbff132a3f384d0aa214c24a8e72919..739a8463d07d1b00f8f6c35bb9ae425fdb78c2e4 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+@@ -13,6 +13,12 @@ import {
+   PLAINTEXT_STAGING_JOURNAL_KEY,
+ } from '@/lib/storage/plaintextStagingCore';
+ import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
++import { ROUTINE_DECISION_BROWSER_DATABASE, ROUTINE_DECISION_STORAGE_KEY } from '@/lib/storage/routineDecisionStorageLocations';
++
++/** Browser database inventory. The encrypted fixed-purpose row participates
++ * in ordinary key enumeration/export and verified purpose/full erasure. Empty
++ * schema metadata carries no owner payload and is retained without migration. */
++export const LOCAL_PRIVATE_BROWSER_DATABASES = [{ name: ROUTINE_DECISION_BROWSER_DATABASE, ciphertextKeys: [ROUTINE_DECISION_STORAGE_KEY] }] as const;
+ 
+ export const LOCAL_PRIVATE_DATA_KEYS = [
+   'layerwell.routineDecisionRecovery.v1',
+diff --git a/apps/mobile/src/lib/storage/privateAsyncStorage.ts b/apps/mobile/src/lib/storage/privateAsyncStorage.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..83ce9b042480dce858803b6ff4df5b0735bd64a3
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/privateAsyncStorage.ts
+@@ -0,0 +1,2 @@
++// Native and synthetic test ports retain the existing approved raw backend.
++export { default } from '@react-native-async-storage/async-storage';
+diff --git a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4cf9ff52e2be7133a399e1521c1545efee2236fb
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+@@ -0,0 +1,79 @@
++import original from '@react-native-async-storage/async-storage';
++import { ROUTINE_DECISION_BROWSER_DATABASE as DB, ROUTINE_DECISION_STORAGE_KEY as KEY } from './routineDecisionStorageLocations';
++
++// Only ciphertext for this new purpose uses the durable browser transaction.
++// Encryption, key custody, source fences, owner admission and erasure remain
++// privateKV's responsibility. Never put a key or plaintext in this database.
++const STORE = 'ciphertext';
++const fail = () => new Error('ROUTINE_DECISION_DURABLE_STORAGE_UNAVAILABLE');
++async function database(create: boolean): Promise<IDBDatabase | null> {
++  if (!globalThis.indexedDB?.databases) throw fail();
++  if (!create && !(await indexedDB.databases()).some(row => row.name === DB)) return null;
++  return new Promise((resolve,reject) => {
++    const open = indexedDB.open(DB,1);
++    let refused = false;
++    open.onblocked = () => { refused = true; reject(fail()); };
++    open.onerror = () => reject(fail());
++    open.onupgradeneeded = () => {
++      if (!create || refused) { open.transaction?.abort(); return; }
++      open.result.createObjectStore(STORE);
++    };
++    open.onsuccess = () => {
++      const db = open.result;
++      if (refused) { db.close(); return; }
++      if (db.objectStoreNames.length !== 1 || !db.objectStoreNames.contains(STORE)) { db.close(); reject(fail()); return; }
++      db.onversionchange = () => db.close(); resolve(db);
++    };
++  });
++}
++async function transaction(write: boolean, value?: string | null): Promise<string | null> {
++  // An older localStorage record is retained as evidence and refused, never
++  // mistaken for absence, migrated by inspection or overwritten by this store.
++  if (value !== null && await original.getItem(KEY) !== null) throw new Error('ROUTINE_DECISION_LEGACY_STORAGE_REFUSED');
++  const db = await database(write && value !== null); if (!db) return null;
++  try {
++    return await new Promise((resolve,reject) => {
++      const tx = db.transaction(STORE,write?'readwrite':'readonly',write?{durability:'strict'}:undefined);
++      if (write && tx.durability !== 'strict') { tx.abort(); reject(fail()); return; }
++      let result: string | null = null;
++      tx.onabort = () => reject(fail()); tx.onerror = () => reject(fail());
++      tx.oncomplete = () => resolve(result);
++      const store = tx.objectStore(STORE);
++      if (write) { if (value === null) store.delete(KEY); else store.put(value,KEY); }
++      else {
++        const read = store.get(KEY);
++        read.onsuccess = () => {
++          if (read.result !== undefined && typeof read.result !== 'string') { tx.abort(); return; }
++          result = read.result ?? null;
++        };
++      }
++    });
++  } finally { db.close(); }
++}
++const storage = {
++  ...original,
++  getItem: (key: string) => key === KEY ? transaction(false) : original.getItem(key),
++  setItem: async (key: string,value: string) => { if (key === KEY) await transaction(true,value); else await original.setItem(key,value); },
++  removeItem: async (key: string) => {
++    if (key !== KEY) { await original.removeItem(key); return; }
++    // Purpose/full cleanup owns both known locations, including refused legacy.
++    await transaction(true,null); await original.removeItem(key);
++  },
++  getAllKeys: async () => {
++    const keys = await original.getAllKeys();
++    // Inventory must retain this key even when its shared encryption key is
++    // lost, preventing an empty replacement history or key regeneration.
++    const db = await database(false);
++    if (!db) return keys;
++    try {
++      const exists = await new Promise<boolean>((resolve,reject) => {
++        const tx=db.transaction(STORE,'readonly'), request=tx.objectStore(STORE).count(KEY);
++        tx.oncomplete=()=>resolve(request.result>0); tx.onabort=()=>reject(fail()); tx.onerror=()=>reject(fail());
++      });
++      return exists ? [...new Set([...keys,KEY])] : keys;
++    } finally { db.close(); }
++  },
++  multiGet: async (keys: readonly string[]): Promise<[string,string|null][]> => Promise.all(keys.map(async key => [key,await storage.getItem(key)])),
++  multiRemove: async (keys: readonly string[]) => { await Promise.all(keys.map(key=>storage.removeItem(key))); },
++};
++export default storage;
+diff --git a/apps/mobile/src/lib/storage/privateKV.ts b/apps/mobile/src/lib/storage/privateKV.ts
+index c67798faa6ed507c8d6caa6293ac05cf40eb4b79..8acca30e05381750f0d103487491ac3ec3ed8612 100644
+--- a/apps/mobile/src/lib/storage/privateKV.ts
++++ b/apps/mobile/src/lib/storage/privateKV.ts
+@@ -1,6 +1,6 @@
+ import 'react-native-get-random-values';
+ 
+-import AsyncStorage from '@react-native-async-storage/async-storage';
++import AsyncStorage from './privateAsyncStorage';
+ import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
+ import {
+   bytesToHex,
+diff --git a/apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts b/apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c32eaa4107f1398439e3b04a8572e01667f3d27e
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts
+@@ -0,0 +1,2 @@
++export const ROUTINE_DECISION_BROWSER_DATABASE = 'layerwell.routine-decision-ciphertext.v1';
++export const ROUTINE_DECISION_STORAGE_KEY = 'layerwell.routineDecisionRecovery.v1';
+diff --git a/apps/mobile/src/lib/storage/verifiedErasure.ts b/apps/mobile/src/lib/storage/verifiedErasure.ts
+index 3d68ab606b510ea9a8a83ce6e90a3e384264c2f5..b939cc461f1d4dae4647b3637e8e7edb17577b09 100644
+--- a/apps/mobile/src/lib/storage/verifiedErasure.ts
++++ b/apps/mobile/src/lib/storage/verifiedErasure.ts
+@@ -1,4 +1,4 @@
+-import AsyncStorage from '@react-native-async-storage/async-storage';
++import AsyncStorage from './privateAsyncStorage';
+ 
+ /** A resolved native mutation is not erasure evidence. Call only inside the
+  * caller's existing writer exclusion; do not decrypt or log retained bytes. */
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index ef5328f4797aec5c786f2bab84a4dfdee02e1c78..611e5862ae7892c51fded6d86dfe4d7232ec97dc 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -8,6 +8,8 @@ Routine records → review exact apply / clear / original recorded-use retractio
+ 
+ Routine records → Review saved routine decisions → confirmed collection / unavailable or unsupported refusal → Review saved decision → original facts and identity → Inspect original routine decision (read-only) → recorded_current / recorded_historical / conflict / not_found / unreadable. Not-found never proves failure. Explicit Retry this original routine decision reacquires current access and, for apply, a new approved in-memory source proof matching the original facts. Changed source/predecessor/target refuses. Acknowledge exact saved routine outcome is separate and rechecks the exact ledger under reservation before retiring only that recovery evidence. Close/Escape/navigation leaves unresolved evidence intact; canceled/stale callbacks cannot operate on a successor. Applying records no use; retraction preserves the original event. Withdrawal/full clearing remove the registered purpose key; export contains strict evidence, never live capabilities. Capacity refuses new preparation without purging unresolved work. All38/all18 remain UNACCEPTED; native/backend/scientific qualification remains absent.
+ 
++Forced-browser-process testing found that localStorage readback could lose the newest prepared command. The new browser recovery purpose therefore stores only existing privateKV-encrypted ciphertext in an inventoried IndexedDB row, requiring a strict transaction and completed encrypted readback before dispatch. Unsupported durability or older localStorage prototype evidence refuses rather than overwrites. Acknowledgement now marks and retains the original evidence for inspect-only review; it does not retire it based on a legacy ledger readback. The collection is bounded to 100 records and 512,000 plaintext UTF-8 bytes; acknowledged and unresolved records remain until explicit purpose/full cleanup, and capacity stops new preparation without automatic eviction. Native AsyncStorage/key custody is unchanged and its physical crash qualification remains absent.
++
+ ## Engineering28 practice template library and navigation retirement (local, unaccepted)
+ 
+ Critical professional web flow at 375×667 and 430×932: Practice templates → Load practice templates → real default503 refusal / admitted practice-only template history → New practice template → generic title and explicit ordered product roles → Review template revision → Return to draft / Save exact template revision → immutable readback → expand any dated prior revision → Revise → cancel or explicitly save a separate revision → Retire → Keep active / Confirm exact retirement → reload retained history. Unknown save retries the identical command; changed authority/history requires fresh review. Missing/corrupt history refuses instead of provisioning. Clear/background/session replacement invalidates pending work and captured controls. Keyboard focus moves to the new heading; title input keeps focus. No owner source or private client plan is imported, no owner record is changed, and no licence or provider admission is created. Exact role-to-bottle mapping, unshelved proposals, plan issuance from a template and original-owner application remain unavailable.
+diff --git a/scripts/e2e/actual-apply-outcome29.mjs b/scripts/e2e/actual-apply-outcome29.mjs
+index 69ba3c08d7f737bc4bb6149163d809817fdc6c4f..198a33fa78831c111b5784a44832a9863c2105ca 100644
+--- a/scripts/e2e/actual-apply-outcome29.mjs
++++ b/scripts/e2e/actual-apply-outcome29.mjs
+@@ -121,7 +121,7 @@ try {
+     json(id + '-canonical-receipt.json', { versions: final.versions.map(({ id, sequence, contentHash, parentHash, source }) => ({ id, sequence, contentHash, parentHash, source })),
+       uses: final.uses.length, ciphertextSha256: sha(final.raw), inspectionPreservedCiphertext: true });
+     const continuity31 = await consumerContinuity31({ b, client, tap, keyboard, text, snapshot, capture, moduleExpression, id, height });
+-    const durable32 = await durableRoutine32({ b, getClient: () => client, tap, keyboard, text, snapshot, capture, moduleExpression, id, height,
++    const durable32 = await durableRoutine32({ b, getClient: () => client, tap, keyboard, text, snapshot, capture, moduleExpression, id, height, record: json, sha,
+       restart: async () => { client.close(); client = undefined; await b.stopProcessBestEffort(browser); browser = startBrowser();
+         json(id + '-restart-processes.json', { browserPid: browser.pid, serverPid: server.pid, appPort, debugPort, retainedSyntheticProfile: true });
+         await connect(width,height); await client.send('Page.navigate', { url: baseUrl + '/routine/records' }); } });
+diff --git a/scripts/e2e/durable-routine32.mjs b/scripts/e2e/durable-routine32.mjs
+index c44f0a737311431fcd81f5a7779c06e3b7ba818c..0c04a271aaa165e4967a24aa72be9ab9030a96ac 100644
+--- a/scripts/e2e/durable-routine32.mjs
++++ b/scripts/e2e/durable-routine32.mjs
+@@ -1,10 +1,11 @@
+ // Real UI/encrypted stores. Faults model local bridge acknowledgement loss;
+ // they never admit source/owner/consent or alter the saved command evidence.
+ import assert from 'node:assert/strict';
+-export async function durableRoutine32({ b, getClient, tap, keyboard, text, snapshot, capture, moduleExpression, id, height, restart }) {
++export async function durableRoutine32({ b, getClient, tap, keyboard, text, snapshot, capture, moduleExpression, id, height, restart, record, sha }) {
+   const evaluate = expression => b.evaluate(getClient(),expression,true);
+   const mods = `${moduleExpression}const recovery=mod('/features/routine/routineDecisionRecoveryStore.ts');const lease=mod('/lib/consent/healthDataWriteAdmission.ts').captureHealthDataWriteLease();`;
+   const rows = () => evaluate(`(async()=>{${mods}return (await recovery.loadRoutineDecisions(lease)).decisions})()`);
++  const rawEvidence = () => evaluate(`(async()=>{${moduleExpression}return mod('/lib/storage/privateAsyncStorage.web.ts').default.getItem('layerwell.routineDecisionRecovery.v1')})()`);
+   const navigate = async route => { await evaluate(`(()=>{${moduleExpression}mod('/node_modules/expo-router/build/exports.js').router.push(${JSON.stringify(route)});return true})()`); await b.waitForPath(getClient(),route); };
+   const fault = async (method,afterCommit) => evaluate(`(()=>{${moduleExpression}const original=store[${JSON.stringify(method)}];store[${JSON.stringify(method)}]=async(...args)=>{store[${JSON.stringify(method)}]=original;globalThis.__original32=${JSON.stringify(method)}==='applyCurrentActualRoutine'?args[2]:${JSON.stringify(method)}==='clearCurrentActualRoutine'?args[1]:args[3];${afterCommit?'await original(...args);':''}throw Error('SYNTHETIC32_ACK_LOST')};return true})()`);
+   const openSaved = async commandId => {
+@@ -15,11 +16,11 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   };
+   const inspection = async (commandId,kind) => {
+     await openSaved(commandId); const before=await snapshot();
+-    const recoveryBefore=await evaluate(`localStorage.getItem('layerwell.routineDecisionRecovery.v1')`);
++    const recoveryBefore=await rawEvidence();
+     await keyboard('Inspect original routine decision',height); await text(kind);
+     assert(await evaluate(`document.querySelector('[role="dialog"][aria-label="Review original routine decision"]').contains(document.activeElement)`));
+     const after=await snapshot(); assert.equal(after.raw,before.raw); assert.equal(after.keyHash,before.keyHash);
+-    assert.equal(await evaluate(`localStorage.getItem('layerwell.routineDecisionRecovery.v1')`),recoveryBefore);
++    assert.equal(await rawEvidence(),recoveryBefore);
+     return {before,after};
+   };
+   await navigate('/routine/records'); await text('My actual routine');
+@@ -29,14 +30,19 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   await keyboard('Apply reviewed actual routine',height); await text('Check saved apply outcome');
+   const original=await evaluate('globalThis.__original32'), before=await snapshot();
+   const prepared=(await rows()).find(row=>row.command.request.id===original.id); assert(prepared); assert.equal(prepared.command.request.createdAt,original.createdAt);
++  const evidenceBefore=await rawEvidence();
++  record(id+'-pre-kill-original-evidence.json',{commandId:original.id,originalTime:original.createdAt,ciphertextSha256:sha(evidenceBefore),ledgerSha256:sha(before.raw),termination:'owned browser process tree force termination'});
+   await restart(); await text('My actual routine');
++  const evidenceAfter=await rawEvidence();
++  record(id+'-post-kill-original-evidence.json',{commandId:original.id,ciphertextSha256:sha(evidenceAfter),unchanged:evidenceAfter===evidenceBefore});
++  assert.equal(evidenceAfter,evidenceBefore);
+   await evaluate(`(()=>{const seen=new WeakSet();const scale=()=>{for(const n of document.querySelectorAll('div[dir="auto"]')){if(seen.has(n))continue;seen.add(n);const s=getComputedStyle(n),size=parseFloat(s.fontSize),line=parseFloat(s.lineHeight);n.style.fontSize=size*2+'px';n.style.lineHeight=(Number.isFinite(line)?line:size*1.5)*2+'px';}};scale();globalThis.__durableText32=new MutationObserver(scale);globalThis.__durableText32.observe(document.body,{childList:true,subtree:true});return true})()`);
+   assert.equal((await snapshot()).raw,before.raw);
+   await inspection(original.id,'not_found'); await capture(id+'-restart-original-not-found');
+   await keyboard('Retry this original routine decision',height); await text('recorded_current');
+   const applied=await snapshot(); assert.equal(applied.versions.length,before.versions.length+1); assert.equal(applied.versions.at(-1).id,original.id);
+   assert.equal(applied.versions.at(-1).createdAt,original.createdAt); assert.equal(applied.uses.length,before.uses.length);
+-  await keyboard('Acknowledge exact saved routine outcome',height); assert(!(await rows()).some(row=>row.command.request.id===original.id));
++  await keyboard('Acknowledge exact saved routine outcome',height); assert((await rows()).find(row=>row.command.request.id===original.id).acknowledged);
+   // Committed clear with lost acknowledgement: restart exposes exact current
+   // outcome and read-only inspection, followed by explicit acknowledgement.
+   await keyboard('Review clearing my applied routine',height); await fault('clearCurrentActualRoutine',true);

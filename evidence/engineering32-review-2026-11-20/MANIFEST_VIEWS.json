@@ -1,0 +1,30 @@
+{
+  "scope": "Ordered readable views of payload file rows before adding these views; full MANIFEST.json also inventories the view files/index. No payload bytes are transformed.",
+  "files": [
+    {
+      "path": "manifest-views/FILES-001.json",
+      "bytes": 47501,
+      "sha256": "c887f384195b9074fca65f916e3d4d62970b26c1f0f75657b5d03f334f246976"
+    },
+    {
+      "path": "manifest-views/FILES-002.json",
+      "bytes": 59971,
+      "sha256": "79ffddcccad194ad35c4fb7a62ca9cee7a21d34cf63f0242058bffc401ce5c70"
+    },
+    {
+      "path": "manifest-views/FILES-003.json",
+      "bytes": 62083,
+      "sha256": "2647612b409e16930e92a3da305c7f57023bc4e528aa875b6567ff55f6328596"
+    },
+    {
+      "path": "manifest-views/FILES-004.json",
+      "bytes": 54962,
+      "sha256": "c359c76045e2a57a40685ea21b9d2cd7c2826b6187f826000dd297e95835455a"
+    },
+    {
+      "path": "manifest-views/FILES-005.json",
+      "bytes": 26398,
+      "sha256": "155939911a66f8cbaded5b2933f4c80d72e65d892494c9a0a4945ee7714fab2d"
+    }
+  ]
+}

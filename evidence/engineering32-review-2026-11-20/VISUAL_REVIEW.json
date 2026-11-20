@@ -1,0 +1,83 @@
+{
+  "at": "2026-11-20T16:25:54.644546+00:00",
+  "source": {
+    "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+    "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "reviewMethod": "Direct view_image inspection of all selected final screenshots and previously inspected labeled historical failure screenshots; retain automated no-horizontal-overflow/keyboard-hit/focus assertions.",
+  "files": [
+    {
+      "path": "final-acceptance3-connected-r1-browser/375x667-restart-original-not-found.png",
+      "bytes": 61826,
+      "sha256": "a725c34850bf60f35dea623a1ef4162bb6625f788b299a2d375b4edeac3a99a3",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final-acceptance3-connected-r1-browser/390x844-restart-original-not-found.png",
+      "bytes": 72791,
+      "sha256": "a1bebf8decea821bc32630d9f05fabbee69ccaeb7937bfe174698ddf36d1c89f",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final-acceptance3-connected-r1-browser/430x932-restart-original-not-found.png",
+      "bytes": 99484,
+      "sha256": "1ef242cd1636cc16929d916701d5ba79070ede16be776969e3bd204e03b535f9",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final-acceptance3-connected-r1-browser/375x667-withdrawal-erased.png",
+      "bytes": 54445,
+      "sha256": "27dd4c52e103e9ced9b58e39d7f23aa3dc74b0f673f126c032b7d92ecd4661bc",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final3-first-document-r1-browser/375-1.png",
+      "bytes": 22422,
+      "sha256": "4a0804c5262f8a63e1103cabdfafbc28f58aff86987d78913f11d53e8cee38ba",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final3-first-document-r1-browser/390-1.png",
+      "bytes": 28246,
+      "sha256": "f747e2be501335dfafdcc227ea3aaeff3bc245183cad1cdcff6846f7cad81d14",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final3-first-document-r1-browser/430-1.png",
+      "bytes": 28345,
+      "sha256": "0c302d8eed8ce861fa3123ee479b19c2d9550ca6903887dd91269f210aee5ad8",
+      "syntheticOnly": true
+    },
+    {
+      "path": "connected-working2-browser/failure-state.png",
+      "bytes": 61258,
+      "sha256": "7b37b1404064fe3cafb70779cec1d99efedd0543d1cd89d66bf7f2b5f6d98e90",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final-connected3-browser/failure-state.png",
+      "bytes": 53424,
+      "sha256": "15f44f87847a37dcc8216b586ae6f9398162fcbff10fce7c2c7a2d00dddd2676",
+      "syntheticOnly": true
+    },
+    {
+      "path": "final-acceptance-connected-r1-browser/failure-state.png",
+      "bytes": 76242,
+      "sha256": "36c282dbcf5609bb9293d7aad4c64cd98c907236027ff4ba78bc121e9c7a6f12",
+      "syntheticOnly": true
+    }
+  ],
+  "observations": [
+    "Final 375/390/430 recovery at doubled browser text wraps references with vertical scrolling; keyboard controls remain reachable; post-inspection focus remains inside the dialog.",
+    "Final withdrawn shell visibly states local cleanup complete and requires fresh explicit consent; actual restart and raw erasure are asserted separately.",
+    "Cold first-document screenshots show the expected age gate after actual admission, with no invented setup.",
+    "Historical failed images remain labeled focus loss, pre-repair withdrawal rollback and missing-source refusal; none is counted as final success."
+  ],
+  "realCustomerData": false,
+  "credentialOrKeyValuesVisible": false,
+  "nativeQualification": false
+}

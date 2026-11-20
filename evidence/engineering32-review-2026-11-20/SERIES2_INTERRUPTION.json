@@ -1,0 +1,13 @@
+{
+  "at": "2026-11-20T16:12:18.437845+00:00",
+  "source": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+  "connectedCellsPassed": 9,
+  "runtimeCellsPassed": 9,
+  "firstDocumentCellsPassed": 9,
+  "diary": "PASS all3",
+  "intake": "PASS all3",
+  "remainingStages": "NOT_RUN at this source; stopped before daily/root checks",
+  "orchestratorExit": 1,
+  "reason": "Safety review and reproduced RED: Promise.all rejected bulk browser reads/erases while sibling I/O remained live. Final source must drain siblings and terminal transactions; all prior evidence retained.",
+  "heldRegressionLauncherExit": 66
+}

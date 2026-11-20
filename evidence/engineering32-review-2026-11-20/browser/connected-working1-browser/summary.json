@@ -1,0 +1,12 @@
+{
+  "start": "2026-11-20T14:47:12.457Z",
+  "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+  "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+  "status": "",
+  "surface": "Actual local Expo/Edge UI and encrypted records; synthetic owner and acknowledgement faults, no native qualification",
+  "viewports": [],
+  "blocked": [],
+  "pass": false,
+  "end": "2026-11-20T14:48:48.094Z",
+  "ownedBrowserAndServerStopped": true
+}

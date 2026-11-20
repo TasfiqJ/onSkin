@@ -1,0 +1,3522 @@
+[
+  {
+    "label": "connected-working1",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T14:47:12.395010+00:00",
+    "freeBytesBefore": 148033249280,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\connected-working1-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T14:48:53.964895+00:00",
+    "freeBytesAfter": 147994066944,
+    "logBytes": 388,
+    "logSha256": "13d753739d4ecebaa9dcfdbf66c99c14c8c6e4e3545016bd904413979c1926e9"
+  },
+  {
+    "label": "connected-working2",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "84492a741de3c5533484b56e03a0612a32591f2d",
+      "tree": "48b90660498c787363b999a164fa5b1c7d81b092",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "b9671987638ca7eda73c3a451a0a58d37f6b55d2984765550df1071e4668767c",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T14:55:36.063092+00:00",
+    "freeBytesBefore": 148003340288,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\connected-working2-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "84492a741de3c5533484b56e03a0612a32591f2d",
+      "tree": "48b90660498c787363b999a164fa5b1c7d81b092",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "b9671987638ca7eda73c3a451a0a58d37f6b55d2984765550df1071e4668767c",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T14:57:19.777607+00:00",
+    "freeBytesAfter": 147964321792,
+    "logBytes": 388,
+    "logSha256": "e5851f11bccdc82d6c2cb5496485480985c59b4e2af3763365d02bd6caa983ae"
+  },
+  {
+    "label": "connected-working3",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T14:58:18.160786+00:00",
+    "freeBytesBefore": 147962757120,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\connected-working3-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:01:09.977821+00:00",
+    "freeBytesAfter": 147930791936,
+    "logBytes": 1197,
+    "logSha256": "b2fd8d1b0d7522db725aceb58b89abe44a9aef287daba1f8d964fd39eb6991a2"
+  },
+  {
+    "label": "connected-working4",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "550f4c8e08a76288e25e7873a88b634f31d4dfd1",
+      "tree": "7725567d72f17bcc73902bd19d058460c6cd1b40",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "8b9c772e98139d7771476b32c19edb8c9410f36ea52fb5c8e84714909e6ee0d7",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:04:36.913028+00:00",
+    "freeBytesBefore": 147929604096,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\connected-working4-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "550f4c8e08a76288e25e7873a88b634f31d4dfd1",
+      "tree": "7725567d72f17bcc73902bd19d058460c6cd1b40",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "8b9c772e98139d7771476b32c19edb8c9410f36ea52fb5c8e84714909e6ee0d7",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:08:56.468477+00:00",
+    "freeBytesAfter": 147888648192,
+    "logBytes": 2816,
+    "logSha256": "f100bddc833b408c593a7fd498d44505bd13699b6629f54709ab5443b8bf83c4"
+  },
+  {
+    "label": "durable-adversarial1",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/lib/storage/privateKV.test.ts",
+      "src/features/settings/localPrivateDataFence44.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:42:12.495141+00:00",
+    "freeBytesBefore": 148036427776,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:42:21.434307+00:00",
+    "freeBytesAfter": 148036423680,
+    "logBytes": 1670,
+    "logSha256": "b389a6f4aca6961548584023346a41329ebffa39a04c6e13038b68c409dcef95"
+  },
+  {
+    "label": "durable-adversarial2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:42:35.268357+00:00",
+    "freeBytesBefore": 148036423680,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:42:37.087855+00:00",
+    "freeBytesAfter": 148036415488,
+    "logBytes": 1371,
+    "logSha256": "ab5968cc0d375b269dfe669a42a909fbf3f6b2b8612e91b0dbe819d86e612b12"
+  },
+  {
+    "label": "durable-adversarial3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:42:58.596886+00:00",
+    "freeBytesBefore": 148036272128,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:43:01.074517+00:00",
+    "freeBytesAfter": 148035743744,
+    "logBytes": 2909,
+    "logSha256": "8dbf399007fff1c52ea15048c3bbe1fe9ea4b5733bbd4fbfc0c44f783ba579dd"
+  },
+  {
+    "label": "durable-adversarial4",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:43:26.037844+00:00",
+    "freeBytesBefore": 148035260416,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:43:28.511978+00:00",
+    "freeBytesAfter": 148035121152,
+    "logBytes": 1900,
+    "logSha256": "eb9369bf767323aaa4bd4f9491bfc1c4e71924ba853acee35e0d2a1f85dc5282"
+  },
+  {
+    "label": "durable-adversarial5",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:43:42.119039+00:00",
+    "freeBytesBefore": 148035125248,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:43:44.560757+00:00",
+    "freeBytesAfter": 148035121152,
+    "logBytes": 2247,
+    "logSha256": "081e16e04c91b2a810794e74dedcc6929eeb75fa6b6c3a81d42865253f5da57d"
+  },
+  {
+    "label": "durable-adversarial6",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "3fd1f5344992c8b4fcd39160b574fe3d81b6346861aaa056f5d97fb32f35bdd3"
+    },
+    "start": "2026-11-20T14:44:19.819224+00:00",
+    "freeBytesBefore": 148035084288,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "3fd1f5344992c8b4fcd39160b574fe3d81b6346861aaa056f5d97fb32f35bdd3"
+    },
+    "end": "2026-11-20T14:44:22.260056+00:00",
+    "freeBytesAfter": 148035084288,
+    "logBytes": 374,
+    "logSha256": "7204aa6e47bfd3596ad005972445ce6ac75c0cfa256f0b5fca75ed69d8b0de77"
+  },
+  {
+    "label": "durable-checkpoint-tests",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n?? scripts/e2e/durable-routine32.mjs",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "f3f3e240af7445d9398abd16362ad2230d3954623f75535e403087dc5a4596a1"
+    },
+    "start": "2026-11-20T14:47:02.963386+00:00",
+    "freeBytesBefore": 148034031616,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n?? scripts/e2e/durable-routine32.mjs",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "f3f3e240af7445d9398abd16362ad2230d3954623f75535e403087dc5a4596a1"
+    },
+    "end": "2026-11-20T14:47:11.827533+00:00",
+    "freeBytesAfter": 148034019328,
+    "logBytes": 424,
+    "logSha256": "d330b2d9458d7c8acd6ccf54db5bfba905a8e8a64d86e3cd89325432508b4d1c"
+  },
+  {
+    "label": "durable-focused-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts",
+      "src/lib/storage/privateKV.test.ts",
+      "src/features/settings/localPrivateDataFence44.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "src/features/settings/localPrivateData.test.ts",
+      "src/features/settings/localDeviceExport.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n?? scripts/e2e/durable-routine32.mjs",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "faeacfeff94f33f4ad8f3ce93db3b67502333e567c1376f452a5dedddee58706"
+    },
+    "start": "2026-11-20T14:46:07.781136+00:00",
+    "freeBytesBefore": 148034727936,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n?? scripts/e2e/durable-routine32.mjs",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "faeacfeff94f33f4ad8f3ce93db3b67502333e567c1376f452a5dedddee58706"
+    },
+    "end": "2026-11-20T14:46:16.832579+00:00",
+    "freeBytesAfter": 148034195456,
+    "logBytes": 708,
+    "logSha256": "000128beb5fbb4166b212bbc5dace05e6f24f4329c5e914d284e81615adfcd42"
+  },
+  {
+    "label": "durable-ledger-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/lib/storage/privateAsyncStorage.web.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M scripts/e2e/actual-apply-outcome29.mjs",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "0b885419b7c211f273770d2cbd94f9a9e923ada52cd8f8597c53ca44b29f286c"
+    },
+    "start": "2026-11-20T15:04:30.924368+00:00",
+    "freeBytesBefore": 147929780224,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M scripts/e2e/actual-apply-outcome29.mjs",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "0b885419b7c211f273770d2cbd94f9a9e923ada52cd8f8597c53ca44b29f286c"
+    },
+    "end": "2026-11-20T15:04:36.451999+00:00",
+    "freeBytesAfter": 147929681920,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "durable-ledger-types",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M scripts/e2e/actual-apply-outcome29.mjs",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "0b885419b7c211f273770d2cbd94f9a9e923ada52cd8f8597c53ca44b29f286c"
+    },
+    "start": "2026-11-20T15:03:50.826349+00:00",
+    "freeBytesBefore": 147930091520,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M scripts/e2e/actual-apply-outcome29.mjs",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "0b885419b7c211f273770d2cbd94f9a9e923ada52cd8f8597c53ca44b29f286c"
+    },
+    "end": "2026-11-20T15:04:06.463558+00:00",
+    "freeBytesAfter": 147930034176,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "durable-ledger-unit",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M scripts/e2e/actual-apply-outcome29.mjs",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "0b885419b7c211f273770d2cbd94f9a9e923ada52cd8f8597c53ca44b29f286c"
+    },
+    "start": "2026-11-20T15:03:47.421004+00:00",
+    "freeBytesBefore": 147930034176,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "4a6cfb9729b2a1186ff7f4c28e18e6261308c804",
+      "tree": "6f48e14c14b06a47e1e420b94576364ca585e94f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M scripts/e2e/actual-apply-outcome29.mjs",
+      "indexSha256": "ad05ac6b39375f06657c913595f42893c465067df96200e42c9c7f17e0b9f04b",
+      "diffSha256": "0b885419b7c211f273770d2cbd94f9a9e923ada52cd8f8597c53ca44b29f286c"
+    },
+    "end": "2026-11-20T15:03:50.535670+00:00",
+    "freeBytesAfter": 147930095616,
+    "logBytes": 425,
+    "logSha256": "63d7bef8e18ed59ada81d316167534f6cd86b54101b78e52564a63bdc4bc6efa"
+  },
+  {
+    "label": "durable-lint1",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/features/routine/SavedRoutineDecisions.tsx",
+      "src/features/routine/routineDecisionRecoveryStore.ts",
+      "src/features/routine/routineDecisionRecoveryCodec.ts",
+      "src/features/routine/ActualRoutinePanel.tsx",
+      "src/features/routine/actualRoutine.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:40:22.393803+00:00",
+    "freeBytesBefore": 148037033984,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:40:28.542687+00:00",
+    "freeBytesAfter": 148036943872,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "durable-lint2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/features/routine/SavedRoutineDecisions.tsx",
+      "src/features/routine/routineDecisionRecoveryStore.ts",
+      "src/features/routine/routineDecisionRecoveryCodec.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/routine/ActualRoutinePanel.tsx",
+      "src/features/routine/actualRoutine.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n?? scripts/e2e/durable-routine32.mjs",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "faeacfeff94f33f4ad8f3ce93db3b67502333e567c1376f452a5dedddee58706"
+    },
+    "start": "2026-11-20T14:46:17.144815+00:00",
+    "freeBytesBefore": 148034187264,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/shelf/firstValue26TestPorts.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n?? scripts/e2e/durable-routine32.mjs",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "faeacfeff94f33f4ad8f3ce93db3b67502333e567c1376f452a5dedddee58706"
+    },
+    "end": "2026-11-20T14:46:23.966285+00:00",
+    "freeBytesAfter": 148034039808,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "durable-storage-green2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "fc56ea0d5b203c51188b37fc83c81cf80290f444d35c22117e5a93382d092fe7"
+    },
+    "start": "2026-11-20T14:54:50.298650+00:00",
+    "freeBytesBefore": 147995803648,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "fc56ea0d5b203c51188b37fc83c81cf80290f444d35c22117e5a93382d092fe7"
+    },
+    "end": "2026-11-20T14:54:53.384403+00:00",
+    "freeBytesAfter": 147995803648,
+    "logBytes": 425,
+    "logSha256": "cacac8b612f856229e44959beeb79366e2bb132cae78919c59fbd550c4fb0dd5"
+  },
+  {
+    "label": "durable-storage-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/lib/storage/privateAsyncStorage.web.ts",
+      "src/lib/storage/privateAsyncStorage.ts",
+      "src/lib/storage/routineDecisionStorageLocations.ts",
+      "src/features/routine/SavedRoutineDecisions.tsx",
+      "src/features/routine/routineDecisionRecoveryStore.ts",
+      "src/features/routine/routineDecisionRecoveryCodec.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "fc56ea0d5b203c51188b37fc83c81cf80290f444d35c22117e5a93382d092fe7"
+    },
+    "start": "2026-11-20T14:54:44.390756+00:00",
+    "freeBytesBefore": 147995918336,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "fc56ea0d5b203c51188b37fc83c81cf80290f444d35c22117e5a93382d092fe7"
+    },
+    "end": "2026-11-20T14:54:50.004758+00:00",
+    "freeBytesAfter": 147995811840,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "durable-storage-types",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "42649804e4831f939b684423c95f235d6474c207451aad685d70ad1ca631aa89"
+    },
+    "start": "2026-11-20T14:53:41.244994+00:00",
+    "freeBytesBefore": 147996893184,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "42649804e4831f939b684423c95f235d6474c207451aad685d70ad1ca631aa89"
+    },
+    "end": "2026-11-20T14:53:56.846216+00:00",
+    "freeBytesAfter": 147996901376,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "durable-storage-unit",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/lib/storage/privateKV.test.ts",
+      "src/lib/storage/privateKVReadOnly25.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "42649804e4831f939b684423c95f235d6474c207451aad685d70ad1ca631aa89"
+    },
+    "start": "2026-11-20T14:53:57.140723+00:00",
+    "freeBytesBefore": 147996897280,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+      "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+      "diffSha256": "42649804e4831f939b684423c95f235d6474c207451aad685d70ad1ca631aa89"
+    },
+    "end": "2026-11-20T14:54:06.187823+00:00",
+    "freeBytesAfter": 147996241920,
+    "logBytes": 2404,
+    "logSha256": "12a9127f4ecbdb641efe7cc432b179950343592cb5e5f7a68f1551c762f2f3db"
+  },
+  {
+    "label": "durable-types1",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "6b9da85c52805f0cf316869376c405c379eb8f9004ed7a8397055b9ef250880a"
+    },
+    "start": "2026-11-20T14:38:50.908550+00:00",
+    "freeBytesBefore": 148037812224,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 2,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "6b9da85c52805f0cf316869376c405c379eb8f9004ed7a8397055b9ef250880a"
+    },
+    "end": "2026-11-20T14:39:06.465475+00:00",
+    "freeBytesAfter": 148037758976,
+    "logBytes": 567,
+    "logSha256": "eb6056dc99351dd3848ba00f0423e46355e5d6ab81f75d8c77dd4ff57c9ae47c"
+  },
+  {
+    "label": "durable-types2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:42:37.394653+00:00",
+    "freeBytesBefore": 148036288512,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 2,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:42:52.921660+00:00",
+    "freeBytesAfter": 148036288512,
+    "logBytes": 1651,
+    "logSha256": "4cf52708aac47248be22c125ea06853a42f62e3407913387d297cecdbb9a5f2b"
+  },
+  {
+    "label": "durable-types3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "start": "2026-11-20T14:43:44.877204+00:00",
+    "freeBytesBefore": 148035117056,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+    },
+    "end": "2026-11-20T14:44:00.594311+00:00",
+    "freeBytesAfter": 148035219456,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "durable-ui-green1",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "src/features/settings/localDeviceExport.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "6b9da85c52805f0cf316869376c405c379eb8f9004ed7a8397055b9ef250880a"
+    },
+    "start": "2026-11-20T14:39:06.784592+00:00",
+    "freeBytesBefore": 148037754880,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "6b9da85c52805f0cf316869376c405c379eb8f9004ed7a8397055b9ef250880a"
+    },
+    "end": "2026-11-20T14:39:15.646075+00:00",
+    "freeBytesAfter": 148037226496,
+    "logBytes": 518,
+    "logSha256": "f73cc548882d6911115b17ee5746b781d8b78971720b0fb0e8ae752fc5a8c719"
+  },
+  {
+    "label": "durable-ui-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/actualRoutineJourney.test.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "973ff94bc8f207fa7d6d1d8a8ebcbcabe9f508405292b03b78bc367e630112d6"
+    },
+    "start": "2026-11-20T14:36:40.180276+00:00",
+    "freeBytesBefore": 148038553600,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/actualRoutineJourney.test.ts",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "973ff94bc8f207fa7d6d1d8a8ebcbcabe9f508405292b03b78bc367e630112d6"
+    },
+    "end": "2026-11-20T14:36:48.664408+00:00",
+    "freeBytesAfter": 148038545408,
+    "logBytes": 2055,
+    "logSha256": "5ce6158c7af45cd8ba3dd40410c4dc333558cfe4d6ead645b472d1fcdd5ed792"
+  },
+  {
+    "label": "final-acceptance-connected-r1",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:37:46.186051+00:00",
+    "freeBytesBefore": 147747311616,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-acceptance-connected-r1-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:41:21.945922+00:00",
+    "freeBytesAfter": 147713777664,
+    "logBytes": 1231,
+    "logSha256": "9c2a5be26c101840f00a09df2acb2734d9af3cf5c50a0afb208d9826c838a312"
+  },
+  {
+    "label": "final-acceptance2-connected-r1",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:46:38.045791+00:00",
+    "freeBytesBefore": 147688951808,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-acceptance2-connected-r1-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:51:23.835198+00:00",
+    "freeBytesAfter": 147610669056,
+    "logBytes": 2918,
+    "logSha256": "55259849dd583d0a28e2eaff6167eab6f05818d262c5f8c6a00aed11347bfe48"
+  },
+  {
+    "label": "final-acceptance2-connected-r2",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:51:24.048947+00:00",
+    "freeBytesBefore": 147610664960,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-acceptance2-connected-r2-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:56:18.251672+00:00",
+    "freeBytesAfter": 147483529216,
+    "logBytes": 2918,
+    "logSha256": "db9e3729ff0d8b6ee9b8a3a83b6a26bbabbac9e63938998f2fa9429253e1f33d"
+  },
+  {
+    "label": "final-acceptance2-connected-r3",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:56:18.498924+00:00",
+    "freeBytesBefore": 147483508736,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-acceptance2-connected-r3-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:01:12.929388+00:00",
+    "freeBytesAfter": 147373555712,
+    "logBytes": 2918,
+    "logSha256": "e8160b605b6774b0e85572a9a6ac8b677a31631ec969f1513b33cac5ceb11a14"
+  },
+  {
+    "label": "final-acceptance3-connected-r1",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:14:23.150598+00:00",
+    "freeBytesBefore": 147154112512,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-acceptance3-connected-r1-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:19:20.047065+00:00",
+    "freeBytesAfter": 146960957440,
+    "logBytes": 2918,
+    "logSha256": "03e9d726e3687b1ec6b0b73ec38cb5e9c82632e01ef78a79b39eb751e3912a92"
+  },
+  {
+    "label": "final-acceptance3-connected-r2",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:19:20.261727+00:00",
+    "freeBytesBefore": 146960953344,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-acceptance3-connected-r2-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:24:05.288809+00:00",
+    "freeBytesAfter": 146902827008,
+    "logBytes": 2918,
+    "logSha256": "cb6cd88b57c278a1035bc6ca33669b41f714c7783f593f90460589f110009f2f"
+  },
+  {
+    "label": "final-acceptance3-connected-r3",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:24:05.490957+00:00",
+    "freeBytesBefore": 146902822912,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-acceptance3-connected-r3-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:28:51.842040+00:00",
+    "freeBytesAfter": 146844508160,
+    "logBytes": 2918,
+    "logSha256": "7c92494c8492da4bf9953eee7d47c06303738236584bb204ba6aece0b3f2f415"
+  },
+  {
+    "label": "final-connected-recovery-drain32",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/lib/storage/webRuntimeHandoff32.test.ts",
+      "src/lib/storage/webRuntimeAdmission.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/shelf/savedProductCompare.test.ts",
+      "src/features/shelf/appointmentBriefRecords.test.ts",
+      "src/features/shelf/shareAppointmentBrief.test.ts",
+      "src/features/shelf/diaryBriefPhoto.test.ts",
+      "src/features/photos/progressDataAuthority.c08a1.test.ts",
+      "src/features/photos/progressDetailUX.c08b2.test.ts",
+      "src/features/photos/photoNoteHistory.test.ts",
+      "src/features/photos/photoRecoveryCopy.test.ts",
+      "src/lib/accessibility/inlineDialogFocus.test.ts",
+      "src/lib/accessibility/modalBackground.test.ts",
+      "--maxWorkers=4"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:55:02.324363+00:00",
+    "freeBytesBefore": 146524905472,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:55:46.338050+00:00",
+    "freeBytesAfter": 146523930624,
+    "logBytes": 1098,
+    "logSha256": "aec39e6fdc748ab80756b3061e8e37a89c028e7e0e9b8de990ee09c1b957c55d"
+  },
+  {
+    "label": "final-connected1",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "9fb1e1e6fa2ba163134fa932e6a853f68f21424d",
+      "tree": "0d0d03b7d60970000ee1215bd6c49081fcdbcb45",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "83f93596774e6ae6f1a020638e4849d6570bdf2be574252b0da0e5c0bf5cdffd",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:12:07.181482+00:00",
+    "freeBytesBefore": 147888459776,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-connected1-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "9fb1e1e6fa2ba163134fa932e6a853f68f21424d",
+      "tree": "0d0d03b7d60970000ee1215bd6c49081fcdbcb45",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "83f93596774e6ae6f1a020638e4849d6570bdf2be574252b0da0e5c0bf5cdffd",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:14:34.083561+00:00",
+    "freeBytesAfter": 147854123008,
+    "logBytes": 388,
+    "logSha256": "d09b8d80fb15ae62daa215fbb9b928559d78711f0d743f246131546b1c1554db"
+  },
+  {
+    "label": "final-connected2",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "b74ba6f4d5505ce682f2e1c0cb0e0d3a79e92643",
+      "tree": "d7309719fa0345e76979a20c239b2c8245effb9e",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "2b702915ee2454c4edc034a5cd8b5be129ba5b5e69744f31749d4bb1da903276",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:15:44.129385+00:00",
+    "freeBytesBefore": 147853230080,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-connected2-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "b74ba6f4d5505ce682f2e1c0cb0e0d3a79e92643",
+      "tree": "d7309719fa0345e76979a20c239b2c8245effb9e",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "2b702915ee2454c4edc034a5cd8b5be129ba5b5e69744f31749d4bb1da903276",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:18:11.851839+00:00",
+    "freeBytesAfter": 147820908544,
+    "logBytes": 388,
+    "logSha256": "1f5131a32205dd474e3315e08c87b0728d46de1fc7c3852e9ac98986a4976688"
+  },
+  {
+    "label": "final-connected3",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:22:24.933964+00:00",
+    "freeBytesBefore": 147820695552,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-connected3-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:24:54.784473+00:00",
+    "freeBytesAfter": 147787104256,
+    "logBytes": 388,
+    "logSha256": "d5ffc8ac7aeaf7364b80d6843a5e90c18db42454ca6128552970a21ec291ae60"
+  },
+  {
+    "label": "final-connected4",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "4144bdf02cf4e76436735ce535a814bdac0b7c41",
+      "tree": "65163f7cb136e94a2698839f357e57a4b38bdb53",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "899731b0d5e4da5643ab6e332bb8885d8ad01668216a827542f93ef4a3afb0ae",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:31:26.618979+00:00",
+    "freeBytesBefore": 147782856704,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-connected4-browser"
+    },
+    "exit": 1,
+    "after": {
+      "head": "4144bdf02cf4e76436735ce535a814bdac0b7c41",
+      "tree": "65163f7cb136e94a2698839f357e57a4b38bdb53",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "899731b0d5e4da5643ab6e332bb8885d8ad01668216a827542f93ef4a3afb0ae",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:34:28.933256+00:00",
+    "freeBytesAfter": 147750408192,
+    "logBytes": 1231,
+    "logSha256": "f72b47db3d085984ee85d332e2037a598700a432428347b992d44ad4f3039aa2"
+  },
+  {
+    "label": "final-consumer-authority-drain32",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutine",
+      "src/features/today/optionalChange",
+      "src/features/today/optionalHistoryRecovery15.test.ts",
+      "src/lib/storage/privateKVCommitFence28.test.ts",
+      "src/features/retainedRecovery",
+      "src/lib/consent",
+      "src/lib/auth/localAccountIsolation.test.ts",
+      "--maxWorkers=4"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:54:37.681060+00:00",
+    "freeBytesBefore": 146521264128,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:54:47.276971+00:00",
+    "freeBytesAfter": 146524925952,
+    "logBytes": 582,
+    "logSha256": "65f78602708f5152c2fe9d398e47f0ef66ef2f2e7762e9fdc3b3539947159c05"
+  },
+  {
+    "label": "final-consumer-build-drain32",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "expo",
+      "export",
+      "--platform",
+      "web",
+      "--output-dir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\build\\consumer-final-drain32"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:53:36.155687+00:00",
+    "freeBytesBefore": 146591793152,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:54:26.709051+00:00",
+    "freeBytesAfter": 146521915392,
+    "logBytes": 6202,
+    "logSha256": "ccb16f0e449fc4f1b775b5116af94330438fc1b9ee70b06780b80ef86f8e5019"
+  },
+  {
+    "label": "final-diary",
+    "command": [
+      "node",
+      "scripts/e2e/diary-note-history.mjs",
+      "--evidence",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-diary"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:03:23.871101+00:00",
+    "freeBytesBefore": 147220901888,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:04:54.363340+00:00",
+    "freeBytesAfter": 147204636672,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-driver-regressions-drain32",
+    "command": [
+      "node",
+      "--test",
+      "scripts/e2e/manual-opening-choice30.test.mjs",
+      "scripts/e2e/onboarding-first-session35.test.mjs",
+      "scripts/e2e/retained-safety-assertions.test.mjs",
+      "scripts/e2e/optional-change41.test.mjs",
+      "scripts/e2e/owned-bottle-formula38.test.mjs",
+      "scripts/e2e/formula-driver-coverage46.test.mjs",
+      "scripts/e2e/cat04-catalog-recovery-audit.test.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:55:46.543048+00:00",
+    "freeBytesBefore": 146523926528,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:55:48.220956+00:00",
+    "freeBytesAfter": 146517860352,
+    "logBytes": 32239,
+    "logSha256": "24b542c1f76fdc9750e230c87adbc7f2e49f8b8665e34795e28c88194aad1cbe"
+  },
+  {
+    "label": "final-first-document-r1",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\first_document_runtime32.mjs"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:54:59.332700+00:00",
+    "freeBytesBefore": 147557990400,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_RUNTIME32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-first-document-r1-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:57:28.176274+00:00",
+    "freeBytesAfter": 147409862656,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-intake",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:04:54.647199+00:00",
+    "freeBytesBefore": 147204632576,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-intake",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:10:04.720653+00:00",
+    "freeBytesAfter": 147152773120,
+    "logBytes": 14855,
+    "logSha256": "d985c63a6e08a352b68e11b2489038a50f69409ed69abab82e8192ff1d066f27"
+  },
+  {
+    "label": "final-lint-drain32",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:52:43.637348+00:00",
+    "freeBytesBefore": 146591735808,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:53:35.951318+00:00",
+    "freeBytesAfter": 146591797248,
+    "logBytes": 1534,
+    "logSha256": "559c3463fa740bbb9a1abb190f967571d532da31b9fa0038b91e7652e06a9d26"
+  },
+  {
+    "label": "final-manual-recovery-drain32",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/manualIntakeDraftUI21.test.ts",
+      "src/features/shelf/manualIntakeDrafts.test.ts",
+      "src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+      "src/features/shelf/compactManual46.test.ts",
+      "src/features/shelf/intakeRecovery.campaign25.test.ts",
+      "src/features/shelf/confirmedDestructive28.test.ts",
+      "src/features/shelf/postDispatchCommit28.test.ts",
+      "src/features/shelf/formulaHistoryJourney.test.ts",
+      "--maxWorkers=4"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:54:47.487954+00:00",
+    "freeBytesBefore": 146524921856,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:55:02.119510+00:00",
+    "freeBytesAfter": 146524909568,
+    "logBytes": 719,
+    "logSha256": "ff32d32e5793d31a6af92d78f2c3d19a45441761677530f1b75396a3cc2c747c"
+  },
+  {
+    "label": "final-privacy-drain32",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/privateKV.test.ts",
+      "src/lib/storage/privateKVContentKey.test.ts",
+      "src/lib/storage/privateKVReadOnly25.test.ts",
+      "src/lib/storage/privateKVCreation28.test.ts",
+      "src/lib/consent/healthDataWriteAdmission.test.ts",
+      "src/lib/consent/healthProcessingEpoch.test.ts",
+      "src/lib/auth/accountGeneration.test.ts",
+      "src/lib/auth/localAccountIsolation.test.ts",
+      "src/features/today/optionalChangeDraftProof23.test.ts",
+      "src/features/photos/photoDeleteR3.integration.test.ts",
+      "src/features/photos/encryptedStorage.test.ts",
+      "src/features/settings/localDeviceExport.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/retainedRecovery/localRecoveryDrafts25.test.ts",
+      "src/features/today/optionalChangeNavigation28.test.ts",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts",
+      "src/lib/storage/privateAsyncStorage32.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "src/features/healthConsent/dependentConsentCleanup.test.ts",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "--maxWorkers=4"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:54:28.089058+00:00",
+    "freeBytesBefore": 146521780224,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:54:37.477975+00:00",
+    "freeBytesAfter": 146521268224,
+    "logBytes": 1333,
+    "logSha256": "d280d2a385b555568f46f5d66107a2582875c2c7be08cc5e0b08afa8612650df"
+  },
+  {
+    "label": "final-professional-build-drain32",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "build",
+      "--",
+      "--outDir",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\build\\professional-final-drain32"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:54:26.914752+00:00",
+    "freeBytesBefore": 146521911296,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:54:27.885062+00:00",
+    "freeBytesAfter": 146521784320,
+    "logBytes": 1053,
+    "logSha256": "8fed5e1d428b6cb1612d618f0998f836e86f3e60eeaf2de969dedd9b364316fb"
+  },
+  {
+    "label": "final-root-tests-drain32",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force",
+      "--concurrency=1",
+      "--",
+      "--maxWorkers=4"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:50:28.203897+00:00",
+    "freeBytesBefore": 146594697216,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:52:25.186141+00:00",
+    "freeBytesAfter": 146592378880,
+    "logBytes": 694096,
+    "logSha256": "906863c3b0558ae511b977884351a424f45f432079bb8330b273c0dee08749bd"
+  },
+  {
+    "label": "final-runtime2-r1",
+    "command": [
+      "node",
+      "scripts/e2e/runtime-handoff32.mjs"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:01:13.153165+00:00",
+    "freeBytesBefore": 147373551616,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_RUNTIME32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-runtime2-r1-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:03:23.586489+00:00",
+    "freeBytesAfter": 147220905984,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-runtime3-r1",
+    "command": [
+      "node",
+      "scripts/e2e/runtime-handoff32.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:28:52.045966+00:00",
+    "freeBytesBefore": 146844504064,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_RUNTIME32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-runtime3-r1-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:31:01.827596+00:00",
+    "freeBytesAfter": 146728599552,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-static-cache32",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\static_cache32.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:56:06.095101+00:00",
+    "freeBytesBefore": 146523344896,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_STATIC32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-static-cache32-browser",
+      "ONSKIN_STATIC32_BUILD": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\build\\consumer-final-drain32"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:56:14.586996+00:00",
+    "freeBytesAfter": 146491125760,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-typecheck-drain32",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:52:25.409217+00:00",
+    "freeBytesBefore": 146592346112,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:52:43.412724+00:00",
+    "freeBytesAfter": 146591739904,
+    "logBytes": 1552,
+    "logSha256": "473647a1198d2c475bb25f1b38d60bb28beb5408a91692e004e67ecf74dde4b6"
+  },
+  {
+    "label": "final3-daily-375-adapter",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\daily_backend32\\onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:43:33.010347+00:00",
+    "freeBytesBefore": 146639204352,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-daily-375-adapter",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8600",
+      "ONBOARDING_E2E_DEBUG_PORT": "9600"
+    },
+    "exit": 1,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:44:41.866907+00:00",
+    "freeBytesAfter": 146614374400,
+    "logBytes": 845,
+    "logSha256": "3565e9bd446e3707ccd160765f7000a5f1a0b8b670cbab6eb29b4ee79f8a7d26"
+  },
+  {
+    "label": "final3-daily-375-adapter2",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\daily_backend32_v2\\onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:48:13.982743+00:00",
+    "freeBytesBefore": 146613649408,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-daily-375-adapter2",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8600",
+      "ONBOARDING_E2E_DEBUG_PORT": "9600"
+    },
+    "exit": 1,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:49:22.134412+00:00",
+    "freeBytesAfter": 146594607104,
+    "logBytes": 857,
+    "logSha256": "a109ca7f9b94c3e56ea9a5aeb4a8b73b3f3e648ded9a15ce4c0d6dc851f82508"
+  },
+  {
+    "label": "final3-daily-375-adapter3",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\daily_backend32_v3\\onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:56:06.095101+00:00",
+    "freeBytesBefore": 146523344896,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-daily-375-adapter3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8600",
+      "ONBOARDING_E2E_DEBUG_PORT": "9600"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:57:24.595193+00:00",
+    "freeBytesAfter": 146476826624,
+    "logBytes": 151,
+    "logSha256": "cf505f3adbbee2f9e5e092f8aeb56154a8f0afdaf4317edb7102fdbb7bb65c17"
+  },
+  {
+    "label": "final3-daily-375",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:37:42.436895+00:00",
+    "freeBytesBefore": 146665000960,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-daily-375",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+      "ONBOARDING_E2E_PORT": "8600",
+      "ONBOARDING_E2E_DEBUG_PORT": "9600"
+    },
+    "exit": 1,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:39:11.018041+00:00",
+    "freeBytesAfter": 146637938688,
+    "logBytes": 648,
+    "logSha256": "2122a8cbd5cb753f44992cbfa7e517dc30adeae1be7d508b0c43d983bc865572"
+  },
+  {
+    "label": "final3-daily-390-adapter3",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\daily_backend32_v3\\onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:57:24.803774+00:00",
+    "freeBytesBefore": 146476822528,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-daily-390-adapter3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+      "ONBOARDING_E2E_PORT": "8601",
+      "ONBOARDING_E2E_DEBUG_PORT": "9601"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:58:42.514179+00:00",
+    "freeBytesAfter": 146449702912,
+    "logBytes": 151,
+    "logSha256": "9329497bf6edc1ef138cdd007fed50de510bafc564109e1bbab1b88c22bd9a7e"
+  },
+  {
+    "label": "final3-daily-430-adapter3",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\daily_backend32_v3\\onboarding-first-session.mjs",
+      "--daily-loop"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:58:42.720012+00:00",
+    "freeBytesBefore": 146449698816,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONBOARDING_E2E_EVIDENCE_DIR": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-daily-430-adapter3",
+      "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+      "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+      "ONBOARDING_E2E_PORT": "8602",
+      "ONBOARDING_E2E_DEBUG_PORT": "9602"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T17:00:01.159969+00:00",
+    "freeBytesAfter": 146422693888,
+    "logBytes": 151,
+    "logSha256": "158f188e85718a9d6aeca7b297de0ea8fffa9251b7fe7d76203d459b71e2af78"
+  },
+  {
+    "label": "final3-diary",
+    "command": [
+      "node",
+      "scripts/e2e/diary-note-history.mjs",
+      "--evidence",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-diary"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:31:02.120167+00:00",
+    "freeBytesBefore": 146728595456,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:32:31.814020+00:00",
+    "freeBytesAfter": 146714402816,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final3-first-document-r1",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\first_document_runtime32.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:15:25.473436+00:00",
+    "freeBytesBefore": 147111559168,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_RUNTIME32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-first-document-r1-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:17:35.753775+00:00",
+    "freeBytesAfter": 146979979264,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final3-intake",
+    "command": [
+      "node",
+      "scripts/e2e/manual-intake-drafts21.mjs"
+    ],
+    "before": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:32:32.094767+00:00",
+    "freeBytesBefore": 146714398720,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_INTAKE_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final3-intake",
+      "ONSKIN_INTAKE_LIFECYCLE30": "1"
+    },
+    "exit": 0,
+    "after": {
+      "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+      "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:37:42.144662+00:00",
+    "freeBytesAfter": 146665005056,
+    "logBytes": 14855,
+    "logSha256": "d985c63a6e08a352b68e11b2489038a50f69409ed69abab82e8192ff1d066f27"
+  },
+  {
+    "label": "recovery-focus-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/features/routine/SavedRoutineDecisions.tsx",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "84492a741de3c5533484b56e03a0612a32591f2d",
+      "tree": "48b90660498c787363b999a164fa5b1c7d81b092",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx",
+      "indexSha256": "b9671987638ca7eda73c3a451a0a58d37f6b55d2984765550df1071e4668767c",
+      "diffSha256": "a95f99162ac0fbe305de512466a8033fb93c72e782ad3052a31078880a0923ad"
+    },
+    "start": "2026-11-20T14:58:12.503937+00:00",
+    "freeBytesBefore": 147962863616,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "84492a741de3c5533484b56e03a0612a32591f2d",
+      "tree": "48b90660498c787363b999a164fa5b1c7d81b092",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx",
+      "indexSha256": "b9671987638ca7eda73c3a451a0a58d37f6b55d2984765550df1071e4668767c",
+      "diffSha256": "a95f99162ac0fbe305de512466a8033fb93c72e782ad3052a31078880a0923ad"
+    },
+    "end": "2026-11-20T14:58:17.705602+00:00",
+    "freeBytesAfter": 147962798080,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "retired-controls-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "9fb1e1e6fa2ba163134fa932e6a853f68f21424d",
+      "tree": "0d0d03b7d60970000ee1215bd6c49081fcdbcb45",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "83f93596774e6ae6f1a020638e4849d6570bdf2be574252b0da0e5c0bf5cdffd",
+      "diffSha256": "00192970e6de4c5ffffa1d9800b6ee4ca84b1d06b807a413e7363a31387cdf67"
+    },
+    "start": "2026-11-20T15:15:27.909000+00:00",
+    "freeBytesBefore": 147853815808,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "9fb1e1e6fa2ba163134fa932e6a853f68f21424d",
+      "tree": "0d0d03b7d60970000ee1215bd6c49081fcdbcb45",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "83f93596774e6ae6f1a020638e4849d6570bdf2be574252b0da0e5c0bf5cdffd",
+      "diffSha256": "00192970e6de4c5ffffa1d9800b6ee4ca84b1d06b807a413e7363a31387cdf67"
+    },
+    "end": "2026-11-20T15:15:37.129657+00:00",
+    "freeBytesAfter": 147853352960,
+    "logBytes": 369,
+    "logSha256": "4e6c03ecea18ec057edd45f2c1ff0eb7dcf7fadbb3800e7c46cba49acab68738"
+  },
+  {
+    "label": "review-controls-working",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "550f4c8e08a76288e25e7873a88b634f31d4dfd1",
+      "tree": "7725567d72f17bcc73902bd19d058460c6cd1b40",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "8b9c772e98139d7771476b32c19edb8c9410f36ea52fb5c8e84714909e6ee0d7",
+      "diffSha256": "a7ee5d4ce72d1a50fd3b83c28110387ea6cbbd1d39b7c8d0ae0f8e469ad686b7"
+    },
+    "start": "2026-11-20T15:11:57.499465+00:00",
+    "freeBytesBefore": 147888668672,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "550f4c8e08a76288e25e7873a88b634f31d4dfd1",
+      "tree": "7725567d72f17bcc73902bd19d058460c6cd1b40",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "8b9c772e98139d7771476b32c19edb8c9410f36ea52fb5c8e84714909e6ee0d7",
+      "diffSha256": "a7ee5d4ce72d1a50fd3b83c28110387ea6cbbd1d39b7c8d0ae0f8e469ad686b7"
+    },
+    "end": "2026-11-20T15:12:06.674721+00:00",
+    "freeBytesAfter": 147888730112,
+    "logBytes": 8778,
+    "logSha256": "ad553bc142399673abccee426d97aadf84d4b6406d5952591f4d21bcc1088b3c"
+  },
+  {
+    "label": "runtime-baseline-red",
+    "command": [
+      "node",
+      "scripts/e2e/actual-apply-outcome29.mjs"
+    ],
+    "before": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+    },
+    "start": "2026-11-20T14:26:20.593159+00:00",
+    "freeBytesBefore": 148184928256,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\runtime-baseline-red-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+    },
+    "end": "2026-11-20T14:29:50.916408+00:00",
+    "freeBytesAfter": 148149465088,
+    "logBytes": 1840,
+    "logSha256": "16352c7ef9d84b318cd9fe378cc7c35f4ed87186b364daa2994fa189610cb3b3"
+  },
+  {
+    "label": "runtime-handoff-green1",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/webRuntimeAdmission.test.ts",
+      "src/lib/storage/webRuntimeHandoff32.test.ts",
+      "src/lib/supabase/client.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts\n M apps/mobile/src/lib/storage/webRuntimeAdmission.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "1f3cd719c87cc295cc5ace3b2f7f13c407a82c7a548380a148cf41b68756e037"
+    },
+    "start": "2026-11-20T14:31:37.039175+00:00",
+    "freeBytesBefore": 148148695040,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts\n M apps/mobile/src/lib/storage/webRuntimeAdmission.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "1f3cd719c87cc295cc5ace3b2f7f13c407a82c7a548380a148cf41b68756e037"
+    },
+    "end": "2026-11-20T14:31:38.680431+00:00",
+    "freeBytesAfter": 148148695040,
+    "logBytes": 438,
+    "logSha256": "3147f8f317af75ae3f9c588f42e349ee35f7426ff6001797da235eb4569bf99d"
+  },
+  {
+    "label": "runtime-handoff-unit-red",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--config",
+      "apps/mobile/vitest.config.ts",
+      "apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+    },
+    "start": "2026-11-20T14:28:01.708598+00:00",
+    "freeBytesBefore": 148154527744,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+    },
+    "end": "2026-11-20T14:28:02.620600+00:00",
+    "freeBytesAfter": 148154527744,
+    "logBytes": 250,
+    "logSha256": "14be43163807686af7b74c6babf120f3efd76498ca2faa532da3e14d8301d659"
+  },
+  {
+    "label": "runtime-handoff-unit-red2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/webRuntimeHandoff32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+    },
+    "start": "2026-11-20T14:28:11.754361+00:00",
+    "freeBytesBefore": 148154482688,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+    },
+    "end": "2026-11-20T14:28:13.269336+00:00",
+    "freeBytesAfter": 148154478592,
+    "logBytes": 1795,
+    "logSha256": "c1ed29b61bcdf97e76d01d267c54a73aeb02ed85025ec3f7e38693567cb0a05c"
+  },
+  {
+    "label": "runtime-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/lib/storage/webRuntimeAdmission.ts",
+      "src/lib/storage/webRuntimeAdmission.test.ts",
+      "src/lib/storage/webRuntimeHandoff32.test.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts\n M apps/mobile/src/lib/storage/webRuntimeAdmission.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs\n?? scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "1f3cd719c87cc295cc5ace3b2f7f13c407a82c7a548380a148cf41b68756e037"
+    },
+    "start": "2026-11-20T14:33:10.416903+00:00",
+    "freeBytesBefore": 148147830784,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts\n M apps/mobile/src/lib/storage/webRuntimeAdmission.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs\n?? scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "1f3cd719c87cc295cc5ace3b2f7f13c407a82c7a548380a148cf41b68756e037"
+    },
+    "end": "2026-11-20T14:33:19.882036+00:00",
+    "freeBytesAfter": 148147761152,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "runtime-repeat-series1",
+    "command": [
+      "node",
+      "scripts/e2e/runtime-handoff32.mjs"
+    ],
+    "before": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T14:33:31.976620+00:00",
+    "freeBytesBefore": 148147625984,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_RUNTIME32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\runtime-repeat-series1-browser"
+    },
+    "exit": 0,
+    "after": {
+      "head": "654de93cc495266989d119f193557c9a0d502f88",
+      "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T14:35:39.261110+00:00",
+    "freeBytesAfter": 148038574080,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "runtime-types",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts\n M apps/mobile/src/lib/storage/webRuntimeAdmission.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs\n?? scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "1f3cd719c87cc295cc5ace3b2f7f13c407a82c7a548380a148cf41b68756e037"
+    },
+    "start": "2026-11-20T14:32:54.236146+00:00",
+    "freeBytesBefore": 148147900416,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+      "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/webRuntimeAdmission.test.ts\n M apps/mobile/src/lib/storage/webRuntimeAdmission.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs\n?? scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+      "diffSha256": "1f3cd719c87cc295cc5ace3b2f7f13c407a82c7a548380a148cf41b68756e037"
+    },
+    "end": "2026-11-20T14:33:10.097765+00:00",
+    "freeBytesAfter": 148147834880,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "source-last-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/features/routine/SavedRoutineDecisions.tsx",
+      "src/features/routine/actualRoutineJourney.test.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "9fb1e1e6fa2ba163134fa932e6a853f68f21424d",
+      "tree": "0d0d03b7d60970000ee1215bd6c49081fcdbcb45",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "83f93596774e6ae6f1a020638e4849d6570bdf2be574252b0da0e5c0bf5cdffd",
+      "diffSha256": "00192970e6de4c5ffffa1d9800b6ee4ca84b1d06b807a413e7363a31387cdf67"
+    },
+    "start": "2026-11-20T15:15:37.420155+00:00",
+    "freeBytesBefore": 147853348864,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "9fb1e1e6fa2ba163134fa932e6a853f68f21424d",
+      "tree": "0d0d03b7d60970000ee1215bd6c49081fcdbcb45",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "83f93596774e6ae6f1a020638e4849d6570bdf2be574252b0da0e5c0bf5cdffd",
+      "diffSha256": "00192970e6de4c5ffffa1d9800b6ee4ca84b1d06b807a413e7363a31387cdf67"
+    },
+    "end": "2026-11-20T15:15:43.656248+00:00",
+    "freeBytesAfter": 147853361152,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "withdrawal-audit-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "src/features/healthConsent/lifecycleStore.test.ts",
+      "src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "src/features/onboarding/OnboardingContext.storage49.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "a1a99199afa4137772fe631d8ca8bc4f496cd857afd379e4aa729a6ee3aaaf8c"
+    },
+    "start": "2026-11-20T15:30:54.748894+00:00",
+    "freeBytesBefore": 147783225344,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "a1a99199afa4137772fe631d8ca8bc4f496cd857afd379e4aa729a6ee3aaaf8c"
+    },
+    "end": "2026-11-20T15:30:58.113142+00:00",
+    "freeBytesAfter": 147783168000,
+    "logBytes": 3740,
+    "logSha256": "0a1f478cfc45ee7107b1228ff152d7736f91de71cd63236536cf1e0dad356024"
+  },
+  {
+    "label": "withdrawal-audit-green2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "8c1a354ce63dc97a1fdff6623412d81a0f58aaed5c71a6b91466a9b04d00ad66"
+    },
+    "start": "2026-11-20T15:31:22.919229+00:00",
+    "freeBytesBefore": 147782971392,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "8c1a354ce63dc97a1fdff6623412d81a0f58aaed5c71a6b91466a9b04d00ad66"
+    },
+    "end": "2026-11-20T15:31:26.128464+00:00",
+    "freeBytesAfter": 147782955008,
+    "logBytes": 419,
+    "logSha256": "22faf5e01400cb957e60798c579c6a315f7496988e046f00a03c2db7c2be6b8d"
+  },
+  {
+    "label": "withdrawal-audit-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/features/healthConsent/lifecycle.ts",
+      "src/features/healthConsent/selectiveCleanup.ts",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "src/lib/storage/privateAsyncStorage.web.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "a1a99199afa4137772fe631d8ca8bc4f496cd857afd379e4aa729a6ee3aaaf8c"
+    },
+    "start": "2026-11-20T15:30:58.421165+00:00",
+    "freeBytesBefore": 147783163904,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "a1a99199afa4137772fe631d8ca8bc4f496cd857afd379e4aa729a6ee3aaaf8c"
+    },
+    "end": "2026-11-20T15:31:04.604097+00:00",
+    "freeBytesAfter": 147783163904,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "withdrawal-durability-tests",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "src/features/healthConsent/lifecycleStore.test.ts",
+      "src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+    },
+    "start": "2026-11-20T15:29:41.176141+00:00",
+    "freeBytesBefore": 147784552448,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+    },
+    "end": "2026-11-20T15:29:44.474149+00:00",
+    "freeBytesAfter": 147784024064,
+    "logBytes": 592,
+    "logSha256": "2b5a93d4c385b71f6b05471564329a9b38a3964a8d40b0f295b05feabcb7b589"
+  },
+  {
+    "label": "withdrawal-durability-types",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+    },
+    "start": "2026-11-20T15:29:25.128231+00:00",
+    "freeBytesBefore": 147784634368,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "9d07a79c09036e371a14a07b6f37987505100176",
+      "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+      "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+      "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+    },
+    "end": "2026-11-20T15:29:40.861769+00:00",
+    "freeBytesAfter": 147784556544,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "working-bulk-erasure-red",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\bulk_erasure_probe32.mjs"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:08:45.271644+00:00",
+    "freeBytesBefore": 147157692416,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:08:45.527637+00:00",
+    "freeBytesAfter": 147157688320,
+    "logBytes": 663,
+    "logSha256": "b55ce0a37f16ac57250fe674fb2345703ef0a3ff1fc10da73567ff3b34ecf0a0"
+  },
+  {
+    "label": "working-bulk-module-green",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/privateAsyncStorage32.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+    },
+    "start": "2026-11-20T16:11:17.269416+00:00",
+    "freeBytesBefore": 147152699392,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+    },
+    "end": "2026-11-20T16:11:20.518649+00:00",
+    "freeBytesAfter": 147152175104,
+    "logBytes": 517,
+    "logSha256": "84c6eb4acf10fb648e9a4c83f7c92204cff6c0862cd4ae377a355f984fff2307"
+  },
+  {
+    "label": "working-bulk-module-red",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/lib/storage/privateAsyncStorage32.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T16:11:00.703066+00:00",
+    "freeBytesBefore": 147152830464,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T16:11:02.066780+00:00",
+    "freeBytesAfter": 147152891904,
+    "logBytes": 1953,
+    "logSha256": "b7225135a01dac21585494f2f8ae478043696d5597f60aafe7468de1127ea9fe"
+  },
+  {
+    "label": "working-drain-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/lib/storage/privateAsyncStorage.web.ts",
+      "src/lib/storage/privateAsyncStorage32.test.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+    },
+    "start": "2026-11-20T16:12:08.491811+00:00",
+    "freeBytesBefore": 147152101376,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+    },
+    "end": "2026-11-20T16:12:13.915387+00:00",
+    "freeBytesAfter": 147152601088,
+    "logBytes": 343,
+    "logSha256": "d66f36aa93b00113e1d1c81e2fae84152e1960069d9f840d4b205bc163b85815"
+  },
+  {
+    "label": "working-drain-lint2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "eslint",
+      "src/lib/storage/privateAsyncStorage.web.ts",
+      "src/lib/storage/privateAsyncStorage32.test.ts",
+      "--max-warnings=0"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "260e27ed8d1c9a998fc5b448b499546716e9cbaf07b45db3a2e02ec24bcd7343"
+    },
+    "start": "2026-11-20T16:12:37.297335+00:00",
+    "freeBytesBefore": 147152711680,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "260e27ed8d1c9a998fc5b448b499546716e9cbaf07b45db3a2e02ec24bcd7343"
+    },
+    "end": "2026-11-20T16:12:42.608148+00:00",
+    "freeBytesAfter": 147152678912,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "working-drain-types",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+    },
+    "start": "2026-11-20T16:12:08.491811+00:00",
+    "freeBytesBefore": 147152101376,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 2,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+    },
+    "end": "2026-11-20T16:12:24.726876+00:00",
+    "freeBytesAfter": 147152584704,
+    "logBytes": 734,
+    "logSha256": "12f518ce68270f1bc69de2bf5f69e07b01aa189ce5f2c015118c9bc92118388b"
+  },
+  {
+    "label": "working-drain-types2",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "260e27ed8d1c9a998fc5b448b499546716e9cbaf07b45db3a2e02ec24bcd7343"
+    },
+    "start": "2026-11-20T16:12:37.297335+00:00",
+    "freeBytesBefore": 147152711680,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 2,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "260e27ed8d1c9a998fc5b448b499546716e9cbaf07b45db3a2e02ec24bcd7343"
+    },
+    "end": "2026-11-20T16:12:53.588571+00:00",
+    "freeBytesAfter": 147150585856,
+    "logBytes": 881,
+    "logSha256": "1b6fb545a80b6a6bd512fa23e2dff1d26b9ea076bf1d02e6affd4abf8fb3b2b7"
+  },
+  {
+    "label": "working-drain-types3",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "2f6d63157bf5c24ef3d7cddc4b7800f1c00d1326034ff457ef35777ea255ea24"
+    },
+    "start": "2026-11-20T16:13:15.718424+00:00",
+    "freeBytesBefore": 147151147008,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+      "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+      "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+      "diffSha256": "2f6d63157bf5c24ef3d7cddc4b7800f1c00d1326034ff457ef35777ea255ea24"
+    },
+    "end": "2026-11-20T16:13:31.378152+00:00",
+    "freeBytesAfter": 147151163392,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "working-eight-row-lint",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "lint"
+    ],
+    "before": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "9768c02de402d5b99338c986f5020e2c59a01a4d604402c201dcf743d193d169"
+    },
+    "start": "2026-11-20T15:45:24.847342+00:00",
+    "freeBytesBefore": 147690721280,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "9768c02de402d5b99338c986f5020e2c59a01a4d604402c201dcf743d193d169"
+    },
+    "end": "2026-11-20T15:46:17.003016+00:00",
+    "freeBytesAfter": 147689594880,
+    "logBytes": 1106,
+    "logSha256": "597950ee8ae5940941d2c8cd31bc338e2d223eecdb36ec1e99ed7e8af5fb7f67"
+  },
+  {
+    "label": "working-eight-row-types",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "before": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "9768c02de402d5b99338c986f5020e2c59a01a4d604402c201dcf743d193d169"
+    },
+    "start": "2026-11-20T15:45:24.847842+00:00",
+    "freeBytesBefore": 147690721280,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "9768c02de402d5b99338c986f5020e2c59a01a4d604402c201dcf743d193d169"
+    },
+    "end": "2026-11-20T15:45:41.909024+00:00",
+    "freeBytesAfter": 147690586112,
+    "logBytes": 53,
+    "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+  },
+  {
+    "label": "working-final-fallback",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/lib/storage/privateKV.test.ts",
+      "src/lib/storage/privateDataKeys.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "4144bdf02cf4e76436735ce535a814bdac0b7c41",
+      "tree": "65163f7cb136e94a2698839f357e57a4b38bdb53",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "899731b0d5e4da5643ab6e332bb8885d8ad01668216a827542f93ef4a3afb0ae",
+      "diffSha256": "5cf2336c1b2485c63f14d01e7578da7576379dd29d765ac835fd93bad601ca70"
+    },
+    "start": "2026-11-20T15:37:35.631292+00:00",
+    "freeBytesBefore": 147747893248,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "4144bdf02cf4e76436735ce535a814bdac0b7c41",
+      "tree": "65163f7cb136e94a2698839f357e57a4b38bdb53",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "899731b0d5e4da5643ab6e332bb8885d8ad01668216a827542f93ef4a3afb0ae",
+      "diffSha256": "5cf2336c1b2485c63f14d01e7578da7576379dd29d765ac835fd93bad601ca70"
+    },
+    "end": "2026-11-20T15:37:39.000516+00:00",
+    "freeBytesAfter": 147747889152,
+    "logBytes": 547,
+    "logSha256": "2acd1bd5afe147784782a06a9a2f6704b17b7652df0920c1b9dddc085a8b6841"
+  },
+  {
+    "label": "working-inspect-failed-source",
+    "command": [
+      "node",
+      "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\inspect_failed_source32.mjs"
+    ],
+    "before": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-20T15:43:09.342562+00:00",
+    "freeBytesBefore": 147711430656,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "ONSKIN_DIAGNOSTIC32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\failed-source-diagnostic32",
+      "ONSKIN_DIAGNOSTIC32_PROFILE": "<HOME>/AppData/Local/Temp/onskin-outcome32-buWP7H"
+    },
+    "exit": 0,
+    "after": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-20T15:43:56.570209+00:00",
+    "freeBytesAfter": 147690999808,
+    "logBytes": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "working-source-durability",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/settings/localPrivateDataKeys.test.ts",
+      "src/features/healthConsent/lifecycle.test.ts",
+      "src/features/healthConsent/selectiveCleanup.test.ts",
+      "src/features/routine/routineDecisionRecovery32.test.ts",
+      "src/features/routine/actualRoutineStore.test.ts",
+      "--maxWorkers=2"
+    ],
+    "before": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "9768c02de402d5b99338c986f5020e2c59a01a4d604402c201dcf743d193d169"
+    },
+    "start": "2026-11-20T15:44:58.685517+00:00",
+    "freeBytesBefore": 147690848256,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+      "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+      "branch": "stage/m1-native-runtime47",
+      "status": "M PROGRESS.md\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n M apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/durable-routine32.mjs\n M scripts/e2e/runtime-handoff32.mjs",
+      "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+      "diffSha256": "9768c02de402d5b99338c986f5020e2c59a01a4d604402c201dcf743d193d169"
+    },
+    "end": "2026-11-20T15:45:02.155336+00:00",
+    "freeBytesAfter": 147690852352,
+    "logBytes": 572,
+    "logSha256": "4f65e8b172e5997491820a755aeccba2ccfebe4a48b8d89156b4cc079ba2fe30"
+  }
+]

@@ -1,0 +1,12 @@
+
+> @layerwell/mobile@0.1.0 typecheck
+> tsc --noEmit
+
+src/features/routine/routineDecisionRecoveryCodec.ts(56,51): error TS18046: 'facts.activeProductIds' is of type 'unknown'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

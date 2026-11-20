@@ -1,0 +1,230 @@
+{
+  "at": "2026-11-20T17:02:47.694618+00:00",
+  "safeForPublication": true,
+  "unreviewedMatches": 0,
+  "hits": [
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 184,
+      "matchSha256": "f57e627d1c7ae64af847d5f8cd7b2e6d5e18bb31b7ba834d8094773cd0eb9b7d",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 189,
+      "matchSha256": "3df00b603eac9e48cf14f70fd398ba6101410121a59e787a742c28e8d0cd08d4",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 194,
+      "matchSha256": "f8da0a7c46dc9b970cbd390ffffad85c1f8665b2e3319f4013e4db7e14237159",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 204,
+      "matchSha256": "9a21b3a84dfa808b66f7315a06a173df7adcea124a1d47d98a1decc768901bc5",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 209,
+      "matchSha256": "8818b89a1f941bd15429d072ab06158192cc6ad5c499ea620b9fd647edcab54b",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 214,
+      "matchSha256": "87b8238afbf4f46ba5e8378bff773b6cd3d13b9ee64aa47bc342d44c28a28146",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1064,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1076,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1249,
+      "matchSha256": "56f8138c8ce5f3623a18b1b2e24ce4176a62b05a93a2a0f9d0027d4464a58620",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1838,
+      "matchSha256": "33fd0c4b5fe54b41aa5bf22eca17cdf634cdb0832067d8b496499cc9ee4ae3b7",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2209,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2259,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2301,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2325,
+      "matchSha256": "33fd0c4b5fe54b41aa5bf22eca17cdf634cdb0832067d8b496499cc9ee4ae3b7",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1064,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1076,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1249,
+      "matchSha256": "56f8138c8ce5f3623a18b1b2e24ce4176a62b05a93a2a0f9d0027d4464a58620",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1838,
+      "matchSha256": "33fd0c4b5fe54b41aa5bf22eca17cdf634cdb0832067d8b496499cc9ee4ae3b7",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2209,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2259,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2301,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v2/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2325,
+      "matchSha256": "33fd0c4b5fe54b41aa5bf22eca17cdf634cdb0832067d8b496499cc9ee4ae3b7",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1064,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1076,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1249,
+      "matchSha256": "56f8138c8ce5f3623a18b1b2e24ce4176a62b05a93a2a0f9d0027d4464a58620",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 1838,
+      "matchSha256": "33fd0c4b5fe54b41aa5bf22eca17cdf634cdb0832067d8b496499cc9ee4ae3b7",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2209,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2259,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2301,
+      "matchSha256": "a2283da9e816fa54089c09b6dc389f4dd2b3ff30116edf1e70c00038b2e43222",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "daily_backend32_v3/onboarding-first-session.mjs",
+      "kind": "email",
+      "line": 2325,
+      "matchSha256": "33fd0c4b5fe54b41aa5bf22eca17cdf634cdb0832067d8b496499cc9ee4ae3b7",
+      "disposition": "Generated density asset or explicit synthetic fixture address."
+    },
+    {
+      "path": "parts/CUMULATIVE_PR48_TO_FINAL.patch.003.txt",
+      "kind": "email",
+      "line": 562,
+      "matchSha256": "a1d5d4103d619e71d41f4d8e96798978615d95d0ed9f31a860b4524840fd8ccf",
+      "disposition": "Exact previously published Engineering31 source fixture signature."
+    }
+  ],
+  "realCustomerDataIncluded": false,
+  "privateKeysIncluded": false,
+  "profilesIncluded": false,
+  "sourcePatchesByteExact": true,
+  "priorCumulativeSha256": "da08d9cd142cae1849d28fc15f77a557859e3251e6b6b34dabfe765b8f2a6fdb",
+  "screenScope": "Changed application and test source, full readable logs/traces and selected visually reviewed synthetic screenshots; no real accounts or inputs used."
+}

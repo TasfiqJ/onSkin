@@ -1,0 +1,42 @@
+[
+  {
+    "label": "final-root-tests-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-typecheck-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-lint-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-consumer-build-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-professional-build-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-privacy-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-consumer-authority-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-manual-recovery-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-connected-recovery-drain32",
+    "exit": 0
+  },
+  {
+    "label": "final-driver-regressions-drain32",
+    "exit": 0
+  }
+]

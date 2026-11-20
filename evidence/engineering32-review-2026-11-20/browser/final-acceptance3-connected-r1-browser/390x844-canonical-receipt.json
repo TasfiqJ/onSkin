@@ -1,0 +1,28 @@
+{
+  "versions": [
+    {
+      "id": "97fba824-e461-4f8d-bd7f-510811fb9762",
+      "sequence": 1,
+      "contentHash": "3ce9dae58679f96667fbeda8210f02f28156c4929450924f5fc58556fd557137",
+      "parentHash": null,
+      "source": "owner-applied-local"
+    },
+    {
+      "id": "8c6e3440-1e66-48aa-b2fc-e8f4b323a87f",
+      "sequence": 2,
+      "contentHash": "0d5be5cbaafff092334e1bffb1ce4d7f5fe48d170a37cb1edb5d41b6a3d17435",
+      "parentHash": "3ce9dae58679f96667fbeda8210f02f28156c4929450924f5fc58556fd557137",
+      "source": "owner-cleared-local"
+    },
+    {
+      "id": "f42527ef-3da7-432a-92b8-727f9ebd8b0a",
+      "sequence": 3,
+      "contentHash": "fa573cfab22b11d805d1bdd8be81a695dcad1253dec5bb81436df62803f1e792",
+      "parentHash": "0d5be5cbaafff092334e1bffb1ce4d7f5fe48d170a37cb1edb5d41b6a3d17435",
+      "source": "owner-applied-local"
+    }
+  ],
+  "uses": 0,
+  "ciphertextSha256": "5b8f07f723cef8afef561b64796d161e9a5e5113ce770863fc50af6b0857d7e5",
+  "inspectionPreservedCiphertext": true
+}

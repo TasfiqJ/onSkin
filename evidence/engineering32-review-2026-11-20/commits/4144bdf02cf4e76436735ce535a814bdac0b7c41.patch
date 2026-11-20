@@ -1,0 +1,205 @@
+diff --git a/apps/mobile/src/features/healthConsent/lifecycle.test.ts b/apps/mobile/src/features/healthConsent/lifecycle.test.ts
+index 246b6310f806916da29e254286e23bde6543b779..50f1da01f5807b826695de628b2f882924c6b50e 100644
+--- a/apps/mobile/src/features/healthConsent/lifecycle.test.ts
++++ b/apps/mobile/src/features/healthConsent/lifecycle.test.ts
+@@ -30,6 +30,7 @@ const mocks = vi.hoisted(() => ({
+   } | null,
+   beginRemote: vi.fn(),
+   cleanup: vi.fn(async () => {}),
++  retainedBrowserBytes: vi.fn(async () => false),
+   clearDependentRecovery: vi.fn(async () => {}),
+   clearEpoch: vi.fn(),
+   clearPending: vi.fn(),
+@@ -188,7 +189,7 @@ vi.mock('./remote', () => ({
+   remoteHealthDataConsentMatchesCurrentContract: mocks.contractMatches,
+   retryRemoteHealthDataWithdrawal: mocks.retryRemote,
+ }));
+-vi.mock('./selectiveCleanup', () => ({ clearHealthPurposeLocalData: mocks.cleanup }));
++vi.mock('./selectiveCleanup', () => ({ clearHealthPurposeLocalData: mocks.cleanup, hasRetainedBrowserHealthPurposeBytes: mocks.retainedBrowserBytes }));
+ 
+ vi.mock('@/lib/storage/privateKV', () => ({
+   getPrivateItem: vi.fn(async (key: string) => mocks.lifecycleBytes.get(key) ?? null),
+@@ -384,6 +385,30 @@ describe('health consent lifecycle orchestration', () => {
+     mocks.hasCurrentConsent.mockResolvedValue(true);
+     mocks.contractMatches.mockResolvedValue(true);
+     mocks.syncLocalConsent.mockResolvedValue(undefined);
++    mocks.retainedBrowserBytes.mockResolvedValue(false);
++  });
++
++  it('rechecks a completed withdrawal in a successor browser and clears reappearing bytes while processing stays closed', async () => {
++    mocks.configured = false; mocks.record = localRecord('withdrawn');
++    mocks.retainedBrowserBytes.mockResolvedValueOnce(true);
++    mocks.cleanup.mockImplementationOnce(async () => {
++      expect(mocks.record).toMatchObject({ state: 'withdrawn', localCleanupComplete: false });
++      expect(mocks.activeLease).toBeNull();
++    });
++    await expect(reconcileHealthDataLifecycle(OWNER)).resolves.toMatchObject({ state: 'withdrawn', localCleanupComplete: true });
++    expect(mocks.cleanup).toHaveBeenCalledWith(OWNER); expect(mocks.setEpoch).not.toHaveBeenCalled();
++  });
++  it('keeps resumed withdrawal cleanup incomplete when reappearing bytes cannot be erased', async () => {
++    mocks.configured = false; mocks.record = localRecord('withdrawn');
++    mocks.retainedBrowserBytes.mockResolvedValueOnce(true); mocks.cleanup.mockRejectedValueOnce(Error('synthetic erase refusal'));
++    await expect(reconcileHealthDataLifecycle(OWNER)).resolves.toMatchObject({ state: 'withdrawn', localCleanupComplete: false });
++    expect(mocks.activeLease).toBeNull(); expect(mocks.setEpoch).not.toHaveBeenCalled();
++  });
++  it('cannot apply an old owner erasure audit after account identity changes during its read', async () => {
++    mocks.configured = false; mocks.record = localRecord('withdrawn');
++    mocks.retainedBrowserBytes.mockImplementationOnce(async () => { mocks.identityGeneration += 1; return true; });
++    await expect(reconcileHealthDataLifecycle(OWNER)).rejects.toThrow();
++    expect(mocks.cleanup).not.toHaveBeenCalled(); expect(mocks.write).not.toHaveBeenCalled();
+   });
+ 
+   it('keeps production status reconciliation and destructive withdrawal available', async () => {
+diff --git a/apps/mobile/src/features/healthConsent/lifecycle.ts b/apps/mobile/src/features/healthConsent/lifecycle.ts
+index 89712c85124d4e53a8eab82b300735488f48c786..53cf44e068a14c718e348affe1b564e058bbe2a8 100644
+--- a/apps/mobile/src/features/healthConsent/lifecycle.ts
++++ b/apps/mobile/src/features/healthConsent/lifecycle.ts
+@@ -59,7 +59,7 @@ import {
+   retryRemoteHealthDataWithdrawal,
+   type RemoteHealthDataLifecycle,
+ } from './remote';
+-import { clearHealthPurposeLocalData } from './selectiveCleanup';
++import { clearHealthPurposeLocalData, hasRetainedBrowserHealthPurposeBytes } from './selectiveCleanup';
+ 
+ export const LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER = 'local-device-unclaimed';
+ export const HEALTH_DATA_LIFECYCLE_LOCAL_OWNER_UNAVAILABLE =
+@@ -776,6 +776,17 @@ async function reconcileHealthDataLifecycleForFence(
+     }
+     if (pending) return await hydratePendingWithdrawal(fence, previous, pending);
+ 
++    // A completed browser erasure is checked again in a successor process.
++    // Persisted withdrawal authority stays closed while legacy bytes are
++    // removed; an old memory readback must not reopen processing or certify a
++    // reappearing localStorage shadow as erased.
++    if (previous?.state === 'withdrawn' && previous.localCleanupComplete &&
++        await runOwnerBoundLocalOperation(fence, hasRetainedBrowserHealthPurposeBytes)) {
++      promoteWorkflowToClosedIntent(fence);
++      const { schemaVersion: _schema, updatedAt: _time, ...input } = previous;
++      previous = await writeLocal(fence, { ...input, localCleanupComplete: false });
++    }
++
+     if (!isSupabaseConfigured) return await reconcileUnconfigured(fence, previous);
+ 
+     const remote = await runRemoteForFence(fence, () =>
+@@ -987,6 +998,7 @@ export function reconcileHealthDataLifecycle(
+   return reconcileHealthDataLifecycleForFence(fence).then(async (result) => {
+     if (result.state === 'withdrawn' && result.localCleanupComplete) {
+       await clearDependentWithdrawalRecoveryAfterTerminal(fence, result);
++      if (workflowOwnsClosedIntent(fence)) releaseClosedIntent(fence);
+     }
+     return result;
+   });
+diff --git a/apps/mobile/src/features/healthConsent/selectiveCleanup.ts b/apps/mobile/src/features/healthConsent/selectiveCleanup.ts
+index ca2a89a706b526bd4afa5e1e2db8688c274e5083..d9ea853075980ed0a4031aa127d1bd63a42e694a 100644
+--- a/apps/mobile/src/features/healthConsent/selectiveCleanup.ts
++++ b/apps/mobile/src/features/healthConsent/selectiveCleanup.ts
+@@ -32,6 +32,7 @@ import {
+ } from '@/lib/storage/privateKV';
+ import { scavengePlaintextStaging } from '@/lib/storage/plaintextStaging';
+ import { removeStoredKeysWithReadback } from '@/lib/storage/verifiedErasure';
++import rawPrivateStorage from '@/lib/storage/privateAsyncStorage';
+ 
+ /**
+  * Records whose purpose depends on health-data consent. This intentionally does
+@@ -41,6 +42,17 @@ import { removeStoredKeysWithReadback } from '@/lib/storage/verifiedErasure';
+  */
+ export { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteAdmission';
+ 
++/** A prior browser erasure readback cannot certify a later process. Inspect
++ * raw presence only, under the lifecycle caller's original owner fence. */
++export async function hasRetainedBrowserHealthPurposeBytes(): Promise<boolean> {
++  if (Platform.OS !== 'web') return false;
++  try {
++    const values = await rawPrivateStorage.multiGet([...HEALTH_PURPOSE_PRIVATE_DATA_KEYS]);
++    return !Array.isArray(values) || values.length !== HEALTH_PURPOSE_PRIVATE_DATA_KEYS.length ||
++      values.some((row,index) => !Array.isArray(row) || row[0] !== HEALTH_PURPOSE_PRIVATE_DATA_KEYS[index] || row[1] !== null);
++  } catch { return true; /* Unknown bytes cannot certify complete erasure. */ }
++}
++
+ export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<void> {
+   if (!ownerUserId || ownerUserId !== ownerUserId.trim() || ownerUserId.length > 128) {
+     throw new Error('HEALTH_PURPOSE_LOCAL_CLEAR_OWNER_INVALID');
+diff --git a/apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts b/apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts
+index 70020707ccde420fecac3f5034f5300c07fa774a..1a2201543a465f78ab8a31574a72324c0c03c5cb 100644
+--- a/apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts
++++ b/apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts
+@@ -35,7 +35,7 @@ vi.mock('expo-router/build/react-navigation/core/NavigationContext',async()=>({N
+ vi.mock('@/lib/env',()=>({isSupabaseConfigured:false,env:{appEnvironment:'staging'}}));
+ vi.mock('@/lib/supabase/client',()=>({supabase:{},readPersistedSupabaseSessionCandidate:vi.fn(),getPersistedSupabaseUser:vi.fn(async()=>({data:{user:null}}))}));
+ vi.mock('@/features/onboarding/skinProfileStore',()=>({setStoredSkinProfileFromExplicitQuiz:vi.fn()}));
+-vi.mock('@/features/healthConsent/selectiveCleanup',()=>({clearHealthPurposeLocalData:vi.fn(async()=>{})}));
++vi.mock('@/features/healthConsent/selectiveCleanup',()=>({clearHealthPurposeLocalData:vi.fn(async()=>{}),hasRetainedBrowserHealthPurposeBytes:vi.fn(async()=>false)}));
+ vi.mock('@/lib/consent/dependentConsentLifecycle',()=>({grantHealthDependentConsent:vi.fn(),isHealthDependentConsentActive:vi.fn()}));
+ vi.mock('@/features/photos/store',()=>({clearPhotos:vi.fn()}));
+ 
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+index c3a88a7ac7b345e37e33efbbfe0a168b7a0fbd15..f9a12efec8300a17a73f3a4d446828cf89a76eb1 100644
+--- a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
++++ b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+@@ -124,7 +124,7 @@ it.each(['lost','replaced','tampered','unsupported','unreadable'] as const)('ret
+   const f=await prepareApply(), original=ports26.bytes.get(KEY)!;
+   if(kind==='lost') ports26.bytes.delete(CONTENT_KEY);
+   if(kind==='replaced') ports26.bytes.set(CONTENT_KEY,'00'.repeat(32));
+-  if(kind==='tampered') {const raw=JSON.parse(original);raw.ciphertextHex='00'+raw.ciphertextHex.slice(2);ports26.bytes.set(KEY,JSON.stringify(raw));}
++  if(kind==='tampered') {const raw=JSON.parse(original);raw.ciphertextHex=(parseInt(raw.ciphertextHex.slice(0,2),16)^1).toString(16).padStart(2,'0')+raw.ciphertextHex.slice(2);ports26.bytes.set(KEY,JSON.stringify(raw));}
+   if(kind==='unsupported') await setPrivateItem(KEY,JSON.stringify({schemaVersion:77,decisions:[]}));
+   if(kind==='unreadable') ports26.failRead=KEY;
+   const before=new Map(ports26.bytes); await expect(loadRoutineDecisions(f.lease)).rejects.toThrow();
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+index fab159ed98eff09e27e959fe8959d526fecb3090..cfd02a58a3c458ad1244c24578eb63f770573777 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+@@ -18,7 +18,7 @@ import { ROUTINE_DECISION_BROWSER_DATABASE, ROUTINE_DECISION_STORAGE_KEY } from
+ /** Browser database inventory. The encrypted fixed-purpose row participates
+  * in ordinary key enumeration/export and verified purpose/full erasure. Empty
+  * schema metadata carries no owner payload and is retained without migration. */
+-export const LOCAL_PRIVATE_BROWSER_DATABASES = [{ name: ROUTINE_DECISION_BROWSER_DATABASE, ciphertextKeys: [ROUTINE_DECISION_STORAGE_KEY, 'layerwell.completions.v1'] }] as const;
++export const LOCAL_PRIVATE_BROWSER_DATABASES = [{ name: ROUTINE_DECISION_BROWSER_DATABASE, ciphertextKeys: [ROUTINE_DECISION_STORAGE_KEY, 'layerwell.completions.v1', 'layerwell.healthDataLifecycle.v1', 'layerwell.healthDataCollectionConsent.v1'] }] as const;
+ 
+ export const LOCAL_PRIVATE_DATA_KEYS = [
+   'layerwell.routineDecisionRecovery.v1',
+diff --git a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+index f8ee2e771755513428d1fead7501feef36eec2c0..e37936898a893cc3c3df75151d664e041bf3dc40 100644
+--- a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
++++ b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+@@ -4,7 +4,8 @@ import { ROUTINE_DECISION_BROWSER_DATABASE as DB, ROUTINE_DECISION_STORAGE_KEY a
+ // Fixed encrypted rows only. All cryptography, exact source fences, original
+ // owner/consent authority and key custody remain in privateKV.
+ const LEDGER = 'layerwell.completions.v1', STORE = 'ciphertext';
+-const ROWS = [KEY, LEDGER];
++const ROWS = [KEY, LEDGER, 'layerwell.healthDataLifecycle.v1', 'layerwell.healthDataCollectionConsent.v1'];
++const createdDatabases = new WeakSet<IDBDatabase>();
+ const fail = () => new Error('ROUTINE_DECISION_DURABLE_STORAGE_UNAVAILABLE');
+ async function database(create: boolean): Promise<IDBDatabase | null> {
+   if (!globalThis.indexedDB?.databases) throw fail();
+@@ -16,6 +17,7 @@ async function database(create: boolean): Promise<IDBDatabase | null> {
+     open.onupgradeneeded = () => {
+       if (!create || refused) { open.transaction?.abort(); return; }
+       open.result.createObjectStore(STORE);
++      createdDatabases.add(open.result);
+     };
+     open.onsuccess = () => {
+       const db = open.result;
+@@ -31,7 +33,7 @@ async function transaction(key: string, write: boolean, value?: string | null):
+   if (key === KEY && value !== null && legacy !== null) throw new Error('ROUTINE_DECISION_LEGACY_STORAGE_REFUSED');
+   // Explicit preparation may atomically preserve an authenticated legacy ledger
+   // predecessor with its new evidence. A read never migrates or creates a DB.
+-  const legacyLedger = write && key === KEY && value !== null ? await original.getItem(LEDGER) : null;
++  const legacySnapshots = write ? await Promise.all(ROWS.map(async row => [row,await original.getItem(row)] as const)) : [];
+   const db = await database(write);
+   if (!db) return key === LEDGER ? legacy : null;
+   try {
+@@ -44,7 +46,12 @@ async function transaction(key: string, write: boolean, value?: string | null):
+       inventory.onsuccess = () => {
+         if (inventory.result.some(row => typeof row !== 'string' || !ROWS.includes(row))) { tx.abort(); return; }
+         if (write) {
+-          if (key === KEY && value !== null && legacyLedger !== null && !inventory.result.includes(LEDGER)) store.put(legacyLedger,LEDGER);
++          // Copy fixed legacy ciphertext byte-for-byte only when the store is
++          // first provisioned by an explicit mutation. Later absence never
++          // adopts a stale localStorage shadow after deletion or withdrawal.
++          if (createdDatabases.has(db)) for (const [row,raw] of legacySnapshots) {
++            if (row !== KEY && row !== key && raw !== null) store.put(raw,row);
++          }
+           if (value === null) store.delete(key); else store.put(value,key);
+         } else {
+           const read = store.get(key);

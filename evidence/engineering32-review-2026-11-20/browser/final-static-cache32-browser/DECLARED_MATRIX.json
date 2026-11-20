@@ -1,0 +1,17 @@
+{
+  "cases": 1,
+  "viewport": [
+    390,
+    844
+  ],
+  "flow": [
+    "inert status",
+    "first app document",
+    "inert same-origin navigation",
+    "actual history return",
+    "independent exclusive-lock refusal"
+  ],
+  "automaticRetries": 0,
+  "manualRetries": 0,
+  "syntheticLifecycleEvents": 0
+}

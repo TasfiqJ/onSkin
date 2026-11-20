@@ -1,0 +1,46 @@
+{
+  "before": [
+    {
+      "key": "layerwell.shelf.v1",
+      "present": true,
+      "sha256": "c106f9461a3eacc5400168e696d203688abbc6a320e592f3f3ad91275dc84cac"
+    },
+    {
+      "key": "layerwell.skinprofile.v1",
+      "present": true,
+      "sha256": "753137c2dfac85bef1f5f60e966d1a46f80a0c77aee3e2dfc2fdd55db250405d"
+    },
+    {
+      "key": "layerwell.conflict.overrides",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "key": "layerwell.routineOrder.v1",
+      "present": false,
+      "sha256": null
+    }
+  ],
+  "after": [
+    {
+      "key": "layerwell.shelf.v1",
+      "present": true,
+      "sha256": "c106f9461a3eacc5400168e696d203688abbc6a320e592f3f3ad91275dc84cac"
+    },
+    {
+      "key": "layerwell.skinprofile.v1",
+      "present": true,
+      "sha256": "753137c2dfac85bef1f5f60e966d1a46f80a0c77aee3e2dfc2fdd55db250405d"
+    },
+    {
+      "key": "layerwell.conflict.overrides",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "key": "layerwell.routineOrder.v1",
+      "present": false,
+      "sha256": null
+    }
+  ]
+}

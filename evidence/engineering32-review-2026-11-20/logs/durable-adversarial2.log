@@ -1,0 +1,36 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/routineDecisionRecovery32.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+ ❯ src/features/routine/routineDecisionRecovery32.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/routine/routineDecisionRecovery32.test.ts [ src/features/routine/routineDecisionRecovery32.test.ts ]
+ReferenceError: __DEV__ is not defined
+ ❯ ../../node_modules/expo/src/async-require/setup.ts:5:1
+      3|
+      4| // Only during development.
+      5| if (
+       | ^
+      6|   __DEV__ &&
+      7|   // Disable for SSR
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  09:42:36
+   Duration  697ms (transform 301ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/routine/routineDecisionRecovery32.test.ts --maxWorkers=2

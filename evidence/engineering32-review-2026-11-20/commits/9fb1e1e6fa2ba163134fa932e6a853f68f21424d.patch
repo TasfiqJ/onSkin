@@ -1,0 +1,139 @@
+diff --git a/apps/mobile/src/features/routine/actualRoutineJourney.test.ts b/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
+index 62a7c51aba77fe8975fbb33dbb75028f1e6172ae..b77cdd35b00d4397d336c4e8e4ef5660c7d390b0 100644
+--- a/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
++++ b/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
+@@ -57,6 +57,18 @@ it('retains the exact uncertain apply as encrypted evidence and discovers it aft
+   expect(text()).toContain('recorded_current');
+   expect((await getActualRoutineSnapshot(source!.orderLease!)).versions).toHaveLength(1);
+ });
++it('retired recovery controls cannot inspect or close a successor review of the same saved object', async () => {
++  await mount();
++  vi.spyOn(completionStore, 'applyCurrentActualRoutine').mockRejectedValueOnce(Error('SYNTHETIC32_UNKNOWN'));
++  await press('Review current Shelf sequence as actual routine'); await press('Apply reviewed actual routine');
++  await press('Cancel apply outcome check'); await press('Review saved routine decisions'); await press('Review saved apply decision 1');
++  const control = (label: string) => renderer!.root.findAll(node => node.props.label === label && typeof node.props.onPress === 'function')[0]!.props.onPress;
++  const oldInspect=control('Inspect original routine decision'), oldClose=control('Close original routine decision');
++  await press('Close original routine decision'); await press('Review saved apply decision 1');
++  const read=vi.spyOn(completionStore,'getActualRoutineSnapshot'); read.mockClear();
++  await act(async()=>{await oldInspect();oldClose();});
++  expect(read).not.toHaveBeenCalled(); expect(text()).toContain('Review original apply decision');
++});
+ 
+ it('retires an initial progress snapshot when recorded activity changes before that read finishes', async () => {
+   const lease = captureHealthDataWriteLease(); const planSource = await capturePlanSource44(lease);
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 611e5862ae7892c51fded6d86dfe4d7232ec97dc..1454072d157d795584ccde7d35fc03c1c2ec57db 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -6,9 +6,9 @@ Browser startup/reload/direct entry → one exclusive Web Lock request, waiting
+ 
+ Routine records → review exact apply / clear / original recorded-use retraction → explicit confirm → encrypted owner/purpose/consent-epoch-bound original command preparation and authenticated readback → dispatch using the original live authority → ledger readback → separate exact acknowledgement. An interrupted preparation cannot dispatch; a lost result retains the original identity, time, predecessor, apply ordered source facts or exact original use/stream evidence. No command replays on startup.
+ 
+-Routine records → Review saved routine decisions → confirmed collection / unavailable or unsupported refusal → Review saved decision → original facts and identity → Inspect original routine decision (read-only) → recorded_current / recorded_historical / conflict / not_found / unreadable. Not-found never proves failure. Explicit Retry this original routine decision reacquires current access and, for apply, a new approved in-memory source proof matching the original facts. Changed source/predecessor/target refuses. Acknowledge exact saved routine outcome is separate and rechecks the exact ledger under reservation before retiring only that recovery evidence. Close/Escape/navigation leaves unresolved evidence intact; canceled/stale callbacks cannot operate on a successor. Applying records no use; retraction preserves the original event. Withdrawal/full clearing remove the registered purpose key; export contains strict evidence, never live capabilities. Capacity refuses new preparation without purging unresolved work. All38/all18 remain UNACCEPTED; native/backend/scientific qualification remains absent.
++Routine records → Review saved routine decisions → confirmed collection / unavailable or unsupported refusal → Review saved decision → original facts and identity → Inspect original routine decision (read-only) → recorded_current / recorded_historical / conflict / not_found / unreadable. Not-found never proves failure. Explicit Retry this original routine decision reacquires current access and, for apply, a new approved in-memory source proof matching the original facts. Changed source/predecessor/target refuses. Acknowledge exact saved routine outcome is separate and rechecks the exact ledger under reservation before marking acknowledgement while retaining the original evidence for inspection. Close/Escape/navigation leaves unresolved evidence intact; canceled/stale callbacks cannot operate on a successor. Applying records no use; retraction preserves the original event. Withdrawal/full clearing remove the registered purpose key; export contains strict evidence, never live capabilities. Capacity refuses new preparation without purging unresolved work. All38/all18 remain UNACCEPTED; native/backend/scientific qualification remains absent.
+ 
+-Forced-browser-process testing found that localStorage readback could lose the newest prepared command. The new browser recovery purpose therefore stores only existing privateKV-encrypted ciphertext in an inventoried IndexedDB row, requiring a strict transaction and completed encrypted readback before dispatch. Unsupported durability or older localStorage prototype evidence refuses rather than overwrites. Acknowledgement now marks and retains the original evidence for inspect-only review; it does not retire it based on a legacy ledger readback. The collection is bounded to 100 records and 512,000 plaintext UTF-8 bytes; acknowledged and unresolved records remain until explicit purpose/full cleanup, and capacity stops new preparation without automatic eviction. Native AsyncStorage/key custody is unchanged and its physical crash qualification remains absent.
++Forced-browser-process testing found that localStorage readback could lose the newest prepared command. The browser recovery collection and completion ledger therefore store only existing privateKV-encrypted ciphertext in two inventoried IndexedDB rows, requiring a strict transaction and completed encrypted readback before dispatch. Unsupported durability or older localStorage prototype evidence refuses rather than overwrites. Acknowledgement now marks and retains the original evidence for inspect-only review; it does not retire it based on a legacy ledger readback. The collection is bounded to 100 records and 512,000 plaintext UTF-8 bytes; acknowledged and unresolved records remain until explicit purpose/full cleanup, and capacity stops new preparation without automatic eviction. Native AsyncStorage/key custody is unchanged and its physical crash qualification remains absent.
+ 
+ ## Engineering28 practice template library and navigation retirement (local, unaccepted)
+ 
+diff --git a/scripts/e2e/durable-routine32.mjs b/scripts/e2e/durable-routine32.mjs
+index 0c04a271aaa165e4967a24aa72be9ab9030a96ac..d8ce1537c947faeb1ec8a0dac5eacaaa4d7da9d7 100644
+--- a/scripts/e2e/durable-routine32.mjs
++++ b/scripts/e2e/durable-routine32.mjs
+@@ -19,8 +19,8 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+     const recoveryBefore=await rawEvidence();
+     await keyboard('Inspect original routine decision',height); await text(kind);
+     assert(await evaluate(`document.querySelector('[role="dialog"][aria-label="Review original routine decision"]').contains(document.activeElement)`));
+-    const after=await snapshot(); assert.equal(after.raw,before.raw); assert.equal(after.keyHash,before.keyHash);
+-    assert.equal(await rawEvidence(),recoveryBefore);
++    const after=await snapshot(); assert(after.raw===before.raw); assert.equal(after.keyHash,before.keyHash);
++    assert((await rawEvidence())===recoveryBefore);
+     return {before,after};
+   };
+   await navigate('/routine/records'); await text('My actual routine');
+@@ -34,10 +34,10 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   record(id+'-pre-kill-original-evidence.json',{commandId:original.id,originalTime:original.createdAt,ciphertextSha256:sha(evidenceBefore),ledgerSha256:sha(before.raw),termination:'owned browser process tree force termination'});
+   await restart(); await text('My actual routine');
+   const evidenceAfter=await rawEvidence();
+-  record(id+'-post-kill-original-evidence.json',{commandId:original.id,ciphertextSha256:sha(evidenceAfter),unchanged:evidenceAfter===evidenceBefore});
+-  assert.equal(evidenceAfter,evidenceBefore);
++  record(id+'-post-kill-original-evidence.json',{commandId:original.id,ciphertextSha256:sha(evidenceAfter),ledgerSha256:sha((await snapshot()).raw),unchanged:evidenceAfter===evidenceBefore});
++  assert(evidenceAfter===evidenceBefore);
+   await evaluate(`(()=>{const seen=new WeakSet();const scale=()=>{for(const n of document.querySelectorAll('div[dir="auto"]')){if(seen.has(n))continue;seen.add(n);const s=getComputedStyle(n),size=parseFloat(s.fontSize),line=parseFloat(s.lineHeight);n.style.fontSize=size*2+'px';n.style.lineHeight=(Number.isFinite(line)?line:size*1.5)*2+'px';}};scale();globalThis.__durableText32=new MutationObserver(scale);globalThis.__durableText32.observe(document.body,{childList:true,subtree:true});return true})()`);
+-  assert.equal((await snapshot()).raw,before.raw);
++  assert((await snapshot()).raw===before.raw);
+   await inspection(original.id,'not_found'); await capture(id+'-restart-original-not-found');
+   await keyboard('Retry this original routine decision',height); await text('recorded_current');
+   const applied=await snapshot(); assert.equal(applied.versions.length,before.versions.length+1); assert.equal(applied.versions.at(-1).id,original.id);
+@@ -65,6 +65,16 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   await inspection(retraction.id,'recorded_current'); await capture(id+'-retraction-restart-inspection');
+   await keyboard('Acknowledge exact saved routine outcome',height);
+   const final=await snapshot(); assert.equal(final.uses.filter(row=>row.id===retraction.id).length,1); assert.deepEqual(final.uses.find(row=>row.id===used.id),used);
++  // Real existing owner withdrawal UI owns both durable ciphertext rows.
++  await navigate('/you'); await keyboard('Withdraw health-data consent',height);
++  await keyboard('Withdraw health consent',height); await text('Status: withdrawn.');
++  const removed=await evaluate(`(async()=>{${moduleExpression}const raw=mod('/lib/storage/privateAsyncStorage.web.ts').default;return {recovery:await raw.getItem('layerwell.routineDecisionRecovery.v1')===null,ledger:await raw.getItem('layerwell.completions.v1')===null}})()`);
++  assert(removed.recovery&&removed.ledger); await capture(id+'-withdrawal-erased');
++  await restart();
++  await b.waitForCondition(getClient(),`document.body.innerText.includes('Status: withdrawn.')||document.body.innerText.includes('Health features are paused')`,30000,'withdrawal remains closed after process restart');
++  const afterWithdrawal=await evaluate(`(async()=>{${moduleExpression}const raw=mod('/lib/storage/privateAsyncStorage.web.ts').default;return {recovery:await raw.getItem('layerwell.routineDecisionRecovery.v1')===null,ledger:await raw.getItem('layerwell.completions.v1')===null}})()`);
++  assert(afterWithdrawal.recovery&&afterWithdrawal.ledger);
++  record(id+'-withdrawal-restart-summary.json',{actualPrivacyUi:true,removed,afterWithdrawal,noOriginalCommandsResurrected:true});
+   return {pass:true,processRestart:true,exactApplyId:original.id,exactClearId:clear.id,exactRetractionId:retraction.id,
+-    originalTimesPreserved:true,readOnlyCiphertextAndKeys:true,originalUsePreserved:true,noStartupReplay:true,explicitRetryOnly:true};
++    originalTimesPreserved:true,readOnlyCiphertextAndKeys:true,originalUsePreserved:true,noStartupReplay:true,explicitRetryOnly:true,actualWithdrawalAndRestart:true};
+ }
+diff --git a/scripts/e2e/runtime-handoff32.mjs b/scripts/e2e/runtime-handoff32.mjs
+index da0c49e583ebb93eada7fe720a15cf584f27be9c..a64686024cc7e3d87d8dc48b2c26f0e23268e4be 100644
+--- a/scripts/e2e/runtime-handoff32.mjs
++++ b/scripts/e2e/runtime-handoff32.mjs
+@@ -17,11 +17,12 @@ json('DECLARED_MATRIX.json', { repeats: 3, viewports: [[375,667],[390,844],[430,
+ let server, browser;
+ const clients = new Set();
+ const evaluate = (client, source) => b.evaluate(client, source, true);
+-const state = client => evaluate(client, `({status:globalThis.__layerwellPrivateWebRuntime?.snapshot(),transitions:globalThis.__layerwellPrivateWebRuntime?.diagnostics(),privateCalls:globalThis.__privateCalls32??0})`);
++const state = client => evaluate(client, `({status:globalThis.__layerwellPrivateWebRuntime?.snapshot(),transitions:globalThis.__layerwellPrivateWebRuntime?.diagnostics(),privateCalls:globalThis.__privateCalls32??0,privateDatabaseCalls:globalThis.__privateDatabaseCalls32??0})`);
+ async function page(width, height, setup = '') {
+   const client = await b.connectToPage(debugPort, origin); clients.add(client);
+   await client.send('Runtime.enable'); await client.send('Page.enable'); await b.setViewport(client, { width, height });
+   await traceRuntimeAdmission32(client, event => { receipt.traces.push(event); json('TRACE.json', receipt.traces); });
++  await client.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__privateDatabaseCalls32=0;const open32=IDBFactory.prototype.open;IDBFactory.prototype.open=function(name,...args){if(name==='layerwell.routine-decision-ciphertext.v1')++globalThis.__privateDatabaseCalls32;return Reflect.apply(open32,this,[name,...args])}` });
+   await client.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__privateCalls32=0;for(const method of ['getItem','setItem','removeItem']){const original=Storage.prototype[method];Storage.prototype[method]=function(key,...args){if(/^(layerwell\\.|sb-)/.test(key))++globalThis.__privateCalls32;return Reflect.apply(original,this,[key,...args])}};${setup}` });
+   return client;
+ }
+@@ -54,6 +55,10 @@ try {
+     const history = await client.send('Page.getNavigationHistory');
+     await newDocument(client, () => client.send('Page.navigateToHistoryEntry', { entryId: history.entries[history.currentIndex-1].id }));
+     const returned = await admitted(client);
++    for (const result of [startup,reload,direct,returned]) {
++      assert.equal(result.transitions.filter(row=>row.reason==='exclusive-request').length,1);
++      assert(!result.transitions.some(row=>row.status==='occupied'||row.status==='unavailable'));
++    }
+     receipt.ordinary.push({width,height,repeat,startup,reload,direct,returned,automaticRetries:0,manualRetries:0,pass:true});
+     const shot = await client.send('Page.captureScreenshot',{format:'png'}); writeFileSync(path.join(out,`${width}-${repeat}.png`),Buffer.from(shot.data,'base64'));
+     await close(client); await b.stopProcessBestEffort(browser); browser=undefined;
+@@ -64,12 +69,12 @@ try {
+   let holder = await page(390,844); await navigate(holder); await admitted(holder);
+   let next = await page(390,844); await navigate(next);
+   await b.waitForCondition(next, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='checking'`,30000,'handoff queued');
+-  const pending = await state(next); assert.equal(pending.privateCalls,0);
++  const pending = await state(next); assert.equal(pending.privateCalls,0); assert.equal(pending.privateDatabaseCalls,0);
+   await close(holder); const handoff = await admitted(next);
+   receipt.induced.push({case:'transient closing holder',pending,handoff,manualRetries:0,pass:true}); holder=next;
+   next=await page(390,844); await navigate(next);
+   await b.waitForCondition(next, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='occupied'`,30000,'bounded live-holder refusal');
+-  const occupied=await state(next); assert.equal(occupied.privateCalls,0); assert.equal((await state(holder)).status,'admitted');
++  const occupied=await state(next); assert.equal(occupied.privateCalls,0); assert.equal(occupied.privateDatabaseCalls,0); assert.equal((await state(holder)).status,'admitted');
+   await close(holder); assert.equal((await state(next)).status,'occupied');
+   await b.clickByText(next,'Retry private app access'); receipt.interventions.push({case:'true contention',action:'explicit visible Retry private app access'});
+   const recovered=await admitted(next); receipt.induced.push({case:'live second tab',occupied,recovered,manualRetries:1,pass:true}); holder=next;
+@@ -83,7 +88,7 @@ try {
+     ['denied',`Object.defineProperty(navigator,'locks',{configurable:true,value:{request:()=>Promise.reject(new DOMException('synthetic','SecurityError'))}})`]]) {
+     const refused=await page(390,844,setup); await navigate(refused);
+     await b.waitForCondition(refused, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='unavailable'`,30000,name);
+-    const result=await state(refused); assert.equal(result.privateCalls,0); receipt.induced.push({case:name,result,pass:true}); await close(refused);
++    const result=await state(refused); assert.equal(result.privateCalls,0); assert.equal(result.privateDatabaseCalls,0); receipt.induced.push({case:name,result,pass:true}); await close(refused);
+   }
+ } catch(error) { receipt.failures.push({message:String(error),stack:error.stack}); process.exitCode=1; }
+ finally { for(const client of clients) client.close(); await b.stopProcessBestEffort(browser); await b.stopProcessBestEffort(server); json('SUMMARY.json',receipt); }

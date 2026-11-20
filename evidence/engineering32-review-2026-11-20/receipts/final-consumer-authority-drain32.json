@@ -1,0 +1,45 @@
+{
+  "label": "final-consumer-authority-drain32",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/actualRoutine",
+    "src/features/today/optionalChange",
+    "src/features/today/optionalHistoryRecovery15.test.ts",
+    "src/lib/storage/privateKVCommitFence28.test.ts",
+    "src/features/retainedRecovery",
+    "src/lib/consent",
+    "src/lib/auth/localAccountIsolation.test.ts",
+    "--maxWorkers=4"
+  ],
+  "before": {
+    "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+    "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-20T16:54:37.681060+00:00",
+  "freeBytesBefore": 146521264128,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+    "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-20T16:54:47.276971+00:00",
+  "freeBytesAfter": 146524925952,
+  "logBytes": 582,
+  "logSha256": "65f78602708f5152c2fe9d398e47f0ef66ef2f2e7762e9fdc3b3539947159c05"
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "documentId": "ca22c7ca-eeb2-48f5-9c21-1f865aaa76cf",
+    "event": "document",
+    "at": 969.9000000357628
+  },
+  {
+    "documentId": "ca22c7ca-eeb2-48f5-9c21-1f865aaa76cf",
+    "event": "pageshow",
+    "at": 1540.2000000476837,
+    "persisted": false
+  },
+  {
+    "documentId": "ca22c7ca-eeb2-48f5-9c21-1f865aaa76cf",
+    "event": "request",
+    "at": 1708.9000000357628,
+    "id": 1,
+    "ifAvailable": false
+  },
+  {
+    "documentId": "ca22c7ca-eeb2-48f5-9c21-1f865aaa76cf",
+    "event": "callback",
+    "at": 1716.6000000238419,
+    "id": 1,
+    "acquired": true
+  }
+]

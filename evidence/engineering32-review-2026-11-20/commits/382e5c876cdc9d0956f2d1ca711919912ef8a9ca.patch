@@ -1,0 +1,982 @@
+diff --git a/PROGRESS.md b/PROGRESS.md
+index 318fd9a949c52b78df00b05a46e2961d73821de4..f888871ad481a70a96592670f6343605fef1c7a3 100644
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -1,3 +1,7 @@
++# Browser handoff and durable routine decisions Engineering32 - 2026-11-20
++
++Local candidate under BRAIN-ONSKIN-AUTONOMOUS-LOCAL-RELIABILITY-32. One bounded cancellable exclusive Web Lock request admits actual callbacks only; a sustained competing runtime requires explicit recovery. Original actual-routine apply/clear/retraction decisions now prepare encrypted purpose/owner/consent-epoch-bound evidence and verify readback before dispatch. Discoverable owner review separates read-only exact inspection, fresh-authority original-identity retry and ledger-verified acknowledgement. Unsupported/unreadable evidence remains closed; cleanup/export/key inventory includes the new purpose. Frozen all38/all18 remain UNACCEPTED; release NO_GO, J01 positive admission closed. Browser/process and final-source validation receipts and retained failures are delivered separately; no native/backend/professional/source publication authority is implied.
++
+ # Practice templates and original-authority recovery Engineering28 - 2026-11-18
+ 
+ Local implementation under BRAIN-ONSKIN-AUTONOMOUS-LOCAL-PRODUCT-28: practice-scoped immutable role templates, explicit review/cancel/revision/copy/retirement, encrypted repository readback and exact uncertain retry; default real API503 preserved. Collapsed optional entries retire on navigation blur/refocus while original-lease source recovery remains available. First-key creation now retains original authority across probes, preserves discovered successor keys and leaves dispatched uncertain keys intact. See [bounded behavior and missing connections](docs/release/full-app-j01/practice-templates28.md). Original RED traces, browser failures, the first full-root two-regression failure and their repair sequence are preserved outside application source for the screened GitHub handoff. Frozen scope/matrix unchanged; all38/all18 UNACCEPTED, J01-only positive admission closed, release NO_GO. No native/device/security/provider qualification is claimed.
+diff --git a/apps/mobile/src/features/routine/ActualRoutinePanel.tsx b/apps/mobile/src/features/routine/ActualRoutinePanel.tsx
+index c02b549bd73912b276fd1cd111f1512bc82d740e..4eb373e0f560ccc43fb259ced6f08e303b574b9a 100644
+--- a/apps/mobile/src/features/routine/ActualRoutinePanel.tsx
++++ b/apps/mobile/src/features/routine/ActualRoutinePanel.tsx
+@@ -13,6 +13,8 @@ import { actualRoutineStep, formulaAtUseLines, inspectActualRoutineApply, inspec
+ import type { PlanSourceSnapshot44 } from './planSourceFence44';
+ import type { RecoverablePlanHookResult } from './usePlan';
+ import { sequenceComparisonLines } from './sequenceComparison';
++import { prepareRoutineDecision, acknowledgeRoutineDecision } from './routineDecisionRecoveryStore';
++import { SavedRoutineDecisions } from './SavedRoutineDecisions';
+ 
+ const leaseIds = new WeakMap<HealthDataWriteLease, number>(); let nextLeaseId = 0;
+ function leaseId(lease: HealthDataWriteLease) { let id = leaseIds.get(lease); if (!id) { id = ++nextLeaseId; leaseIds.set(lease, id); } return id; }
+@@ -107,16 +109,23 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+     const stillCurrent = () => safe() && reviewEpoch.current === epoch && intentRef.current === accepted;
+     flight.current = true; setWorking(true); setFeedback(null);
+     try {
++      const evidence = await prepareRoutineDecision(lease, { kind: 'apply', facts: accepted.proof, request: accepted.request }, () => {
++        if (!stillCurrent()) throw new Error('ROUTINE_DECISION_RETIRED');
++      });
++      if (!stillCurrent()) return;
+       const saved = await applyCurrentActualRoutine(accepted.proof, lease, accepted.request);
++      // Acknowledgement is separate from mutation and inspection. Loss leaves
++      // the original encrypted decision discoverable after navigation/restart.
++      const acknowledged = await acknowledgeRoutineDecision(lease, evidence, () => { if (!stillCurrent()) throw Error('ROUTINE_DECISION_RETIRED'); }).then(() => true, () => false);
+       if (!stillCurrent()) return;
+       // Commit results certify their own revision, not the current cache. A
+       // delayed acknowledgement must not replace a newer authenticated read.
+       await refreshActualRecords();
+       if (!stillCurrent()) return;
+       replaceIntent(null); replaceUncertain(null);
+-      setFeedback(saved.versions.at(-1)?.id === accepted.request.id ? 'Actual routine applied and read back on this device. New check-offs can record this version.' :
++      setFeedback((saved.versions.at(-1)?.id === accepted.request.id ? 'Actual routine applied and read back on this device. New check-offs can record this version.' :
+         saved.versions.at(-1)?.sourceHash === accepted.proof.sourceHash ? 'This exact source is already the current actual routine. No new version or check-offs were created.' :
+-          'The reviewed version is saved. A later owner version is current; reload history.');
++          'The reviewed version is saved. A later owner version is current; reload history.') + (acknowledged ? '' : ' Recovery acknowledgement was not confirmed. Review saved routine decisions retains the original evidence.'));
+     } catch (error) {
+       if (stillCurrent()) {
+         const code = error instanceof Error ? error.message : '';
+@@ -171,11 +180,16 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+     const stillCurrent = () => safe() && reviewEpoch.current === epoch && clearRef.current === accepted;
+     flight.current = true; setWorking(true); setFeedback(null);
+     try {
++      const evidence = await prepareRoutineDecision(lease, { kind: 'clear', request: accepted }, () => {
++        if (!stillCurrent()) throw Error('ROUTINE_DECISION_RETIRED');
++      });
++      if (!stillCurrent()) return;
+       await clearCurrentActualRoutine(lease, accepted);
++      const acknowledged = await acknowledgeRoutineDecision(lease, evidence, () => { if (!stillCurrent()) throw Error('ROUTINE_DECISION_RETIRED'); }).then(() => true, () => false);
+       if (!stillCurrent()) return;
+       await refreshActualRecords(); if (!stillCurrent()) return;
+       replaceClear(null); replaceCorrection(null);
+-      setFeedback('Applied routine cleared and read back. Earlier versions and recorded uses are unchanged.');
++      setFeedback('Applied routine cleared and read back. Earlier versions and recorded uses are unchanged.' + (acknowledged ? '' : ' Recovery acknowledgement was not confirmed. Review saved routine decisions retains the original evidence.'));
+     } catch (error) {
+       if (stillCurrent()) { replaceCorrection({ kind: 'clear', request: accepted }); setFeedback(error instanceof Error && /STALE/.test(error.message)
+         ? 'The applied version changed. A previous clear may already have saved. Check its exact outcome before preparing another decision.'
+@@ -189,10 +203,15 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+     const stillCurrent = () => safe() && reviewEpoch.current === epoch && retractionRef.current === accepted;
+     flight.current = true; setWorking(true);
+     try {
++      const evidence = await prepareRoutineDecision(lease, { kind: 'retraction', ...accepted }, () => {
++        if (!stillCurrent()) throw Error('ROUTINE_DECISION_RETIRED');
++      });
++      if (!stillCurrent()) return;
+       await retractActualRoutineUse(lease, accepted.event.id, accepted.expectedHash, accepted.request);
++      const acknowledged = await acknowledgeRoutineDecision(lease, evidence, () => { if (!stillCurrent()) throw Error('ROUTINE_DECISION_RETIRED'); }).then(() => true, () => false);
+       if (!stillCurrent()) return;
+       await refreshActualRecords(); if (!stillCurrent()) return;
+-      replaceRetraction(null); replaceCorrection(null); setFeedback('Retraction saved. The original use remains in history; current check-off projection is corrected. Legacy streak/replay history is unchanged.');
++      replaceRetraction(null); replaceCorrection(null); setFeedback('Retraction saved. The original use remains in history; current check-off projection is corrected. Legacy streak/replay history is unchanged.' + (acknowledged ? '' : ' Recovery acknowledgement was not confirmed. Review saved routine decisions retains the original evidence.'));
+     } catch { if (stillCurrent()) { replaceCorrection({ kind: 'retraction', ...accepted }); setFeedback('History changed or retraction could not be confirmed. Inspect its exact saved outcome before reviewing another correction.'); } }
+     finally { flight.current = false; if (mounted.current) setWorking(false); }
+   }
+@@ -221,6 +240,7 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+   if (!current(lease)) return <Text accessibilityRole="alert">Actual routine history is unavailable under the current privacy authority.</Text>;
+   return <View className="gap-3 rounded-card border border-hairline bg-paper-raised p-4">
+     <Text accessibilityRole="header" className="font-sans-semibold text-[18px]">My actual routine</Text>
++    <SavedRoutineDecisions lease={lease} onChanged={refreshActualRecords} />
+     <Text variant="bodySm">Only an explicit apply creates an actual routine version. Saved snapshots, generated suggestions and old check-offs are not apply intent. This does not confirm use or provide advice. Sequence records commit order; device dates are not a trusted clock.</Text>
+     {history.isFetching || history.isPending ? <Text>Reading actual routine history…</Text> : history.isError ? <Text accessibilityRole="alert">Actual routine history is unavailable. No records were reset.</Text> : ledger ?
+       <Text>{latest ? `${latest.source === 'owner-cleared-local' ? 'Applied routine cleared in version' : 'Current owner-applied version'} ${latest.sequence} · ${latest.createdAt}` : 'No actual routine has been applied on this device.'}</Text> : null}
+@@ -295,7 +315,7 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+     </View> : null}
+ 
+     {uncertainCorrection ? <View className="gap-2">
+-      <Text variant="bodySm">This correction has an uncertain outcome. Check the original command, target and predecessor in saved history. Similar current content is not proof. Leaving or canceling retires this in-memory decision; later history reads cannot reconstruct a missing command.</Text>
++      <Text variant="bodySm">This correction has an uncertain outcome. Check the original command, target and predecessor in saved history. Similar current content is not proof. Leaving or canceling closes this review; retained encrypted original decisions remain available in Review saved routine decisions. Cancellation does not undo a dispatched write.</Text>
+       <Button label="Check saved correction outcome" disabled={working} onPress={() => void inspectCorrectionOutcome()} />
+       <Button label="Cancel correction outcome check" disabled={working} variant="ghost" onPress={() => {
+         if (correctionRef.current !== uncertainCorrection || flight.current) return;
+diff --git a/apps/mobile/src/features/routine/SavedRoutineDecisions.tsx b/apps/mobile/src/features/routine/SavedRoutineDecisions.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..569b613b6b159df4fca36d997b493d5cffdec930
+--- /dev/null
++++ b/apps/mobile/src/features/routine/SavedRoutineDecisions.tsx
+@@ -0,0 +1,102 @@
++import { useFocusEffect } from 'expo-router';
++import { useCallback, useRef, useState } from 'react';
++import { Modal, ScrollView, View } from 'react-native';
++import { Button, Text } from '@/components/ui';
++import { useModalBackgroundIsolation } from '@/lib/accessibility/modalBackground';
++import { motionAwareModalAnimation, useReduceMotionPreference } from '@/lib/accessibility/useReduceMotionPreference';
++import { assertOriginalHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { loadRoutineDecisions, inspectSavedRoutineDecision, acknowledgeRoutineDecision, retrySavedRoutineDecision } from './routineDecisionRecoveryStore';
++import type { SavedRoutineDecision } from './routineDecisionRecoveryCodec';
++
++export function SavedRoutineDecisions({ lease, onChanged }: { lease: HealthDataWriteLease; onChanged: () => Promise<unknown> }) {
++  const [rows, setRows] = useState<readonly SavedRoutineDecision[] | null>(null);
++  const [selected, setSelected] = useState<SavedRoutineDecision | null>(null);
++  const [feedback, setFeedback] = useState<string | null>(null);
++  const [recorded, setRecorded] = useState(false);
++  const [working, setWorking] = useState(false);
++  const [dialog, setDialog] = useState<View | null>(null);
++  const reduced = useReduceMotionPreference();
++  useModalBackgroundIsolation(dialog, selected !== null);
++  const focused = useRef(false), epoch = useRef(0), flight = useRef(false);
++  const [, renderFocus] = useState(0);
++  const renderedEpoch = epoch.current;
++  const chosen = useRef<SavedRoutineDecision | null>(null);
++  useFocusEffect(useCallback(() => {
++    focused.current = true; renderFocus(++epoch.current);
++    return () => { focused.current = false; ++epoch.current; chosen.current = null; setSelected(null); setRows(null); setFeedback(null); setRecorded(false); };
++  }, []));
++  function guard(expected: number, decision?: SavedRoutineDecision) {
++    assertOriginalHealthDataWriteLease(lease);
++    if (!focused.current || epoch.current !== expected || (decision && chosen.current !== decision)) throw Error('ROUTINE_DECISION_RETIRED');
++  }
++  function currentRender() { try { guard(renderedEpoch); return true; } catch { return false; } }
++  async function load() {
++    if (flight.current || !currentRender()) return;
++    const accepted = ++epoch.current; flight.current = true; setWorking(true); setFeedback(null); setRows(null);
++    try { guard(accepted); const saved = await loadRoutineDecisions(lease); guard(accepted); setRows(saved.decisions); }
++    catch { if (focused.current && epoch.current === accepted) setFeedback('Original decision evidence is unavailable or unsupported. Nothing was reset, replayed or removed. Retry when current private access returns.'); }
++    finally { flight.current = false; if (focused.current) setWorking(false); }
++  }
++  function close(expected: SavedRoutineDecision | null) {
++    if (chosen.current !== expected || !currentRender()) return;
++    ++epoch.current; chosen.current = null; setSelected(null); setRecorded(false); setFeedback(null);
++  }
++  async function act(action: 'inspect' | 'retry' | 'acknowledge', accepted: SavedRoutineDecision) {
++    if (chosen.current !== accepted || flight.current || !currentRender()) return;
++    const serial = epoch.current, assertCurrent = () => guard(serial, accepted);
++    flight.current = true; setWorking(true); setFeedback(null);
++    try {
++      assertCurrent();
++      if (action === 'acknowledge') {
++        if (!recorded) return;
++        await acknowledgeRoutineDecision(lease, accepted, assertCurrent); assertCurrent();
++        setRows(previous => previous?.filter(row => row !== accepted) ?? null); close(accepted);
++        setFeedback('Exact saved outcome acknowledged. Only its recovery evidence was retired; routine and original use history are unchanged.');
++      } else {
++        if (action === 'retry') { await retrySavedRoutineDecision(lease, accepted, assertCurrent); assertCurrent(); await onChanged(); assertCurrent(); }
++        const outcome = await inspectSavedRoutineDecision(lease, accepted, assertCurrent); assertCurrent();
++        setRecorded(outcome.kind === 'recorded_current' || outcome.kind === 'recorded_historical');
++        setFeedback(outcome.kind === 'not_found'
++          ? 'not_found: No exact original command was found in this readable history. This does not prove an earlier operation failed. Keep this evidence and review before any retry.'
++          : outcome.kind === 'conflict' ? 'conflict: Saved history differs from the original command. It was not rewritten. Keep this evidence for inspection.'
++          : `${outcome.kind}: Exact original command found at sequence ${outcome.sequence}. Inspection changed no records or keys. Acknowledgement is a separate action.`);
++      }
++    } catch { if (focused.current && epoch.current === serial) { setRecorded(false); setFeedback('Current authority, exact source or saved evidence could not be re-established. No success is claimed. Keep the original decision for read-only inspection; a dispatched write may still have saved. No keys were recreated.'); } }
++    finally { flight.current = false; if (focused.current) setWorking(false); }
++  }
++  return <View className="gap-3">
++    <Button label="Review saved routine decisions" variant="ghost" disabled={working} onPress={() => void load()} />
++    {rows?.length === 0 ? <Text>No unresolved original routine decisions were found in the readable recovery collection. This does not establish a missing operation outcome.</Text> : null}
++    {rows?.map((saved, index) => <View key={saved.command.request.id} className="gap-2">
++      <Text>{saved.command.kind} decision {index + 1}. Original command: {saved.command.request.id}</Text>
++      <Button label={`Review saved ${saved.command.kind} decision ${index + 1}`} disabled={working} onPress={() => {
++        if (flight.current || !currentRender()) return; ++epoch.current; chosen.current = saved; setSelected(saved); setRecorded(false); setFeedback(null);
++      }} />
++    </View>)}
++    {!selected && feedback ? <Text accessibilityLiveRegion="polite">{feedback}</Text> : null}
++    <Modal visible={selected !== null} transparent animationType={motionAwareModalAnimation(reduced, 'fade')} onRequestClose={() => close(selected)}>
++      {selected ? <View ref={setDialog} className="flex-1 justify-center bg-paper px-5 py-6" role="dialog" aria-modal accessibilityViewIsModal accessibilityLabel="Review original routine decision">
++        <ScrollView keyboardShouldPersistTaps="handled" contentContainerClassName="gap-3 pb-8">
++          <Text accessibilityRole="header">Review original {selected.command.kind} decision</Text>
++          <Text>Original command: {selected.command.request.id}</Text>
++          <Text>Original time: {'createdAt' in selected.command.request ? selected.command.request.createdAt : selected.command.request.recordedAt}</Text>
++          <Text>Nothing is replayed automatically. Canceling or leaving this review does not undo a dispatched write. Applying still records no product use.</Text>
++          {selected.command.kind === 'apply' ? <>
++            <Text>Original source reference: {selected.command.facts.sourceHash}</Text>
++            {(['am','pm'] as const).map(phase => <View key={phase}><Text>{phase.toUpperCase()} reviewed sequence</Text>
++              {selected.command.kind === 'apply' && selected.command.facts[phase].map((step,index) => <Text key={step.productId}>{index + 1}. {step.name} ({step.productId})</Text>)}</View>)}
++          </> : selected.command.kind === 'retraction' ? <>
++            <Text>Original use: {selected.command.event.id}. Plan: {selected.command.event.planId}. Day: {selected.command.event.observedOn}. Step: {selected.command.event.stepKey}.</Text>
++            <Text>Original stream predecessor: {selected.command.expectedHash}</Text>
++          </> : null}
++          {'expectedParentHash' in selected.command.request ? <Text>Original predecessor: {selected.command.request.expectedParentHash ?? 'no earlier applied version'}</Text> : null}
++          <Button label="Inspect original routine decision" disabled={working} onPress={() => void act('inspect', selected)} />
++          <Button label="Retry this original routine decision" disabled={working || recorded} onPress={() => void act('retry', selected)} />
++          {recorded ? <Button label="Acknowledge exact saved routine outcome" disabled={working} onPress={() => void act('acknowledge', selected)} /> : null}
++          <Button label="Close original routine decision" variant="ghost" onPress={() => close(selected)} />
++          {feedback ? <Text accessibilityLiveRegion="polite">{feedback}</Text> : null}
++        </ScrollView>
++      </View> : null}
++    </Modal>
++  </View>;
++}
+diff --git a/apps/mobile/src/features/routine/actualRoutine.ts b/apps/mobile/src/features/routine/actualRoutine.ts
+index b482d8fe83a18e89643dca62b52ddf8a1b2b9f7e..de781749c03383ce094d1a5d6e91e6c839fdc5ce 100644
+--- a/apps/mobile/src/features/routine/actualRoutine.ts
++++ b/apps/mobile/src/features/routine/actualRoutine.ts
+@@ -48,6 +48,27 @@ function contentHash(value: { contentHash: string }): string { const { contentHa
+ export function emptyActualRoutine(ownerUserId: string): ActualRoutineLedger {
+   return Object.freeze({ schemaVersion: 1, ownerUserId, versions: Object.freeze([]), uses: Object.freeze([]) });
+ }
++/** Strict immutable original target evidence. This validates facts, never
++ * grants source or mutation authority to a deserialized record. */
++export function decodeActualRoutineUseEvidence(value: unknown, owner: string): ActualRoutineUse {
++  decodePlanHistory45(null, owner);
++  const schema = (value as ActualRoutineUse | null)?.schemaVersion;
++  const event = record(value, ['id','sequence','schemaVersion','source','actorOwnerId','recordedAt','observedOn','stepKey','planId','planHash','kind','targetId','previousHash','contentHash', ...(schema === 2 ? ['formulaAtUse'] : [])]) as unknown as ActualRoutineUse;
++  if (!uuid(event.id) || !Number.isSafeInteger(event.sequence) || event.sequence < 1 || (schema !== 1 && schema !== 2) ||
++      event.source !== 'owner-recorded-local' || event.actorOwnerId !== owner || !instant(event.recordedAt) || !validLocalDate(event.observedOn) ||
++      !uuid(event.planId) || !/^[0-9a-f]{64}$/u.test(event.planHash) ||
++      (event.previousHash !== null && !/^[0-9a-f]{64}$/u.test(event.previousHash)) ||
++      typeof event.stepKey !== 'string' || !/^(AM|PM):[^\u0000-\u001f\u007f-\u009f\ud800-\udfff]{1,128}$/u.test(event.stepKey) ||
++      event.kind !== 'use' || event.targetId !== null || contentHash(event) !== event.contentHash) fail();
++  if (schema === 2 && event.formulaAtUse !== null) {
++    const evidence = record(event.formulaAtUse, ['ownedVersionId','ownedVersionHash','formula']) as unknown as FormulaAtUse;
++    validateFormulaVersion38(evidence.formula);
++    if (!/^[0-9a-f]{64}$/u.test(evidence.ownedVersionHash) || evidence.ownedVersionId !== `owned38:${evidence.ownedVersionHash}` ||
++        evidence.formula.ownerUserId !== owner || evidence.formula.ownedUnitId !== event.stepKey.slice(3)) fail();
++    Object.freeze(evidence.formula); Object.freeze(evidence);
++  }
++  return Object.freeze({ ...event });
++}
+ export function decodeActualRoutine(value: unknown, owner: string): ActualRoutineLedger {
+   decodePlanHistory45(null, owner); // Retain the shared strict owner-identity check.
+   const row = record(value, ['schemaVersion', 'ownerUserId', 'versions', 'uses']);
+diff --git a/apps/mobile/src/features/routine/actualRoutineJourney.test.ts b/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
+index 158ab13616b80b9e3f26f801768393d55437fb5a..62a7c51aba77fe8975fbb33dbb75028f1e6172ae 100644
+--- a/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
++++ b/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
+@@ -40,6 +40,24 @@ beforeEach(async () => { vi.stubGlobal('__DEV__', true); client = await reset26(
+ });
+ afterEach(async () => { if (renderer) await act(async () => renderer!.unmount()); renderer = undefined; await close26(client); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+ 
++it('retains the exact uncertain apply as encrypted evidence and discovers it after remount', async () => {
++  await mount();
++  const apply = completionStore.applyCurrentActualRoutine;
++  let originalId: string | undefined;
++  vi.spyOn(completionStore, 'applyCurrentActualRoutine').mockImplementationOnce(async (...args) => {
++    originalId = args[2].id; await apply(...args); throw Error('SYNTHETIC32_ACK_LOSS');
++  });
++  await press('Review current Shelf sequence as actual routine'); await press('Apply reviewed actual routine');
++  const raw = ports26.bytes.get('layerwell.routineDecisionRecovery.v1');
++  expect(raw).toBeDefined(); expect(raw).not.toContain(originalId);
++  await act(async () => renderer!.unmount()); renderer = undefined; await mount();
++  await press('Review saved routine decisions');
++  expect(text()).toContain(originalId);
++  await press('Review saved apply decision 1'); await press('Inspect original routine decision');
++  expect(text()).toContain('recorded_current');
++  expect((await getActualRoutineSnapshot(source!.orderLease!)).versions).toHaveLength(1);
++});
++
+ it('retires an initial progress snapshot when recorded activity changes before that read finishes', async () => {
+   const lease = captureHealthDataWriteLease(); const planSource = await capturePlanSource44(lease);
+   const ledger = await applyCurrentActualRoutine(planSource, lease, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: null });
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..120dbcacaad030e8b822fe5f1e3f5cf550cd8939
+--- /dev/null
++++ b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+@@ -0,0 +1,160 @@
++import { adultLifecycle26, close26, grant26, ports26, profile26, reset26 } from '@/features/shelf/firstValue26TestPorts';
++import AsyncStorage from '@react-native-async-storage/async-storage';
++import type { QueryClient } from '@tanstack/react-query';
++import { randomUUID } from 'node:crypto';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { addProduct, updateProduct } from '@/features/shelf/store';
++import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
++import { beginAccountGenerationBoundary, endAccountGenerationBoundary, runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
++import { claimLocalDataOwnership } from '@/lib/auth/sessionOwner';
++import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
++import { applyCurrentActualRoutine, clearCurrentActualRoutine, getActualRoutineSnapshot, toggleCompletion } from '@/features/today/completionsStore';
++import { localDateString } from '@/features/today/useToday';
++import { collectLocalDeviceExportData } from '@/features/settings/localDeviceExport';
++import { capturePlanSource44 } from './planSourceFence44';
++import { acknowledgeRoutineDecision, inspectSavedRoutineDecision, loadRoutineDecisions, prepareRoutineDecision, retrySavedRoutineDecision } from './routineDecisionRecoveryStore';
++import { ROUTINE_DECISION_KEY as KEY, decodeRoutineDecisions, makeSavedRoutineDecision, routineDecisionHash, type RoutineDecision } from './routineDecisionRecoveryCodec';
++vi.mock('expo-file-system/legacy', () => ({ documentDirectory: null, cacheDirectory: null }));
++vi.mock('@/features/notifications/deliver', () => ({ scheduleTrialReminder: async () => {}, waitForHealthNotificationOperationsToSettle: async () => {} }));
++vi.mock('@/features/notifications/nativeMutation', () => ({ clearNativeNotificationsForAccountIsolation: async () => {} }));
++vi.mock('@/features/photos/encryptedStorage', () => ({ beginEncryptedPhotoAccountBoundary: () => {}, endEncryptedPhotoAccountBoundary: () => {}, clearEncryptedPhotoStorage: async () => {}, waitForEncryptedPhotoWritesToSettle: async () => {} }));
++vi.mock('@/features/photos/sensitiveImageMemory', () => ({ purgeSensitiveImageMemory: () => {} }));
++vi.mock('@/features/widgets/lifecycleCoordinator', () => ({ clearRoutineWidgetLifecycleForPrivacy: async () => {} }));
++vi.mock('@/lib/iap/revenuecat', () => ({ resetRevenueCatIdentity: async () => {} }));
++vi.mock('expo-network', () => ({ getNetworkStateAsync: async () => ({ isConnected: false }), addNetworkStateListener: () => ({ remove() {} }) }));
++
++const guard = () => {};
++const LEDGER = 'layerwell.completions.v1', CONTENT_KEY = 'layerwell.private_kv.content_key.v1';
++let client: QueryClient, product: string;
++beforeEach(async () => { vi.stubGlobal('__DEV__',true); client=await reset26(); await adultLifecycle26(); await profile26(); await claimLocalDataOwnership('synthetic-first-value-a');
++  product=(await addProduct({name:'Synthetic32 original cleanser',category:'cleanser',addedVia:'manual'})).id; });
++afterEach(async () => { ports26.release?.(); vi.restoreAllMocks(); await close26(client); vi.unstubAllGlobals(); });
++async function applyDecision() {
++  const lease=captureHealthDataWriteLease(), proof=await capturePlanSource44(lease);
++  const command: RoutineDecision={kind:'apply',facts:proof,request:{id:randomUUID(),createdAt:new Date().toISOString(),expectedParentHash:null}};
++  return {lease,proof,command};
++}
++async function prepareApply() { const f=await applyDecision(); return {...f,saved:await prepareRoutineDecision(f.lease,f.command,guard)}; }
++async function applied() { const f=await prepareApply(); await retrySavedRoutineDecision(f.lease,f.saved,guard); return {...f,ledger:await getActualRoutineSnapshot(f.lease)}; }
++
++it('preparation and readback precede dispatch, survive fresh runtime leases, and cannot serialize the source capability',async()=>{
++  const f=await applyDecision(); expect(ports26.bytes.has(KEY)).toBe(false);
++  const saved=await prepareRoutineDecision(f.lease,f.command,guard);
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(0);
++  const fresh=captureHealthDataWriteLease();
++  expect((await loadRoutineDecisions(fresh)).decisions[0]).toEqual(saved);
++  expect(ports26.bytes.get(KEY)).not.toContain(f.command.request.id);
++  await expect(applyCurrentActualRoutine(JSON.parse(JSON.stringify(f.proof)),fresh,f.command.request)).rejects.toThrow('PLAN_SOURCE44_STALE');
++  await retrySavedRoutineDecision(fresh,saved,guard); await retrySavedRoutineDecision(fresh,saved,guard);
++  const ledger=await getActualRoutineSnapshot(fresh);
++  expect(ledger.versions).toHaveLength(1); expect(ledger.versions[0]).toMatchObject({id:f.command.request.id,createdAt:'createdAt' in f.command.request?f.command.request.createdAt:undefined,parentHash:null}); expect(ledger.uses).toHaveLength(0);
++});
++it('inspection after commit/ack loss is byte-identical and acknowledgement is a separate guarded operation',async()=>{
++  const f=await applied(), bytes=new Map(ports26.bytes);
++  expect(await inspectSavedRoutineDecision(f.lease,f.saved,guard)).toMatchObject({kind:'recorded_current'});
++  expect(ports26.bytes).toEqual(bytes);
++  ports26.failWrite=KEY;
++  await expect(acknowledgeRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow(); ports26.failWrite=null;
++  expect((await loadRoutineDecisions(f.lease)).decisions).toEqual([f.saved]);
++  await acknowledgeRoutineDecision(f.lease,f.saved,guard);
++  expect((await loadRoutineDecisions(f.lease)).decisions).toHaveLength(0);
++  expect(ports26.bytes.get(LEDGER)).toBe(bytes.get(LEDGER)); expect(ports26.bytes.get(CONTENT_KEY)).toBe(bytes.get(CONTENT_KEY));
++});
++it('not-found remains unknown and cannot acknowledge or retire the only command evidence',async()=>{
++  const f=await prepareApply(), before=new Map(ports26.bytes);
++  expect(await inspectSavedRoutineDecision(f.lease,f.saved,guard)).toEqual({kind:'not_found'});
++  await expect(acknowledgeRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow(); expect(ports26.bytes).toEqual(before);
++});
++it('historical exact results remain inspectable, while changed predecessors cannot replay',async()=>{
++  const f=await applied(); await clearCurrentActualRoutine(f.lease,{id:randomUUID(),createdAt:new Date().toISOString(),expectedParentHash:f.ledger.versions[0]!.contentHash});
++  expect(await inspectSavedRoutineDecision(f.lease,f.saved,guard)).toMatchObject({kind:'recorded_historical'});
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(2);
++});
++it('a new current source cannot acquire the old reviewed apply identity',async()=>{
++  const f=await prepareApply(); await updateProduct(product,{name:'Synthetic32 successor name'});
++  const before=new Map(ports26.bytes); await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow('SOURCE_CHANGED_INSPECT_ONLY');
++  expect(ports26.bytes).toEqual(before); expect((await loadRoutineDecisions(f.lease)).decisions[0]).toEqual(f.saved);
++});
++it('preserves the exact original clear and retraction identities, target and stream across retries',async()=>{
++  const f=await applied(), version=f.ledger.versions[0]!;
++  await toggleCompletion(`AM:${product}`,localDateString(),undefined,undefined,{originalLease:f.lease,source:f.proof,versionId:version.id,versionHash:version.contentHash});
++  const original=(await getActualRoutineSnapshot(f.lease)).uses[0]!;
++  const retract:RoutineDecision={kind:'retraction',event:original,expectedHash:original.contentHash,request:{id:randomUUID(),recordedAt:new Date().toISOString()}};
++  const retained=await prepareRoutineDecision(f.lease,retract,guard);
++  await retrySavedRoutineDecision(f.lease,retained,guard); await retrySavedRoutineDecision(f.lease,retained,guard);
++  expect((await getActualRoutineSnapshot(f.lease)).uses).toHaveLength(2);
++  expect((await getActualRoutineSnapshot(f.lease)).uses[0]).toEqual(original);
++  const clear:RoutineDecision={kind:'clear',request:{id:randomUUID(),createdAt:new Date().toISOString(),expectedParentHash:version.contentHash}};
++  const cleared=await prepareRoutineDecision(f.lease,clear,guard); await retrySavedRoutineDecision(f.lease,cleared,guard); await retrySavedRoutineDecision(f.lease,cleared,guard);
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(2);
++  expect((await loadRoutineDecisions(f.lease)).decisions.map(row=>row.command)).toContainEqual(retract);
++  const forged={...retained,command:{...retract,event:{...original,stepKey:`PM:${product}`}}};
++  await expect(retrySavedRoutineDecision(f.lease,forged,guard)).rejects.toThrow();
++});
++it.each(['prepare','inspect','acknowledge','retry'] as const)('retires %s under owner/account replacement while private read is pending',async phase=>{
++  const f=await applied();
++  ports26.holdRead=KEY;
++  const pending=phase==='prepare'?prepareRoutineDecision(f.lease,f.command,guard):phase==='inspect'?inspectSavedRoutineDecision(f.lease,f.saved,guard):
++    phase==='acknowledge'?acknowledgeRoutineDecision(f.lease,f.saved,guard):retrySavedRoutineDecision(f.lease,f.saved,guard);
++  const rejected=expect(pending).rejects.toThrow();
++  for(let i=0;i<50&&!ports26.release;i++) await new Promise(resolve=>setTimeout(resolve,0));
++  expect(ports26.release).not.toBeNull(); clearActiveHealthProcessingEpoch();
++  ports26.release?.(); await rejected; await grant26('synthetic-first-value-b'); await grant26();
++  await expect(prepareRoutineDecision(f.lease,f.command,guard)).rejects.toThrow();
++});
++it('withdrawal cleanup erases the purpose key and cannot resurrect old decisions after regrant',async()=>{
++  const f=await prepareApply();
++  const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
++  await clearHealthPurposeLocalData('synthetic-first-value-a');
++  expect(ports26.bytes.has(KEY)).toBe(false);
++  await grant26(); await adultLifecycle26(26);
++  const generation=await runAccountGenerationOperation(lease=>lease.generation);
++  setActiveHealthProcessingEpoch(26,{ownerUserId:'synthetic-first-value-a',accountGeneration:generation});
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++  const fresh=captureHealthDataWriteLease(); expect((await loadRoutineDecisions(fresh)).decisions).toHaveLength(0);
++  await expect(retrySavedRoutineDecision(fresh,f.saved,guard)).rejects.toThrow();
++});
++it('a new account generation cannot reuse an old admitted recovery callback',async()=>{
++  const f=await prepareApply(); beginAccountGenerationBoundary(); endAccountGenerationBoundary(); await grant26();
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++});
++it.each(['lost','replaced','tampered','unsupported','unreadable'] as const)('retains ambiguous evidence without rewriting or key recreation when %s',async kind=>{
++  const f=await prepareApply(), original=ports26.bytes.get(KEY)!;
++  if(kind==='lost') ports26.bytes.delete(CONTENT_KEY);
++  if(kind==='replaced') ports26.bytes.set(CONTENT_KEY,'00'.repeat(32));
++  if(kind==='tampered') {const raw=JSON.parse(original);raw.ciphertextHex='00'+raw.ciphertextHex.slice(2);ports26.bytes.set(KEY,JSON.stringify(raw));}
++  if(kind==='unsupported') await setPrivateItem(KEY,JSON.stringify({schemaVersion:77,decisions:[]}));
++  if(kind==='unreadable') ports26.failRead=KEY;
++  const before=new Map(ports26.bytes); await expect(loadRoutineDecisions(f.lease)).rejects.toThrow();
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++  expect(ports26.bytes).toEqual(before);
++});
++it('retains a successful durable preparation whose bridge acknowledgement was lost, without dispatch',async()=>{
++  const f=await applyDecision(), set=AsyncStorage.setItem; let lost=false;
++  vi.spyOn(AsyncStorage,'setItem').mockImplementation(async(key,raw)=>{await set(key,raw);if(key===KEY&&!lost){lost=true;throw Error('synthetic32 lost acknowledgement');}});
++  await expect(prepareRoutineDecision(f.lease,f.command,guard)).rejects.toThrow();
++  vi.restoreAllMocks();
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(0);
++  // The existing privateKV rollback/readback protocol may restore pre-write
++  // absence. If it retains evidence, it must be the exact original command.
++  const rows=(await loadRoutineDecisions(f.lease)).decisions;
++  expect(rows.length===0||rows[0]!.command.request.id===f.command.request.id).toBe(true);
++});
++it('exports strictly decoded original evidence under the existing owner rights path',async()=>{
++  const f=await prepareApply();
++  const exported=await runAccountGenerationOperation(lease=>collectLocalDeviceExportData(lease,'synthetic-first-value-a'));
++  expect(JSON.stringify(exported)).toContain(f.command.request.id);
++  expect(JSON.stringify(exported)).not.toContain(ports26.bytes.get(CONTENT_KEY));
++});
++it('refuses unsupported nested fields, conflicting IDs and bounded capacity without dropping unresolved commands',async()=>{
++  const f=await prepareApply();
++  const raw=await getPrivateItem(KEY), parsed=JSON.parse(raw!);
++  expect(()=>decodeRoutineDecisions(JSON.stringify({...parsed,schemaVersion:2}),'synthetic-first-value-a',25)).toThrow();
++  expect(()=>makeSavedRoutineDecision({...f.command,extra:true} as RoutineDecision,f.saved.consentHash,'synthetic-first-value-a')).toThrow();
++  await expect(prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,createdAt:'2020-01-01T00:00:00.000Z'}},guard)).rejects.toThrow();
++  for(let i=1;i<20;i++) await prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,id:randomUUID()}},guard);
++  const before=new Map(ports26.bytes); await expect(prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,id:randomUUID()}},guard)).rejects.toThrow('CAPACITY');
++  expect(ports26.bytes).toEqual(before); expect(routineDecisionHash((await loadRoutineDecisions(f.lease)).decisions[0])).toBe(routineDecisionHash(f.saved));
++});
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7a4bad158c93f9d6d52456ed63604598a0b53981
+--- /dev/null
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+@@ -0,0 +1,86 @@
++import { bytesToHex, utf8ToBytes } from '@noble/ciphers/utils.js';
++import { sha256 } from '@noble/hashes/sha256';
++import { canonical41 } from '@/features/today/optionalChange41';
++import { decodePlanHistoryVersion45 } from './planHistory45';
++import { decodeActualRoutineUseEvidence, type ActualRoutineCorrection } from './actualRoutine';
++import type { PlanSourceSnapshot44 } from './planSourceFence44';
++
++export const ROUTINE_DECISION_KEY = 'layerwell.routineDecisionRecovery.v1';
++export const ROUTINE_DECISION_LIMIT = 20;
++export const ROUTINE_DECISION_INVALID = 'ROUTINE_DECISION_INVALID';
++export const ROUTINE_DECISION_CONFLICT = 'ROUTINE_DECISION_CONFLICT';
++export type RoutineDecision = ActualRoutineCorrection | Readonly<{
++  kind: 'apply'; facts: PlanSourceSnapshot44;
++  request: { id: string; createdAt: string; expectedParentHash: string | null };
++}>;
++export type SavedRoutineDecision = Readonly<{ command: RoutineDecision; consentHash: string; contentHash: string }>;
++export type RoutineDecisionCollection = Readonly<{
++  schemaVersion: 1; purpose: 'uncertain_local_actual_routine'; ownerUserId: string; processingEpoch: number;
++  decisions: readonly SavedRoutineDecision[];
++}>;
++function invalid(): never { throw new Error(ROUTINE_DECISION_INVALID); }
++function row(value: unknown, keys: string[]): Record<string, unknown> {
++  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).sort().join('|') !== keys.sort().join('|')) invalid();
++  return value as Record<string, unknown>;
++}
++function uuid(value: unknown): string {
++  if (typeof value !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u.test(value)) invalid();
++  return value;
++}
++function instant(value: unknown): string {
++  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u.test(value) || !Number.isFinite(Date.parse(value)) || new Date(value).toISOString() !== value) invalid();
++  return value;
++}
++function digest(value: unknown): string {
++  if (typeof value !== 'string' || !/^[0-9a-f]{64}$/u.test(value)) invalid(); return value;
++}
++export function routineDecisionHash(value: unknown): string { return bytesToHex(sha256(utf8ToBytes(canonical41(value)))); }
++export function decodeRoutineDecision(value: unknown, owner: string): RoutineDecision {
++  const kind = (value as RoutineDecision | null)?.kind;
++  const command = row(value, kind === 'apply' ? ['kind','facts','request'] : kind === 'clear' ? ['kind','request'] : ['kind','event','expectedHash','request']);
++  if (kind === 'retraction') {
++    const request = row(command.request, ['id','recordedAt']);
++    return Object.freeze({ kind, event: decodeActualRoutineUseEvidence(command.event, owner), expectedHash: digest(command.expectedHash),
++      request: Object.freeze({ id: uuid(request.id), recordedAt: instant(request.recordedAt) }) });
++  }
++  if (kind !== 'apply' && kind !== 'clear') invalid();
++  const request = row(command.request, ['id','createdAt','expectedParentHash']);
++  const expectedParentHash = request.expectedParentHash === null && kind === 'apply' ? null : digest(request.expectedParentHash);
++  const accepted = Object.freeze({ id: uuid(request.id), createdAt: instant(request.createdAt), expectedParentHash });
++  if (kind === 'clear') return Object.freeze({ kind, request: { ...accepted, expectedParentHash: expectedParentHash! } });
++  const facts = row(command.facts, ['source','sourceHash','activeProductIds','am','pm']);
++  const activeIds = facts.activeProductIds;
++  const checked = decodePlanHistoryVersion45({ id: accepted.id, sequence: 1, createdAt: accepted.createdAt, sourceHash: facts.sourceHash, am: facts.am, pm: facts.pm }, 1);
++  if (facts.source !== 'local' || !Array.isArray(activeIds) || activeIds.length > 100 ||
++      activeIds.some(id => typeof id !== 'string' || !id || id.length > 128 || id.trim() !== id || /[\u0000-\u001f\u007f-\u009f\ud800-\udfff]/u.test(id)) ||
++      new Set(activeIds).size !== activeIds.length ||
++      [...checked.am,...checked.pm].some(step => !activeIds.includes(step.productId))) invalid();
++  return Object.freeze({ kind, request: accepted, facts: Object.freeze({ source: 'local', sourceHash: checked.sourceHash,
++    activeProductIds: Object.freeze([...activeIds]) as readonly string[], am: checked.am, pm: checked.pm }) });
++}
++export function makeSavedRoutineDecision(command: RoutineDecision, consentHash: string, owner: string): SavedRoutineDecision {
++  const body = { command: decodeRoutineDecision(command, owner), consentHash: digest(consentHash) };
++  return Object.freeze({ ...body, contentHash: routineDecisionHash(body) });
++}
++export function decodeRoutineDecisions(raw: string | null, ownerUserId: string, processingEpoch?: number): RoutineDecisionCollection {
++  if (!ownerUserId || ownerUserId.length > 128 || ownerUserId.trim() !== ownerUserId) invalid();
++  if (raw === null) {
++    if (!Number.isSafeInteger(processingEpoch) || processingEpoch! < 0) invalid();
++    return Object.freeze({ schemaVersion: 1, purpose: 'uncertain_local_actual_routine', ownerUserId, processingEpoch: processingEpoch!, decisions: Object.freeze([]) });
++  }
++  if (utf8ToBytes(raw).length > 512_000) invalid();
++  let value: unknown; try { value = JSON.parse(raw); } catch { invalid(); }
++  const collection = row(value, ['schemaVersion','purpose','ownerUserId','processingEpoch','decisions']);
++  if (collection.schemaVersion !== 1 || collection.purpose !== 'uncertain_local_actual_routine' || collection.ownerUserId !== ownerUserId ||
++      !Number.isSafeInteger(collection.processingEpoch) || (collection.processingEpoch as number) < 0 ||
++      (processingEpoch !== undefined && collection.processingEpoch !== processingEpoch) || !Array.isArray(collection.decisions) || collection.decisions.length > ROUTINE_DECISION_LIMIT) invalid();
++  const decisions = collection.decisions.map(value => {
++    const entry = row(value, ['command','consentHash','contentHash']);
++    const saved = makeSavedRoutineDecision(entry.command as RoutineDecision, entry.consentHash as string, ownerUserId);
++    if (saved.contentHash !== digest(entry.contentHash)) invalid();
++    return saved;
++  });
++  if (new Set(decisions.map(saved => saved.command.request.id)).size !== decisions.length) invalid();
++  return Object.freeze({ schemaVersion: 1, purpose: 'uncertain_local_actual_routine', ownerUserId,
++    processingEpoch: collection.processingEpoch as number, decisions: Object.freeze(decisions) });
++}
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8ca95466ab80dde62031f9520568af649990b376
+--- /dev/null
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+@@ -0,0 +1,110 @@
++import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
++import { classifyAgePolicyReceipt } from '@/features/onboarding/ageGateStore';
++import { hasCurrentHealthDataCollectionConsentBytes } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_LIFECYCLE_KEY, parseHealthDataLifecycleRecord } from '@/features/healthConsent/lifecycleStore';
++import { assertOriginalHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { updatePrivateItemWithSources } from '@/lib/storage/privateKV';
++import { actualRoutineSnapshotFromBytes, getActualRoutineSnapshot, applyCurrentActualRoutine, clearCurrentActualRoutine, retractActualRoutineUse } from '@/features/today/completionsStore';
++import { inspectActualRoutineApply, inspectActualRoutineCorrection, type ActualRoutineLedger } from './actualRoutine';
++import { capturePlanSource44 } from './planSourceFence44';
++import { ROUTINE_DECISION_KEY, ROUTINE_DECISION_CONFLICT, ROUTINE_DECISION_LIMIT, decodeRoutineDecision, decodeRoutineDecisions,
++  makeSavedRoutineDecision, routineDecisionHash, type RoutineDecision, type SavedRoutineDecision, type RoutineDecisionCollection } from './routineDecisionRecoveryCodec';
++
++const CONSENT_KEY = 'layerwell.healthDataCollectionConsent.v1';
++const COMPLETION_KEY = 'layerwell.completions.v1';
++const AUTH_KEYS = [AGE_POLICY_RECEIPT_KEY, CONSENT_KEY, HEALTH_DATA_LIFECYCLE_KEY] as const;
++function authorization(lease: HealthDataWriteLease) {
++  return { keys: AUTH_KEYS, validate(values: ReadonlyMap<string,string|null>) {
++    assertOriginalHealthDataWriteLease(lease);
++    if (classifyAgePolicyReceipt(values.get(AGE_POLICY_RECEIPT_KEY) ?? null) !== 'current' || !hasCurrentHealthDataCollectionConsentBytes(values.get(CONSENT_KEY) ?? null)) throw Error(ROUTINE_DECISION_CONFLICT);
++    const lifecycle = parseHealthDataLifecycleRecord(values.get(HEALTH_DATA_LIFECYCLE_KEY) ?? '');
++    if (lifecycle.ownerUserId !== lease.ownerUserId || lifecycle.processingEpoch !== lease.epoch || lifecycle.state !== 'active' || lifecycle.activationRoutePending) throw Error(ROUTINE_DECISION_CONFLICT);
++  } };
++}
++function collection(values: ReadonlyMap<string,string|null>, lease: HealthDataWriteLease) {
++  const saved = decodeRoutineDecisions(values.get(ROUTINE_DECISION_KEY) ?? null, lease.ownerUserId, lease.epoch);
++  const consentHash = routineDecisionHash(values.get(CONSENT_KEY));
++  if (saved.decisions.some(row => row.consentHash !== consentHash)) throw Error(ROUTINE_DECISION_CONFLICT);
++  return saved;
++}
++function exact(saved: RoutineDecisionCollection, expected: SavedRoutineDecision) {
++  const found = saved.decisions.find(row => row.command.request.id === expected.command.request.id);
++  if (!found || routineDecisionHash(found) !== routineDecisionHash(expected)) throw Error(ROUTINE_DECISION_CONFLICT);
++  return found;
++}
++export async function loadRoutineDecisions(lease: HealthDataWriteLease): Promise<RoutineDecisionCollection> {
++  const guard = () => assertOriginalHealthDataWriteLease(lease); guard();
++  let result: RoutineDecisionCollection | undefined;
++  await updatePrivateItemWithSources(ROUTINE_DECISION_KEY, AUTH_KEYS, values => {
++    guard(); result = collection(values, lease); return values.get(ROUTINE_DECISION_KEY) ?? null;
++  }, guard, undefined, undefined, authorization(lease));
++  guard(); return result!;
++}
++export function inspectRoutineDecision(ledger: ActualRoutineLedger, command: RoutineDecision) {
++  return command.kind === 'apply' ? inspectActualRoutineApply(ledger, command.facts, command.request) : inspectActualRoutineCorrection(ledger, command);
++}
++/** Write-ahead evidence only. This function cannot dispatch the mutation and
++ * never puts a live source capability or runtime lease in persistent storage. */
++export async function prepareRoutineDecision(lease: HealthDataWriteLease, command: RoutineDecision, assertCallerCurrent: () => void): Promise<SavedRoutineDecision> {
++  const accepted = decodeRoutineDecision(command, lease.ownerUserId);
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  let result: SavedRoutineDecision | undefined;
++  await updatePrivateItemWithSources(ROUTINE_DECISION_KEY, [...AUTH_KEYS, COMPLETION_KEY], values => {
++    guard(); const saved = collection(values, lease);
++    const candidate = makeSavedRoutineDecision(accepted, routineDecisionHash(values.get(CONSENT_KEY)), lease.ownerUserId);
++    const existing = saved.decisions.find(row => row.command.request.id === accepted.request.id);
++    if (existing) { result = exact(saved, candidate); return values.get(ROUTINE_DECISION_KEY) ?? null; }
++    if (saved.decisions.length >= ROUTINE_DECISION_LIMIT) throw Error('ROUTINE_DECISION_CAPACITY');
++    const ledger = actualRoutineSnapshotFromBytes(values.get(COMPLETION_KEY) ?? null, lease.ownerUserId);
++    if (accepted.kind === 'retraction') {
++      const target = ledger.uses.find(row => row.id === accepted.event.id);
++      if (!target || target.kind !== 'use' || routineDecisionHash(target) !== routineDecisionHash(accepted.event) || ledger.uses.at(-1)?.contentHash !== accepted.expectedHash) throw Error(ROUTINE_DECISION_CONFLICT);
++    } else if ((ledger.versions.at(-1)?.contentHash ?? null) !== accepted.request.expectedParentHash) throw Error(ROUTINE_DECISION_CONFLICT);
++    result = candidate;
++    const next = JSON.stringify({ ...saved, decisions: [...saved.decisions, candidate] });
++    decodeRoutineDecisions(next, lease.ownerUserId, lease.epoch); return next;
++  }, guard, undefined, undefined, authorization(lease), guard);
++  guard();
++  // Verify authenticated encrypted durable readback before dispatch is possible.
++  const readback = await loadRoutineDecisions(lease); guard();
++  return exact(readback, result!);
++}
++export async function inspectSavedRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void) {
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  const saved = exact(await loadRoutineDecisions(lease), expected); guard();
++  const ledger = await getActualRoutineSnapshot(lease); guard();
++  return inspectRoutineDecision(ledger, saved.command);
++}
++/** Separate acknowledgement. An exact recorded event must still exist under a
++ * reserved ledger read; not-found/conflicting/unsupported evidence is retained. */
++export async function acknowledgeRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void): Promise<void> {
++  const accepted = JSON.parse(JSON.stringify(expected)) as SavedRoutineDecision;
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  await updatePrivateItemWithSources(ROUTINE_DECISION_KEY, [...AUTH_KEYS, COMPLETION_KEY], values => {
++    guard(); const saved = collection(values, lease), found = exact(saved, accepted);
++    const ledger = actualRoutineSnapshotFromBytes(values.get(COMPLETION_KEY) ?? null, lease.ownerUserId);
++    const outcome = inspectRoutineDecision(ledger, found.command);
++    if (outcome.kind !== 'recorded_current' && outcome.kind !== 'recorded_historical') throw Error(ROUTINE_DECISION_CONFLICT);
++    return JSON.stringify({ ...saved, decisions: saved.decisions.filter(row => row.command.request.id !== found.command.request.id) });
++  }, guard, undefined, undefined, authorization(lease), guard);
++  guard();
++}
++/** Only explicit owner confirmation calls this. Reacquire an original current
++ * proof through capturePlanSource44; serialized facts cannot be that proof. */
++export async function retrySavedRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void): Promise<void> {
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  const saved = exact(await loadRoutineDecisions(lease), expected); guard();
++  const command = saved.command;
++  if (command.kind === 'apply') {
++    const fresh = await capturePlanSource44(lease); guard();
++    if (routineDecisionHash(fresh) !== routineDecisionHash(command.facts)) throw Error('ROUTINE_DECISION_SOURCE_CHANGED_INSPECT_ONLY');
++    await applyCurrentActualRoutine(fresh, lease, command.request);
++  } else if (command.kind === 'clear') {
++    await clearCurrentActualRoutine(lease, command.request);
++  } else {
++    const ledger = await getActualRoutineSnapshot(lease); guard();
++    if (routineDecisionHash(ledger.uses.find(row => row.id === command.event.id) ?? null) !== routineDecisionHash(command.event)) throw Error(ROUTINE_DECISION_CONFLICT);
++    await retractActualRoutineUse(lease, command.event.id, command.expectedHash, command.request);
++  }
++  guard();
++}
+diff --git a/apps/mobile/src/features/settings/localDeviceExport.ts b/apps/mobile/src/features/settings/localDeviceExport.ts
+index b649b6913f0ddf81146ecf5e7157ee9045bd2f80..90d4d35cb5e0799959b92e37b6bb93530780df1d 100644
+--- a/apps/mobile/src/features/settings/localDeviceExport.ts
++++ b/apps/mobile/src/features/settings/localDeviceExport.ts
+@@ -1,5 +1,6 @@
+ import { validateCompletionHistoryForExport } from '@/features/today/completionLogCodec';
+ import { BOTTLE_DRAFT_KEY, decodeBottleDraftCollection } from '@/features/shelf/bottleDraftCodec';
++import { ROUTINE_DECISION_KEY, decodeRoutineDecisions } from '@/features/routine/routineDecisionRecoveryCodec';
+ import { MANUAL_INTAKE_DRAFT_KEY, decodeManualIntakeDraftCollection } from '@/features/shelf/manualIntakeDraftCodec';
+ import { OPTIONAL_CHANGE_DRAFT_KEY, decodeOptionalChangeDraftCollection } from '@/features/today/optionalChangeDraftCodec';
+ import { decryptPhotoNoteForPurposeLimitedExport } from '@/features/photos/encryptedStorage';
+@@ -47,6 +48,7 @@ export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
+ ] as const satisfies readonly LocalPrivateDataKey[];
+ 
+ const LOCAL_EXPORT_SPECS = [
++  { key: ROUTINE_DECISION_KEY, section: 'shelf_and_routine', field: 'original_routine_decisions' },
+   { key: BOTTLE_DRAFT_KEY, section: 'shelf_and_routine', field: 'unconfirmed_bottle_drafts' },
+   { key: MANUAL_INTAKE_DRAFT_KEY, section: 'shelf_and_routine', field: 'unconfirmed_manual_intake_drafts' },
+   { key: OPTIONAL_CHANGE_DRAFT_KEY, section: 'activity_and_app_state', field: 'unconfirmed_optional_change_drafts' },
+@@ -497,7 +499,9 @@ export async function collectLocalDeviceExportData(
+       if (spec.key === 'layerwell.completions.v1') {
+         validateCompletionHistoryForExport(raw, expectedUserId);
+       }
+-      const parsed = spec.key === BOTTLE_DRAFT_KEY
++      const parsed = spec.key === ROUTINE_DECISION_KEY
++        ? decodeRoutineDecisions(raw, expectedUserId!)
++        : spec.key === BOTTLE_DRAFT_KEY
+         ? decodeBottleDraftCollection(raw, expectedUserId!)
+         : spec.key === MANUAL_INTAKE_DRAFT_KEY
+         ? decodeManualIntakeDraftCollection(raw, expectedUserId!)
+diff --git a/apps/mobile/src/features/settings/localPrivateData.test.ts b/apps/mobile/src/features/settings/localPrivateData.test.ts
+index 2db1be4c06c382d3bd1edbeec54224eb73340f36..2bd04115bf543252c4ae0a1fa4ec87f37e22bd18 100644
+--- a/apps/mobile/src/features/settings/localPrivateData.test.ts
++++ b/apps/mobile/src/features/settings/localPrivateData.test.ts
+@@ -156,7 +156,7 @@ describe('local private data cleanup', () => {
+     await expect(clearLocalPrivateData()).resolves.toBeUndefined();
+   });
+ 
+-  it.each(['layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1'])(
++  it.each(['layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1', 'layerwell.routineDecisionRecovery.v1'])(
+     'retains full-deletion recovery authority while %s bytes remain', async key => {
+     mocks.markerStorage.set(key, 'synthetic-draft-ciphertext');
+     await expect(clearLocalPrivateData()).rejects.toThrow('registered_records');
+diff --git a/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts b/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts
+index de14e519db32c3024d7e81a391268517ec0498f9..f71558b92a22f8a9b1000075571a2898c211114d 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataFence44.test.ts
+@@ -961,7 +961,7 @@ it('AUDIT_RESUME CONTROL: actual selective cleanup succeeds alone and preserves
+   await expect(runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
+ });
+ 
+-it.each(['layerwell.bottleDrafts.v1', 'layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1'])(
++it.each(['layerwell.bottleDrafts.v1', 'layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1', 'layerwell.routineDecisionRecovery.v1'])(
+   'reports selective cleanup failure when %s erasure is incomplete and removes it on an explicit retry', async key => {
+   const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
+   native.configuredForSelective = true; native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+@@ -976,7 +976,7 @@ it.each(['layerwell.bottleDrafts.v1', 'layerwell.manualIntakeDrafts.v1', 'layerw
+   expect(native.bytes.has(key)).toBe(false);
+ });
+ 
+-it.each(['layerwell.bottleDrafts.v1', 'layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1'])(
++it.each(['layerwell.bottleDrafts.v1', 'layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1', 'layerwell.routineDecisionRecovery.v1'])(
+   'withdrawal drains an interrupted encrypted %s write before erasure without resurrection', async key => {
+   const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
+   native.configuredForSelective = true; native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+index 6e58114776b329e5ef78a41328e2f098ff82cf40..829ad58cfcbff132a3f384d0aa214c24a8e72919 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+@@ -15,6 +15,7 @@ import {
+ import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+ 
+ export const LOCAL_PRIVATE_DATA_KEYS = [
++  'layerwell.routineDecisionRecovery.v1',
+   'layerwell.bottleDrafts.v1',
+   'layerwell.manualIntakeDrafts.v1',
+   'layerwell.optionalChangeDrafts.v1',
+diff --git a/apps/mobile/src/features/shelf/firstValue26TestPorts.ts b/apps/mobile/src/features/shelf/firstValue26TestPorts.ts
+index 03d4a3b2bb18063746ab495dfdf2a294165889c6..05ab57ef3a503f96d73299a908dd88445bcf05ce 100644
+--- a/apps/mobile/src/features/shelf/firstValue26TestPorts.ts
++++ b/apps/mobile/src/features/shelf/firstValue26TestPorts.ts
+@@ -103,7 +103,7 @@ vi.mock('@/lib/supabase/client', () => ({
+     },
+   },
+ }));
+-vi.mock('@/lib/analytics/track', () => ({ track: ports26.track }));
++vi.mock('@/lib/analytics/track', () => ({ track: ports26.track, resetAnalyticsIdentity: async () => {} }));
+ // Use actual UI implementations, avoiding eager native-only barrel exports.
+ vi.mock('@/components/ui', async () => ({
+   ...(await import('@/components/ui/Button')),
+diff --git a/apps/mobile/src/features/today/completionsStore.ts b/apps/mobile/src/features/today/completionsStore.ts
+index 901f9b6a35b7acda0cc698ca660d7e3ae4458bc8..d5e35a525e6bef217bf6085de2916b3c1e4643be 100644
+--- a/apps/mobile/src/features/today/completionsStore.ts
++++ b/apps/mobile/src/features/today/completionsStore.ts
+@@ -566,6 +566,9 @@ export async function getCompletedSteps(date: string = localDateString()): Promi
+ }
+ 
+ /** Reading never migrates legacy check-offs or invents apply/use provenance. */
++export function actualRoutineSnapshotFromBytes(raw: string | null, owner: string): ActualRoutineLedger {
++  return decodeCompletionLogForOwner(raw, owner).actualRoutine ?? emptyActualRoutine(owner);
++}
+ export async function getActualRoutineSnapshot(expected: HealthDataWriteLease): Promise<ActualRoutineLedger> {
+   const guard = () => assertOriginalHealthDataWriteLease(expected);
+   guard();
+@@ -573,7 +576,7 @@ export async function getActualRoutineSnapshot(expected: HealthDataWriteLease):
+   let result: ActualRoutineLedger | undefined;
+   await updatePrivateItemWithSources(KEY, [], values => {
+     guard(); const raw = values.get(KEY) ?? null;
+-    result = decodeCompletionLog(raw).actualRoutine ?? emptyActualRoutine(expected.ownerUserId);
++    result = actualRoutineSnapshotFromBytes(raw, expected.ownerUserId);
+     return raw;
+   }, guard);
+   guard(); if (!result) throw new Error(ACTUAL_ROUTINE_STALE);
+diff --git a/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts b/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts
+index 89a3fd99866b393d0ecc686aa4f66d0497e8899e..d2273d1c3dfd7ea89bdfefeb60391b65bb04a4f8 100644
+--- a/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts
++++ b/apps/mobile/src/lib/consent/healthDataWriteAdmission.ts
+@@ -11,6 +11,7 @@ export const HEALTH_DATA_WRITE_OWNER_MISMATCH = 'HEALTH_DATA_WRITE_OWNER_MISMATC
+  * commerce recovery records are deliberately outside this set.
+  */
+ export const HEALTH_PURPOSE_PRIVATE_DATA_KEYS = [
++  'layerwell.routineDecisionRecovery.v1',
+   'layerwell.bottleDrafts.v1',
+   'layerwell.manualIntakeDrafts.v1',
+   'layerwell.optionalChangeDrafts.v1',
+diff --git a/apps/mobile/src/lib/storage/privateKV.test.ts b/apps/mobile/src/lib/storage/privateKV.test.ts
+index 4d8409b849b873bbbfe58e15741e772856eebb4f..6d105ca6cc5c8eb3cd59743b005b7bc1c78d7a29 100644
+--- a/apps/mobile/src/lib/storage/privateKV.test.ts
++++ b/apps/mobile/src/lib/storage/privateKV.test.ts
+@@ -220,7 +220,7 @@ describe('private KV encrypted storage', () => {
+     await expect(getPrivateItem('legacy-key')).resolves.toBe('legacy-value');
+   });
+ 
+-  it.each(['layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1'])(
++  it.each(['layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1', 'layerwell.routineDecisionRecovery.v1'])(
+     'purpose-binds %s and permits exact-account rights reads while processing is paused', async key => {
+     const raw = '{"synthetic":"unconfirmed intake"}';
+     await setPrivateItem(key, raw);
+@@ -254,7 +254,7 @@ describe('private KV encrypted storage', () => {
+     expect(mocks.secureStorage.size).toBe(0);
+   });
+ 
+-  it.each(['layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1'])(
++  it.each(['layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1', 'layerwell.routineDecisionRecovery.v1'])(
+     'refuses missing native batch rows for %s without reporting an empty collection', async key => {
+       const storage = (await import('@react-native-async-storage/async-storage')).default;
+       await setPrivateItem(key, '{"synthetic":"saved draft"}');
+diff --git a/apps/mobile/src/lib/storage/privateKV.ts b/apps/mobile/src/lib/storage/privateKV.ts
+index 2c41c5a0995c474607140a891d999811f7047cea..c67798faa6ed507c8d6caa6293ac05cf40eb4b79 100644
+--- a/apps/mobile/src/lib/storage/privateKV.ts
++++ b/apps/mobile/src/lib/storage/privateKV.ts
+@@ -311,7 +311,7 @@ async function assertHistoryKeysReadable45(keys: readonly string[]): Promise<voi
+ function rejectLegacyHistoryRaw45(key: string, raw: string | null): void {
+   // This new key has no plaintext legacy format. In particular, native '' is
+   // invalid data, never the null absence used by the strict history decoder.
+-  if ((key === 'layerwell.routinePlanHistory.v1' || key === 'layerwell.photos.deleteJournal.v1' || key === 'layerwell.bottleDrafts.v1' || key === 'layerwell.manualIntakeDrafts.v1' || key === 'layerwell.optionalChangeDrafts.v1') && raw !== null &&
++  if ((key === 'layerwell.routinePlanHistory.v1' || key === 'layerwell.photos.deleteJournal.v1' || key === 'layerwell.bottleDrafts.v1' || key === 'layerwell.manualIntakeDrafts.v1' || key === 'layerwell.optionalChangeDrafts.v1' || key === 'layerwell.routineDecisionRecovery.v1') && raw !== null &&
+       classifyEnvelope(key, raw).kind === 'legacy') {
+     rememberFailedRead(key, raw);
+     throw new Error(PRIVATE_KV_SOURCE_UNAUTHENTICATED);
+@@ -319,7 +319,7 @@ function rejectLegacyHistoryRaw45(key: string, raw: string | null): void {
+ }
+ 
+ function assertHistoryBatchShape45(keys: readonly string[], entries: unknown): void {
+-  for (const historyKey of ['layerwell.routinePlanHistory.v1', 'layerwell.bottleDrafts.v1', 'layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1']) {
++  for (const historyKey of ['layerwell.routinePlanHistory.v1', 'layerwell.bottleDrafts.v1', 'layerwell.manualIntakeDrafts.v1', 'layerwell.optionalChangeDrafts.v1', 'layerwell.routineDecisionRecovery.v1']) {
+   const requested = keys.filter((key) => key === historyKey).length;
+   if (!Array.isArray(entries)) throw new Error(PRIVATE_KV_ENVELOPE_INVALID);
+   const rows = entries.filter((entry: unknown): entry is unknown[] => Array.isArray(entry) && entry[0] === historyKey);
+@@ -389,7 +389,7 @@ function envelopeClassificationError(kind: 'malformed' | 'unsupported'): Error {
+ }
+ 
+ function privateEnvelopeVersion(key: string): PrivateEnvelope['version'] {
+-  return key === 'layerwell.photos.deleteJournal.v1' || key === 'layerwell.bottleDrafts.v1' || key === 'layerwell.manualIntakeDrafts.v1' || key === 'layerwell.optionalChangeDrafts.v1' ? PURPOSE_BOUND_VERSION : ENCRYPTION_VERSION;
++  return key === 'layerwell.photos.deleteJournal.v1' || key === 'layerwell.bottleDrafts.v1' || key === 'layerwell.manualIntakeDrafts.v1' || key === 'layerwell.optionalChangeDrafts.v1' || key === 'layerwell.routineDecisionRecovery.v1' ? PURPOSE_BOUND_VERSION : ENCRYPTION_VERSION;
+ }
+ 
+ function cipherForPrivateKey45(key: string, contentKey: Uint8Array, nonce: Uint8Array, version = privateEnvelopeVersion(key)) {
+@@ -407,7 +407,7 @@ function decryptEnvelopeBytes(key: string, envelope: PrivateEnvelope, contentKey
+ }
+ 
+ function decryptEnvelope(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): string {
+-  if ((key === 'layerwell.bottleDrafts.v1' || key === 'layerwell.manualIntakeDrafts.v1' || key === 'layerwell.optionalChangeDrafts.v1') && envelope.version !== PURPOSE_BOUND_VERSION) {
++  if ((key === 'layerwell.bottleDrafts.v1' || key === 'layerwell.manualIntakeDrafts.v1' || key === 'layerwell.optionalChangeDrafts.v1' || key === 'layerwell.routineDecisionRecovery.v1') && envelope.version !== PURPOSE_BOUND_VERSION) {
+     throw new Error(PRIVATE_KV_PURPOSE_BINDING_REQUIRED);
+   }
+   const plaintext = decryptEnvelopeBytes(key, envelope, contentKey);
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 80e2c7046c04cbab2021acaac82cc43a38ffa5ec..ef5328f4797aec5c786f2bab84a4dfdee02e1c78 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -1,5 +1,13 @@
+ # User Flow Tree
+ 
++## Engineering32 bounded browser handoff and original routine decisions (local, unaccepted)
++
++Browser startup/reload/direct entry → one exclusive Web Lock request, waiting at most three seconds → actual lock callback → private startup. A closing document may hand off during that bounded wait. A live holder beyond the bound leaves private access paused; close the holder, then explicitly Retry private app access. Pending document departure aborts only its request. Blur, route changes and unmount never release held authority. Unsupported/rejected coordination stays closed; query results never admit access.
++
++Routine records → review exact apply / clear / original recorded-use retraction → explicit confirm → encrypted owner/purpose/consent-epoch-bound original command preparation and authenticated readback → dispatch using the original live authority → ledger readback → separate exact acknowledgement. An interrupted preparation cannot dispatch; a lost result retains the original identity, time, predecessor, apply ordered source facts or exact original use/stream evidence. No command replays on startup.
++
++Routine records → Review saved routine decisions → confirmed collection / unavailable or unsupported refusal → Review saved decision → original facts and identity → Inspect original routine decision (read-only) → recorded_current / recorded_historical / conflict / not_found / unreadable. Not-found never proves failure. Explicit Retry this original routine decision reacquires current access and, for apply, a new approved in-memory source proof matching the original facts. Changed source/predecessor/target refuses. Acknowledge exact saved routine outcome is separate and rechecks the exact ledger under reservation before retiring only that recovery evidence. Close/Escape/navigation leaves unresolved evidence intact; canceled/stale callbacks cannot operate on a successor. Applying records no use; retraction preserves the original event. Withdrawal/full clearing remove the registered purpose key; export contains strict evidence, never live capabilities. Capacity refuses new preparation without purging unresolved work. All38/all18 remain UNACCEPTED; native/backend/scientific qualification remains absent.
++
+ ## Engineering28 practice template library and navigation retirement (local, unaccepted)
+ 
+ Critical professional web flow at 375×667 and 430×932: Practice templates → Load practice templates → real default503 refusal / admitted practice-only template history → New practice template → generic title and explicit ordered product roles → Review template revision → Return to draft / Save exact template revision → immutable readback → expand any dated prior revision → Revise → cancel or explicitly save a separate revision → Retire → Keep active / Confirm exact retirement → reload retained history. Unknown save retries the identical command; changed authority/history requires fresh review. Missing/corrupt history refuses instead of provisioning. Clear/background/session replacement invalidates pending work and captured controls. Keyboard focus moves to the new heading; title input keeps focus. No owner source or private client plan is imported, no owner record is changed, and no licence or provider admission is created. Exact role-to-bottle mapping, unshelved proposals, plan issuance from a template and original-owner application remain unavailable.
+diff --git a/scripts/e2e/actual-apply-outcome29.mjs b/scripts/e2e/actual-apply-outcome29.mjs
+index e1f5dfb92ccd07e22f63d69ddbff7dd416b0731e..69ba3c08d7f737bc4bb6149163d809817fdc6c4f 100644
+--- a/scripts/e2e/actual-apply-outcome29.mjs
++++ b/scripts/e2e/actual-apply-outcome29.mjs
+@@ -11,6 +11,7 @@ import { setTimeout as delay } from 'node:timers/promises';
+ import * as b from './cat04-catalog-recovery-audit.mjs';
+ import { consumerContinuity31 } from './consumer-continuity31.mjs';
+ import { traceRuntimeAdmission32 } from './runtime-admission-trace32.mjs';
++import { durableRoutine32 } from './durable-routine32.mjs';
+ 
+ const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+ const out = path.resolve(process.env.ONSKIN_OUTCOME_EVIDENCE ?? path.join(repo, '../ENGINEERING29_EVIDENCE/outcome-browser'));
+@@ -23,7 +24,14 @@ const receipt = { start: new Date().toISOString(), head: git('rev-parse', 'HEAD'
+   surface: 'Actual local Expo/Edge UI and encrypted records; synthetic owner and acknowledgement faults, no native qualification', viewports: [], blocked: [], pass: false };
+ const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
+ let server, browser, client;
++const profilePath = mkdtempSync(path.join(tmpdir(), 'onskin-outcome32-'));
++function startBrowser() {
++  return spawn(browserPath, ['--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${profilePath}`,
++    '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--disable-sync',
++    '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1', 'about:blank'], { stdio: 'ignore', windowsHide: true });
++}
+ let keyboardProbe = 0;
++const admissionEvents = new Map();
+ const moduleExpression = `const mod=suffix=>{const entry=[...__r.getModules().values()].find(m=>(m.verboseName??'').replaceAll('\\\\','/').endsWith(suffix));if(!entry?.publicModule?.exports)throw new Error('Missing loaded source module');return entry.publicModule.exports;};const store=mod('/features/today/completionsStore.ts');`;
+ const tap = label => b.scrollControlIntoView(client, label).then(() => b.clickByText(client, label));
+ const contains = label => b.scrollControlIntoView(client, label, { exact: false }).then(() => b.clickByText(client, label, { exact: false }));
+@@ -51,7 +59,8 @@ async function keyboard(label, height) {
+ async function connect(width, height) {
+   client = await b.connectToPage(debugPort, baseUrl);
+   for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable', 'Log.enable']) await client.send(method);
+-  const transitions = [];
++  const traceKey = `${width}x${height}`;
++  const transitions = admissionEvents.get(traceKey) ?? []; admissionEvents.set(traceKey, transitions);
+   await traceRuntimeAdmission32(client, event => { transitions.push(event); json(`${width}x${height}-admission-trace.json`, transitions); });
+   const page = client;
+   page.ws.addEventListener('message', event => { const m = JSON.parse(event.data); if (m.method !== 'Fetch.requestPaused') return;
+@@ -88,9 +97,7 @@ for (const key of Object.keys(process.env)) if (key.startsWith('EXPO_PUBLIC_') |
+ Object.assign(process.env, { EXPO_OFFLINE: '1', EXPO_UNSTABLE_HEADLESS: '1', EXPO_NO_DOTENV: '1', EXPO_NO_TELEMETRY: '1', TURBO_TELEMETRY_DISABLED: '1', CI: '1' });
+ try {
+   server = b.startExpoServer({ appPort, evidenceDir: out, group: { id: 'e29-actual-outcome', env: { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner', EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'false' } } });
+-  browser = spawn(browserPath, ['--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-outcome29-'))}`,
+-    '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--disable-sync',
+-    '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1', 'about:blank'], { stdio: 'ignore', windowsHide: true });
++  browser = startBrowser();
+   json('owned-processes.json', { serverPid: server.pid, browserPid: browser.pid, appPort, debugPort }); await b.waitForUrl(baseUrl);
+   for (const [width, height] of [[375, 667], [390, 844], [430, 932]]) {
+     const id = `${width}x${height}`; await connect(width, height); await onboarding(id);
+@@ -114,7 +121,11 @@ try {
+     json(id + '-canonical-receipt.json', { versions: final.versions.map(({ id, sequence, contentHash, parentHash, source }) => ({ id, sequence, contentHash, parentHash, source })),
+       uses: final.uses.length, ciphertextSha256: sha(final.raw), inspectionPreservedCiphertext: true });
+     const continuity31 = await consumerContinuity31({ b, client, tap, keyboard, text, snapshot, capture, moduleExpression, id, height });
+-    receipt.viewports.push({ width, height, pass: true, explicitOnboarding: true, syntheticAcknowledgementFault: true, exactReadOnlyOutcome: true, continuity31 });
++    const durable32 = await durableRoutine32({ b, getClient: () => client, tap, keyboard, text, snapshot, capture, moduleExpression, id, height,
++      restart: async () => { client.close(); client = undefined; await b.stopProcessBestEffort(browser); browser = startBrowser();
++        json(id + '-restart-processes.json', { browserPid: browser.pid, serverPid: server.pid, appPort, debugPort, retainedSyntheticProfile: true });
++        await connect(width,height); await client.send('Page.navigate', { url: baseUrl + '/routine/records' }); } });
++    receipt.viewports.push({ width, height, pass: true, explicitOnboarding: true, syntheticAcknowledgementFault: true, exactReadOnlyOutcome: true, continuity31, durable32 });
+     const target = (await client.send('Target.getTargetInfo')).targetInfo.targetId; await client.send('Target.closeTarget', { targetId: target }).catch(() => {}); client.close(); client = undefined;
+   }
+   assert.equal(receipt.blocked.length, 0); receipt.pass = true;
+diff --git a/scripts/e2e/durable-routine32.mjs b/scripts/e2e/durable-routine32.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c44f0a737311431fcd81f5a7779c06e3b7ba818c
+--- /dev/null
++++ b/scripts/e2e/durable-routine32.mjs
+@@ -0,0 +1,64 @@
++// Real UI/encrypted stores. Faults model local bridge acknowledgement loss;
++// they never admit source/owner/consent or alter the saved command evidence.
++import assert from 'node:assert/strict';
++export async function durableRoutine32({ b, getClient, tap, keyboard, text, snapshot, capture, moduleExpression, id, height, restart }) {
++  const evaluate = expression => b.evaluate(getClient(),expression,true);
++  const mods = `${moduleExpression}const recovery=mod('/features/routine/routineDecisionRecoveryStore.ts');const lease=mod('/lib/consent/healthDataWriteAdmission.ts').captureHealthDataWriteLease();`;
++  const rows = () => evaluate(`(async()=>{${mods}return (await recovery.loadRoutineDecisions(lease)).decisions})()`);
++  const navigate = async route => { await evaluate(`(()=>{${moduleExpression}mod('/node_modules/expo-router/build/exports.js').router.push(${JSON.stringify(route)});return true})()`); await b.waitForPath(getClient(),route); };
++  const fault = async (method,afterCommit) => evaluate(`(()=>{${moduleExpression}const original=store[${JSON.stringify(method)}];store[${JSON.stringify(method)}]=async(...args)=>{store[${JSON.stringify(method)}]=original;globalThis.__original32=${JSON.stringify(method)}==='applyCurrentActualRoutine'?args[2]:${JSON.stringify(method)}==='clearCurrentActualRoutine'?args[1]:args[3];${afterCommit?'await original(...args);':''}throw Error('SYNTHETIC32_ACK_LOST')};return true})()`);
++  const openSaved = async commandId => {
++    await keyboard('Review saved routine decisions',height);
++    const saved=await rows(), index=saved.findIndex(row=>row.command.request.id===commandId); assert(index>=0);
++    await keyboard(`Review saved ${saved[index].command.kind} decision ${index+1}`,height);
++    return saved[index];
++  };
++  const inspection = async (commandId,kind) => {
++    await openSaved(commandId); const before=await snapshot();
++    const recoveryBefore=await evaluate(`localStorage.getItem('layerwell.routineDecisionRecovery.v1')`);
++    await keyboard('Inspect original routine decision',height); await text(kind);
++    assert(await evaluate(`document.querySelector('[role="dialog"][aria-label="Review original routine decision"]').contains(document.activeElement)`));
++    const after=await snapshot(); assert.equal(after.raw,before.raw); assert.equal(after.keyHash,before.keyHash);
++    assert.equal(await evaluate(`localStorage.getItem('layerwell.routineDecisionRecovery.v1')`),recoveryBefore);
++    return {before,after};
++  };
++  await navigate('/routine/records'); await text('My actual routine');
++  // Prepared but not dispatched: a browser-process restart loses every old
++  // closure/WeakMap. Explicit retry must reacquire source and keep original ID.
++  await keyboard('Review current Shelf sequence as actual routine',height); await fault('applyCurrentActualRoutine',false);
++  await keyboard('Apply reviewed actual routine',height); await text('Check saved apply outcome');
++  const original=await evaluate('globalThis.__original32'), before=await snapshot();
++  const prepared=(await rows()).find(row=>row.command.request.id===original.id); assert(prepared); assert.equal(prepared.command.request.createdAt,original.createdAt);
++  await restart(); await text('My actual routine');
++  await evaluate(`(()=>{const seen=new WeakSet();const scale=()=>{for(const n of document.querySelectorAll('div[dir="auto"]')){if(seen.has(n))continue;seen.add(n);const s=getComputedStyle(n),size=parseFloat(s.fontSize),line=parseFloat(s.lineHeight);n.style.fontSize=size*2+'px';n.style.lineHeight=(Number.isFinite(line)?line:size*1.5)*2+'px';}};scale();globalThis.__durableText32=new MutationObserver(scale);globalThis.__durableText32.observe(document.body,{childList:true,subtree:true});return true})()`);
++  assert.equal((await snapshot()).raw,before.raw);
++  await inspection(original.id,'not_found'); await capture(id+'-restart-original-not-found');
++  await keyboard('Retry this original routine decision',height); await text('recorded_current');
++  const applied=await snapshot(); assert.equal(applied.versions.length,before.versions.length+1); assert.equal(applied.versions.at(-1).id,original.id);
++  assert.equal(applied.versions.at(-1).createdAt,original.createdAt); assert.equal(applied.uses.length,before.uses.length);
++  await keyboard('Acknowledge exact saved routine outcome',height); assert(!(await rows()).some(row=>row.command.request.id===original.id));
++  // Committed clear with lost acknowledgement: restart exposes exact current
++  // outcome and read-only inspection, followed by explicit acknowledgement.
++  await keyboard('Review clearing my applied routine',height); await fault('clearCurrentActualRoutine',true);
++  await keyboard('Confirm clearing applied routine',height); await text('Check saved correction outcome');
++  const clear=await evaluate('globalThis.__original32'); await getClient().send('Page.reload'); await text('My actual routine');
++  await inspection(clear.id,'recorded_current'); await capture(id+'-clear-restart-inspection');
++  await keyboard('Acknowledge exact saved routine outcome',height);
++  await keyboard('Review current Shelf sequence as actual routine',height); await keyboard('Apply reviewed actual routine',height); await text('Actual routine applied and read back');
++  await navigate('/today'); await b.waitForCondition(getClient(),`!!document.querySelector('[role="checkbox"][aria-checked="false"]')`,30000,'new version visible use');
++  const label=await evaluate(`document.querySelector('[role="checkbox"][aria-checked="false"]').getAttribute('aria-label')`);
++  await b.scrollControlIntoView(getClient(),label); await b.clickByText(getClient(),label);
++  await b.waitForCondition(getClient(),`!!document.querySelector('[role="checkbox"][aria-checked="true"]')`,30000,'use persisted');
++  await navigate('/routine/records'); await tap('Show actual routine and use history');
++  const used=(await snapshot()).uses.at(-1); assert.equal(used.kind,'use');
++  await keyboard(`Review retraction of use ${used.sequence}`,height); await fault('retractActualRoutineUse',true);
++  await keyboard('Confirm actual-use retraction',height); await text('Check saved correction outcome');
++  const retraction=await evaluate('globalThis.__original32');
++  const savedRetraction=(await rows()).find(row=>row.command.request.id===retraction.id); assert.deepEqual(savedRetraction.command.event,used);
++  await getClient().send('Page.reload'); await text('My actual routine');
++  await inspection(retraction.id,'recorded_current'); await capture(id+'-retraction-restart-inspection');
++  await keyboard('Acknowledge exact saved routine outcome',height);
++  const final=await snapshot(); assert.equal(final.uses.filter(row=>row.id===retraction.id).length,1); assert.deepEqual(final.uses.find(row=>row.id===used.id),used);
++  return {pass:true,processRestart:true,exactApplyId:original.id,exactClearId:clear.id,exactRetractionId:retraction.id,
++    originalTimesPreserved:true,readOnlyCiphertextAndKeys:true,originalUsePreserved:true,noStartupReplay:true,explicitRetryOnly:true};
++}

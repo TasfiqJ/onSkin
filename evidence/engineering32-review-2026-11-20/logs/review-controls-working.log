@@ -1,0 +1,44 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/actualRoutineJourney.test.ts src/features/routine/routineDecisionRecovery32.test.ts src/features/settings/localPrivateDataKeys.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/routine/actualRoutineJourney.test.ts > retired recovery controls cannot inspect or close a successor review of the same saved object
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/routine/actualRoutineJourney.test.ts (30 tests | 1 failed) 6799ms
+   × retired recovery controls cannot inspect or close a successor review of the same saved object 269ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/routine/actualRoutineJourney.test.ts > retired recovery controls cannot inspect or close a successor review of the same saved object
+AssertionError: expected '{"type":"View","props":{"className":"…' to contain 'Review original apply decision'
+
+Expected: "Review original apply decision"
+Received: "{"type":"View","props":{"className":"gap-3 rounded-card border border-hairline bg-paper-raised p-4"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[18px]","accessibilityRole":"header"},"children":["My actual routine"]},{"type":"View","props":{"className":"gap-3"},"children":[{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-transparent w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-ink"},"children":["Review saved routine decisions"]}]},{"type":"View","props":{"className":"gap-2"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["apply"," decision ","1",". Original command: ","4f5db68c-08c7-4f62-a0a6-a14fc2f754df"]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-ink w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-paper"},"children":["Review saved apply decision 1"]}]}]},{"type":"Modal","props":{"visible":true,"transparent":true,"animationType":"none"},"children":[{"type":"View","props":{"className":"flex-1 justify-center bg-paper px-5 py-6","role":"dialog","aria-modal":true,"accessibilityViewIsModal":true,"accessibilityLabel":"Review original routine decision"},"children":[{"type":"ScrollView","props":{"keyboardShouldPersistTaps":"handled","contentContainerClassName":"gap-3 pb-8"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink","accessibilityRole":"header"},"children":["Review original ","apply"," decision"]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["Original command: ","4f5db68c-08c7-4f62-a0a6-a14fc2f754df"]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["Original time: ","2026-11-20T15:11:59.977Z"]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["Nothing is replayed automatically. Canceling or leaving this review does not undo a dispatched write. Applying still records no product use."]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["Original source reference: ","efa907cfb66db5bb4215a3f6b6613caa7905e73cf6f19b3fb0c677bbf7ac8763"]},{"type":"View","props":{},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["AM"," reviewed sequence"]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["1",". ","Journey cleanser"," (","1e0f47d2-bb55-4ba6-a542-ccb971c99056",")"]}]},{"type":"View","props":{},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["PM"," reviewed sequence"]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["1",". ","Journey cleanser"," (","1e0f47d2-bb55-4ba6-a542-ccb971c99056",")"]}]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["Original predecessor: ","no earlier applied version"]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-ink w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-paper"},"children":["Inspect original routine decision"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-ink w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-paper"},"children":["Retry this original routine decision"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-transparent w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-ink"},"children":["Close original routine decision"]}]}]}]}]}]},{"type":"Text","props":{"className":"font-sans text-sm leading-5 text-ink"},"children":["Only an explicit apply creates an actual routine version. Saved snapshots, generated suggestions and old check-offs are not apply intent. This does not confirm use or provide advice. Sequence records commit order; device dates are not a trusted clock."]},{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink"},"children":["No actual routine has been applied on this device."]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-ink w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-paper"},"children":["Review current Shelf sequence as actual routine"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-transparent w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-ink"},"children":["Reload actual routine and source"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityState":{"disabled":false},"disabled":false,"className":"min-h-[56px] items-center justify-center rounded-pill px-6 py-3.5 bg-transparent w-full"},"children":[{"type":"Text","props":{"className":"font-sans text-base leading-6 text-ink font-sans-semibold text-[16px] text-ink"},"children":["Show actual routine and use history"]}]},{"type":"Modal","props":{"visible":false,"transparent":true,"animationType":"none"},"children":null}]}"
+
+ ❯ src/features/routine/actualRoutineJourney.test.ts:70:55
+     68|   const read=vi.spyOn(completionStore,'getActualRoutineSnapshot'); rea…
+     69|   await act(async()=>{await oldInspect();oldClose();});
+     70|   expect(read).not.toHaveBeenCalled(); expect(text()).toContain('Revie…
+       |                                                       ^
+     71| });
+     72|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 63 passed (64)
+   Start at  10:11:58
+   Duration  8.06s (transform 1.33s, setup 0ms, import 1.98s, tests 8.15s, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/routine/actualRoutineJourney.test.ts src/features/routine/routineDecisionRecovery32.test.ts src/features/settings/localPrivateDataKeys.test.ts --maxWorkers=2

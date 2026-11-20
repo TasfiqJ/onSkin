@@ -1,0 +1,72 @@
+[
+  {
+    "logical": "logs/final-root-tests-drain32.log",
+    "parts": [
+      "parts/logs/final-root-tests-drain32.log.001.txt",
+      "parts/logs/final-root-tests-drain32.log.002.txt",
+      "parts/logs/final-root-tests-drain32.log.003.txt",
+      "parts/logs/final-root-tests-drain32.log.004.txt"
+    ],
+    "bytes": 694072,
+    "sha256": "0c28d590861ea3d59ac65ebd514eb1b02bc4141964a2835a3128dbf9c2ed7c8a",
+    "originalRawSha256": "906863c3b0558ae511b977884351a424f45f432079bb8330b273c0dee08749bd",
+    "byteExact": false
+  },
+  {
+    "logical": "CUMULATIVE_PR48_TO_FINAL.patch",
+    "parts": [
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.001.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.002.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.003.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.004.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.005.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.006.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.007.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.008.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.009.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.010.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.011.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.012.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.013.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.014.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.015.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.016.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.017.txt",
+      "parts/CUMULATIVE_PR48_TO_FINAL.patch.018.txt"
+    ],
+    "bytes": 3924727,
+    "sha256": "1d4630bf06ad4efd637badc7f368747b65cec4e47e47b92e9cb487f98111085d",
+    "originalRawSha256": "1d4630bf06ad4efd637badc7f368747b65cec4e47e47b92e9cb487f98111085d",
+    "byteExact": true
+  },
+  {
+    "logical": "SESSION_ENGINEERING31_TO_FINAL.patch",
+    "parts": [
+      "SESSION_ENGINEERING31_TO_FINAL.patch"
+    ],
+    "bytes": 152368,
+    "sha256": "e45d41afe6dca75d4d07e3d96243a80a437495fcf50c7bc6adeefad66c26f820",
+    "originalRawSha256": "e45d41afe6dca75d4d07e3d96243a80a437495fcf50c7bc6adeefad66c26f820",
+    "byteExact": true
+  },
+  {
+    "logical": "COMMIT_ANCESTRY_WITNESS.json",
+    "parts": [
+      "COMMIT_ANCESTRY_WITNESS.json"
+    ],
+    "bytes": 121984,
+    "sha256": "f564d1dc2be731b4c616b1d648534dcd702baa6f70ae15519889144be04b1bd7",
+    "originalRawSha256": "f564d1dc2be731b4c616b1d648534dcd702baa6f70ae15519889144be04b1bd7",
+    "byteExact": true
+  },
+  {
+    "logical": "verify_ancestry.py",
+    "parts": [
+      "verify_ancestry.py"
+    ],
+    "bytes": 1516,
+    "sha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9",
+    "originalRawSha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9",
+    "byteExact": true
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "label": "working-bulk-erasure-red",
+  "command": [
+    "node",
+    "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\bulk_erasure_probe32.mjs"
+  ],
+  "before": {
+    "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+    "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-20T16:08:45.271644+00:00",
+  "freeBytesBefore": 147157692416,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 1,
+  "after": {
+    "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+    "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-20T16:08:45.527637+00:00",
+  "freeBytesAfter": 147157688320,
+  "logBytes": 663,
+  "logSha256": "b55ce0a37f16ac57250fe674fb2345703ef0a3ff1fc10da73567ff3b34ecf0a0"
+}

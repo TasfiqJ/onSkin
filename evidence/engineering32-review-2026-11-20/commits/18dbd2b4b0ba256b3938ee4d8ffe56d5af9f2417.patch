@@ -1,0 +1,76 @@
+diff --git a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+index dafea02becd1e7d7705b36ed6ba302daebff90ae..ef8638a4f4e6b453e679f54be7f7ab752a4425a4 100644
+--- a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
++++ b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+@@ -6,6 +6,11 @@ import { ROUTINE_DECISION_BROWSER_DATABASE as DB, ROUTINE_DECISION_STORAGE_KEY a
+ const STORE = 'ciphertext';
+ const createdDatabases = new WeakSet<IDBDatabase>();
+ const fail = () => new Error('ROUTINE_DECISION_DURABLE_STORAGE_UNAVAILABLE');
++async function settled<T>(operations: Promise<T>[]): Promise<T[]> {
++  // Failure cannot release an owner/cleanup fence while sibling I/O continues.
++  const results = await Promise.allSettled(operations);
++  return results.map(result => { if (result.status === 'rejected') throw result.reason; return result.value; });
++}
+ async function database(create: boolean): Promise<IDBDatabase | null> {
+   if (!globalThis.indexedDB?.databases) throw fail();
+   if (!create && !(await indexedDB.databases()).some(row => row.name === DB)) return null;
+@@ -40,7 +45,9 @@ async function transaction(key: string, write: boolean, value?: string | null):
+       const tx = db.transaction(STORE,write?'readwrite':'readonly',write?{durability:'strict'}:undefined);
+       if (write && tx.durability !== 'strict') { tx.abort(); reject(fail()); return; }
+       let result: string | null = null;
+-      tx.onabort = () => reject(fail()); tx.onerror = () => reject(fail()); tx.oncomplete = () => resolve(result);
++      // A request error aborts by default. Wait for the terminal abort event,
++      // rather than retiring the caller's fence during a still-live transaction.
++      tx.onabort = () => reject(fail()); tx.oncomplete = () => resolve(result);
+       const store = tx.objectStore(STORE), inventory = store.getAllKeys();
+       inventory.onsuccess = () => {
+         if (inventory.result.some(row => typeof row !== 'string' || !ROWS.includes(row))) { tx.abort(); return; }
+@@ -87,12 +94,12 @@ const storage = {
+           if(request.result.some(row=>typeof row!=='string'||!ROWS.includes(row))) { reject(fail()); return; }
+           resolve(request.result as string[]);
+         };
+-        tx.onabort=()=>reject(fail()); tx.onerror=()=>reject(fail());
++        tx.onabort=()=>reject(fail());
+       });
+       return [...new Set([...keys,...retained])];
+     } finally { db.close(); }
+   },
+-  multiGet: async (keys: readonly string[]): Promise<[string,string|null][]> => Promise.all(keys.map(async key => [key,await storage.getItem(key)])),
+-  multiRemove: async (keys: readonly string[]) => { await Promise.all(keys.map(key=>storage.removeItem(key))); },
++  multiGet: async (keys: readonly string[]): Promise<[string,string|null][]> => settled(keys.map(async (key): Promise<[string,string|null]> => [key,await storage.getItem(key)])),
++  multiRemove: async (keys: readonly string[]) => { await settled(keys.map(key=>storage.removeItem(key))); },
+ };
+ export default storage;
+diff --git a/apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts b/apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4fb1502ea16b2f0fe685d2d8f4fb5189415a82c5
+--- /dev/null
++++ b/apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts
+@@ -0,0 +1,27 @@
++import { afterEach, expect, it, vi } from 'vitest';
++import storage from './privateAsyncStorage.web';
++vi.mock('@react-native-async-storage/async-storage', () => ({ default: {} }));
++
++afterEach(() => vi.restoreAllMocks());
++it.each(['read','erase'] as const)('keeps a failed bulk %s pending until every dispatched operation settles', async kind => {
++  let release!: () => void, settled = false, remainingFinished = false;
++  const hold = new Promise<void>(resolve => { release = resolve; });
++  const failure = new Error('synthetic storage rejection');
++  const calls: string[] = [];
++  const operation = async (key: string) => {
++    calls.push(key);
++    if (key === 'reject') throw failure;
++    await hold; remainingFinished = true;
++  };
++  vi.spyOn(storage,'getItem').mockImplementation(async key => { await operation(key); return null; });
++  vi.spyOn(storage,'removeItem').mockImplementation(operation);
++  const result = (kind === 'read' ? storage.multiGet(['reject','pending']) : storage.multiRemove(['reject','pending']))
++    .then(() => { settled = true; return null; }, error => { settled = true; return error; });
++  try {
++    await new Promise(resolve => setTimeout(resolve,0));
++    expect(calls).toEqual(['reject','pending']);
++    expect(settled).toBe(false); // An owner fence cannot retire pending I/O.
++  } finally { release(); await result; }
++  expect(remainingFinished).toBe(true);
++  expect(await result).toBe(failure);
++});

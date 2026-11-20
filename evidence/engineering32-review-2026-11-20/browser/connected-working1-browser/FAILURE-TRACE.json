@@ -1,0 +1,4 @@
+{
+  "message": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(index>=0)\n",
+  "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(index>=0)\n\n    at openSaved (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/durable-routine32.mjs:12:95)\n    at async inspection (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/durable-routine32.mjs:17:5)\n    at async durableRoutine32 (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/durable-routine32.mjs:35:3)\n    at async file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:124:23"
+}

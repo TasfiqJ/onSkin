@@ -1,0 +1,11 @@
+{
+  "purpose": "Close initial-target trace gap: first app execution starts only after observer installation on inert local Metro status page. No retry or admission bypass.",
+  "source": "<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/runtime-handoff32.mjs",
+  "sourceSha256": "b5c19a0ecc3e599c76853a797c60c8bea47e0ac47d2cf46fc7295d28ecbc12f6",
+  "derivedSha256": "d88f7a2ee305a2c0f36f2bb745e1fc74b31e7daa98b958f55f715cde4e8bba22",
+  "changes": [
+    "Resolve imports/repository from external evidence path",
+    "Initial target /status instead of application root",
+    "Assert inert packager-status text and absent app admission before navigating to app"
+  ]
+}

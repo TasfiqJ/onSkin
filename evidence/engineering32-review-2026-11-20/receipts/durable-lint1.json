@@ -1,0 +1,43 @@
+{
+  "label": "durable-lint1",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--",
+    "eslint",
+    "src/features/routine/SavedRoutineDecisions.tsx",
+    "src/features/routine/routineDecisionRecoveryStore.ts",
+    "src/features/routine/routineDecisionRecoveryCodec.ts",
+    "src/features/routine/ActualRoutinePanel.tsx",
+    "src/features/routine/actualRoutine.ts",
+    "--max-warnings=0"
+  ],
+  "before": {
+    "head": "654de93cc495266989d119f193557c9a0d502f88",
+    "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+    "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+    "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+  },
+  "start": "2026-11-20T14:40:22.393803+00:00",
+  "freeBytesBefore": 148037033984,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "654de93cc495266989d119f193557c9a0d502f88",
+    "tree": "0830cc4261fbdf9a3bb93f720274a2aaec6046ca",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateDataFence44.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n?? apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n?? apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n?? apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+    "indexSha256": "1d8aff5f8c50328eb6e5575d6d1993a592e660d8591d7fe55279f92b9fa987d1",
+    "diffSha256": "fc48ef136c2d15a4637930482d9071cbb4a5e3fc33166d8c4b523138efdd76ed"
+  },
+  "end": "2026-11-20T14:40:28.542687+00:00",
+  "freeBytesAfter": 148036943872,
+  "logBytes": 0,
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

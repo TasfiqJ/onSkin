@@ -1,0 +1,2140 @@
+{
+  "ordinary": [
+    {
+      "width": 375,
+      "height": 667,
+      "repeat": 1,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 10,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "repeat": 2,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 8,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "repeat": 3,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "repeat": 1,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 8,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "repeat": 2,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "repeat": 3,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "repeat": 1,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 11,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "repeat": 2,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 23,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "repeat": 3,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    }
+  ],
+  "induced": [
+    {
+      "case": "transient closing holder",
+      "pending": {
+        "status": "checking",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "handoff": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "case": "live second tab",
+      "occupied": {
+        "status": "occupied",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 2,
+            "status": "occupied",
+            "reason": "bounded-wait-ended"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "recovered": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 2,
+            "status": "occupied",
+            "reason": "bounded-wait-ended"
+          },
+          {
+            "attempt": 3,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 3,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "manualRetries": 1,
+      "pass": true
+    },
+    {
+      "case": "pending document reload termination",
+      "pass": true
+    },
+    {
+      "case": "unsupported",
+      "result": {
+        "status": "unavailable",
+        "transitions": [
+          {
+            "attempt": 0,
+            "status": "unavailable",
+            "reason": "unsupported"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "denied",
+      "result": {
+        "status": "unavailable",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "unavailable",
+            "reason": "request-rejected"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "raw storage denial and unsupported schema",
+      "storageBoundary": {
+        "legacyReadPreserved": true,
+        "legacyReadCreatedNoDatabase": true,
+        "strictWriteDenied": true,
+        "noCiphertextWritten": true,
+        "futureRefused": true,
+        "versionPreserved": true
+      },
+      "syntheticPortOnly": true,
+      "pass": true
+    }
+  ],
+  "interventions": [
+    {
+      "case": "true contention",
+      "action": "explicit visible Retry private app access"
+    }
+  ],
+  "failures": [],
+  "traces": [
+    {
+      "documentId": "4f8d124d-20d8-48c7-bc21-670d0b4692eb",
+      "event": "document",
+      "at": 759
+    },
+    {
+      "documentId": "4f8d124d-20d8-48c7-bc21-670d0b4692eb",
+      "event": "pageshow",
+      "at": 11449.5,
+      "persisted": false
+    },
+    {
+      "documentId": "4f8d124d-20d8-48c7-bc21-670d0b4692eb",
+      "event": "request",
+      "at": 11625.199999988079,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "4f8d124d-20d8-48c7-bc21-670d0b4692eb",
+      "event": "callback",
+      "at": 11635.5,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "29931b37-d6bc-4d3c-96f2-aa35220a5bc9",
+      "event": "document",
+      "at": 582.1999999880791
+    },
+    {
+      "documentId": "29931b37-d6bc-4d3c-96f2-aa35220a5bc9",
+      "event": "pageshow",
+      "at": 1028.8999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "29931b37-d6bc-4d3c-96f2-aa35220a5bc9",
+      "event": "request",
+      "at": 1098.2999999523163,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "29931b37-d6bc-4d3c-96f2-aa35220a5bc9",
+      "event": "callback",
+      "at": 1104.3999999761581,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "ce8c9858-ecbd-42ff-a419-77d0072cceec",
+      "event": "document",
+      "at": 663.9000000357628
+    },
+    {
+      "documentId": "ce8c9858-ecbd-42ff-a419-77d0072cceec",
+      "event": "pageshow",
+      "at": 1152.699999988079,
+      "persisted": false
+    },
+    {
+      "documentId": "ce8c9858-ecbd-42ff-a419-77d0072cceec",
+      "event": "request",
+      "at": 1230.199999988079,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "ce8c9858-ecbd-42ff-a419-77d0072cceec",
+      "event": "callback",
+      "at": 1241.4000000357628,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "11f034e9-81a8-489f-a132-cfa1bbaa69fe",
+      "event": "document",
+      "at": 723.6999999880791
+    },
+    {
+      "documentId": "11f034e9-81a8-489f-a132-cfa1bbaa69fe",
+      "event": "pageshow",
+      "at": 1272.1000000238419,
+      "persisted": false
+    },
+    {
+      "documentId": "11f034e9-81a8-489f-a132-cfa1bbaa69fe",
+      "event": "request",
+      "at": 1330.800000011921,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "11f034e9-81a8-489f-a132-cfa1bbaa69fe",
+      "event": "callback",
+      "at": 1337.800000011921,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "a150988a-ca85-4c6e-b1e7-afba4c2be002",
+      "event": "document",
+      "at": 532.5
+    },
+    {
+      "documentId": "a150988a-ca85-4c6e-b1e7-afba4c2be002",
+      "event": "pageshow",
+      "at": 950.3999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "a150988a-ca85-4c6e-b1e7-afba4c2be002",
+      "event": "request",
+      "at": 1010.5,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "a150988a-ca85-4c6e-b1e7-afba4c2be002",
+      "event": "callback",
+      "at": 1016.8999999761581,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "f5ffcae3-c1c0-4bec-a14b-57fcf918d784",
+      "event": "document",
+      "at": 683
+    },
+    {
+      "documentId": "f5ffcae3-c1c0-4bec-a14b-57fcf918d784",
+      "event": "pageshow",
+      "at": 1502,
+      "persisted": false
+    },
+    {
+      "documentId": "f5ffcae3-c1c0-4bec-a14b-57fcf918d784",
+      "event": "request",
+      "at": 1688.800000011921,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "f5ffcae3-c1c0-4bec-a14b-57fcf918d784",
+      "event": "callback",
+      "at": 1704.3999999761581,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "1da84732-f7da-456d-816d-0f0a86c1a295",
+      "event": "document",
+      "at": 633.8000000119209
+    },
+    {
+      "documentId": "1da84732-f7da-456d-816d-0f0a86c1a295",
+      "event": "pageshow",
+      "at": 1040.699999988079,
+      "persisted": false
+    },
+    {
+      "documentId": "1da84732-f7da-456d-816d-0f0a86c1a295",
+      "event": "request",
+      "at": 1097.9000000357628,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "1da84732-f7da-456d-816d-0f0a86c1a295",
+      "event": "callback",
+      "at": 1103.6000000238419,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "a90c3093-9d66-4465-ab8a-3c5c12878534",
+      "event": "document",
+      "at": 513.5999999642372
+    },
+    {
+      "documentId": "a90c3093-9d66-4465-ab8a-3c5c12878534",
+      "event": "pageshow",
+      "at": 966.1999999880791,
+      "persisted": false
+    },
+    {
+      "documentId": "a90c3093-9d66-4465-ab8a-3c5c12878534",
+      "event": "request",
+      "at": 1018.5999999642372,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "a90c3093-9d66-4465-ab8a-3c5c12878534",
+      "event": "callback",
+      "at": 1025.699999988079,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "2e2c21ef-9595-43a0-970b-2f19df5dc588",
+      "event": "document",
+      "at": 545.5
+    },
+    {
+      "documentId": "2e2c21ef-9595-43a0-970b-2f19df5dc588",
+      "event": "pageshow",
+      "at": 1043.3999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "2e2c21ef-9595-43a0-970b-2f19df5dc588",
+      "event": "request",
+      "at": 1105.0999999642372,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "2e2c21ef-9595-43a0-970b-2f19df5dc588",
+      "event": "callback",
+      "at": 1112,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "a5efa814-671d-41d2-bffe-bfb783e353b6",
+      "event": "document",
+      "at": 628.8999999761581
+    },
+    {
+      "documentId": "a5efa814-671d-41d2-bffe-bfb783e353b6",
+      "event": "pageshow",
+      "at": 1226.699999988079,
+      "persisted": false
+    },
+    {
+      "documentId": "a5efa814-671d-41d2-bffe-bfb783e353b6",
+      "event": "request",
+      "at": 1300.800000011921,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "a5efa814-671d-41d2-bffe-bfb783e353b6",
+      "event": "callback",
+      "at": 1309,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "39a74177-29a6-424d-b877-17d482462d35",
+      "event": "document",
+      "at": 666.9000000357628
+    },
+    {
+      "documentId": "39a74177-29a6-424d-b877-17d482462d35",
+      "event": "pageshow",
+      "at": 1278.699999988079,
+      "persisted": false
+    },
+    {
+      "documentId": "39a74177-29a6-424d-b877-17d482462d35",
+      "event": "request",
+      "at": 1450.1000000238419,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "39a74177-29a6-424d-b877-17d482462d35",
+      "event": "callback",
+      "at": 1457.800000011921,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "1fdd1064-583e-4a2e-8f5d-618fa3395556",
+      "event": "document",
+      "at": 565.4000000357628
+    },
+    {
+      "documentId": "1fdd1064-583e-4a2e-8f5d-618fa3395556",
+      "event": "pageshow",
+      "at": 970,
+      "persisted": false
+    },
+    {
+      "documentId": "1fdd1064-583e-4a2e-8f5d-618fa3395556",
+      "event": "request",
+      "at": 1029.199999988079,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "1fdd1064-583e-4a2e-8f5d-618fa3395556",
+      "event": "callback",
+      "at": 1037.4000000357628,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "0d8ca2de-6100-487e-86ad-ab5992700cd4",
+      "event": "document",
+      "at": 548.0999999642372
+    },
+    {
+      "documentId": "0d8ca2de-6100-487e-86ad-ab5992700cd4",
+      "event": "pageshow",
+      "at": 992.3999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "0d8ca2de-6100-487e-86ad-ab5992700cd4",
+      "event": "request",
+      "at": 1050.3999999761581,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "0d8ca2de-6100-487e-86ad-ab5992700cd4",
+      "event": "callback",
+      "at": 1056.8999999761581,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "81c54497-bd80-445d-9922-45733c1dc521",
+      "event": "document",
+      "at": 522
+    },
+    {
+      "documentId": "81c54497-bd80-445d-9922-45733c1dc521",
+      "event": "pageshow",
+      "at": 940.8000000119209,
+      "persisted": false
+    },
+    {
+      "documentId": "81c54497-bd80-445d-9922-45733c1dc521",
+      "event": "request",
+      "at": 999,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "81c54497-bd80-445d-9922-45733c1dc521",
+      "event": "callback",
+      "at": 1004.6000000238419,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "2acf65f5-a2d3-488f-9268-ad7c8b2ac9ad",
+      "event": "document",
+      "at": 528.1999999880791
+    },
+    {
+      "documentId": "2acf65f5-a2d3-488f-9268-ad7c8b2ac9ad",
+      "event": "pageshow",
+      "at": 985.1000000238419,
+      "persisted": false
+    },
+    {
+      "documentId": "2acf65f5-a2d3-488f-9268-ad7c8b2ac9ad",
+      "event": "request",
+      "at": 1044.4000000357628,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "2acf65f5-a2d3-488f-9268-ad7c8b2ac9ad",
+      "event": "callback",
+      "at": 1052.800000011921,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "02116489-e3bb-4a0c-8274-d3561fa6f411",
+      "event": "document",
+      "at": 675
+    },
+    {
+      "documentId": "02116489-e3bb-4a0c-8274-d3561fa6f411",
+      "event": "pageshow",
+      "at": 1352.9000000357628,
+      "persisted": false
+    },
+    {
+      "documentId": "02116489-e3bb-4a0c-8274-d3561fa6f411",
+      "event": "request",
+      "at": 1543.4000000357628,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "02116489-e3bb-4a0c-8274-d3561fa6f411",
+      "event": "callback",
+      "at": 1553.1000000238419,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "2162ef44-7ab7-491e-b773-8ad419793e22",
+      "event": "document",
+      "at": 622.5999999642372
+    },
+    {
+      "documentId": "2162ef44-7ab7-491e-b773-8ad419793e22",
+      "event": "pageshow",
+      "at": 1005.0999999642372,
+      "persisted": false
+    },
+    {
+      "documentId": "2162ef44-7ab7-491e-b773-8ad419793e22",
+      "event": "request",
+      "at": 1058.699999988079,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "2162ef44-7ab7-491e-b773-8ad419793e22",
+      "event": "callback",
+      "at": 1064.7999999523163,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "de8f4548-c0e2-43ef-839b-bfd2362aa1d1",
+      "event": "document",
+      "at": 503
+    },
+    {
+      "documentId": "de8f4548-c0e2-43ef-839b-bfd2362aa1d1",
+      "event": "pageshow",
+      "at": 949.1000000238419,
+      "persisted": false
+    },
+    {
+      "documentId": "de8f4548-c0e2-43ef-839b-bfd2362aa1d1",
+      "event": "request",
+      "at": 1004.8000000119209,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "de8f4548-c0e2-43ef-839b-bfd2362aa1d1",
+      "event": "callback",
+      "at": 1010.3000000119209,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "b6519b89-abe6-4531-bbd6-54575ab2e214",
+      "event": "document",
+      "at": 519.5
+    },
+    {
+      "documentId": "b6519b89-abe6-4531-bbd6-54575ab2e214",
+      "event": "pageshow",
+      "at": 948.9000000357628,
+      "persisted": false
+    },
+    {
+      "documentId": "b6519b89-abe6-4531-bbd6-54575ab2e214",
+      "event": "request",
+      "at": 1016.1000000238419,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "b6519b89-abe6-4531-bbd6-54575ab2e214",
+      "event": "callback",
+      "at": 1023,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "139dc079-43c2-4256-ba2a-f4cbc231b616",
+      "event": "document",
+      "at": 585.8999999761581
+    },
+    {
+      "documentId": "139dc079-43c2-4256-ba2a-f4cbc231b616",
+      "event": "pageshow",
+      "at": 1069.300000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "139dc079-43c2-4256-ba2a-f4cbc231b616",
+      "event": "request",
+      "at": 1127.5,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "139dc079-43c2-4256-ba2a-f4cbc231b616",
+      "event": "callback",
+      "at": 1136.8999999761581,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "e2668741-5d8c-4030-be54-4cd4d5b32ea2",
+      "event": "document",
+      "at": 697.2999999523163
+    },
+    {
+      "documentId": "e2668741-5d8c-4030-be54-4cd4d5b32ea2",
+      "event": "pageshow",
+      "at": 1311.8999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "e2668741-5d8c-4030-be54-4cd4d5b32ea2",
+      "event": "request",
+      "at": 1512,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "e2668741-5d8c-4030-be54-4cd4d5b32ea2",
+      "event": "callback",
+      "at": 1521.199999988079,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "b45ef3d6-1bd3-4af7-ac1f-4d3bf3b2563e",
+      "event": "document",
+      "at": 564.1000000238419
+    },
+    {
+      "documentId": "b45ef3d6-1bd3-4af7-ac1f-4d3bf3b2563e",
+      "event": "pageshow",
+      "at": 959.2000000476837,
+      "persisted": false
+    },
+    {
+      "documentId": "b45ef3d6-1bd3-4af7-ac1f-4d3bf3b2563e",
+      "event": "request",
+      "at": 1012.2000000476837,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "b45ef3d6-1bd3-4af7-ac1f-4d3bf3b2563e",
+      "event": "callback",
+      "at": 1017.4000000357628,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "8bf5da93-d51c-4bcd-8328-8d2b0fcbdac5",
+      "event": "document",
+      "at": 521.5
+    },
+    {
+      "documentId": "8bf5da93-d51c-4bcd-8328-8d2b0fcbdac5",
+      "event": "pageshow",
+      "at": 919.5,
+      "persisted": false
+    },
+    {
+      "documentId": "8bf5da93-d51c-4bcd-8328-8d2b0fcbdac5",
+      "event": "request",
+      "at": 975.5999999642372,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "8bf5da93-d51c-4bcd-8328-8d2b0fcbdac5",
+      "event": "callback",
+      "at": 981.8000000119209,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "2f167f7a-34ba-4d42-8007-bdaf6b7b1b02",
+      "event": "document",
+      "at": 491.60000002384186
+    },
+    {
+      "documentId": "2f167f7a-34ba-4d42-8007-bdaf6b7b1b02",
+      "event": "pageshow",
+      "at": 855.6000000238419,
+      "persisted": false
+    },
+    {
+      "documentId": "2f167f7a-34ba-4d42-8007-bdaf6b7b1b02",
+      "event": "request",
+      "at": 906.1000000238419,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "2f167f7a-34ba-4d42-8007-bdaf6b7b1b02",
+      "event": "callback",
+      "at": 910.8999999761581,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "35586454-0f55-43b4-b056-2e266446e0ce",
+      "event": "document",
+      "at": 493.30000001192093
+    },
+    {
+      "documentId": "35586454-0f55-43b4-b056-2e266446e0ce",
+      "event": "pageshow",
+      "at": 909.1999999880791,
+      "persisted": false
+    },
+    {
+      "documentId": "35586454-0f55-43b4-b056-2e266446e0ce",
+      "event": "request",
+      "at": 967.8999999761581,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "35586454-0f55-43b4-b056-2e266446e0ce",
+      "event": "callback",
+      "at": 973.0999999642372,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "9406370a-df61-4aa9-be49-a46ef8a3bb28",
+      "event": "document",
+      "at": 675.5999999642372
+    },
+    {
+      "documentId": "9406370a-df61-4aa9-be49-a46ef8a3bb28",
+      "event": "pageshow",
+      "at": 1305.5,
+      "persisted": false
+    },
+    {
+      "documentId": "9406370a-df61-4aa9-be49-a46ef8a3bb28",
+      "event": "request",
+      "at": 1477,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "9406370a-df61-4aa9-be49-a46ef8a3bb28",
+      "event": "callback",
+      "at": 1487.5999999642372,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "22fcea77-6803-4b7d-8efd-f73b50c732d4",
+      "event": "document",
+      "at": 515.0999999642372
+    },
+    {
+      "documentId": "22fcea77-6803-4b7d-8efd-f73b50c732d4",
+      "event": "pageshow",
+      "at": 1018.8999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "22fcea77-6803-4b7d-8efd-f73b50c732d4",
+      "event": "request",
+      "at": 1080,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "22fcea77-6803-4b7d-8efd-f73b50c732d4",
+      "event": "callback",
+      "at": 1087.7999999523163,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "6b4fa3b8-f1c1-4df4-9baa-00189fca141c",
+      "event": "document",
+      "at": 530.1000000238419
+    },
+    {
+      "documentId": "6b4fa3b8-f1c1-4df4-9baa-00189fca141c",
+      "event": "pageshow",
+      "at": 946.4000000357628,
+      "persisted": false
+    },
+    {
+      "documentId": "6b4fa3b8-f1c1-4df4-9baa-00189fca141c",
+      "event": "request",
+      "at": 1000,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "6b4fa3b8-f1c1-4df4-9baa-00189fca141c",
+      "event": "callback",
+      "at": 1006.8000000119209,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "07677332-9243-413d-9e5b-a01ebf499d59",
+      "event": "document",
+      "at": 549.1999999880791
+    },
+    {
+      "documentId": "07677332-9243-413d-9e5b-a01ebf499d59",
+      "event": "pageshow",
+      "at": 988.8999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "07677332-9243-413d-9e5b-a01ebf499d59",
+      "event": "request",
+      "at": 1040.6000000238419,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "07677332-9243-413d-9e5b-a01ebf499d59",
+      "event": "callback",
+      "at": 1046.6000000238419,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "351ec7ed-d1ce-44a0-b2fb-193977b0d062",
+      "event": "document",
+      "at": 546.6999999880791
+    },
+    {
+      "documentId": "351ec7ed-d1ce-44a0-b2fb-193977b0d062",
+      "event": "pageshow",
+      "at": 1023.8000000119209,
+      "persisted": false
+    },
+    {
+      "documentId": "351ec7ed-d1ce-44a0-b2fb-193977b0d062",
+      "event": "request",
+      "at": 1099.199999988079,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "351ec7ed-d1ce-44a0-b2fb-193977b0d062",
+      "event": "callback",
+      "at": 1108,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "d013dfd5-13d3-4508-a90a-de5dff0541df",
+      "event": "document",
+      "at": 1035.3999999761581
+    },
+    {
+      "documentId": "d013dfd5-13d3-4508-a90a-de5dff0541df",
+      "event": "pageshow",
+      "at": 2161.899999976158,
+      "persisted": false
+    },
+    {
+      "documentId": "d013dfd5-13d3-4508-a90a-de5dff0541df",
+      "event": "request",
+      "at": 2477.600000023842,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "d013dfd5-13d3-4508-a90a-de5dff0541df",
+      "event": "callback",
+      "at": 2510.199999988079,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "5c35fce4-166a-492d-a22b-58f33598707f",
+      "event": "document",
+      "at": 1225.300000011921
+    },
+    {
+      "documentId": "5c35fce4-166a-492d-a22b-58f33598707f",
+      "event": "pageshow",
+      "at": 2132.100000023842,
+      "persisted": false
+    },
+    {
+      "documentId": "5c35fce4-166a-492d-a22b-58f33598707f",
+      "event": "request",
+      "at": 2234.400000035763,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "5c35fce4-166a-492d-a22b-58f33598707f",
+      "event": "callback",
+      "at": 2245.600000023842,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "5ebdb048-ef14-46c4-b0b1-bcd5ba391026",
+      "event": "document",
+      "at": 1158.6000000238419
+    },
+    {
+      "documentId": "5ebdb048-ef14-46c4-b0b1-bcd5ba391026",
+      "event": "pageshow",
+      "at": 2101.2000000476837,
+      "persisted": false
+    },
+    {
+      "documentId": "5ebdb048-ef14-46c4-b0b1-bcd5ba391026",
+      "event": "request",
+      "at": 2203.300000011921,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "5ebdb048-ef14-46c4-b0b1-bcd5ba391026",
+      "event": "callback",
+      "at": 2216.400000035763,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "ba19a627-577a-47de-8e45-fd8e9720e23d",
+      "event": "document",
+      "at": 1074.0999999642372
+    },
+    {
+      "documentId": "ba19a627-577a-47de-8e45-fd8e9720e23d",
+      "event": "pageshow",
+      "at": 2011.8999999761581,
+      "persisted": false
+    },
+    {
+      "documentId": "ba19a627-577a-47de-8e45-fd8e9720e23d",
+      "event": "request",
+      "at": 2106.099999964237,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "ba19a627-577a-47de-8e45-fd8e9720e23d",
+      "event": "callback",
+      "at": 2118,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "6d410de3-b2ca-4224-bbc1-7e02b0f250cd",
+      "event": "document",
+      "at": 1060.199999988079
+    },
+    {
+      "documentId": "6d410de3-b2ca-4224-bbc1-7e02b0f250cd",
+      "event": "pageshow",
+      "at": 2107.800000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "6d410de3-b2ca-4224-bbc1-7e02b0f250cd",
+      "event": "request",
+      "at": 2213.099999964237,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "6d410de3-b2ca-4224-bbc1-7e02b0f250cd",
+      "event": "callback",
+      "at": 2224.800000011921,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "c949b3b2-87bf-462c-b60b-d2db9f6c8952",
+      "event": "document",
+      "at": 1344.8999999761581
+    },
+    {
+      "documentId": "c949b3b2-87bf-462c-b60b-d2db9f6c8952",
+      "event": "pageshow",
+      "at": 2420.600000023842,
+      "persisted": false
+    },
+    {
+      "documentId": "c949b3b2-87bf-462c-b60b-d2db9f6c8952",
+      "event": "request",
+      "at": 2748.199999988079,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "c949b3b2-87bf-462c-b60b-d2db9f6c8952",
+      "event": "callback",
+      "at": 2763,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "26c56d38-ac33-4e41-bc17-9be59e9ece1a",
+      "event": "document",
+      "at": 1141.300000011921
+    },
+    {
+      "documentId": "26c56d38-ac33-4e41-bc17-9be59e9ece1a",
+      "event": "pageshow",
+      "at": 2130.600000023842,
+      "persisted": false
+    },
+    {
+      "documentId": "26c56d38-ac33-4e41-bc17-9be59e9ece1a",
+      "event": "request",
+      "at": 2234.5,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "26c56d38-ac33-4e41-bc17-9be59e9ece1a",
+      "event": "callback",
+      "at": 2246.600000023842,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "7a58d5eb-3d6c-4081-a56e-c509e24a8e39",
+      "event": "document",
+      "at": 1200.699999988079
+    },
+    {
+      "documentId": "7a58d5eb-3d6c-4081-a56e-c509e24a8e39",
+      "event": "pageshow",
+      "at": 2137.7999999523163,
+      "persisted": false
+    },
+    {
+      "documentId": "7a58d5eb-3d6c-4081-a56e-c509e24a8e39",
+      "event": "request",
+      "at": 2236.399999976158,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "7a58d5eb-3d6c-4081-a56e-c509e24a8e39",
+      "event": "callback",
+      "at": 2248.099999964237,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "5ffc426b-fb34-4ae7-9d0a-99e3375b4bc5",
+      "event": "document",
+      "at": 1028.8999999761581
+    },
+    {
+      "documentId": "5ffc426b-fb34-4ae7-9d0a-99e3375b4bc5",
+      "event": "pageshow",
+      "at": 1937.5999999642372,
+      "persisted": false
+    },
+    {
+      "documentId": "5ffc426b-fb34-4ae7-9d0a-99e3375b4bc5",
+      "event": "request",
+      "at": 2034.0999999642372,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "5ffc426b-fb34-4ae7-9d0a-99e3375b4bc5",
+      "event": "callback",
+      "at": 2046.5999999642372,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "2e4ad666-8081-4de0-9032-360965628dff",
+      "event": "document",
+      "at": 696.4000000357628
+    },
+    {
+      "documentId": "2e4ad666-8081-4de0-9032-360965628dff",
+      "event": "pageshow",
+      "at": 1137.5,
+      "persisted": false
+    },
+    {
+      "documentId": "2e4ad666-8081-4de0-9032-360965628dff",
+      "event": "request",
+      "at": 1195.800000011921,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "2e4ad666-8081-4de0-9032-360965628dff",
+      "event": "callback",
+      "at": 1200.9000000357628,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "88b93960-2170-4a56-a78d-121f8c99e354",
+      "event": "document",
+      "at": 751
+    },
+    {
+      "documentId": "88b93960-2170-4a56-a78d-121f8c99e354",
+      "event": "pageshow",
+      "at": 1542.300000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "88b93960-2170-4a56-a78d-121f8c99e354",
+      "event": "request",
+      "at": 1858.9000000357628,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "88b93960-2170-4a56-a78d-121f8c99e354",
+      "event": "callback",
+      "at": 1875.9000000357628,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "edb51723-5c9e-4157-80fa-9f1aa3334088",
+      "event": "document",
+      "at": 1234.3999999761581
+    },
+    {
+      "documentId": "edb51723-5c9e-4157-80fa-9f1aa3334088",
+      "event": "pageshow",
+      "at": 2111.2999999523163,
+      "persisted": false
+    },
+    {
+      "documentId": "edb51723-5c9e-4157-80fa-9f1aa3334088",
+      "event": "request",
+      "at": 2221.099999964237,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "edb51723-5c9e-4157-80fa-9f1aa3334088",
+      "event": "callback",
+      "at": 2235.699999988079,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "f38aef07-98be-4885-ab25-68fe66547206",
+      "event": "document",
+      "at": 1131.5
+    },
+    {
+      "documentId": "f38aef07-98be-4885-ab25-68fe66547206",
+      "event": "pageshow",
+      "at": 2030.199999988079,
+      "persisted": false
+    },
+    {
+      "documentId": "f38aef07-98be-4885-ab25-68fe66547206",
+      "event": "request",
+      "at": 2131.2999999523163,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "f38aef07-98be-4885-ab25-68fe66547206",
+      "event": "callback",
+      "at": 2144.5,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "0a7c5c05-6e1f-43b9-9774-b00a39bd5e57",
+      "event": "document",
+      "at": 1115.0999999642372
+    },
+    {
+      "documentId": "0a7c5c05-6e1f-43b9-9774-b00a39bd5e57",
+      "event": "pageshow",
+      "at": 2113.199999988079,
+      "persisted": false
+    },
+    {
+      "documentId": "0a7c5c05-6e1f-43b9-9774-b00a39bd5e57",
+      "event": "request",
+      "at": 2210,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "0a7c5c05-6e1f-43b9-9774-b00a39bd5e57",
+      "event": "callback",
+      "at": 2218.7999999523163,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "92e196b6-b442-4275-aaf4-c8b5901063cd",
+      "event": "document",
+      "at": 1064.3999999761581
+    },
+    {
+      "documentId": "92e196b6-b442-4275-aaf4-c8b5901063cd",
+      "event": "pageshow",
+      "at": 1842.800000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "92e196b6-b442-4275-aaf4-c8b5901063cd",
+      "event": "request",
+      "at": 1945,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "92e196b6-b442-4275-aaf4-c8b5901063cd",
+      "event": "callback",
+      "at": 1956.199999988079,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "f3274810-b9d3-46aa-8485-f4a1243c28ea",
+      "event": "document",
+      "at": 696.1000000238419
+    },
+    {
+      "documentId": "f3274810-b9d3-46aa-8485-f4a1243c28ea",
+      "event": "pageshow",
+      "at": 1291.300000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "f3274810-b9d3-46aa-8485-f4a1243c28ea",
+      "event": "request",
+      "at": 1462.5,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "f3274810-b9d3-46aa-8485-f4a1243c28ea",
+      "event": "callback",
+      "at": 1470.2000000476837,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "5ae423a0-5839-4802-af52-68e0c0370b4f",
+      "event": "document",
+      "at": 547.8999999761581
+    },
+    {
+      "documentId": "5ae423a0-5839-4802-af52-68e0c0370b4f",
+      "event": "pageshow",
+      "at": 1325.800000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "5ae423a0-5839-4802-af52-68e0c0370b4f",
+      "event": "request",
+      "at": 1506.8999999761581,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "5ae423a0-5839-4802-af52-68e0c0370b4f",
+      "event": "callback",
+      "at": 1545.699999988079,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "88188617-a42b-4361-981e-8a8fc32c3f2f",
+      "event": "document",
+      "at": 537
+    },
+    {
+      "documentId": "88188617-a42b-4361-981e-8a8fc32c3f2f",
+      "event": "pageshow",
+      "at": 1191.5999999642372,
+      "persisted": false
+    },
+    {
+      "documentId": "88188617-a42b-4361-981e-8a8fc32c3f2f",
+      "event": "request",
+      "at": 1366.800000011921,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "88188617-a42b-4361-981e-8a8fc32c3f2f",
+      "event": "rejected",
+      "at": 4377.300000011921,
+      "id": 1,
+      "errorName": "AbortError"
+    },
+    {
+      "documentId": "88188617-a42b-4361-981e-8a8fc32c3f2f",
+      "event": "request",
+      "at": 4404.599999964237,
+      "id": 2,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "88188617-a42b-4361-981e-8a8fc32c3f2f",
+      "event": "callback",
+      "at": 4406.5,
+      "id": 2,
+      "acquired": true
+    },
+    {
+      "documentId": "092639a3-5673-4262-aaf3-df90677dc057",
+      "event": "document",
+      "at": 540.8000000119209
+    },
+    {
+      "documentId": "092639a3-5673-4262-aaf3-df90677dc057",
+      "event": "pageshow",
+      "at": 1176.699999988079,
+      "persisted": false
+    },
+    {
+      "documentId": "092639a3-5673-4262-aaf3-df90677dc057",
+      "event": "request",
+      "at": 1373.3999999761581,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "35adf361-6165-4e6b-aac9-c257b8c61d78",
+      "event": "document",
+      "at": 539.1999999880791
+    },
+    {
+      "documentId": "35adf361-6165-4e6b-aac9-c257b8c61d78",
+      "event": "pageshow",
+      "at": 961.3000000119209,
+      "persisted": false
+    },
+    {
+      "documentId": "35adf361-6165-4e6b-aac9-c257b8c61d78",
+      "event": "request",
+      "at": 1019.5999999642372,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "35adf361-6165-4e6b-aac9-c257b8c61d78",
+      "event": "callback",
+      "at": 1177.5,
+      "id": 1,
+      "acquired": true
+    },
+    {
+      "documentId": "7bf24eb3-19cf-4673-a585-6bdcc84b7796",
+      "event": "document",
+      "at": 562.3000000119209
+    },
+    {
+      "documentId": "7bf24eb3-19cf-4673-a585-6bdcc84b7796",
+      "event": "pageshow",
+      "at": 1189.300000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "b8b76986-e999-4afd-a97b-c6bf051317d3",
+      "event": "document",
+      "at": 522.6999999880791
+    },
+    {
+      "documentId": "b8b76986-e999-4afd-a97b-c6bf051317d3",
+      "event": "pageshow",
+      "at": 1158.300000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "c678e214-fc3c-4a60-9609-342943883851",
+      "event": "document",
+      "at": 529
+    },
+    {
+      "documentId": "c678e214-fc3c-4a60-9609-342943883851",
+      "event": "pageshow",
+      "at": 1136.800000011921,
+      "persisted": false
+    },
+    {
+      "documentId": "c678e214-fc3c-4a60-9609-342943883851",
+      "event": "request",
+      "at": 1315.0999999642372,
+      "id": 1,
+      "ifAvailable": false
+    },
+    {
+      "documentId": "c678e214-fc3c-4a60-9609-342943883851",
+      "event": "callback",
+      "at": 1322.199999988079,
+      "id": 1,
+      "acquired": true
+    }
+  ]
+}

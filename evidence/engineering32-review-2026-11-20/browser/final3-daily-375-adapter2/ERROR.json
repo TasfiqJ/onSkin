@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "message": "Rendered Today date does not match the interaction target",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

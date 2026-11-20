@@ -1,0 +1,18 @@
+
+> @layerwell/professional-web@0.1.0 build
+> vite build --outDir <HOME>\Documents\ChatGPT\MasterV2Code\ENGINEERING32_EVIDENCE_20261120\build\professional-final-drain32
+
+vite v8.1.6 building client environment for production...
+[2Ktransforming...✓ 22 modules transformed.
+
+(!) outDir <HOME>\Documents\ChatGPT\MasterV2Code\ENGINEERING32_EVIDENCE_20261120\build\professional-final-drain32 is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+rendering chunks...
+computing gzip size...
+../../../ENGINEERING32_EVIDENCE_20261120/build/professional-final-drain32/_headers                     0.39 kB
+../../../ENGINEERING32_EVIDENCE_20261120/build/professional-final-drain32/index.html                   1.92 kB │ gzip:  0.86 kB
+../../../ENGINEERING32_EVIDENCE_20261120/build/professional-final-drain32/assets/index-CO6eptI9.css    1.81 kB │ gzip:  0.74 kB
+../../../ENGINEERING32_EVIDENCE_20261120/build/professional-final-drain32/assets/index-CtZ1hqw0.js   104.57 kB │ gzip: 27.44 kB
+
+✓ built in 71ms

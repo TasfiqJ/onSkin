@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/lib/storage/privateAsyncStorage32.test.ts src/features/healthConsent/selectiveCleanup.test.ts src/features/healthConsent/lifecycle.test.ts src/features/routine/routineDecisionRecovery32.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  4 passed (4)
+      Tests  98 passed (98)
+   Start at  11:11:18
+   Duration  2.18s (transform 868ms, setup 0ms, import 1.22s, tests 1.52s, environment 0ms)
+

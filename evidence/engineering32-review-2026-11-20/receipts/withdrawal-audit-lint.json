@@ -1,0 +1,42 @@
+{
+  "label": "withdrawal-audit-lint",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--",
+    "eslint",
+    "src/features/healthConsent/lifecycle.ts",
+    "src/features/healthConsent/selectiveCleanup.ts",
+    "src/features/healthConsent/lifecycle.test.ts",
+    "src/lib/storage/privateAsyncStorage.web.ts",
+    "--max-warnings=0"
+  ],
+  "before": {
+    "head": "9d07a79c09036e371a14a07b6f37987505100176",
+    "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+    "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+    "diffSha256": "a1a99199afa4137772fe631d8ca8bc4f496cd857afd379e4aa729a6ee3aaaf8c"
+  },
+  "start": "2026-11-20T15:30:58.421165+00:00",
+  "freeBytesBefore": 147783163904,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "9d07a79c09036e371a14a07b6f37987505100176",
+    "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+    "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+    "diffSha256": "a1a99199afa4137772fe631d8ca8bc4f496cd857afd379e4aa729a6ee3aaaf8c"
+  },
+  "end": "2026-11-20T15:31:04.604097+00:00",
+  "freeBytesAfter": 147783163904,
+  "logBytes": 0,
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,79 @@
+{
+  "at": "2026-11-20T16:22:58.807969+00:00",
+  "source": {
+    "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+    "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "branch": "engineering32-review-2026-11-20",
+  "parent": "ef15a0d9a435016c9f8e389ed4bc10237ae153f4",
+  "parentTree": "c413d13b0d0f4955ac645e367855fa9cb539e325",
+  "preservedRefs": {
+    "main": "53a84d921d14dbff1d2e9b8f1b3bb27e10dcede6",
+    "stage/m1-native-runtime47": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+    "engineering19-review-2026-11-16": "303538aadb990e0f6f5e56c926b874ca54ec1085",
+    "brain-latest-review-2026-11-18": "fdcade2438e0d8f8e1611f03cf6f3575dc1600ac",
+    "engineering28-review-2026-11-18": "63898e8dceb11d953bb1e2f137439c7e52c3e6fe",
+    "engineering29-review-2026-11-18": "3e52d582c88310e664fbcb777496468195407742",
+    "engineering29r-validation-2026-11-19": "449f121864a4814acb5daa45eda6cc28e08e69c6",
+    "engineering30-review-2026-11-19": "1366f3fda2605ac3eeb0294552bdde7cd7ab58fc",
+    "engineering31-review-2026-11-19": "ef15a0d9a435016c9f8e389ed4bc10237ae153f4",
+    "pr48": {
+      "state": "open",
+      "draft": true,
+      "head": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+      "base": "02aa4ba879fb844f3ca0aa929591203ee45f4163"
+    },
+    "archiveTag": "cda890d175198c0ba0c041a19999d0e7fe171d0d"
+  },
+  "parentWorkflowFree": true,
+  "repositoryHooks": [],
+  "repositoryRulesets": [],
+  "workflows": [
+    {
+      "path": ".github/workflows/g97-security-acceptance.yml",
+      "sha": "6afd4e34c6142c1a28814f2deb73483b1365d863",
+      "triggers": "workflow_dispatch:"
+    },
+    {
+      "path": ".github/workflows/ios-launch-contract.yml",
+      "sha": "3f80c9f19ac4a3675d82446501a0d3aae4c511a0",
+      "triggers": "pull_request:\n  push:\n    branches:\n      - main\n  workflow_dispatch:"
+    },
+    {
+      "path": ".github/workflows/ios-simulator-compile.yml",
+      "sha": "0564dea4c256471ab139a7fd03acc59f3e8d2a78",
+      "triggers": "workflow_dispatch:"
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "sha": "e983e936097fe2f8478804ba23d69a713e9a1b2c",
+      "triggers": "pull_request:\n  push:\n    branches:\n      - main\n  workflow_dispatch:"
+    },
+    {
+      "path": ".github/workflows/security-candidate22.yml",
+      "sha": "02f80cd4a48b3bb82b09028adc8970673a504eba",
+      "triggers": "pull_request:"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "sha": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+      "triggers": "pull_request:\n  push:\n    branches:\n      - main\n  schedule:\n    - cron: '17 9 * * 1'\n  workflow_dispatch:\n    inputs:\n      confirm_destructive_account_deletion:\n        description: Authorize deletion of a disposable staging account after staging-security review\n        required: true\n        default: false\n        type: boolean\n      ios_build_id:\n        description: Optional exact iOS EAS build UUID or build URL tied to this evidence\n        required: false\n        type: string"
+    }
+  ],
+  "actionsPermissions": {
+    "enabled": true,
+    "allowed_actions": "all",
+    "sha_pinning_required": false
+  },
+  "workflowPermissions": {
+    "default_workflow_permissions": "read",
+    "can_approve_pull_request_reviews": false
+  },
+  "newBranchAbsent": true,
+  "rationale": "Workflow-free evidence parent/candidate; unchanged default workflows restrict push to main or require PR/manual dispatch. No PR, dispatch, application ref or settings mutation. skip-ci supplementary only.",
+  "limitation": "Repository-visible configuration; inaccessible installation internals are not independently attested."
+}

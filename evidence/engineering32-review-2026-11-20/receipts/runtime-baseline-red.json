@@ -1,0 +1,35 @@
+{
+  "label": "runtime-baseline-red",
+  "command": [
+    "node",
+    "scripts/e2e/actual-apply-outcome29.mjs"
+  ],
+  "before": {
+    "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+    "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? scripts/e2e/runtime-admission-trace32.mjs",
+    "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+    "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+  },
+  "start": "2026-11-20T14:26:20.593159+00:00",
+  "freeBytesBefore": 148184928256,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {
+    "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\runtime-baseline-red-browser"
+  },
+  "exit": 0,
+  "after": {
+    "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+    "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M scripts/e2e/actual-apply-outcome29.mjs\n?? apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts\n?? scripts/e2e/runtime-admission-trace32.mjs",
+    "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+    "diffSha256": "7336c84df0fc79b6bc86459fc3fc028558b63f167f0a189f38cc96cd1b06f496"
+  },
+  "end": "2026-11-20T14:29:50.916408+00:00",
+  "freeBytesAfter": 148149465088,
+  "logBytes": 1840,
+  "logSha256": "16352c7ef9d84b318cd9fe378cc7c35f4ed87186b364daa2994fa189610cb3b3"
+}

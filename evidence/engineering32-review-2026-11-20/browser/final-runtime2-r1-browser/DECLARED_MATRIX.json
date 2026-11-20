@@ -1,0 +1,31 @@
+{
+  "repeats": 3,
+  "viewports": [
+    [
+      375,
+      667
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      430,
+      932
+    ]
+  ],
+  "ordinary": [
+    "startup",
+    "reload",
+    "direct entry",
+    "return navigation"
+  ],
+  "induced": [
+    "transient closing holder",
+    "live second tab refusal and explicit retry",
+    "pending reload termination",
+    "unsupported",
+    "denied"
+  ],
+  "ordinaryRetryBudget": 0
+}

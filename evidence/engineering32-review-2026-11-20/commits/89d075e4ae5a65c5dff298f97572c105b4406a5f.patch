@@ -1,0 +1,104 @@
+diff --git a/PROGRESS.md b/PROGRESS.md
+index f888871ad481a70a96592670f6343605fef1c7a3..c6af1fab500144556eba1942e9ced61cd8d9873f 100644
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -2,6 +2,8 @@
+ 
+ Local candidate under BRAIN-ONSKIN-AUTONOMOUS-LOCAL-RELIABILITY-32. One bounded cancellable exclusive Web Lock request admits actual callbacks only; a sustained competing runtime requires explicit recovery. Original actual-routine apply/clear/retraction decisions now prepare encrypted purpose/owner/consent-epoch-bound evidence and verify readback before dispatch. Discoverable owner review separates read-only exact inspection, fresh-authority original-identity retry and ledger-verified acknowledgement. Unsupported/unreadable evidence remains closed; cleanup/export/key inventory includes the new purpose. Frozen all38/all18 remain UNACCEPTED; release NO_GO, J01 positive admission closed. Browser/process and final-source validation receipts and retained failures are delivered separately; no native/backend/professional/source publication authority is implied.
+ 
++Forced-process probes exposed localStorage rollback of command preparation, ledger successors and withdrawal authority. Four fixed browser ciphertext rows now require strict IndexedDB completion, using unchanged encryption and key custody. A completed withdrawal audits retained raw purpose bytes again after restart and reopens guarded cleanup while processing remains closed. Legacy control/ledger inspection never provisions a database; ambiguous recovery prototypes and missing-primary legacy shadows refuse. Explicit acknowledgement retains bounded original evidence; no automatic eviction or startup replay.
++
+ # Practice templates and original-authority recovery Engineering28 - 2026-11-18
+ 
+ Local implementation under BRAIN-ONSKIN-AUTONOMOUS-LOCAL-PRODUCT-28: practice-scoped immutable role templates, explicit review/cancel/revision/copy/retirement, encrypted repository readback and exact uncertain retry; default real API503 preserved. Collapsed optional entries retire on navigation blur/refocus while original-lease source recovery remains available. First-key creation now retains original authority across probes, preserves discovered successor keys and leaves dispatched uncertain keys intact. See [bounded behavior and missing connections](docs/release/full-app-j01/practice-templates28.md). Original RED traces, browser failures, the first full-root two-regression failure and their repair sequence are preserved outside application source for the screened GitHub handoff. Frozen scope/matrix unchanged; all38/all18 UNACCEPTED, J01-only positive admission closed, release NO_GO. No native/device/security/provider qualification is claimed.
+diff --git a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+index e37936898a893cc3c3df75151d664e041bf3dc40..d4f6d0685607268f94faed9b78b02d597ec7a8e0 100644
+--- a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
++++ b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+@@ -35,7 +35,7 @@ async function transaction(key: string, write: boolean, value?: string | null):
+   // predecessor with its new evidence. A read never migrates or creates a DB.
+   const legacySnapshots = write ? await Promise.all(ROWS.map(async row => [row,await original.getItem(row)] as const)) : [];
+   const db = await database(write);
+-  if (!db) return key === LEDGER ? legacy : null;
++  if (!db) return key === KEY ? null : legacy;
+   try {
+     return await new Promise((resolve,reject) => {
+       const tx = db.transaction(STORE,write?'readwrite':'readonly',write?{durability:'strict'}:undefined);
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 1454072d157d795584ccde7d35fc03c1c2ec57db..0d77ab0fac62e2473086eb2f13bfc0178f0b1ba3 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -8,7 +8,7 @@ Routine records → review exact apply / clear / original recorded-use retractio
+ 
+ Routine records → Review saved routine decisions → confirmed collection / unavailable or unsupported refusal → Review saved decision → original facts and identity → Inspect original routine decision (read-only) → recorded_current / recorded_historical / conflict / not_found / unreadable. Not-found never proves failure. Explicit Retry this original routine decision reacquires current access and, for apply, a new approved in-memory source proof matching the original facts. Changed source/predecessor/target refuses. Acknowledge exact saved routine outcome is separate and rechecks the exact ledger under reservation before marking acknowledgement while retaining the original evidence for inspection. Close/Escape/navigation leaves unresolved evidence intact; canceled/stale callbacks cannot operate on a successor. Applying records no use; retraction preserves the original event. Withdrawal/full clearing remove the registered purpose key; export contains strict evidence, never live capabilities. Capacity refuses new preparation without purging unresolved work. All38/all18 remain UNACCEPTED; native/backend/scientific qualification remains absent.
+ 
+-Forced-browser-process testing found that localStorage readback could lose the newest prepared command. The browser recovery collection and completion ledger therefore store only existing privateKV-encrypted ciphertext in two inventoried IndexedDB rows, requiring a strict transaction and completed encrypted readback before dispatch. Unsupported durability or older localStorage prototype evidence refuses rather than overwrites. Acknowledgement now marks and retains the original evidence for inspect-only review; it does not retire it based on a legacy ledger readback. The collection is bounded to 100 records and 512,000 plaintext UTF-8 bytes; acknowledged and unresolved records remain until explicit purpose/full cleanup, and capacity stops new preparation without automatic eviction. Native AsyncStorage/key custody is unchanged and its physical crash qualification remains absent.
++Forced-browser-process testing found that localStorage readback could lose the newest prepared command, ledger successor or withdrawal authority receipt. Four inventoried browser rows therefore retain only existing privateKV-encrypted ciphertext in strict IndexedDB transactions: routine recovery, completion ledger, original health lifecycle and original consent. Preparation requires completed encrypted readback before dispatch. Reads preserve legacy lifecycle/consent/ledger bytes without creating or migrating a database. Unsupported durability or older localStorage recovery prototype evidence refuses rather than overwrites. After restart, an existing completed withdrawal rechecks raw health-purpose absence under its original owner fence; retained or unreadable bytes reopen cleanup while processing stays closed. The original consent/lifecycle receipts remain outside purpose erasure under their existing policy. Acknowledgement marks and retains the original command evidence for inspect-only review. The collection is bounded to 100 records and 512,000 plaintext UTF-8 bytes; acknowledged and unresolved records remain until explicit purpose/full cleanup, and capacity stops new preparation without automatic eviction. Native AsyncStorage/key custody is unchanged and its physical crash qualification remains absent.
+ 
+ ## Engineering28 practice template library and navigation retirement (local, unaccepted)
+ 
+diff --git a/scripts/e2e/actual-apply-outcome29.mjs b/scripts/e2e/actual-apply-outcome29.mjs
+index 5ca01fdc8cf80217df65de38e6fc436227c7b6f5..8d83565b400435429b1be92cab3688ce4987b4e4 100644
+--- a/scripts/e2e/actual-apply-outcome29.mjs
++++ b/scripts/e2e/actual-apply-outcome29.mjs
+@@ -24,7 +24,7 @@ const receipt = { start: new Date().toISOString(), head: git('rev-parse', 'HEAD'
+   surface: 'Actual local Expo/Edge UI and encrypted records; synthetic owner and acknowledgement faults, no native qualification', viewports: [], blocked: [], pass: false };
+ const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
+ let server, browser, client;
+-const profilePath = mkdtempSync(path.join(tmpdir(), 'onskin-outcome32-'));
++let profilePath;
+ function startBrowser() {
+   return spawn(browserPath, ['--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${profilePath}`,
+     '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--disable-sync',
+@@ -97,9 +97,11 @@ for (const key of Object.keys(process.env)) if (key.startsWith('EXPO_PUBLIC_') |
+ Object.assign(process.env, { EXPO_OFFLINE: '1', EXPO_UNSTABLE_HEADLESS: '1', EXPO_NO_DOTENV: '1', EXPO_NO_TELEMETRY: '1', TURBO_TELEMETRY_DISABLED: '1', CI: '1' });
+ try {
+   server = b.startExpoServer({ appPort, evidenceDir: out, group: { id: 'e29-actual-outcome', env: { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner', EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'false' } } });
+-  browser = startBrowser();
+-  json('owned-processes.json', { serverPid: server.pid, browserPid: browser.pid, appPort, debugPort }); await b.waitForUrl(baseUrl);
++  await b.waitForUrl(baseUrl);
+   for (const [width, height] of [[375, 667], [390, 844], [430, 932]]) {
++    profilePath = mkdtempSync(path.join(tmpdir(), 'onskin-outcome32-'));
++    browser = startBrowser();
++    json(`${width}x${height}-owned-processes.json`, { serverPid: server.pid, browserPid: browser.pid, appPort, debugPort, freshProfile: true });
+     const id = `${width}x${height}`; await connect(width, height); await onboarding(id);
+     await tap('Review current Shelf sequence as actual routine'); await text('Review before applying'); await fault(true); await keyboard('Apply reviewed actual routine', height);
+     await text('Check saved apply outcome'); await capture(id + '-uncertain'); const before = await snapshot(); assert.equal(before.versions.length, 1); assert.equal(before.uses.length, 0);
+@@ -127,6 +129,7 @@ try {
+         await connect(width,height); await client.send('Page.navigate', { url: baseUrl + '/routine/records' }); } });
+     receipt.viewports.push({ width, height, pass: true, explicitOnboarding: true, syntheticAcknowledgementFault: true, exactReadOnlyOutcome: true, continuity31, durable32 });
+     const target = (await client.send('Target.getTargetInfo')).targetInfo.targetId; await client.send('Target.closeTarget', { targetId: target }).catch(() => {}); client.close(); client = undefined;
++    await b.stopProcessBestEffort(browser); browser = undefined;
+   }
+   assert.equal(receipt.blocked.length, 0); receipt.pass = true;
+ } catch (error) { json('FAILURE-TRACE.json', { message: String(error), stack: error.stack }); if (client) await capture('failure-state').catch(() => {}); process.exitCode = 1;
+diff --git a/scripts/e2e/runtime-handoff32.mjs b/scripts/e2e/runtime-handoff32.mjs
+index c7340290ab27287e59a2255f2a2686bf4f2a1e9a..beeeb0d6686467f19d56edd5ea87be5f628e2998 100644
+--- a/scripts/e2e/runtime-handoff32.mjs
++++ b/scripts/e2e/runtime-handoff32.mjs
+@@ -95,6 +95,16 @@ try {
+   const storageBoundary=await evaluate(storagePage, `(async()=>{
+     const entry=[...__r.getModules().values()].find(row=>(row.verboseName??'').replaceAll('\\\\','/').endsWith('/lib/storage/privateAsyncStorage.web.ts'));
+     const raw=entry.publicModule.exports.default, name='layerwell.routine-decision-ciphertext.v1', key='layerwell.routineDecisionRecovery.v1';
++    const legacyKeys=['layerwell.healthDataLifecycle.v1','layerwell.healthDataCollectionConsent.v1','layerwell.completions.v1'];
++    const legacySaved=legacyKeys.map(k=>localStorage.getItem(k)),listDatabases=indexedDB.databases,priorOpens=globalThis.__privateDatabaseCalls32;
++    let legacyReadPreserved=false,legacyReadCreatedNoDatabase=false;
++    try{
++      // Isolated raw-port fixture for a legacy installation without the DB.
++      indexedDB.databases=async()=>[];
++      for(const k of legacyKeys)localStorage.setItem(k,'synthetic opaque legacy ciphertext');
++      legacyReadPreserved=(await Promise.all(legacyKeys.map(k=>raw.getItem(k)))).every(value=>value==='synthetic opaque legacy ciphertext');
++      legacyReadCreatedNoDatabase=globalThis.__privateDatabaseCalls32===priorOpens;
++    }finally{indexedDB.databases=listDatabases;for(const [i,k] of legacyKeys.entries()){if(legacySaved[i]===null)localStorage.removeItem(k);else localStorage.setItem(k,legacySaved[i]);}}
+     const original=IDBDatabase.prototype.transaction;let denied=false;
+     IDBDatabase.prototype.transaction=function(store,mode,options){if(this.name===name&&mode==='readwrite')throw new DOMException('synthetic strict refusal','SecurityError');return Reflect.apply(original,this,[store,mode,options])};
+     try{await raw.setItem(key,'synthetic opaque storage-port value');}catch{denied=true;}finally{IDBDatabase.prototype.transaction=original;}
+@@ -102,7 +112,7 @@ try {
+     await new Promise((resolve,reject)=>{const open=indexedDB.open(name,2);open.onerror=()=>reject(Error('fixture open'));open.onupgradeneeded=()=>open.result.createObjectStore('unsupported-fixture').put('synthetic','row');open.onsuccess=()=>{open.result.close();resolve()}});
+     let futureRefused=false;try{await raw.getItem(key);}catch{futureRefused=true;}
+     const version=(await indexedDB.databases()).find(row=>row.name===name)?.version;
+-    return {strictWriteDenied:denied,noCiphertextWritten:unchanged,futureRefused,versionPreserved:version===2};
++    return {legacyReadPreserved,legacyReadCreatedNoDatabase,strictWriteDenied:denied,noCiphertextWritten:unchanged,futureRefused,versionPreserved:version===2};
+   })()`);
+   assert(Object.values(storageBoundary).every(Boolean)); receipt.induced.push({case:'raw storage denial and unsupported schema',storageBoundary,syntheticPortOnly:true,pass:true}); await close(storagePage);
+ } catch(error) { receipt.failures.push({message:String(error),stack:error.stack}); process.exitCode=1; }

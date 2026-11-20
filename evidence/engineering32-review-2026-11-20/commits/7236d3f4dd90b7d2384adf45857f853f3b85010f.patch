@@ -1,0 +1,150 @@
+diff --git a/PROGRESS.md b/PROGRESS.md
+index c6af1fab500144556eba1942e9ced61cd8d9873f..a5e9beb65d996edc68bcf23a44835d096ccfe671 100644
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -2,7 +2,7 @@
+ 
+ Local candidate under BRAIN-ONSKIN-AUTONOMOUS-LOCAL-RELIABILITY-32. One bounded cancellable exclusive Web Lock request admits actual callbacks only; a sustained competing runtime requires explicit recovery. Original actual-routine apply/clear/retraction decisions now prepare encrypted purpose/owner/consent-epoch-bound evidence and verify readback before dispatch. Discoverable owner review separates read-only exact inspection, fresh-authority original-identity retry and ledger-verified acknowledgement. Unsupported/unreadable evidence remains closed; cleanup/export/key inventory includes the new purpose. Frozen all38/all18 remain UNACCEPTED; release NO_GO, J01 positive admission closed. Browser/process and final-source validation receipts and retained failures are delivered separately; no native/backend/professional/source publication authority is implied.
+ 
+-Forced-process probes exposed localStorage rollback of command preparation, ledger successors and withdrawal authority. Four fixed browser ciphertext rows now require strict IndexedDB completion, using unchanged encryption and key custody. A completed withdrawal audits retained raw purpose bytes again after restart and reopens guarded cleanup while processing remains closed. Legacy control/ledger inspection never provisions a database; ambiguous recovery prototypes and missing-primary legacy shadows refuse. Explicit acknowledgement retains bounded original evidence; no automatic eviction or startup replay.
++Forced-process probes exposed localStorage rollback of command preparation, ledger successors and withdrawal authority. Eight fixed browser ciphertext rows (including the original canonical routine source stores) now require strict IndexedDB completion, using unchanged encryption and key custody. A completed withdrawal audits retained raw purpose bytes again after restart and reopens guarded cleanup while processing remains closed. Legacy control/ledger inspection never provisions a database; ambiguous recovery prototypes and missing-primary legacy shadows refuse. Explicit acknowledgement retains bounded original evidence; no automatic eviction or startup replay.
+ 
+ # Practice templates and original-authority recovery Engineering28 - 2026-11-18
+ 
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
+index aec0044d9a68924f5401d308a479878e8b4fa29a..a3a8d88a097d3d4ece77c9f87dfc41f949059113 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.test.ts
+@@ -6,9 +6,9 @@ import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanup
+ import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+ import { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteAdmission';
+ import { PRIVATE_WEB_RUNTIME_LOCK } from '@/lib/storage/webRuntimeAdmission';
+-import { LOCAL_PRIVATE_BROWSER_DATABASES } from './localPrivateDataKeys';
+ 
+ import {
++  LOCAL_PRIVATE_BROWSER_DATABASES,
+   LOCAL_PRIVATE_CONTROL_KEYS,
+   LOCAL_PRIVATE_DATA_KEYS,
+   LOCAL_PRIVATE_METADATA_KEYS,
+diff --git a/apps/mobile/src/features/settings/localPrivateDataKeys.ts b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+index cfd02a58a3c458ad1244c24578eb63f770573777..f0f0e645a00e2ceb4f8a261f5dadc50976490327 100644
+--- a/apps/mobile/src/features/settings/localPrivateDataKeys.ts
++++ b/apps/mobile/src/features/settings/localPrivateDataKeys.ts
+@@ -13,12 +13,12 @@ import {
+   PLAINTEXT_STAGING_JOURNAL_KEY,
+ } from '@/lib/storage/plaintextStagingCore';
+ import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+-import { ROUTINE_DECISION_BROWSER_DATABASE, ROUTINE_DECISION_STORAGE_KEY } from '@/lib/storage/routineDecisionStorageLocations';
++import { ROUTINE_DECISION_BROWSER_DATABASE, ROUTINE_DECISION_BROWSER_CIPHERTEXT_KEYS } from '@/lib/storage/routineDecisionStorageLocations';
+ 
+ /** Browser database inventory. The encrypted fixed-purpose row participates
+  * in ordinary key enumeration/export and verified purpose/full erasure. Empty
+  * schema metadata carries no owner payload and is retained without migration. */
+-export const LOCAL_PRIVATE_BROWSER_DATABASES = [{ name: ROUTINE_DECISION_BROWSER_DATABASE, ciphertextKeys: [ROUTINE_DECISION_STORAGE_KEY, 'layerwell.completions.v1', 'layerwell.healthDataLifecycle.v1', 'layerwell.healthDataCollectionConsent.v1'] }] as const;
++export const LOCAL_PRIVATE_BROWSER_DATABASES = [{ name: ROUTINE_DECISION_BROWSER_DATABASE, ciphertextKeys: ROUTINE_DECISION_BROWSER_CIPHERTEXT_KEYS }] as const;
+ 
+ export const LOCAL_PRIVATE_DATA_KEYS = [
+   'layerwell.routineDecisionRecovery.v1',
+diff --git a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+index d4f6d0685607268f94faed9b78b02d597ec7a8e0..dafea02becd1e7d7705b36ed6ba302daebff90ae 100644
+--- a/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
++++ b/apps/mobile/src/lib/storage/privateAsyncStorage.web.ts
+@@ -1,10 +1,9 @@
+ import original from '@react-native-async-storage/async-storage';
+-import { ROUTINE_DECISION_BROWSER_DATABASE as DB, ROUTINE_DECISION_STORAGE_KEY as KEY } from './routineDecisionStorageLocations';
++import { ROUTINE_DECISION_BROWSER_DATABASE as DB, ROUTINE_DECISION_STORAGE_KEY as KEY, ROUTINE_DECISION_BROWSER_CIPHERTEXT_KEYS as ROWS } from './routineDecisionStorageLocations';
+ 
+ // Fixed encrypted rows only. All cryptography, exact source fences, original
+ // owner/consent authority and key custody remain in privateKV.
+-const LEDGER = 'layerwell.completions.v1', STORE = 'ciphertext';
+-const ROWS = [KEY, LEDGER, 'layerwell.healthDataLifecycle.v1', 'layerwell.healthDataCollectionConsent.v1'];
++const STORE = 'ciphertext';
+ const createdDatabases = new WeakSet<IDBDatabase>();
+ const fail = () => new Error('ROUTINE_DECISION_DURABLE_STORAGE_UNAVAILABLE');
+ async function database(create: boolean): Promise<IDBDatabase | null> {
+diff --git a/apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts b/apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts
+index c32eaa4107f1398439e3b04a8572e01667f3d27e..fab767c696caf9fc73d7cd162ba4dd967356a65f 100644
+--- a/apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts
++++ b/apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts
+@@ -1,2 +1,10 @@
+ export const ROUTINE_DECISION_BROWSER_DATABASE = 'layerwell.routine-decision-ciphertext.v1';
+ export const ROUTINE_DECISION_STORAGE_KEY = 'layerwell.routineDecisionRecovery.v1';
++// Canonical source bytes stay in their original authenticated stores. Persisting
++// them never converts saved command facts into the live WeakMap source proof.
++export const ROUTINE_DECISION_BROWSER_CIPHERTEXT_KEYS: readonly string[] = Object.freeze([
++  ROUTINE_DECISION_STORAGE_KEY, 'layerwell.completions.v1',
++  'layerwell.healthDataLifecycle.v1', 'layerwell.healthDataCollectionConsent.v1',
++  'layerwell.shelf.v1', 'layerwell.skinprofile.v1',
++  'layerwell.conflict.overrides', 'layerwell.routineOrder.v1',
++]);
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 0d77ab0fac62e2473086eb2f13bfc0178f0b1ba3..49756eb538f92f83b88a99b1753dc9b1c7b2a19a 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -8,7 +8,7 @@ Routine records → review exact apply / clear / original recorded-use retractio
+ 
+ Routine records → Review saved routine decisions → confirmed collection / unavailable or unsupported refusal → Review saved decision → original facts and identity → Inspect original routine decision (read-only) → recorded_current / recorded_historical / conflict / not_found / unreadable. Not-found never proves failure. Explicit Retry this original routine decision reacquires current access and, for apply, a new approved in-memory source proof matching the original facts. Changed source/predecessor/target refuses. Acknowledge exact saved routine outcome is separate and rechecks the exact ledger under reservation before marking acknowledgement while retaining the original evidence for inspection. Close/Escape/navigation leaves unresolved evidence intact; canceled/stale callbacks cannot operate on a successor. Applying records no use; retraction preserves the original event. Withdrawal/full clearing remove the registered purpose key; export contains strict evidence, never live capabilities. Capacity refuses new preparation without purging unresolved work. All38/all18 remain UNACCEPTED; native/backend/scientific qualification remains absent.
+ 
+-Forced-browser-process testing found that localStorage readback could lose the newest prepared command, ledger successor or withdrawal authority receipt. Four inventoried browser rows therefore retain only existing privateKV-encrypted ciphertext in strict IndexedDB transactions: routine recovery, completion ledger, original health lifecycle and original consent. Preparation requires completed encrypted readback before dispatch. Reads preserve legacy lifecycle/consent/ledger bytes without creating or migrating a database. Unsupported durability or older localStorage recovery prototype evidence refuses rather than overwrites. After restart, an existing completed withdrawal rechecks raw health-purpose absence under its original owner fence; retained or unreadable bytes reopen cleanup while processing stays closed. The original consent/lifecycle receipts remain outside purpose erasure under their existing policy. Acknowledgement marks and retains the original command evidence for inspect-only review. The collection is bounded to 100 records and 512,000 plaintext UTF-8 bytes; acknowledged and unresolved records remain until explicit purpose/full cleanup, and capacity stops new preparation without automatic eviction. Native AsyncStorage/key custody is unchanged and its physical crash qualification remains absent.
++Forced-browser-process testing found that localStorage readback could lose the newest prepared command, ledger successor or withdrawal authority receipt. Eight inventoried browser rows therefore retain only existing privateKV-encrypted ciphertext in strict IndexedDB transactions: routine recovery, completion ledger, original health lifecycle and original consent, and the four original canonical routine source stores (Shelf, profile, choices and order). Canonical source loss was independently reproduced after a forced restart; these stores remain authoritative only through their unchanged decoders and newly captured live source proofs. Persisted command facts are never restored into those stores. Preparation requires completed encrypted readback before dispatch. Reads preserve legacy lifecycle/consent/ledger bytes without creating or migrating a database. Unsupported durability or older localStorage recovery prototype evidence refuses rather than overwrites. After restart, an existing completed withdrawal rechecks raw health-purpose absence under its original owner fence; retained or unreadable bytes reopen cleanup while processing stays closed. The original consent/lifecycle receipts remain outside purpose erasure under their existing policy. Acknowledgement marks and retains the original command evidence for inspect-only review. The collection is bounded to 100 records and 512,000 plaintext UTF-8 bytes; acknowledged and unresolved records remain until explicit purpose/full cleanup, and capacity stops new preparation without automatic eviction. Native AsyncStorage/key custody is unchanged and its physical crash qualification remains absent.
+ 
+ ## Engineering28 practice template library and navigation retirement (local, unaccepted)
+ 
+diff --git a/scripts/e2e/durable-routine32.mjs b/scripts/e2e/durable-routine32.mjs
+index 9f6e5d7f7709b47af1515eff06e36fa5fea4ea34..c3e74c588ff1112025301e37f38f3a59770d6b34 100644
+--- a/scripts/e2e/durable-routine32.mjs
++++ b/scripts/e2e/durable-routine32.mjs
+@@ -7,6 +7,13 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   const rows = () => evaluate(`(async()=>{${mods}return (await recovery.loadRoutineDecisions(lease)).decisions})()`);
+   const rawEvidence = () => evaluate(`(async()=>{${moduleExpression}return mod('/lib/storage/privateAsyncStorage.web.ts').default.getItem('layerwell.routineDecisionRecovery.v1')})()`);
+   const rawModule=`const entry=[...__r.getModules().values()].find(row=>(row.verboseName??'').replaceAll('\\\\','/').endsWith('/lib/storage/privateAsyncStorage.web.ts'));const raw=entry.publicModule.exports.default;`;
++  let sourceRestart = 0;
++  const canonicalSource = () => evaluate(`(async()=>{${rawModule}const rows=[];for(const key of ['layerwell.shelf.v1','layerwell.skinprofile.v1','layerwell.conflict.overrides','layerwell.routineOrder.v1']){const value=await raw.getItem(key);rows.push({key,present:value!==null,sha256:value===null?null:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(x=>x.toString(16).padStart(2,'0')).join('')})}return rows})()`);
++  const restartRoutine = async () => {
++    const before=await canonicalSource(); await restart(); await text('My actual routine');
++    const after=await canonicalSource(); record(`${id}-canonical-source-restart-${++sourceRestart}-source-hashes.json`,{before,after});
++    assert.deepEqual(after,before);
++  };
+   const withdrawn = () => b.waitForCondition(getClient(),`[...document.querySelectorAll('div[dir="auto"]')].some(node=>node.textContent.replace(/\\s+/g,' ').includes('Status: withdrawn. Local cleanup complete.')&&node.getClientRects().length&&!node.closest('[inert],[aria-hidden="true"]'))`,30000,'visible withdrawn status and complete local cleanup');
+   const navigate = async route => { await evaluate(`(()=>{${moduleExpression}mod('/node_modules/expo-router/build/exports.js').router.push(${JSON.stringify(route)});return true})()`); await b.waitForPath(getClient(),route); };
+   const fault = async (method,afterCommit) => evaluate(`(()=>{${moduleExpression}const original=store[${JSON.stringify(method)}];store[${JSON.stringify(method)}]=async(...args)=>{store[${JSON.stringify(method)}]=original;globalThis.__original32=${JSON.stringify(method)}==='applyCurrentActualRoutine'?args[2]:${JSON.stringify(method)}==='clearCurrentActualRoutine'?args[1]:args[3];${afterCommit?'await original(...args);':''}throw Error('SYNTHETIC32_ACK_LOST')};return true})()`);
+@@ -34,7 +41,7 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   const prepared=(await rows()).find(row=>row.command.request.id===original.id); assert(prepared); assert.equal(prepared.command.request.createdAt,original.createdAt);
+   const evidenceBefore=await rawEvidence();
+   record(id+'-pre-kill-original-evidence.json',{commandId:original.id,originalTime:original.createdAt,ciphertextSha256:sha(evidenceBefore),ledgerSha256:sha(before.raw),termination:'owned browser process tree force termination'});
+-  await restart(); await text('My actual routine');
++  await restartRoutine();
+   const evidenceAfter=await rawEvidence();
+   record(id+'-post-kill-original-evidence.json',{commandId:original.id,ciphertextSha256:sha(evidenceAfter),ledgerSha256:sha((await snapshot()).raw),unchanged:evidenceAfter===evidenceBefore});
+   assert(evidenceAfter===evidenceBefore);
+@@ -49,7 +56,7 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   // outcome and read-only inspection, followed by explicit acknowledgement.
+   await keyboard('Review clearing my applied routine',height); await fault('clearCurrentActualRoutine',true);
+   await keyboard('Confirm clearing applied routine',height); await text('Check saved correction outcome');
+-  const clear=await evaluate('globalThis.__original32'); await getClient().send('Page.reload'); await text('My actual routine');
++  const clear=await evaluate('globalThis.__original32'); await restartRoutine();
+   await inspection(clear.id,'recorded_current'); await capture(id+'-clear-restart-inspection');
+   await keyboard('Acknowledge exact saved routine outcome',height);
+   await keyboard('Review current Shelf sequence as actual routine',height); await keyboard('Apply reviewed actual routine',height); await text('Actual routine applied and read back');
+@@ -63,7 +70,7 @@ export async function durableRoutine32({ b, getClient, tap, keyboard, text, snap
+   await keyboard('Confirm actual-use retraction',height); await text('Check saved correction outcome');
+   const retraction=await evaluate('globalThis.__original32');
+   const savedRetraction=(await rows()).find(row=>row.command.request.id===retraction.id); assert.deepEqual(savedRetraction.command.event,used);
+-  await getClient().send('Page.reload'); await text('My actual routine');
++  await restartRoutine();
+   await inspection(retraction.id,'recorded_current'); await capture(id+'-retraction-restart-inspection');
+   await keyboard('Acknowledge exact saved routine outcome',height);
+   const final=await snapshot(); assert.equal(final.uses.filter(row=>row.id===retraction.id).length,1); assert.deepEqual(final.uses.find(row=>row.id===used.id),used);
+diff --git a/scripts/e2e/runtime-handoff32.mjs b/scripts/e2e/runtime-handoff32.mjs
+index beeeb0d6686467f19d56edd5ea87be5f628e2998..5206b1e47a97eab11059d3b37f2e00034b976c9e 100644
+--- a/scripts/e2e/runtime-handoff32.mjs
++++ b/scripts/e2e/runtime-handoff32.mjs
+@@ -95,7 +95,7 @@ try {
+   const storageBoundary=await evaluate(storagePage, `(async()=>{
+     const entry=[...__r.getModules().values()].find(row=>(row.verboseName??'').replaceAll('\\\\','/').endsWith('/lib/storage/privateAsyncStorage.web.ts'));
+     const raw=entry.publicModule.exports.default, name='layerwell.routine-decision-ciphertext.v1', key='layerwell.routineDecisionRecovery.v1';
+-    const legacyKeys=['layerwell.healthDataLifecycle.v1','layerwell.healthDataCollectionConsent.v1','layerwell.completions.v1'];
++    const legacyKeys=['layerwell.healthDataLifecycle.v1','layerwell.healthDataCollectionConsent.v1','layerwell.completions.v1','layerwell.shelf.v1','layerwell.skinprofile.v1','layerwell.conflict.overrides','layerwell.routineOrder.v1'];
+     const legacySaved=legacyKeys.map(k=>localStorage.getItem(k)),listDatabases=indexedDB.databases,priorOpens=globalThis.__privateDatabaseCalls32;
+     let legacyReadPreserved=false,legacyReadCreatedNoDatabase=false;
+     try{

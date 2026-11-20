@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/routineDecisionRecovery32.test.ts src/features/settings/localPrivateDataKeys.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  29 passed (29)
+   Start at  09:54:51
+   Duration  2.02s (transform 697ms, setup 0ms, import 955ms, tests 1.31s, environment 0ms)
+

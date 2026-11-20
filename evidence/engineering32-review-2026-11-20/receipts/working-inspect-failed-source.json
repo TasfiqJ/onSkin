@@ -1,0 +1,36 @@
+{
+  "label": "working-inspect-failed-source",
+  "command": [
+    "node",
+    "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\inspect_failed_source32.mjs"
+  ],
+  "before": {
+    "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+    "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-20T15:43:09.342562+00:00",
+  "freeBytesBefore": 147711430656,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {
+    "ONSKIN_DIAGNOSTIC32_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\failed-source-diagnostic32",
+    "ONSKIN_DIAGNOSTIC32_PROFILE": "<HOME>/AppData/Local/Temp/onskin-outcome32-buWP7H"
+  },
+  "exit": 0,
+  "after": {
+    "head": "89d075e4ae5a65c5dff298f97572c105b4406a5f",
+    "tree": "d5d83561dd906abb9b9b305150e2b2ed640d0990",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "7d0b14b01b4aa24d69f770ce6f77971ca2ecf034845270b8641f6bcb3b8bc5f2",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-20T15:43:56.570209+00:00",
+  "freeBytesAfter": 147690999808,
+  "logBytes": 0,
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

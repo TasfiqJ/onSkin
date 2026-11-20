@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-20T14:25:42.973676+00:00",
+  "source": {
+    "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+    "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "1975b010a9768484518eb8c292bbca153e165f29e25a25b81b62f8da57592dbf",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "freeBytes": 148186128384,
+  "pr48Ancestor": true,
+  "writerObservation": "Process inventory and repeat clean identity show no competing source writer or Git lock. Existing tool hosts only; observational, not an OS lock.",
+  "ancestry": "199db7d7b90df9793ca980916701f1dfb9b83df8 4a4611c66134ce01046645dc64fed5bcbb249a0f 57532a7e409f7db6eab3b7fc726af19bedeadf41 Preserve original Diary recovery explanation with browser capability detail\n57532a7e409f7db6eab3b7fc726af19bedeadf41 fc957e8492cc0cb6d83c1f8a31b7dd6be0981f04 5d2cb11d2f1922a70061304aada0714445a8e4b5 Await actual keyboard ownership after browser modal transitions\n5d2cb11d2f1922a70061304aada0714445a8e4b5 d4169e898f5be0185011ce550bf94aaf93208cda e5b5d0934852dccac5bd90a2017f9536e2ac89f9 Engineering31 connected consumer recovery and exact source review\ne5b5d0934852dccac5bd90a2017f9536e2ac89f9 9de89e78a4d475dbaf154d1d66dd29f34617a0d5 07b08d9bb01f652b910e4c7337c3fb4a770802aa test: bind visible owner Shelf controls and sustained text pressure\n07b08d9bb01f652b910e4c7337c3fb4a770802aa 16b2f89859f5d0ac593556eae62dd08304123725 e471655b25e99a5a8c953a3c9ba82127b466e73a fix: keep large-text drafts reachable and bind owner-race setup\ne471655b25e99a5a8c953a3c9ba82127b466e73a 5472d9120bd446ccd553373fea796e287c48af72 68dc086743f6c7f8b2ea8706aa973b27328b7814 feat: complete guarded manual intake and saved product lifecycle\n68dc086743f6c7f8b2ea8706aa973b27328b7814 613b11c549f4a46901c2ba819fb3db5a3d40ba61 db5f6ed1acacdb9e8dafb28615913f818891cd8b test: make optional history entry and absent journal explicit\ndb5f6ed1acacdb9e8dafb28615913f818891cd8b 89964371551d58c49edec132b8465f742c55874c b29e731097984be98f5b06024d11255dbb732809 test: align Diary recovery check with incomplete-storage refusal"
+}

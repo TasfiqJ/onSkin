@@ -1,0 +1,4 @@
+{
+  "message": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(await evaluate(`document.querySelector('[role=\"dialog\"][aria-label=\"Review original routine decision\"]').contains(document.activeElement)`))\n",
+  "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(await evaluate(`document.querySelector('[role=\"dialog\"][aria-label=\"Review original routine decision\"]').contains(document.activeElement)`))\n\n    at inspection (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/durable-routine32.mjs:21:5)\n    at async durableRoutine32 (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/durable-routine32.mjs:41:3)\n    at async file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:124:23"
+}

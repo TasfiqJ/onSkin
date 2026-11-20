@@ -1,0 +1,44 @@
+{
+  "label": "durable-storage-lint",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--",
+    "eslint",
+    "src/lib/storage/privateAsyncStorage.web.ts",
+    "src/lib/storage/privateAsyncStorage.ts",
+    "src/lib/storage/routineDecisionStorageLocations.ts",
+    "src/features/routine/SavedRoutineDecisions.tsx",
+    "src/features/routine/routineDecisionRecoveryStore.ts",
+    "src/features/routine/routineDecisionRecoveryCodec.ts",
+    "--max-warnings=0"
+  ],
+  "before": {
+    "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+    "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts",
+    "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+    "diffSha256": "fc56ea0d5b203c51188b37fc83c81cf80290f444d35c22117e5a93382d092fe7"
+  },
+  "start": "2026-11-20T14:54:44.390756+00:00",
+  "freeBytesBefore": 147995918336,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "382e5c876cdc9d0956f2d1ca711919912ef8a9ca",
+    "tree": "f32d379b7d4defc5251c59ba7299817de95084db",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/routine/SavedRoutineDecisions.tsx\n M apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts\n M apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/storage/verifiedErasure.ts\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/durable-routine32.mjs\n?? apps/mobile/src/lib/storage/privateAsyncStorage.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/routineDecisionStorageLocations.ts",
+    "indexSha256": "8792613595dd71637382719b11d46150fed60fce3327424a21faabaefb36e88b",
+    "diffSha256": "fc56ea0d5b203c51188b37fc83c81cf80290f444d35c22117e5a93382d092fe7"
+  },
+  "end": "2026-11-20T14:54:50.004758+00:00",
+  "freeBytesAfter": 147995811840,
+  "logBytes": 0,
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

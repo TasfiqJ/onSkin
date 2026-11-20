@@ -1,0 +1,12 @@
+{
+  "actualPrivacyUi": true,
+  "removed": {
+    "recovery": true,
+    "ledger": true
+  },
+  "afterWithdrawal": {
+    "recovery": true,
+    "ledger": true
+  },
+  "noOriginalCommandsResurrected": true
+}

@@ -1,0 +1,3161 @@
+{
+  "source": {
+    "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+    "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "4c5bb844ee1a26610bf017ced5ba96ba2db65624e27b011f6a807f25d464303b",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ordinary": [
+    {
+      "width": 375,
+      "height": 667,
+      "repeat": 1,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "repeat": 2,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "repeat": 3,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 11,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "repeat": 1,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "repeat": 2,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "repeat": 3,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 10,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "repeat": 1,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "repeat": 2,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "repeat": 3,
+      "startup": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "reload": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "direct": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 27,
+        "privateDatabaseCalls": 0
+      },
+      "returned": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "automaticRetries": 0,
+      "manualRetries": 0,
+      "pass": true
+    }
+  ],
+  "firstAppDocument": {
+    "ordinary": [
+      {
+        "width": 375,
+        "height": 667,
+        "repeat": 1,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 8,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 375,
+        "height": 667,
+        "repeat": 2,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 8,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 375,
+        "height": 667,
+        "repeat": 3,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "repeat": 1,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "repeat": 2,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "repeat": 3,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 430,
+        "height": 932,
+        "repeat": 1,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 430,
+        "height": 932,
+        "repeat": 2,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 10,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "width": 430,
+        "height": 932,
+        "repeat": 3,
+        "startup": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 10,
+          "privateDatabaseCalls": 0
+        },
+        "reload": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "direct": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 27,
+          "privateDatabaseCalls": 0
+        },
+        "returned": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "automaticRetries": 0,
+        "manualRetries": 0,
+        "pass": true
+      }
+    ],
+    "induced": [
+      {
+        "case": "transient closing holder",
+        "pending": {
+          "status": "checking",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            }
+          ],
+          "privateCalls": 0,
+          "privateDatabaseCalls": 0
+        },
+        "handoff": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "manualRetries": 0,
+        "pass": true
+      },
+      {
+        "case": "live second tab",
+        "occupied": {
+          "status": "occupied",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 2,
+              "status": "occupied",
+              "reason": "bounded-wait-ended"
+            }
+          ],
+          "privateCalls": 0,
+          "privateDatabaseCalls": 0
+        },
+        "recovered": {
+          "status": "admitted",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 2,
+              "status": "occupied",
+              "reason": "bounded-wait-ended"
+            },
+            {
+              "attempt": 3,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 3,
+              "status": "admitted",
+              "reason": "exclusive-callback"
+            }
+          ],
+          "privateCalls": 15,
+          "privateDatabaseCalls": 0
+        },
+        "manualRetries": 1,
+        "pass": true
+      },
+      {
+        "case": "pending document reload termination",
+        "pass": true
+      },
+      {
+        "case": "unsupported",
+        "result": {
+          "status": "unavailable",
+          "transitions": [
+            {
+              "attempt": 0,
+              "status": "unavailable",
+              "reason": "unsupported"
+            }
+          ],
+          "privateCalls": 0,
+          "privateDatabaseCalls": 0
+        },
+        "pass": true
+      },
+      {
+        "case": "denied",
+        "result": {
+          "status": "unavailable",
+          "transitions": [
+            {
+              "attempt": 1,
+              "status": "checking",
+              "reason": "exclusive-request"
+            },
+            {
+              "attempt": 1,
+              "status": "unavailable",
+              "reason": "request-rejected"
+            }
+          ],
+          "privateCalls": 0,
+          "privateDatabaseCalls": 0
+        },
+        "pass": true
+      },
+      {
+        "case": "raw storage denial and unsupported schema",
+        "storageBoundary": {
+          "legacyReadPreserved": true,
+          "legacyReadCreatedNoDatabase": true,
+          "strictWriteDenied": true,
+          "noCiphertextWritten": true,
+          "futureRefused": true,
+          "versionPreserved": true
+        },
+        "syntheticPortOnly": true,
+        "pass": true
+      }
+    ],
+    "interventions": [
+      {
+        "case": "true contention",
+        "action": "explicit visible Retry private app access"
+      }
+    ],
+    "failures": [],
+    "traces": [
+      {
+        "documentId": "489aad1b-0435-45fd-b2e2-abfe7810e353",
+        "event": "document",
+        "at": 649.6999999880791
+      },
+      {
+        "documentId": "489aad1b-0435-45fd-b2e2-abfe7810e353",
+        "event": "pageshow",
+        "at": 11674.300000011921,
+        "persisted": false
+      },
+      {
+        "documentId": "489aad1b-0435-45fd-b2e2-abfe7810e353",
+        "event": "request",
+        "at": 11865.5,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "489aad1b-0435-45fd-b2e2-abfe7810e353",
+        "event": "callback",
+        "at": 11877.300000011921,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "94848259-ddf8-4e0d-8890-71fdc74e1ace",
+        "event": "document",
+        "at": 636.3000000119209
+      },
+      {
+        "documentId": "94848259-ddf8-4e0d-8890-71fdc74e1ace",
+        "event": "pageshow",
+        "at": 1080.6000000238419,
+        "persisted": false
+      },
+      {
+        "documentId": "94848259-ddf8-4e0d-8890-71fdc74e1ace",
+        "event": "request",
+        "at": 1140.8999999761581,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "94848259-ddf8-4e0d-8890-71fdc74e1ace",
+        "event": "callback",
+        "at": 1147.1000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "7d855942-9fed-4f0e-a7ac-7c6c9a6765c8",
+        "event": "document",
+        "at": 518.8000000119209
+      },
+      {
+        "documentId": "7d855942-9fed-4f0e-a7ac-7c6c9a6765c8",
+        "event": "pageshow",
+        "at": 971.5,
+        "persisted": false
+      },
+      {
+        "documentId": "7d855942-9fed-4f0e-a7ac-7c6c9a6765c8",
+        "event": "request",
+        "at": 1025.699999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "7d855942-9fed-4f0e-a7ac-7c6c9a6765c8",
+        "event": "callback",
+        "at": 1033.199999988079,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "2c2f5ef3-a4ef-457d-893b-da58e3d1ae33",
+        "event": "document",
+        "at": 524.0999999642372
+      },
+      {
+        "documentId": "2c2f5ef3-a4ef-457d-893b-da58e3d1ae33",
+        "event": "pageshow",
+        "at": 981.8000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "2c2f5ef3-a4ef-457d-893b-da58e3d1ae33",
+        "event": "request",
+        "at": 1067.8999999761581,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "2c2f5ef3-a4ef-457d-893b-da58e3d1ae33",
+        "event": "callback",
+        "at": 1075.3999999761581,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "d25ee022-aef2-4947-9231-fca2e5be98d7",
+        "event": "document",
+        "at": 534.5
+      },
+      {
+        "documentId": "d25ee022-aef2-4947-9231-fca2e5be98d7",
+        "event": "pageshow",
+        "at": 1051.300000011921,
+        "persisted": false
+      },
+      {
+        "documentId": "d25ee022-aef2-4947-9231-fca2e5be98d7",
+        "event": "request",
+        "at": 1125.9000000357628,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "d25ee022-aef2-4947-9231-fca2e5be98d7",
+        "event": "callback",
+        "at": 1135.800000011921,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "94d4fbb3-0cb9-40a1-9d64-dffccedafce6",
+        "event": "document",
+        "at": 701
+      },
+      {
+        "documentId": "94d4fbb3-0cb9-40a1-9d64-dffccedafce6",
+        "event": "pageshow",
+        "at": 1388.9000000357628,
+        "persisted": false
+      },
+      {
+        "documentId": "94d4fbb3-0cb9-40a1-9d64-dffccedafce6",
+        "event": "request",
+        "at": 1578.199999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "94d4fbb3-0cb9-40a1-9d64-dffccedafce6",
+        "event": "callback",
+        "at": 1587.1000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "0f205f9d-d699-4680-8dd4-593ebd810acd",
+        "event": "document",
+        "at": 575.3000000119209
+      },
+      {
+        "documentId": "0f205f9d-d699-4680-8dd4-593ebd810acd",
+        "event": "pageshow",
+        "at": 1009.3000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "0f205f9d-d699-4680-8dd4-593ebd810acd",
+        "event": "request",
+        "at": 1066.8999999761581,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "0f205f9d-d699-4680-8dd4-593ebd810acd",
+        "event": "callback",
+        "at": 1072.199999988079,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "3782a264-5cd6-47da-b036-d1222464eb0c",
+        "event": "document",
+        "at": 521.5
+      },
+      {
+        "documentId": "3782a264-5cd6-47da-b036-d1222464eb0c",
+        "event": "pageshow",
+        "at": 977.5999999642372,
+        "persisted": false
+      },
+      {
+        "documentId": "3782a264-5cd6-47da-b036-d1222464eb0c",
+        "event": "request",
+        "at": 1030.699999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "3782a264-5cd6-47da-b036-d1222464eb0c",
+        "event": "callback",
+        "at": 1037.2999999523163,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "8abb94e5-ead6-4538-8c9d-a29936b4e435",
+        "event": "document",
+        "at": 583.1000000238419
+      },
+      {
+        "documentId": "8abb94e5-ead6-4538-8c9d-a29936b4e435",
+        "event": "pageshow",
+        "at": 1093.699999988079,
+        "persisted": false
+      },
+      {
+        "documentId": "8abb94e5-ead6-4538-8c9d-a29936b4e435",
+        "event": "request",
+        "at": 1154.8999999761581,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "8abb94e5-ead6-4538-8c9d-a29936b4e435",
+        "event": "callback",
+        "at": 1162.300000011921,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "739c84be-8b3c-4dfd-b174-95c321e376d8",
+        "event": "document",
+        "at": 511.19999998807907
+      },
+      {
+        "documentId": "739c84be-8b3c-4dfd-b174-95c321e376d8",
+        "event": "pageshow",
+        "at": 1072.699999988079,
+        "persisted": false
+      },
+      {
+        "documentId": "739c84be-8b3c-4dfd-b174-95c321e376d8",
+        "event": "request",
+        "at": 1156.5,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "739c84be-8b3c-4dfd-b174-95c321e376d8",
+        "event": "callback",
+        "at": 1169.6000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "a2435aea-6a80-4996-8210-9c83132ee38f",
+        "event": "document",
+        "at": 694.7000000476837
+      },
+      {
+        "documentId": "a2435aea-6a80-4996-8210-9c83132ee38f",
+        "event": "pageshow",
+        "at": 1389.9000000357628,
+        "persisted": false
+      },
+      {
+        "documentId": "a2435aea-6a80-4996-8210-9c83132ee38f",
+        "event": "request",
+        "at": 1585.9000000357628,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "a2435aea-6a80-4996-8210-9c83132ee38f",
+        "event": "callback",
+        "at": 1596.1000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "71ac92f3-e4f8-4090-996e-27ededd93c24",
+        "event": "document",
+        "at": 640.6999999880791
+      },
+      {
+        "documentId": "71ac92f3-e4f8-4090-996e-27ededd93c24",
+        "event": "pageshow",
+        "at": 1039,
+        "persisted": false
+      },
+      {
+        "documentId": "71ac92f3-e4f8-4090-996e-27ededd93c24",
+        "event": "request",
+        "at": 1093.0999999642372,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "71ac92f3-e4f8-4090-996e-27ededd93c24",
+        "event": "callback",
+        "at": 1098.0999999642372,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "0d1ab61b-6a28-49e4-bb5c-2747259e97ff",
+        "event": "document",
+        "at": 518.1000000238419
+      },
+      {
+        "documentId": "0d1ab61b-6a28-49e4-bb5c-2747259e97ff",
+        "event": "pageshow",
+        "at": 937.5,
+        "persisted": false
+      },
+      {
+        "documentId": "0d1ab61b-6a28-49e4-bb5c-2747259e97ff",
+        "event": "request",
+        "at": 994.7000000476837,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "0d1ab61b-6a28-49e4-bb5c-2747259e97ff",
+        "event": "callback",
+        "at": 1000.9000000357628,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "d37aa6f2-6605-4e74-8712-7e37a3fc4b6d",
+        "event": "document",
+        "at": 559.8999999761581
+      },
+      {
+        "documentId": "d37aa6f2-6605-4e74-8712-7e37a3fc4b6d",
+        "event": "pageshow",
+        "at": 992.8000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "d37aa6f2-6605-4e74-8712-7e37a3fc4b6d",
+        "event": "request",
+        "at": 1049.699999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "d37aa6f2-6605-4e74-8712-7e37a3fc4b6d",
+        "event": "callback",
+        "at": 1056.6000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "a1e16e80-dd39-4632-9d2c-c7395c48fe9f",
+        "event": "document",
+        "at": 622.8000000119209
+      },
+      {
+        "documentId": "a1e16e80-dd39-4632-9d2c-c7395c48fe9f",
+        "event": "pageshow",
+        "at": 1068.6000000238419,
+        "persisted": false
+      },
+      {
+        "documentId": "a1e16e80-dd39-4632-9d2c-c7395c48fe9f",
+        "event": "request",
+        "at": 1134.1000000238419,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "a1e16e80-dd39-4632-9d2c-c7395c48fe9f",
+        "event": "callback",
+        "at": 1139.5,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "519fc07e-2b6c-4098-8c25-5961cfa2333a",
+        "event": "document",
+        "at": 749.8000000119209
+      },
+      {
+        "documentId": "519fc07e-2b6c-4098-8c25-5961cfa2333a",
+        "event": "pageshow",
+        "at": 1481.1000000238419,
+        "persisted": false
+      },
+      {
+        "documentId": "519fc07e-2b6c-4098-8c25-5961cfa2333a",
+        "event": "request",
+        "at": 1689.699999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "519fc07e-2b6c-4098-8c25-5961cfa2333a",
+        "event": "callback",
+        "at": 1702.1000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "9a42bca0-eaac-48f8-8d80-7b8cb42519fd",
+        "event": "document",
+        "at": 647.6999999880791
+      },
+      {
+        "documentId": "9a42bca0-eaac-48f8-8d80-7b8cb42519fd",
+        "event": "pageshow",
+        "at": 1094.3999999761581,
+        "persisted": false
+      },
+      {
+        "documentId": "9a42bca0-eaac-48f8-8d80-7b8cb42519fd",
+        "event": "request",
+        "at": 1158.199999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "9a42bca0-eaac-48f8-8d80-7b8cb42519fd",
+        "event": "callback",
+        "at": 1165.199999988079,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "467ed84c-c822-4409-93f7-5eb9ff004eac",
+        "event": "document",
+        "at": 566.6999999880791
+      },
+      {
+        "documentId": "467ed84c-c822-4409-93f7-5eb9ff004eac",
+        "event": "pageshow",
+        "at": 1000.6999999880791,
+        "persisted": false
+      },
+      {
+        "documentId": "467ed84c-c822-4409-93f7-5eb9ff004eac",
+        "event": "request",
+        "at": 1052.3999999761581,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "467ed84c-c822-4409-93f7-5eb9ff004eac",
+        "event": "callback",
+        "at": 1059,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "16a564ea-3664-4977-85ce-a42beb257b9d",
+        "event": "document",
+        "at": 516.3999999761581
+      },
+      {
+        "documentId": "16a564ea-3664-4977-85ce-a42beb257b9d",
+        "event": "pageshow",
+        "at": 938.3000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "16a564ea-3664-4977-85ce-a42beb257b9d",
+        "event": "request",
+        "at": 991.1999999880791,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "16a564ea-3664-4977-85ce-a42beb257b9d",
+        "event": "callback",
+        "at": 997.8000000119209,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "d697a2a7-b182-4bab-99a2-fff77e15058a",
+        "event": "document",
+        "at": 513.7999999523163
+      },
+      {
+        "documentId": "d697a2a7-b182-4bab-99a2-fff77e15058a",
+        "event": "pageshow",
+        "at": 898.7999999523163,
+        "persisted": false
+      },
+      {
+        "documentId": "d697a2a7-b182-4bab-99a2-fff77e15058a",
+        "event": "request",
+        "at": 955.5,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "d697a2a7-b182-4bab-99a2-fff77e15058a",
+        "event": "callback",
+        "at": 961.5999999642372,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "d6ad0fdd-5b36-4fdf-94c8-e6a41e3ef148",
+        "event": "document",
+        "at": 619.5
+      },
+      {
+        "documentId": "d6ad0fdd-5b36-4fdf-94c8-e6a41e3ef148",
+        "event": "pageshow",
+        "at": 1172.7999999523163,
+        "persisted": false
+      },
+      {
+        "documentId": "d6ad0fdd-5b36-4fdf-94c8-e6a41e3ef148",
+        "event": "request",
+        "at": 1342,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "d6ad0fdd-5b36-4fdf-94c8-e6a41e3ef148",
+        "event": "callback",
+        "at": 1349.5999999642372,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "3c9b627c-43dd-4bb2-aab8-e34b376e7a5c",
+        "event": "document",
+        "at": 520.4000000357628
+      },
+      {
+        "documentId": "3c9b627c-43dd-4bb2-aab8-e34b376e7a5c",
+        "event": "pageshow",
+        "at": 963.8000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "3c9b627c-43dd-4bb2-aab8-e34b376e7a5c",
+        "event": "request",
+        "at": 1019.8000000119209,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "3c9b627c-43dd-4bb2-aab8-e34b376e7a5c",
+        "event": "callback",
+        "at": 1025.699999988079,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "761834a3-e7e9-4f49-b826-23399570e435",
+        "event": "document",
+        "at": 519.5
+      },
+      {
+        "documentId": "761834a3-e7e9-4f49-b826-23399570e435",
+        "event": "pageshow",
+        "at": 911.6000000238419,
+        "persisted": false
+      },
+      {
+        "documentId": "761834a3-e7e9-4f49-b826-23399570e435",
+        "event": "request",
+        "at": 966.4000000357628,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "761834a3-e7e9-4f49-b826-23399570e435",
+        "event": "callback",
+        "at": 971.4000000357628,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "432942c3-51c4-48e0-b315-e3b3c2b40e9b",
+        "event": "document",
+        "at": 503.69999998807907
+      },
+      {
+        "documentId": "432942c3-51c4-48e0-b315-e3b3c2b40e9b",
+        "event": "pageshow",
+        "at": 902.1000000238419,
+        "persisted": false
+      },
+      {
+        "documentId": "432942c3-51c4-48e0-b315-e3b3c2b40e9b",
+        "event": "request",
+        "at": 952.1000000238419,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "432942c3-51c4-48e0-b315-e3b3c2b40e9b",
+        "event": "callback",
+        "at": 958,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "953d5705-23d2-4aa0-9f3f-ae22ad8341dc",
+        "event": "document",
+        "at": 524.8999999761581
+      },
+      {
+        "documentId": "953d5705-23d2-4aa0-9f3f-ae22ad8341dc",
+        "event": "pageshow",
+        "at": 975.3999999761581,
+        "persisted": false
+      },
+      {
+        "documentId": "953d5705-23d2-4aa0-9f3f-ae22ad8341dc",
+        "event": "request",
+        "at": 1036.3999999761581,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "953d5705-23d2-4aa0-9f3f-ae22ad8341dc",
+        "event": "callback",
+        "at": 1043,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "12d05703-4ed6-4e57-a7e1-6f4cb1deb192",
+        "event": "document",
+        "at": 603.8999999761581
+      },
+      {
+        "documentId": "12d05703-4ed6-4e57-a7e1-6f4cb1deb192",
+        "event": "pageshow",
+        "at": 1199.8999999761581,
+        "persisted": false
+      },
+      {
+        "documentId": "12d05703-4ed6-4e57-a7e1-6f4cb1deb192",
+        "event": "request",
+        "at": 1376.199999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "12d05703-4ed6-4e57-a7e1-6f4cb1deb192",
+        "event": "callback",
+        "at": 1384.2999999523163,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "89f82fd4-160d-479f-897d-f4d6ba622d5f",
+        "event": "document",
+        "at": 505.4000000357628
+      },
+      {
+        "documentId": "89f82fd4-160d-479f-897d-f4d6ba622d5f",
+        "event": "pageshow",
+        "at": 961.8000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "89f82fd4-160d-479f-897d-f4d6ba622d5f",
+        "event": "request",
+        "at": 1016.6999999880791,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "89f82fd4-160d-479f-897d-f4d6ba622d5f",
+        "event": "callback",
+        "at": 1023.9000000357628,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "58d0cf70-4ef2-4d72-90c5-aae2604a7729",
+        "event": "document",
+        "at": 534.5999999642372
+      },
+      {
+        "documentId": "58d0cf70-4ef2-4d72-90c5-aae2604a7729",
+        "event": "pageshow",
+        "at": 941.3999999761581,
+        "persisted": false
+      },
+      {
+        "documentId": "58d0cf70-4ef2-4d72-90c5-aae2604a7729",
+        "event": "request",
+        "at": 997,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "58d0cf70-4ef2-4d72-90c5-aae2604a7729",
+        "event": "callback",
+        "at": 1003.0999999642372,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "276b00c9-d18f-4f96-83dc-3670ac570544",
+        "event": "document",
+        "at": 500.89999997615814
+      },
+      {
+        "documentId": "276b00c9-d18f-4f96-83dc-3670ac570544",
+        "event": "pageshow",
+        "at": 875.3000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "276b00c9-d18f-4f96-83dc-3670ac570544",
+        "event": "request",
+        "at": 926.8000000119209,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "276b00c9-d18f-4f96-83dc-3670ac570544",
+        "event": "callback",
+        "at": 932.8000000119209,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "ec944119-13c4-433d-8fdd-328d3fb9f28a",
+        "event": "document",
+        "at": 499.0999999642372
+      },
+      {
+        "documentId": "ec944119-13c4-433d-8fdd-328d3fb9f28a",
+        "event": "pageshow",
+        "at": 911.1999999880791,
+        "persisted": false
+      },
+      {
+        "documentId": "ec944119-13c4-433d-8fdd-328d3fb9f28a",
+        "event": "request",
+        "at": 971.3000000119209,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "ec944119-13c4-433d-8fdd-328d3fb9f28a",
+        "event": "callback",
+        "at": 977.5999999642372,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "f6ba91f9-5d83-4d48-882e-8a9d8ef68026",
+        "event": "document",
+        "at": 616.3000000119209
+      },
+      {
+        "documentId": "f6ba91f9-5d83-4d48-882e-8a9d8ef68026",
+        "event": "pageshow",
+        "at": 1200.5999999642372,
+        "persisted": false
+      },
+      {
+        "documentId": "f6ba91f9-5d83-4d48-882e-8a9d8ef68026",
+        "event": "request",
+        "at": 1372.5,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "f6ba91f9-5d83-4d48-882e-8a9d8ef68026",
+        "event": "callback",
+        "at": 1381.5,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "2f9f0d1f-2ff2-4fad-a7eb-a5b94c2c654a",
+        "event": "document",
+        "at": 521.6999999880791
+      },
+      {
+        "documentId": "2f9f0d1f-2ff2-4fad-a7eb-a5b94c2c654a",
+        "event": "pageshow",
+        "at": 991.0999999642372,
+        "persisted": false
+      },
+      {
+        "documentId": "2f9f0d1f-2ff2-4fad-a7eb-a5b94c2c654a",
+        "event": "request",
+        "at": 1053.5999999642372,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "2f9f0d1f-2ff2-4fad-a7eb-a5b94c2c654a",
+        "event": "callback",
+        "at": 1061.5999999642372,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "29880fc9-3d21-4e8f-85e7-ef63d38f84c6",
+        "event": "document",
+        "at": 517.9000000357628
+      },
+      {
+        "documentId": "29880fc9-3d21-4e8f-85e7-ef63d38f84c6",
+        "event": "pageshow",
+        "at": 946.1000000238419,
+        "persisted": false
+      },
+      {
+        "documentId": "29880fc9-3d21-4e8f-85e7-ef63d38f84c6",
+        "event": "request",
+        "at": 1004.6000000238419,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "29880fc9-3d21-4e8f-85e7-ef63d38f84c6",
+        "event": "callback",
+        "at": 1012.4000000357628,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "ca96b132-38f6-465b-b1b3-aa59a9c1f4f3",
+        "event": "document",
+        "at": 543.1999999880791
+      },
+      {
+        "documentId": "ca96b132-38f6-465b-b1b3-aa59a9c1f4f3",
+        "event": "pageshow",
+        "at": 963.3000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "ca96b132-38f6-465b-b1b3-aa59a9c1f4f3",
+        "event": "request",
+        "at": 1015.1999999880791,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "ca96b132-38f6-465b-b1b3-aa59a9c1f4f3",
+        "event": "callback",
+        "at": 1021.6000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "ca4fd75e-96f3-483c-8f3e-e6ace26c5a68",
+        "event": "document",
+        "at": 512.8000000119209
+      },
+      {
+        "documentId": "ca4fd75e-96f3-483c-8f3e-e6ace26c5a68",
+        "event": "pageshow",
+        "at": 914.5,
+        "persisted": false
+      },
+      {
+        "documentId": "ca4fd75e-96f3-483c-8f3e-e6ace26c5a68",
+        "event": "request",
+        "at": 974.5,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "ca4fd75e-96f3-483c-8f3e-e6ace26c5a68",
+        "event": "callback",
+        "at": 981,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "51198bfe-cc05-480a-ae33-7c741f55ede5",
+        "event": "document",
+        "at": 637.9000000357628
+      },
+      {
+        "documentId": "51198bfe-cc05-480a-ae33-7c741f55ede5",
+        "event": "pageshow",
+        "at": 1317.800000011921,
+        "persisted": false
+      },
+      {
+        "documentId": "51198bfe-cc05-480a-ae33-7c741f55ede5",
+        "event": "request",
+        "at": 1498.6000000238419,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "51198bfe-cc05-480a-ae33-7c741f55ede5",
+        "event": "callback",
+        "at": 1507.6000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "6eaef0c9-616d-407a-ba2a-20fb69fda98a",
+        "event": "document",
+        "at": 619.8000000119209
+      },
+      {
+        "documentId": "6eaef0c9-616d-407a-ba2a-20fb69fda98a",
+        "event": "pageshow",
+        "at": 1123.300000011921,
+        "persisted": false
+      },
+      {
+        "documentId": "6eaef0c9-616d-407a-ba2a-20fb69fda98a",
+        "event": "request",
+        "at": 1180.3999999761581,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "6eaef0c9-616d-407a-ba2a-20fb69fda98a",
+        "event": "callback",
+        "at": 1186.6000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "ee101c09-db23-4c07-9e2b-46b901d3bbcd",
+        "event": "document",
+        "at": 515.7999999523163
+      },
+      {
+        "documentId": "ee101c09-db23-4c07-9e2b-46b901d3bbcd",
+        "event": "pageshow",
+        "at": 953.5999999642372,
+        "persisted": false
+      },
+      {
+        "documentId": "ee101c09-db23-4c07-9e2b-46b901d3bbcd",
+        "event": "request",
+        "at": 1009.5999999642372,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "ee101c09-db23-4c07-9e2b-46b901d3bbcd",
+        "event": "callback",
+        "at": 1014.8999999761581,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "5f8a2500-d330-4bc6-af64-45dedbcc32d4",
+        "event": "document",
+        "at": 554.3999999761581
+      },
+      {
+        "documentId": "5f8a2500-d330-4bc6-af64-45dedbcc32d4",
+        "event": "pageshow",
+        "at": 1073.7999999523163,
+        "persisted": false
+      },
+      {
+        "documentId": "5f8a2500-d330-4bc6-af64-45dedbcc32d4",
+        "event": "request",
+        "at": 1133.2999999523163,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "5f8a2500-d330-4bc6-af64-45dedbcc32d4",
+        "event": "callback",
+        "at": 1140,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "eadc7740-8536-4e83-99ea-6f740407f27a",
+        "event": "document",
+        "at": 554.8999999761581
+      },
+      {
+        "documentId": "eadc7740-8536-4e83-99ea-6f740407f27a",
+        "event": "pageshow",
+        "at": 968.8000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "eadc7740-8536-4e83-99ea-6f740407f27a",
+        "event": "request",
+        "at": 1025.699999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "eadc7740-8536-4e83-99ea-6f740407f27a",
+        "event": "callback",
+        "at": 1030.699999988079,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "6a822c71-8f56-4074-bcc0-a01ccabb9f57",
+        "event": "document",
+        "at": 636.4000000357628
+      },
+      {
+        "documentId": "6a822c71-8f56-4074-bcc0-a01ccabb9f57",
+        "event": "pageshow",
+        "at": 1252.6000000238419,
+        "persisted": false
+      },
+      {
+        "documentId": "6a822c71-8f56-4074-bcc0-a01ccabb9f57",
+        "event": "request",
+        "at": 1436,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "6a822c71-8f56-4074-bcc0-a01ccabb9f57",
+        "event": "callback",
+        "at": 1446,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "23e5aafb-24c3-4b40-93a8-0922a206b57b",
+        "event": "document",
+        "at": 548.3000000119209
+      },
+      {
+        "documentId": "23e5aafb-24c3-4b40-93a8-0922a206b57b",
+        "event": "pageshow",
+        "at": 1007.8000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "23e5aafb-24c3-4b40-93a8-0922a206b57b",
+        "event": "request",
+        "at": 1066.5,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "23e5aafb-24c3-4b40-93a8-0922a206b57b",
+        "event": "callback",
+        "at": 1074.1000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "435a49c8-9538-4b36-a061-25b71519e4c9",
+        "event": "document",
+        "at": 524.5999999642372
+      },
+      {
+        "documentId": "435a49c8-9538-4b36-a061-25b71519e4c9",
+        "event": "pageshow",
+        "at": 932.3999999761581,
+        "persisted": false
+      },
+      {
+        "documentId": "435a49c8-9538-4b36-a061-25b71519e4c9",
+        "event": "request",
+        "at": 985.2999999523163,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "435a49c8-9538-4b36-a061-25b71519e4c9",
+        "event": "callback",
+        "at": 991.8999999761581,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "fe1e4fa1-b346-424b-847c-770e2c14b7ad",
+        "event": "document",
+        "at": 528.6999999880791
+      },
+      {
+        "documentId": "fe1e4fa1-b346-424b-847c-770e2c14b7ad",
+        "event": "pageshow",
+        "at": 940.1999999880791,
+        "persisted": false
+      },
+      {
+        "documentId": "fe1e4fa1-b346-424b-847c-770e2c14b7ad",
+        "event": "request",
+        "at": 994,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "fe1e4fa1-b346-424b-847c-770e2c14b7ad",
+        "event": "callback",
+        "at": 999.6999999880791,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "3397acc7-2957-416d-b6f3-6513a571b28d",
+        "event": "document",
+        "at": 593.5
+      },
+      {
+        "documentId": "3397acc7-2957-416d-b6f3-6513a571b28d",
+        "event": "pageshow",
+        "at": 1013.6999999880791,
+        "persisted": false
+      },
+      {
+        "documentId": "3397acc7-2957-416d-b6f3-6513a571b28d",
+        "event": "request",
+        "at": 1071.300000011921,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "3397acc7-2957-416d-b6f3-6513a571b28d",
+        "event": "callback",
+        "at": 1077.6000000238419,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "cdfdc67c-9e28-42d7-b68c-ee1071c18b24",
+        "event": "document",
+        "at": 764.6000000238419
+      },
+      {
+        "documentId": "cdfdc67c-9e28-42d7-b68c-ee1071c18b24",
+        "event": "pageshow",
+        "at": 1394.9000000357628,
+        "persisted": false
+      },
+      {
+        "documentId": "cdfdc67c-9e28-42d7-b68c-ee1071c18b24",
+        "event": "request",
+        "at": 1566.199999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "cdfdc67c-9e28-42d7-b68c-ee1071c18b24",
+        "event": "callback",
+        "at": 1574.9000000357628,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "fa1f3135-22cf-446f-b5fe-2f9f151d627d",
+        "event": "document",
+        "at": 629.1000000238419
+      },
+      {
+        "documentId": "fa1f3135-22cf-446f-b5fe-2f9f151d627d",
+        "event": "pageshow",
+        "at": 1225.800000011921,
+        "persisted": false
+      },
+      {
+        "documentId": "fa1f3135-22cf-446f-b5fe-2f9f151d627d",
+        "event": "request",
+        "at": 1403.800000011921,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "fa1f3135-22cf-446f-b5fe-2f9f151d627d",
+        "event": "callback",
+        "at": 1449,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "8b56a2a6-edad-4c38-ad7a-22290ad925ca",
+        "event": "document",
+        "at": 517.6999999880791
+      },
+      {
+        "documentId": "8b56a2a6-edad-4c38-ad7a-22290ad925ca",
+        "event": "pageshow",
+        "at": 1118.800000011921,
+        "persisted": false
+      },
+      {
+        "documentId": "8b56a2a6-edad-4c38-ad7a-22290ad925ca",
+        "event": "request",
+        "at": 1293.699999988079,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "8b56a2a6-edad-4c38-ad7a-22290ad925ca",
+        "event": "rejected",
+        "at": 4305.800000011921,
+        "id": 1,
+        "errorName": "AbortError"
+      },
+      {
+        "documentId": "8b56a2a6-edad-4c38-ad7a-22290ad925ca",
+        "event": "request",
+        "at": 4328.399999976158,
+        "id": 2,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "8b56a2a6-edad-4c38-ad7a-22290ad925ca",
+        "event": "callback",
+        "at": 4330.5,
+        "id": 2,
+        "acquired": true
+      },
+      {
+        "documentId": "a63446a3-a696-44f6-a626-db6057d872de",
+        "event": "document",
+        "at": 512.8999999761581
+      },
+      {
+        "documentId": "a63446a3-a696-44f6-a626-db6057d872de",
+        "event": "pageshow",
+        "at": 1086.300000011921,
+        "persisted": false
+      },
+      {
+        "documentId": "a63446a3-a696-44f6-a626-db6057d872de",
+        "event": "request",
+        "at": 1256.0999999642372,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "b601df31-7af4-44e1-afd2-0151f3466b4a",
+        "event": "document",
+        "at": 543.2000000476837
+      },
+      {
+        "documentId": "b601df31-7af4-44e1-afd2-0151f3466b4a",
+        "event": "pageshow",
+        "at": 964.8000000119209,
+        "persisted": false
+      },
+      {
+        "documentId": "b601df31-7af4-44e1-afd2-0151f3466b4a",
+        "event": "request",
+        "at": 1030.800000011921,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "b601df31-7af4-44e1-afd2-0151f3466b4a",
+        "event": "callback",
+        "at": 1043,
+        "id": 1,
+        "acquired": true
+      },
+      {
+        "documentId": "44b4181a-1e37-4cda-8ae1-b70854dc3b7d",
+        "event": "document",
+        "at": 520.8000000119209
+      },
+      {
+        "documentId": "44b4181a-1e37-4cda-8ae1-b70854dc3b7d",
+        "event": "pageshow",
+        "at": 1078.4000000357628,
+        "persisted": false
+      },
+      {
+        "documentId": "8f3f5001-d69c-4035-b5d1-518c5b50f70e",
+        "event": "document",
+        "at": 522.9000000357628
+      },
+      {
+        "documentId": "8f3f5001-d69c-4035-b5d1-518c5b50f70e",
+        "event": "pageshow",
+        "at": 1099.199999988079,
+        "persisted": false
+      },
+      {
+        "documentId": "03e2064e-f020-49ef-90be-760e3a29a7de",
+        "event": "document",
+        "at": 546.5999999642372
+      },
+      {
+        "documentId": "03e2064e-f020-49ef-90be-760e3a29a7de",
+        "event": "pageshow",
+        "at": 1151.5,
+        "persisted": false
+      },
+      {
+        "documentId": "03e2064e-f020-49ef-90be-760e3a29a7de",
+        "event": "request",
+        "at": 1329.5,
+        "id": 1,
+        "ifAvailable": false
+      },
+      {
+        "documentId": "03e2064e-f020-49ef-90be-760e3a29a7de",
+        "event": "callback",
+        "at": 1338.0999999642372,
+        "id": 1,
+        "acquired": true
+      }
+    ]
+  },
+  "induced": [
+    {
+      "case": "transient closing holder",
+      "pending": {
+        "status": "checking",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "handoff": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "manualRetries": 0,
+      "pass": true
+    },
+    {
+      "case": "live second tab",
+      "occupied": {
+        "status": "occupied",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 2,
+            "status": "occupied",
+            "reason": "bounded-wait-ended"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "recovered": {
+        "status": "admitted",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 2,
+            "status": "occupied",
+            "reason": "bounded-wait-ended"
+          },
+          {
+            "attempt": 3,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 3,
+            "status": "admitted",
+            "reason": "exclusive-callback"
+          }
+        ],
+        "privateCalls": 15,
+        "privateDatabaseCalls": 0
+      },
+      "manualRetries": 1,
+      "pass": true
+    },
+    {
+      "case": "pending document reload termination",
+      "pass": true
+    },
+    {
+      "case": "unsupported",
+      "result": {
+        "status": "unavailable",
+        "transitions": [
+          {
+            "attempt": 0,
+            "status": "unavailable",
+            "reason": "unsupported"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "denied",
+      "result": {
+        "status": "unavailable",
+        "transitions": [
+          {
+            "attempt": 1,
+            "status": "checking",
+            "reason": "exclusive-request"
+          },
+          {
+            "attempt": 1,
+            "status": "unavailable",
+            "reason": "request-rejected"
+          }
+        ],
+        "privateCalls": 0,
+        "privateDatabaseCalls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "raw storage denial and unsupported schema",
+      "storageBoundary": {
+        "legacyReadPreserved": true,
+        "legacyReadCreatedNoDatabase": true,
+        "strictWriteDenied": true,
+        "noCiphertextWritten": true,
+        "futureRefused": true,
+        "versionPreserved": true
+      },
+      "syntheticPortOnly": true,
+      "pass": true
+    }
+  ],
+  "interventions": [
+    {
+      "case": "true contention",
+      "action": "explicit visible Retry private app access"
+    }
+  ],
+  "connected": [
+    {
+      "repeat": 1,
+      "width": 375,
+      "height": 667,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "df32e698-5baa-4e4a-a7d9-90b44215db8f",
+        "exactClearId": "a1b94676-20ec-4dc2-aaa2-624971c2b932",
+        "exactRetractionId": "284d20cd-f286-4d90-aa03-1f4a6ad269de",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 1,
+      "width": 390,
+      "height": 844,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "04742058-a2d9-44c9-a5bd-47cb59eb3850",
+        "exactClearId": "9cfbb06f-0a50-46c6-9af1-2c960481d60a",
+        "exactRetractionId": "b1b91367-307f-475c-9746-96ebda6dd0c4",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 1,
+      "width": 430,
+      "height": 932,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "df0ae91c-5da3-40d8-827a-26679382ea7a",
+        "exactClearId": "42b5dcee-e6a7-4795-aded-a39ed3acea21",
+        "exactRetractionId": "5a35a34c-4600-4d97-bf9a-2fe0b2ed6ccf",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 2,
+      "width": 375,
+      "height": 667,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "54b808e4-0319-493a-a82e-54434c9b1c9d",
+        "exactClearId": "458f2eb4-85fe-4560-85c5-43973c091c7e",
+        "exactRetractionId": "c4b49750-7187-4066-a8b1-e3678ed0a254",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 2,
+      "width": 390,
+      "height": 844,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "813d8d32-8607-475b-b37a-6d80022d4f63",
+        "exactClearId": "4b9ff4a0-7cf4-441d-a949-d399b07bbfdf",
+        "exactRetractionId": "d58b703a-5764-43d3-bfbc-7f542c74bc63",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 2,
+      "width": 430,
+      "height": 932,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "0e32ced8-4ed0-4182-8d30-5f342441a8b4",
+        "exactClearId": "6062accd-bbdb-4498-a740-04a8564baa95",
+        "exactRetractionId": "97951016-406f-4792-bf2b-483a739d81cd",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 3,
+      "width": 375,
+      "height": 667,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "4d30551d-b97f-497c-8147-aa083b45d3a3",
+        "exactClearId": "4efdcec8-fa8d-445f-a84f-0a957b3d9e4e",
+        "exactRetractionId": "ad773f37-b35d-4ee2-a4b3-39d68189363b",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 3,
+      "width": 390,
+      "height": 844,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "7a4ec0b0-1bcf-4a94-9329-54ff52f3f593",
+        "exactClearId": "9bab1572-ba7c-402e-9d9b-eb3fbc4c1a5f",
+        "exactRetractionId": "3a0b68f7-45d1-43fd-a984-9af49f0d9ee8",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "repeat": 3,
+      "width": 430,
+      "height": 932,
+      "unassisted": true,
+      "durable": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "578139dc-7e7e-46b1-8ea2-79de7dc1b81a",
+        "exactClearId": "3f1b80cd-0986-494b-970d-f2d1ffdcc269",
+        "exactRetractionId": "e45e09df-b439-44bc-b063-347d02147d0c",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    }
+  ],
+  "statuses": {
+    "unassisted_pass": 9,
+    "recovery_with_explicit_user_action": 2,
+    "externally_assisted_E32": 0,
+    "failed_final_series": 0,
+    "retained_earlier_failures": true
+  }
+}

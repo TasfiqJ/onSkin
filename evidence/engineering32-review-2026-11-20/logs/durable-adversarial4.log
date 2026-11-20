@@ -1,0 +1,38 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/routineDecisionRecovery32.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+ ❯ src/features/routine/routineDecisionRecovery32.test.ts (20 tests | 1 failed) 390ms
+   × withdrawal cleanup erases the purpose key and cannot resurrect old decisions after regrant 156ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/routine/routineDecisionRecovery32.test.ts > withdrawal cleanup erases the purpose key and cannot resurrect old decisions after regrant
+TypeError: Cannot read properties of undefined (reading 'EventEmitter')
+ ❯ ../../node_modules/expo-modules-core/src/EventEmitter.ts:22:77
+     20| export type EventEmitter<TEventsMap extends EventsMap = Record<never, …
+     21|   typeof ExpoGlobal.EventEmitter<TEventsMap>;
+     22| export const EventEmitter: typeof ExpoGlobal.EventEmitter = globalThis…
+       |                                                                             ^
+     23|
+ ❯ ../../node_modules/expo-modules-core/src/index.ts:7:1
+ ❯ ../../node_modules/expo-network/src/Network.ts:1:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 passed (20)
+   Start at  09:43:26
+   Duration  1.41s (transform 666ms, setup 0ms, import 826ms, tests 390ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/routine/routineDecisionRecovery32.test.ts --maxWorkers=2

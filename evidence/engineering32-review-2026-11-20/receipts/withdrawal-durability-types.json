@@ -1,0 +1,36 @@
+{
+  "label": "withdrawal-durability-types",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "typecheck"
+  ],
+  "before": {
+    "head": "9d07a79c09036e371a14a07b6f37987505100176",
+    "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+    "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+    "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+  },
+  "start": "2026-11-20T15:29:25.128231+00:00",
+  "freeBytesBefore": 147784634368,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "9d07a79c09036e371a14a07b6f37987505100176",
+    "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+    "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+    "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+  },
+  "end": "2026-11-20T15:29:40.861769+00:00",
+  "freeBytesAfter": 147784556544,
+  "logBytes": 53,
+  "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+}

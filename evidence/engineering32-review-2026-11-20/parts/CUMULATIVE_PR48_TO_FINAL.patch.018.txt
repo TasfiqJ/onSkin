@@ -1,0 +1,1792 @@
+reason);
++    assert.deepEqual(retracted.snapshot.events.slice(0, 3), corrected.snapshot.events);
++    assert.equal(retracted.drafts.drafts.length, 0);
++    await capture(id + '-retained-correction-retraction');
++
++    const laterCorrection = 'Synthetic21 deliberate correction of the earlier retained original.';
++    await startDraft('Correct entry 1', laterCorrection);
++    await tap(labels.save); await b.waitForText(client, labels.saved);
++    await reloadInventory(); await tap(labels.resume);
++    await b.waitForInputValue(client, 'Your factual note', laterCorrection);
++    await assertFreshReviewRequired(); await confirm(height);
++    const earlierCorrected = await canonicalReceipt(id + '-earlier-retained-correction');
++    assertHistory(earlierCorrected, initial, 5);
++    assert.equal(earlierCorrected.snapshot.events[4].targetEventId, original.id);
++    assert.deepEqual(earlierCorrected.snapshot.events.slice(0, 4), retracted.snapshot.events);
++    assert.equal(earlierCorrected.drafts.drafts.length, 0);
++
++    await startDraft('Record a change (optional)', 'Synthetic21 draft selected for explicit discard.');
++    await tap(labels.save); await b.waitForText(client, labels.saved); await tap('Cancel draft');
++    await inventory(); await tap(labels.discard); await tap(labels.keep);
++    await tap(labels.discard); const discardGeometry = await keyboard(labels.confirmDiscard, height);
++    await b.waitForText(client, labels.empty); await capture(id + '-draft-discarded');
++    assertHistory(await canonicalReceipt(id + '-after-discard'), initial, 5);
++
++    await b.evaluate(client, `(()=>{globalThis.__changeOriginalGet=Storage.prototype.getItem;Storage.prototype.getItem=function(key){if(key===${JSON.stringify(draftKey)})throw new Error('SYNTHETIC_SOURCE_UNAVAILABLE');return globalThis.__changeOriginalGet.call(this,key)}})()`);
++    await tap(labels.refresh); await b.waitForText(client, 'Saved change draft storage is unavailable or unreadable.');
++    assert(!await b.evaluate(client, `document.body.innerText.includes(${JSON.stringify(labels.empty)})`));
++    await capture(id + '-unavailable-storage');
++    await b.evaluate(client, `Storage.prototype.getItem=globalThis.__changeOriginalGet;delete globalThis.__changeOriginalGet`);
++    await keyboard(labels.refresh, height); await b.waitForText(client, labels.empty);
++    const unsupported = await b.evaluate(client, `(()=>{const key=${JSON.stringify(draftKey)};globalThis.__changeOriginalBytes=localStorage.getItem(key);const row=JSON.parse(globalThis.__changeOriginalBytes);row.version='xchacha20poly1305:purpose-bound:v999';const value=JSON.stringify(row);localStorage.setItem(key,value);return value})()`);
++    await tap(labels.refresh); await b.waitForText(client, 'Saved change data is unsupported or invalid.');
++    assert.equal(await b.evaluate(client, `localStorage.getItem(${JSON.stringify(draftKey)})`), unsupported);
++    assert(!await b.evaluate(client, `document.body.innerText.includes(${JSON.stringify(labels.empty)})`));
++    await capture(id + '-unsupported-storage');
++    await b.evaluate(client, `localStorage.setItem(${JSON.stringify(draftKey)},globalThis.__changeOriginalBytes);delete globalThis.__changeOriginalBytes`);
++    await tap(labels.refresh); await b.waitForText(client, labels.empty);
++    await capture(id + '-storage-recovered');
++    const final = await canonicalReceipt(id + '-final');
++    assertHistory(final, initial, 5);
++    assert.deepEqual(final.snapshot.events, earlierCorrected.snapshot.events);
++    const requests = client.events.filter(event => event.method === 'Network.requestWillBeSent').map(event => event.params.request);
++    for (const request of requests) for (const privateText of [noteText, correctionText, reason, laterCorrection]) {
++      assert(!String(request.postData ?? '').includes(privateText) && !request.url.includes(encodeURIComponent(privateText)), 'Optional text must not enter network requests');
++    }
++    const network = requests.map(request => ({ method: request.method, url: request.url.split('?')[0], hasBody: Boolean(request.postData) }));
++    json(id + '-network.json', network);
++    assert(network.every(request => new URL(request.url).origin === baseUrl));
++    assert.equal(receipt.blockedRemoteRequests.length, 0);
++    json(id + '-console.json', client.events.filter(event => ['Runtime.consoleAPICalled', 'Runtime.exceptionThrown', 'Log.entryAdded'].includes(event.method)));
++    receipt.viewports.push({ width, height, explicitAgeConsent: true, noteCiphertext, originalTextRecovered: true,
++      unsavedEditNotRestored: true, notesCorrectionsRetractionsRecovered: true, explicitRefreshAndReviewRequired: true,
++      exactTargetsPreserved: true, earlierRetainedEventCorrectionAllowed: true, noDuplicateEventId: true,
++      originalCompletionAndActualRoutineUnchanged: true, savedDraftsRetiredAfterCanonicalReadback: true,
++      discardReviewCancelConfirm: true, unavailableAndUnsupportedNeverEmpty: true, saveGeometry, confirmGeometry, discardGeometry });
++    await closePage(client); client = undefined;
++  }
++  receipt.pass = true;
++  step('PASS optional change recovery journeys', '375x667, 390x844, 430x932');
++} catch (error) {
++  receipt.error = error instanceof Error ? error.message : String(error);
++  if (client) await capture('FAILURE').catch(() => {});
++  throw error;
++} finally {
++  receipt.endedAt = new Date().toISOString(); json('summary.json', receipt); json('steps.json', steps);
++  client?.close(); secondary?.close();
++  await b.stopProcessBestEffort(browser); await b.stopProcessBestEffort(server);
++}
+diff --git a/scripts/e2e/optional-change41.mjs b/scripts/e2e/optional-change41.mjs
+index 6d8c496bbbf2337300eed616c420a8ee0cbdeaa4..f55e678a0a21c321dab3c868f0f690bd75416502 100644
+--- a/scripts/e2e/optional-change41.mjs
++++ b/scripts/e2e/optional-change41.mjs
+@@ -4,6 +4,20 @@ import { readFileSync } from 'node:fs';
+ import { setTimeout as delay } from 'node:timers/promises';
+ import { assertFormulaMessageVisible38, formulaControlExpression38, formulaMessageExpression38, selectFormulaControl38, touchFormulaControl38 } from './owned-bottle-formula38.mjs';
+ 
++export async function ensureOptionalHistory41({ readEntry, open, waitExpanded }) {
++  if ((await readEntry()).expanded !== true) {
++    await open();
++    await waitExpanded();
++  }
++}
++
++export function assertOptionalJournal41(before, after) {
++  const prior = before === null ? [] : before.sync.journal;
++  assert.ok(Array.isArray(prior) && Array.isArray(after?.sync?.journal), 'Unsupported original completion journal.');
++  assert.ok(after.sync.journal.length >= prior.length, 'Original remote journal was lost.');
++  for (const event of prior) assert.ok(after.sync.journal.some(current => JSON.stringify(current) === JSON.stringify(event)));
++}
++
+ export function assertOptionalHistory41(snapshot, { revision, owner, original = null, target = null } = {}) {
+   assert.equal(snapshot?.revision, revision, 'Wrong optional change revision.');
+   assert.equal(snapshot?.events?.length, revision, 'History count disagrees with revision.');
+@@ -87,8 +101,10 @@ export async function runOptionalChange41(io) {
+   const read = () => evaluate(client, `(async () => { ${moduleExpression}
+     const lease=admission.captureHealthDataWriteLease(); const snapshot=await store.getOptionalChanges41(lease);
+     const raw=await mod('/lib/storage/privateKV.ts').getPrivateItem('layerwell.completions.v1');
+-    const envelope=raw===null?null:JSON.parse(raw); const coreBytes=envelope?.version===4?envelope.completionBytes:raw;
+-    return {snapshot,owner:lease.ownerUserId,coreBytes,core:coreBytes===null?null:JSON.parse(coreBytes),version:envelope?.version??null}; })()`, true);
++    const envelope=raw===null?null:JSON.parse(raw);const optionalBytes=envelope?.version===5?envelope.completionBytes:raw;
++    const optional=optionalBytes===null?null:JSON.parse(optionalBytes); const coreBytes=optional?.version===4?optional.completionBytes:optionalBytes;
++    return {snapshot,owner:lease.ownerUserId,coreBytes,core:coreBytes===null?null:JSON.parse(coreBytes),version:envelope?.version??null,
++      optionalVersion:optional?.version??null,actual:envelope?.version===5?envelope.actualRoutine:null}; })()`, true);
+   const receipts = {};
+   const receipt = async (name) => {
+     const value = await read();
+@@ -122,13 +138,17 @@ export async function runOptionalChange41(io) {
+     }
+     throw new Error('Actual Back/tab controls did not reach Today.');
+   };
++  const expandedHistory = `[...document.querySelectorAll('[role="button"],button')].some(n=>
++    !n.closest('[aria-hidden="true"],[inert]') && n.getClientRects().length &&
++    (n.getAttribute('aria-label')==='Refresh changes'||n.textContent.trim()==='Refresh changes'))`;
+   const waitReady = async () => {
+     await waitForText(client, 'Record a change (optional)', 60_000);
+-    if (!(await evaluate(client, `document.body.innerText.includes('Your optional change notes')`))) {
+-      await touch('Record a change (optional)');
+-      await waitForText(client, 'Your optional change notes', 60_000);
+-      await waitForText(client, 'Record a change (optional)', 60_000);
+-    }
++    await ensureOptionalHistory41({
++      readEntry: async () => ({ expanded: await evaluate(client, expandedHistory) }),
++      open: () => touch('Record a change (optional)'),
++      waitExpanded: () => waitForCondition(client, expandedHistory, 60_000, 'expanded optional history'),
++    });
++    await waitForText(client, 'Record a change (optional)', 60_000);
+   };
+   const acceptRelaunch = async () => {
+     await waitForText(client, 'Record a change (optional)', 60_000);
+@@ -136,9 +156,22 @@ export async function runOptionalChange41(io) {
+     await waitReady();
+     return current;
+   };
+-  await enterTodayHonestly(); await waitReady(); await guard();
++  await enterTodayHonestly();
++  // The long core journey keeps tab screens mounted while navigating. A minute
++  // tick on another route can set Today's clock to PM before the tab restores
++  // its development-only ?routine=AM preview. Begin this draft-free section in
++  // a fresh real document, then verify persisted owner/epoch and current phase.
++  const phaseBeforeEntry = await evaluate(client, '({url:location.href, morning:document.body.innerText.includes("Morning routine"),evening:document.body.innerText.includes("Evening routine")})');
++  const phaseEntryUrl = await evaluate(client, 'location.origin+"/today?routine=AM"');
++  await client.send('Page.navigate', { url: phaseEntryUrl });
++  await acceptRelaunch(); await waitForText(client, 'Morning routine', 30_000); await guard();
++  writeJson('C41-development-phase-entry.json', { before: phaseBeforeEntry,
++    action: 'Fresh document at the existing development AM preview before any optional draft',
++    after: await evaluate(client, '({url:location.href,morning:document.body.innerText.includes("Morning routine"),evening:document.body.innerText.includes("Evening routine")})'),
++    persistedOwnerAndEpochVerified: true, developmentPreviewOnly: true });
+   const initial = await receipt('beforeAnyNote');
+   assertOptionalHistory41(initial.snapshot, { revision: 0, owner: initial.owner });
++  await waitForText(client, 'Nothing recorded');
+   assert.ok((await evaluate(client, 'document.body.innerText')).includes('Nothing recorded'));
+   await touch('Record a change (optional)'); await touch('Other personal note'); await field('Your factual note', 'Synthetic canceled private draft41.');
+   await capture('01-explicit-draft'); await touch('Cancel draft');
+@@ -159,7 +192,9 @@ export async function runOptionalChange41(io) {
+   assert.deepEqual((await read()).snapshot, initial.snapshot, 'Review created an event before confirmation.');
+   await confirm(); const first = await receipt('firstExplicitSave');
+   assertOptionalHistory41(first.snapshot, { revision: 1, owner: first.owner });
+-  assert.equal(first.version, 4); assert.equal(first.coreBytes, initial.coreBytes, 'Note upgrade altered original completion bytes.');
++  assert.equal(first.version, initial.version === 5 ? 5 : 4); assert.equal(first.optionalVersion, 4);
++  assert.deepEqual(first.actual, initial.actual, 'Note upgrade altered actual routine history.');
++  assert.equal(first.coreBytes, initial.coreBytes, 'Note upgrade altered original completion bytes.');
+   assert.equal(first.snapshot.events[0].observedOn, date); const original = first.snapshot.events[0];
+   await capture('02-first-save');
+   await draft('Other personal note', correctedText, { action: 'Correct entry 1' }); await confirm();
+@@ -214,10 +249,86 @@ export async function runOptionalChange41(io) {
+     await waitForCondition(client, `document.querySelector('[role="checkbox"][aria-label='+${JSON.stringify(JSON.stringify(checkbox))}+']')?.getAttribute('aria-checked') === 'true'`, 30_000, 'original later check-off readback');
+     const afterCheckoff = await receipt('originalCheckoffAfterV4');
+     assert.deepEqual(afterCheckoff.snapshot.events, retried.snapshot.events, 'Original check-off changed notes.');
+-    assert.ok(afterCheckoff.core.sync.journal.length >= initial.core.sync.journal.length, 'Original remote journal was lost.');
+-    for (const prior of initial.core.sync.journal) assert.ok(afterCheckoff.core.sync.journal.some((event) => JSON.stringify(event) === JSON.stringify(prior)));
++    assertOptionalJournal41(initial.core, afterCheckoff.core);
+     laterCheckoff = 'ACTUAL_VISIBLE_CHECKBOX_PRESERVED_NOTES';
+   }
++  let recovery15 = null;
++  if (process.argv.includes('--optional-history-recovery15')) {
++    // Completing the current phase changes Today to its completed branch and
++    // remounts the optional section closed. Reopen it through the real control
++    // before establishing which history the subsequent stale control displays.
++    await waitReady();
++    const externalAppend = (text, kind = 'note', target = null) => evaluate(client, `(async()=>{${moduleExpression}
++      const lease=admission.captureHealthDataWriteLease(),current=await store.getOptionalChanges41(lease);
++      const target=${JSON.stringify(target)};return store.appendOptionalChange41({id:crypto.randomUUID(),expectedRevision:current.revision,
++        expectedSourceProof:current.sourceProof,expectedSourceBytes:current.sourceBytes,observedOn:target?.observedOn??${JSON.stringify(date)},
++        category:'personal_note',text:${JSON.stringify(text)},kind:${JSON.stringify(kind)},targetEventId:target?.id??null,confirmation:true},lease);
++    })()`, true);
++    // Deliberate same-owner concurrent writes model another admitted screen.
++    // They are disclosed negative fixtures, never happy-path capture evidence.
++    await externalAppend('Synthetic15 unseen concurrent correction.', 'correction', original);
++    const beforeStaleOpen = await read();
++    await touch('Correct entry 1'); await waitMessage('Recorded history changed.');
++    assert.equal(await evaluate(client, `!!document.querySelector('[aria-label="Your factual note"]')`), false);
++    assert.deepEqual((await read()).snapshot, beforeStaleOpen.snapshot);
++    assert.equal(await evaluate(client, `document.body.innerText.includes('Current observation')`), false);
++    await capture('15-stale-history-control-refused');
++    await touch('Refresh changes'); await waitReady();
++    await draft('Other personal note', 'Synthetic15 retained draft after conflict.', { action: 'Correct entry 1' });
++    await externalAppend('Synthetic15 separately saved concurrent note.');
++    const winner = await read();
++    await touch('Confirm and save this change');
++    const conflictMessage = 'History changed. Your draft is kept.';
++    await waitForText(client, conflictMessage);
++    const beforeAlertScroll = await evaluate(client, formulaMessageExpression38(conflictMessage));
++    assert.equal(beforeAlertScroll.matches, 1, 'Conflict recovery needs exactly one accessible status alert.');
++    writeJson('C41-recovery15-conflict-alert-before-scroll.json', beforeAlertScroll);
++    // Returning from short review to the expanded retained draft can leave its
++    // status below the viewport. Explicitly scroll the exact live alert, using
++    // the same route/active/visible/hit checks as actual recovery controls.
++    await guard();
++    await inspect(beforeAlertScroll.text, { path: '/today', role: 'alert', scroll: true });
++    await delay(180);
++    const scrolledAlert = await inspect(beforeAlertScroll.text, { path: '/today', role: 'alert' });
++    selectFormulaControl38(scrolledAlert);
++    await waitMessage(conflictMessage);
++    writeJson('C41-recovery15-conflict-alert-scroll.json', { before: beforeAlertScroll,
++      action: 'Explicit user-equivalent scroll to the unique accessible conflict alert', target: scrolledAlert,
++      after: await evaluate(client, formulaMessageExpression38(conflictMessage)),
++      automaticStatusReveal: false, nativeAccessibilityQualified: false });
++    await waitForCondition(client, `document.querySelector('[aria-label="Your factual note"]')?.value==='Synthetic15 retained draft after conflict.'`, 10000, 'conflicted text retained');
++    assert.equal(await evaluate(client, `document.querySelector('[aria-label="Your factual note"]')?.readOnly`), true);
++    assert.deepEqual((await read()).snapshot, winner.snapshot);
++    await capture('15-conflicted-draft-retained');
++    await touch('Refresh changes');
++    await waitForCondition(client, `document.querySelector('[aria-label="Your factual note"]')?.readOnly===false`, 10000, 'fresh explicit review available');
++    assert.equal(await evaluate(client, `document.querySelector('[aria-label="Your factual note"]')?.value`), 'Synthetic15 retained draft after conflict.');
++    assert.deepEqual((await read()).snapshot, winner.snapshot, 'Refresh silently submitted a retained draft.');
++    await inspect('Review this change', { path: '/today', role: 'button', scroll: true });
++    assert.equal(await evaluate(client, `(()=>{const buttons=[...document.querySelectorAll('[role="button"],button')].filter(n=>n.textContent.trim()==='Review this change');
++      if(buttons.length!==1)return false;buttons[0].focus();return document.activeElement===buttons[0];})()`), true);
++    await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r', unmodifiedText: '\r' });
++    await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
++    await waitForText(client, 'Confirm and save this change'); await confirm();
++    const recovered = await receipt('recovery15ExplicitReviewedSave');
++    assert.deepEqual(recovered.snapshot.events.slice(0, -1), winner.snapshot.events);
++    assert.equal(recovered.snapshot.events.at(-1).text, 'Synthetic15 retained draft after conflict.');
++    assert.deepEqual(recovered.snapshot.events[0], original);
++    assert.equal(recovered.coreBytes, winner.coreBytes, 'Recovery changed unrelated Today check-offs.');
++    assert.deepEqual(recovered.actual, winner.actual, 'Recovery changed actual routine history.');
++    await touch('Record a change (optional)'); await touch('Other personal note');
++    await field('Your factual note', 'Synthetic15 unsaved refresh-preserved draft.');
++    await touch('Refresh changes');
++    await waitForCondition(client, `document.querySelector('[aria-label="Your factual note"]')?.value==='Synthetic15 unsaved refresh-preserved draft.'`, 10000, 'unsaved draft survives explicit refresh');
++    assert.deepEqual((await read()).snapshot, recovered.snapshot);
++    await capture('15-refreshed-unsaved-draft'); await touch('Cancel draft');
++    recovery15 = { verdict: 'PASS', staleOpeningRefused: true, conflictDraftRetained: true,
++      explicitRefreshDoesNotSubmit: true, newReviewRequired: true, originalHistoryAndCheckoffsPreserved: true,
++      conflictStatus: { explicitUserScroll: true, visibleBeforeScroll: beforeAlertScroll.visible,
++        visibleAfterScroll: true, automaticStatusReveal: false, nativeAccessibilityQualified: false },
++      concurrentWrites: 'synthetic negative through real owner-bound encrypted append', revision: recovered.snapshot.revision };
++    writeJson('C41-recovery15-summary.json', recovery15);
++  }
+   const beforeNavigation = await receipt('beforeNavigation');
+   await touch('You', 'tab'); await waitForCondition(client, `location.pathname === '/you'`, 30_000, 'actual You tab');
+   await acceptNavigationAuthority('actual-You-tab');
+@@ -253,7 +364,12 @@ export async function runOptionalChange41(io) {
+     const health=mod('/lib/consent/healthProcessingEpoch.ts');health.setActiveHealthProcessingEpoch(${currentAuthority.epoch + 1},{ownerUserId:'change41-forged-owner',ownerBinding:'${'b'.repeat(64)}',accountGeneration:${currentAuthority.accountGeneration},identityGeneration:${currentAuthority.identityGeneration}});
+     const result={};try{await store.getOptionalChanges41(admission.captureHealthDataWriteLease());result.newOwner='UNEXPECTED_SUCCESS';}catch(error){result.newOwner=String(error.message);}
+     try{await store.getOptionalChanges41(globalThis.__change41OldLease);result.oldLease='UNEXPECTED_SUCCESS';}catch(error){result.oldLease=String(error.message);}return result;})()`, true);
+-  assert.match(forged.newOwner, /OWNER_MISMATCH|HEALTH_DATA_WRITE_ADMISSION_CLOSED/); assert.notEqual(forged.oldLease, 'UNEXPECTED_SUCCESS');
++  // The v5 outer owner decoder refuses before its nested optional journal.
++  // A real encrypted-store adversary separately fixes this exact error shape.
++  assert.match(forged.newOwner, initial.version === 5
++    ? /^(ACTUAL_ROUTINE_INVALID|HEALTH_DATA_WRITE_ADMISSION_CLOSED)$/
++    : /OWNER_MISMATCH|HEALTH_DATA_WRITE_ADMISSION_CLOSED/);
++  assert.notEqual(forged.oldLease, 'UNEXPECTED_SUCCESS');
+   assert.equal(await cipherHash(), cipherBefore); await capture('07-forged-owner-refused');
+   writeJson('C41-hostile-authority-negatives.json', { fixture: 'deliberate synthetic closed epoch and forged owner; not positive account-switch qualification', closed, forged, ciphertextUnchanged: true });
+   await client.send('Page.reload', { ignoreCache: false }); await acceptRelaunch();
+@@ -267,13 +383,15 @@ export async function runOptionalChange41(io) {
+       await touch('Cancel draft');
+     } finally { await evaluate(client, `(()=>{for(const[n,font,line]of globalThis.__change41Styles??[]){n.style.fontSize=font;n.style.lineHeight=line;}delete globalThis.__change41Styles;return true;})()`); }
+   }
+-  const requests = assertNoChangeNetwork41(client.events.slice(startEvent), [firstText, correctedText, failedText, 'Synthetic41 retired owner draft.']);
++  const requests = assertNoChangeNetwork41(client.events.slice(startEvent), [firstText, correctedText, failedText, 'Synthetic41 retired owner draft.',
++    'Synthetic15 retained draft after conflict.', 'Synthetic15 unsaved refresh-preserved draft.', 'Synthetic15 unseen concurrent correction.',
++    'Synthetic15 separately saved concurrent note.']);
+   const origin = await evaluate(client, 'location.origin'); assert.ok(requests.every((request) => request.origin === origin || request.origin === 'null'), 'Optional flow issued a nonlocal request.');
+   writeJson('C41-network-metadata.json', requests); await guard();
+   const sourceAfter = sourceHashes(); assert.deepEqual(sourceAfter, sourceBefore, 'Source changed during optional browser run.');
+   writeJson('C41-source-hashes.json', { before: sourceBefore, after: sourceAfter, stable: true });
+   const summary = { verdict: 'PASS', surface: 'Real Chrome CDP Expo web', viewport: await evaluate(client, '({width:innerWidth,height:innerHeight})'),
+-    syntheticOwner: true, noPro: true, revision: 5, laterCheckoff, duplicateTouchOutcome, largeText,
++    syntheticOwner: true, noPro: true, revision: beforeNavigation.snapshot.revision, laterCheckoff, duplicateTouchOutcome, largeText, recovery15,
+     observed: ['honest-existing-free-first-session', 'empty-distinct-from-affirmative-none', 'draft-and-cancel-no-event', 'chosen-local-date', 'explicit-confirmation-only',
+       'immutable-correction-lineage', 'append-retraction', 'one-key-v4-preserves-original-completion-bytes', 'injected-storage-refusal', 'real-retry-single-event-with-second-touch-ownership-guard',
+       'actual-browser-back-forward', 'tab-reentry', 'refresh-reload', 'deliberate-closed-epoch-masking', 'forged-owner-refusal', 'genuine-persisted-owner-reload', 'no-note-network-content'],
+diff --git a/scripts/e2e/optional-change41.test.mjs b/scripts/e2e/optional-change41.test.mjs
+index f12ae1c21cecd78cfaa1252a4e0635e0412f9659..a7bff15d831e90c1ec0ba635525d09dd54b41a0a 100644
+--- a/scripts/e2e/optional-change41.test.mjs
++++ b/scripts/e2e/optional-change41.test.mjs
+@@ -1,6 +1,50 @@
+ import assert from 'node:assert/strict';
+ import test from 'node:test';
+-import { assertNoChangeNetwork41, assertOptionalHistory41 } from './optional-change41.mjs';
++import { assertNoChangeNetwork41, assertOptionalHistory41, ensureOptionalHistory41, assertOptionalJournal41 } from './optional-change41.mjs';
++
++test('first actual check-off after optional notes accepts confirmed absent prior completion bytes', () => {
++  assert.doesNotThrow(() => assertOptionalJournal41(null, { sync: { journal: [{ id: 'actual-first-step' }] } }));
++});
++
++test('later actual check-off preserves every existing original completion event', () => {
++  const event = { id: 'original', completed: true };
++  assert.doesNotThrow(() => assertOptionalJournal41({ sync: { journal: [event] } }, { sync: { journal: [event, { id: 'later' }] } }));
++  assert.throws(() => assertOptionalJournal41({ sync: { journal: [event] } }, { sync: { journal: [] } }));
++  assert.throws(() => assertOptionalJournal41({ sync: { journal: [event] } }, { sync: { journal: [{ ...event, completed: false }] } }));
++});
++
++for (const [before, after] of [[{}, {sync:{journal:[]}}], [null, null], [null, {sync:{journal:'unsupported'}}]]) {
++  test('unsupported completion evidence never substitutes for confirmed absence', () => {
++    assert.throws(() => assertOptionalJournal41(before, after));
++  });
++}
++
++test('shared collapsed heading cannot substitute for explicitly expanded optional history', async () => {
++  const events = [];
++  await ensureOptionalHistory41({
++    readEntry: async () => ({ heading: true, expanded: false }),
++    open: async () => { events.push('open'); },
++    waitExpanded: async () => { events.push('expanded'); },
++  });
++  assert.deepEqual(events, ['open', 'expanded']);
++});
++
++test('already expanded optional history is not toggled into a new draft', async () => {
++  await ensureOptionalHistory41({
++    readEntry: async () => ({ heading: true, expanded: true }),
++    open: async () => { assert.fail('Expanded history was toggled'); },
++    waitExpanded: async () => { assert.fail('No new entry was requested'); },
++  });
++});
++
++for (const phase of ['read', 'open', 'wait']) test(`optional history entry preserves ${phase} failure`, async () => {
++  const failure = new Error('Synthetic entry refusal: ' + phase);
++  await assert.rejects(() => ensureOptionalHistory41({
++    readEntry: async () => { if (phase === 'read') throw failure; return { heading: true, expanded: false }; },
++    open: async () => { if (phase === 'open') throw failure; },
++    waitExpanded: async () => { if (phase === 'wait') throw failure; },
++  }), error => error === failure);
++});
+ 
+ const original = { id: '41000000-0000-4000-8000-000000000001', ownerUserId: 'synthetic-a', observedOn: '2026-11-01',
+   revision: 1, expectedRevision: 0, actor: 'owner', basis: 'owner_reported', kind: 'note', text: 'Synthetic statement.', targetEventId: null };
+diff --git a/scripts/e2e/owned-bottle-formula38.mjs b/scripts/e2e/owned-bottle-formula38.mjs
+index 0f42a293e6c265f0d2da1d96d7719036f9f2ee08..5bac4d56d03127edcc94e44cab602133200dd012 100644
+--- a/scripts/e2e/owned-bottle-formula38.mjs
++++ b/scripts/e2e/owned-bottle-formula38.mjs
+@@ -243,6 +243,20 @@ export async function runOwnedBottleFormula38(io) {
+   const unsaved = await saveReceipt('draftIsNotConfirmation');
+   assert.deepEqual(unsaved, unknown);
+   await capture('02-draft-no-confirmation');
++  await touch('Back'); await waitForText(client, 'Keep your bottle draft?');
++  await capture('02a-unsaved-back-choice');
++  await evaluate(client, `Array.from(document.querySelectorAll('[role="button"],button')).find(n=>n.textContent.trim()==='Keep editing bottle draft').focus()`);
++  await client.send('Input.dispatchKeyEvent', {type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13,text:'\r',unmodifiedText:'\r'});
++  await client.send('Input.dispatchKeyEvent', {type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
++  await waitForText(client, 'Draft observation');
++  assert.equal(await evaluate(client, `document.querySelector('[aria-label="Ingredient label as printed"]').value`), labelOne);
++  await touch('Back'); await waitForText(client, 'Keep your bottle draft?');
++  await touch('Discard bottle draft and leave');
++  await waitForCondition(client, `location.pathname === ${JSON.stringify(detailPath)}`, 30_000, 'explicit discard leaves without a write');
++  await touch('Bottle & formula history', detailPath); await waitCurrent();
++  await acceptNavigationAuthority('discarded-draft-reopened');
++  assert.deepEqual(await saveReceipt('discardedDraftNeverSaved'), unknown);
++  await edit();
+   await touch('Cancel draft');
+   assert.deepEqual(await saveReceipt('cancelPreservesUnknown'), unknown);
+   await capture('03-cancelled-unknown');
+@@ -351,15 +365,29 @@ export async function runOwnedBottleFormula38(io) {
+     labelText: 'Aqua, Glycerin.', market: 'Canada', variant: 'Concurrent synthetic screen', observedOn: date };
+   await evaluate(client, `(async () => { ${moduleExpression}
+     return store.confirmOwnedBottleVersion38(${JSON.stringify(concurrent)}); })()`, true);
+-  const concurrentSnapshot = await saveReceipt('injectedConcurrentScreenBeforeStaleTap');
++  let concurrentSnapshot = await saveReceipt('injectedConcurrentScreenBeforeStaleTap');
+   assert.equal(concurrentSnapshot.revision, 4);
+   await touch('Confirm this bottle observation');
+   await waitMessage('This draft is outdated.');
+   assert.deepEqual(await saveReceipt('staleDraftCannotOverwrite'), concurrentSnapshot);
+   await capture('13-outdated-draft-refused');
+-  await touch('Cancel draft'); await touch('Refresh history');
++  await touch('Review current saved bottle');
++  await waitForText(client, 'Current saved revision 4.');
++  await capture('13a-current-saved-source-review');
++  await touch('Cancel saved-source review');
++  assert.equal(await evaluate(client, `document.querySelector('[aria-label="Ingredient label as printed"]').value`), 'Aqua, Sodium Hyaluronate.');
++  await touch('Review current saved bottle');
++  await touch('Keep draft with reviewed source');
++  await waitMessage('Your draft is retained against the reviewed saved source.');
++  assert.deepEqual(await saveReceipt('reviewAdoptionDoesNotWrite'), concurrentSnapshot);
++  await confirm();
++  const recovered = await saveReceipt('retainedTranscriptionExplicitlyConfirmed');
++  assert.equal(recovered.revision, 5); assert.equal(recovered.currentVersion.formulaVersion.labelText, 'Aqua, Sodium Hyaluronate.');
++  assert.equal(recovered.currentVersion.formulaVersion.variant, 'Outdated draft');
++  assert.deepEqual(recovered.versions.slice(0, 4), concurrentSnapshot.versions);
++  concurrentSnapshot = recovered;
+   await waitForText(client, 'Concurrent synthetic screen');
+-  await capture('14-refreshed-factual-current-and-prior');
++  await capture('14-recovered-draft-and-immutable-history');
+   const shelfCipherHash = () => evaluate(client, `(async () => {
+     const raw = localStorage.getItem('layerwell.shelf.v1');
+     if (raw === null) throw new Error('Synthetic Shelf ciphertext missing');
+@@ -476,10 +504,10 @@ export async function runOwnedBottleFormula38(io) {
+   await guard();
+   const summary = { verdict: 'PASS', surface: 'Real Chrome CDP Expo web', id,
+     syntheticOwner: true, noPro: true, viewport: await evaluate(client, '({width:innerWidth,height:innerHeight,dpr:devicePixelRatio})'),
+-    historyCounts: [0, 1, 2, 3, 4], currentVersionId: concurrentSnapshot.currentVersionId,
++    historyCounts: [0, 1, 2, 3, 4, 5], currentVersionId: concurrentSnapshot.currentVersionId,
+     observed: ['draft-no-write', 'cancel-no-write', 'explicit-label-confirmation', 'browser-back-forward-same-version', 'back-reentry', 'same-owner-page-reload',
+       'offline-identical-idempotency', 'offline-explicit-unknown-append', 'old-version-immutable', 'injected-storage-refusal',
+-      'explicit-retry', 'injected-concurrent-screen', 'stale-draft-visible-refusal', 'refresh-readback',
++      'explicit-retry', 'injected-concurrent-screen', 'stale-draft-visible-refusal', 'explicit-source-review-cancel-adopt', 'retained-transcription-confirmed', 'keyboard-keep-editing', 'explicit-discard-no-write',
+       'injected-closed-epoch-masks-history-and-draft', 'forged-other-owner-read-write-refusal', 'ciphertext-preserved',
+       'genuine-owner-reload-restores-history', 'disabled-loading-no-network', 'no-formula-network-content'],
+     textPressure,
+@@ -492,5 +520,5 @@ export async function runOwnedBottleFormula38(io) {
+     stable: JSON.stringify(sourceBefore) === JSON.stringify(sourceAfter) });
+   assert.deepEqual(sourceAfter, sourceBefore, 'Feature source changed during the browser journey.');
+   writeJson('C38-summary.json', summary);
+-  return { verdict: 'PASS', currentVersionId: concurrentSnapshot.currentVersionId, revision: 4 };
++  return { verdict: 'PASS', currentVersionId: concurrentSnapshot.currentVersionId, revision: concurrentSnapshot.revision };
+ }
+diff --git a/scripts/e2e/practice-templates28.mjs b/scripts/e2e/practice-templates28.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..5005834ae6ec36e7db771386d682cbe16fc7f176
+--- /dev/null
++++ b/scripts/e2e/practice-templates28.mjs
+@@ -0,0 +1,122 @@
++// Local browser + real API/domain/encrypted repository. All identity, licence,
++// billing, retained keys and serial storage are explicitly synthetic ports.
++import assert from 'node:assert/strict';
++import { spawn, execFileSync } from 'node:child_process';
++import { createRequire } from 'node:module';
++import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath, pathToFileURL } from 'node:url';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const repo = fileURLToPath(new URL('../../', import.meta.url));
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const { createServer } = await import(pathToFileURL(require.resolve('vite')).href);
++const out = path.resolve(process.env.ONSKIN_TEMPLATE_EVIDENCE ?? path.join(repo, '../ENGINEERING28_EVIDENCE/templates-browser'));
++mkdirSync(out, { recursive: false });
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
++const port = await b.findAvailablePort(4336), debugPort = await b.findAvailablePort(9466), origin = `http://localhost:${port}`;
++const root = path.join(repo, 'apps/professional-web');
++const browserPath = process.env.BROWSER_PATH ?? 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
++assert(existsSync(browserPath));
++const receipt = { start: new Date().toISOString(), head: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8', windowsHide: true }).trim(),
++  surface: 'Actual local Edge; real source API/domain/encryption with synthetic trust/serial driver only', viewports: [], requests: [], blocked: [], interceptionErrors: [], pass: false };
++let server, browser, client, f, repository, context = 'synthetic-practice-session', loseNext = false, denied = false;
++const submitted = [], responses = [];
++async function wait(work) { for (let n = 0; n < 100; n++) { try { if (await work()) return; } catch {} await delay(100); } throw new Error('Local browser readiness timeout'); }
++async function capture(name) {
++  const state = await b.evaluate(client, `({text:document.querySelector('#practice-templates').innerText,focus:document.activeElement?.textContent,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),persisted:JSON.stringify([Object.entries(localStorage),Object.entries(sessionStorage)])})`);
++  assert.equal(state.overflow, 0); assert(!state.persisted.includes('Generic'), 'Template text must never persist in browser storage'); json(name + '.json', state);
++  const shot = await client.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++}
++const text = expected => b.waitForCondition(client, `document.querySelector('#practice-templates').innerText.includes(${JSON.stringify(expected)})`, 10000, expected);
++const click = label => b.clickByText(client, label);
++async function title(value) {
++  await b.evaluate(client, `(()=>{const n=document.querySelector('#practice-templates input');n.focus();n.value=${JSON.stringify(value)};n.dispatchEvent(new Event('input',{bubbles:true}));return document.activeElement===n})()`);
++  assert(await b.evaluate(client, `document.activeElement===document.querySelector('#practice-templates input')`), 'Typing must retain focus');
++}
++async function keyboard(label) {
++  const result = await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practice-templates button')].find(n=>n.textContent===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();const r=n.getBoundingClientRect();return {focused:document.activeElement===n,height:r.height,visible:r.y>=0&&r.bottom<=innerHeight}})()`);
++  assert(result.focused && result.height >= 44 && result.visible);
++  for (const type of ['keyDown', 'keyUp']) await client.send('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, ...(type === 'keyDown' ? { text: '\r' } : {}) });
++}
++try {
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true } }); await server.listen();
++  assert.equal((await fetch(origin + '/api/professional/templates', { method: 'POST' })).status, 503, 'Actual default API must refuse');
++  await server.close();
++  let handler;
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true }, plugins: [{ name: 'synthetic-template-browser-only', enforce: 'pre',
++    configureServer(s) { s.middlewares.use('/api/professional/templates', async (req, res) => {
++      try {
++        const chunks = []; for await (const chunk of req) chunks.push(chunk); const body = Buffer.concat(chunks);
++        const input = JSON.parse(body.toString()); submitted.push(input);
++        f.controls.loseCommitReply = loseNext && input.kind === 'change'; if (f.controls.loseCommitReply) loseNext = false;
++        const response = denied ? new Response('{"status":"unavailable"}', { status: 503, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }) :
++          await handler(new Request(origin + '/api/professional/templates', { method: req.method, headers: req.headers, body }));
++        f.controls.loseCommitReply = false;
++        const reply = await response.text(); responses.push({ status: response.status, reply });
++        res.writeHead(response.status, Object.fromEntries(response.headers)); res.end(reply);
++      } catch (error) { responses.push({ fixtureError: String(error) }); res.writeHead(503, { 'Cache-Control': 'no-store' }); res.end(); }
++    }); } }] });
++  const { custodyFixture } = await server.ssrLoadModule('/src/test/custodyFixture.ts'); f = await custodyFixture(); const now = f.controls.now;
++  const { EncryptedWorkspaceRepository, workspaceRecordKey: keys } = await server.ssrLoadModule('/src/encryptedWorkspaceRepository.ts');
++  const { emptyWorkspaceBilling, reconcileWorkspaceBilling } = await server.ssrLoadModule('/src/workspaceBilling.ts');
++  const billing = await reconcileWorkspaceBilling(emptyWorkspaceBilling('practice-a', 'customer-a', 'subscription-a'), { verifyAndRetrieve: async () => ({
++    workspaceId: 'practice-a', customerId: 'customer-a', subscriptionId: 'subscription-a', eventId: 'synthetic-event', eventAt: now, retrievedAt: now,
++    verifiedUntil: now + 100000, paidThrough: now + 100000, pastDueSince: null, status: 'active', tier: 'solo' }) }, new Uint8Array([1]), 'synthetic-only', now);
++  await f.custody.transaction(async tx => { await tx.write(keys.billing('practice-a'), billing); await tx.write(keys.templates('practice-a'), []); });
++  const forbidden = async () => { throw new Error('No client record authority in template fixture'); };
++  repository = new EncryptedWorkspaceRepository(f.custody, { authority: async () => ({ session: { subjectId: 'synthetic-staff', ownerId: null, workspaceId: 'practice-a',
++    epoch: 1, startedAt: now, lastActivityAt: now, stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
++    membership: { subjectId: 'synthetic-staff', workspaceId: 'practice-a', roles: ['assigned_practitioner'], revision: 1, active: true },
++    licence: { subjectId: 'synthetic-staff', jurisdiction: 'CA', verifiedAt: now, expiresAt: now + 100000 }, billing: 'unknown', assignment: null, grant: null, health: null }),
++    lifecycle: forbidden, planSource: forbidden, activationAvailable: forbidden });
++  const { createTemplateApi } = await server.ssrLoadModule('/src/templateApi.ts');
++  handler = createTemplateApi({ origin, repository, authenticate: async () => ({ token: 'synthetic-only', workspaceId: 'practice-a', context }) });
++  await server.listen();
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-template28-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  json('owned-processes.json', { browserPid: browser.pid, appPort: port, debugPort });
++  await wait(async () => (await fetch(`http://127.0.0.1:${debugPort}/json/version`)).ok);
++  client = await b.connectToPage(debugPort, origin);
++  await client.send('Page.enable'); await client.send('Runtime.enable'); await client.send('Network.enable');
++  await client.send('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
++  client.ws.addEventListener('message', event => { const m = JSON.parse(event.data); if (m.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = m.params; const url = new URL(request.url);
++    if (url.origin === origin) { receipt.requests.push({ method: request.method, path: url.pathname }); void client.send('Fetch.continueRequest', { requestId }).catch(error => receipt.interceptionErrors.push(String(error))); }
++    else { receipt.blocked.push(url.origin); void client.send('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' }).catch(error => receipt.interceptionErrors.push(String(error))); }
++  });
++  for (const [width, height] of [[375, 667], [430, 932]]) {
++    await client.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
++    await client.send('Page.navigate', { url: origin }); await text('Practice templates');
++    denied = true; await click('Load practice templates'); await text('Practice templates unavailable'); await capture(width + '-unavailable'); denied = false;
++    await click('Load practice templates'); await text('Saved practice templates');
++    await click('New practice template'); await title('Generic ' + width); await click('Add Cleanser to template am'); await click('Add Moisturizer to template pm');
++    await click('Review template revision'); await text('Review exact template revision'); await capture(width + '-review');
++    assert(await b.evaluate(client, `document.activeElement===document.querySelector('#practice-templates h2')`));
++    await b.evaluate(client, `globalThis.__oldTemplateConfirm=[...document.querySelectorAll('#practice-templates button')].find(n=>n.textContent==='Save exact template revision').onclick`);
++    await click('Return to template draft'); const beforeCancel = submitted.length; await b.evaluate(client, 'globalThis.__oldTemplateConfirm()'); assert.equal(submitted.length, beforeCancel);
++    await click('Review template revision'); loseNext = true; await keyboard('Save exact template revision'); await text('Template save outcome unknown');
++    const first = submitted.at(-1); await capture(width + '-unknown'); await keyboard('Retry identical template save'); await text('Saved practice templates');
++    assert.deepEqual(submitted.at(-1), first, 'Unknown outcome retry must be byte-identical');
++    await click('Revise Generic ' + width); await title('Generic revised ' + width); await click('Add Other product role to template pm');
++    await click('Review template revision'); await click('Save exact template revision'); await text('Generic revised ' + width + ' · revision 2');
++    const summary = `Generic ${width}: revision 1 (active)`;
++    await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practice-templates summary')].find(n=>n.textContent===${JSON.stringify(summary)});n.scrollIntoView({block:'center'});n.click()})()`);
++    await click(`Draft new template from Generic ${width} revision 1`); await text('Compose practice template'); await click('Cancel template draft');
++    await click('Retire Generic revised ' + width); await text('Review template retirement'); await click('Keep template active');
++    await click('Retire Generic revised ' + width); await keyboard('Confirm exact template retirement'); await text('Generic revised ' + width + ' · revision 3 · retired');
++    await capture(width + '-retired'); await client.send('Page.reload'); await text('Practice templates'); await click('Load practice templates'); await text('Generic revised ' + width + ' · revision 3 · retired');
++    await click('New practice template'); await title('Generic abandoned'); await click('Add Cleanser to template am'); await click('Review template revision');
++    context += '-next'; const before = submitted.length; await keyboard('Save exact template revision'); await text('Template source changed'); assert.equal(submitted.length, before + 1);
++    await capture(width + '-changed'); await click('Clear template screen'); await text('Practice templates');
++    receipt.viewports.push({ width, height, pass: true });
++  }
++  const { practiceTemplates } = await server.ssrLoadModule('/src/templateService.ts');
++  const retained = await practiceTemplates(repository, 'synthetic', 'practice-a'); assert.equal(retained.length, 6);
++  assert(!JSON.stringify([...f.records()]).includes('Generic'), 'Custody must retain ciphertext only');
++  json('retained-template-revisions.json', retained); json('submitted-commands.json', submitted);
++  receipt.pass = true;
++} catch (error) { json('FAILURE-TRACE.json', { message: String(error), stack: error.stack }); if (client) await capture('failure-state').catch(() => {}); process.exitCode = 1;
++} finally { json('responses.json', responses); json('submitted-commands.json', submitted); client?.close(); await b.stopProcessBestEffort(browser); await server?.close(); receipt.end = new Date().toISOString(); receipt.ownedBrowserAndServerStopped = true; json('summary.json', receipt); }
++console.log(JSON.stringify(receipt));
+diff --git a/scripts/e2e/professional-authoring.mjs b/scripts/e2e/professional-authoring.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..b67b4060df852920d0e7fd55f231186c18e3c739
+--- /dev/null
++++ b/scripts/e2e/professional-authoring.mjs
+@@ -0,0 +1,157 @@
++import { spawn } from 'node:child_process';
++import { existsSync, writeFileSync, mkdirSync, mkdtempSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local browser UI only. All positive HTTP data below is explicitly SYNTHETIC.
++// The real Vite API remains unavailable; no production account is installed.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const width = Number(process.argv[2] || 375); const height = Number(process.argv[3] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering09', `authoring-${width}`); mkdirSync(evidence, { recursive: true });
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local browser unavailable');
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const port = 4327; const debugPort = 9457; const origin = `http://127.0.0.1:${port}`;
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = e => { const m = JSON.parse(e.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); m.error ? p.reject(new Error(m.error.message)) : p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve, reject) => { this.pending.set(id, { resolve, reject }); this.ws.send(JSON.stringify({ id, method, params })); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now() + timeout; while (Date.now() < end) { try { const value = await work(); if (value) return value; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.querySelector('#practitioner-plan').innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const p = await cdp.value(`(() => { const n=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent===${JSON.stringify(label)}); if(!n||n.disabled)return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(p, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', clickCount: 1, ...p });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', clickCount: 1, ...p });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(path.join(evidence, `${name}.png`), Buffer.from(r.data, 'base64')); }
++async function key(key, code = key, virtual = key === 'Tab' ? 9 : 13) {
++  await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode: virtual, ...(key === 'Enter' ? { text: '\r' } : {}) });
++  await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode: virtual });
++}
++const source = { products: [{ productId: 'bottle-a', name: 'SYNTHETIC recorded cleanser' }, { productId: 'bottle-b', name: 'SYNTHETIC recorded cream' }],
++  sourceHash: 'a'.repeat(64), grantVersion: 1, grantEpoch: 1, expectedParentHash: null, latestSequence: 0, latestIssued: null };
++const sent = []; const issued = new Map(); const overflow = []; let mode = 'normal'; let held;
++const planProjection = plan => ({ id: plan.id, contentHash: plan.contentHash, sequence: plan.sequence, issuedAt: 1800000000000,
++  am: sent.find(s => s.kind === 'issue' && s.command.id === plan.id).command.am,
++  pm: sent.find(s => s.kind === 'issue' && s.command.id === plan.id).command.pm });
++const currentSource = () => {
++  const latest = [...issued.values()].at(-1);
++  return { ...source, products: mode === 'empty' ? [] : source.products,
++    expectedParentHash: latest?.contentHash ?? null, latestSequence: latest?.sequence ?? 0, latestIssued: latest ? planProjection(latest) : null };
++};
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/practitioner-plan`, { method: 'POST' })).status === 503, 'No default authoring authority');
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-authoring-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(t => t.type === 'page'), 'Browser unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl); await cdp.send('Page.enable'); await cdp.send('Runtime.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
++  await cdp.send('Page.navigate', { url: origin }); await text('Practitioner intended plan');
++  await click('Load assigned client products'); await text('Practitioner editor unavailable'); await screenshot('unavailable');
++  await cdp.value(`globalThis.__retiredLoad=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent==='Load assigned client products')`);
++  await cdp.send('Fetch.enable', { patterns: [{ urlPattern: `${origin}/api/professional/practitioner-plan`, requestStage: 'Request' }] });
++  cdp.onEvent = async m => {
++    if (m.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = m.params; const input = JSON.parse(request.postData); sent.push(input);
++    if (mode === 'hold') { held = requestId; return; }
++    let status = 200; let output;
++    if (mode === 'denied') { status = 403; output = { private: 'SYNTHETIC-PRIVATE-ERROR' }; }
++    else if (mode === 'forged') output = { paid: true, approved: true };
++    else if (input.kind === 'source') {
++      output = { kind: 'source', context: 'synthetic-staff-session', source: currentSource() };
++    }
++    else if (input.kind === 'history') {
++      output = { kind: 'history', context: input.context, grantVersion: 1, grantEpoch: 1,
++        plans: [...issued.values()].reverse().map(plan => ({ planId: plan.id, planHash: plan.contentHash, sequence: plan.sequence, issuedAt: 1800000000000 })) };
++    }
++    else if (input.kind === 'reuse') {
++      const plan = issued.get(input.planId); assert(plan && plan.contentHash === input.planHash, 'Exact reused fixture version');
++      assert(input.expectedParentHash === currentSource().expectedParentHash && input.sourceHash === source.sourceHash, 'Reuse source/parent');
++      output = { kind: 'reused', context: input.context, source: currentSource(), plan: planProjection(plan) };
++    }
++    else {
++      if (!issued.has(input.command.id)) issued.set(input.command.id, { kind: 'issued', context: input.context, id: input.command.id, contentHash: String.fromCharCode(98 + issued.size).repeat(64), sequence: issued.size + 1 });
++      output = issued.get(input.command.id);
++      if (mode === 'lost') { mode = 'normal'; status = 503; output = { status: 'unavailable' }; }
++    }
++    await cdp.send('Fetch.fulfillRequest', { requestId, responseCode: status, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify(output)).toString('base64') });
++  };
++  await click('Load assigned client products'); await text('Compose intended sequence');
++  assert(await cdp.value(`document.activeElement.textContent==='Compose intended sequence'`), 'Editor heading focus');
++  await cdp.value(`globalThis.__oldLoad=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent==='Clear practitioner draft');globalThis.__keyboard=[];for(const type of ['keydown','keyup','click'])document.addEventListener(type,e=>globalThis.__keyboard.push({type,key:e.key,text:e.target.textContent}));`);
++  await key('Tab'); assert(await cdp.value(`document.activeElement.textContent==='Add SYNTHETIC recorded cleanser to am'`), 'Keyboard add target');
++  await key('Enter'); await text('Remove SYNTHETIC recorded cleanser from am');
++  assert(await cdp.value(`document.activeElement.textContent==='Compose intended sequence'`), 'Keyboard edit focus restoration');
++  await click('Add SYNTHETIC recorded cream to am'); await click('Move SYNTHETIC recorded cream earlier in am');
++  await click('Add SYNTHETIC recorded cream to pm'); await click('Remove SYNTHETIC recorded cream from pm');
++  await click('Review intended sequence'); await text('Review intended sequence before issuing');
++  overflow.push(await cdp.value('document.documentElement.scrollWidth<=innerWidth')); await screenshot('review');
++  assert(await cdp.value(`document.activeElement.textContent==='Review intended sequence before issuing'`), 'Review focus');
++  await cdp.value(`globalThis.__oldConfirm=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent==='Issue this intended version')`);
++  await click('Return to draft'); assert(issued.size === 0, 'Cancel issued'); await click('Review intended sequence');
++  const beforeRetired = sent.length; await cdp.value('globalThis.__oldConfirm.click();globalThis.__oldLoad.click();globalThis.__retiredLoad.click()'); await delay(100);
++  assert(issued.size === 0, 'Retired callback issued'); await text('Review intended sequence before issuing');
++  assert(sent.length === beforeRetired, 'Retired load acquired a successor assignment');
++  mode = 'lost'; await click('Issue this intended version'); await text('Issuance outcome unknown'); await screenshot('unknown');
++  await click('Retry identical issuance request'); await text('Intended version 1 was issued');
++  const attempts = sent.filter(x => x.kind === 'issue'); assert(attempts.length === 2 && JSON.stringify(attempts[0]) === JSON.stringify(attempts[1]), 'Changed retry identity');
++  assert(issued.size === 1, 'Duplicate immutable version'); assert(attempts[0].command.am.map(p => p.productId).join(',') === 'bottle-b,bottle-a', 'Lost explicit order');
++  await screenshot('issued'); overflow.push(await cdp.value('document.documentElement.scrollWidth<=innerWidth'));
++  await click('Load assigned client products'); await text('Latest visible issued version'); await text('Saved morning: SYNTHETIC recorded cream → SYNTHETIC recorded cleanser');
++  await screenshot('latest-readback'); overflow.push(await cdp.value('document.documentElement.scrollWidth<=innerWidth'));
++  await click('Add SYNTHETIC recorded cleanser to pm'); await click('Reuse an issued version'); await text('Choose an issued version for a new draft');
++  assert(await cdp.value(`document.activeElement.textContent==='Choose an issued version for a new draft'`), 'Reuse chooser focus');
++  await cdp.value(`globalThis.__oldReuse=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent.startsWith('Reuse version 1'))`);
++  await click('Keep current draft'); await text('Remove SYNTHETIC recorded cleanser from pm');
++  assert(issued.size === 1, 'Reuse cancellation wrote a version'); await click('Reuse an issued version'); await text('Choose an issued version for a new draft');
++  const beforeStaleReuse = sent.length; await cdp.value('globalThis.__oldReuse.click()'); await delay(100);
++  assert(sent.length === beforeStaleReuse, 'Retired reuse adopted a successor chooser');
++  await key('Tab'); assert(await cdp.value(`document.activeElement.textContent.startsWith('Reuse version 1')`), 'Reuse keyboard target');
++  await key('Enter'); await text('Draft started from issued version 1');
++  assert(await cdp.value(`!document.querySelector('#practitioner-plan').innerText.includes('Remove SYNTHETIC recorded cleanser from pm')`), 'Reused draft retained overwritten evening edits');
++  await click('Add SYNTHETIC recorded cream to pm'); await click('Review intended sequence'); await screenshot('reuse-review');
++  await click('Issue this intended version'); await text('Intended version 2 was issued');
++  const revised = sent.filter(s => s.kind === 'issue').at(-1); assert(revised.command.expectedParentHash === [...issued.values()][0].contentHash, 'Reused draft lost current parent');
++  assert(revised.command.am.map(p => p.productId).join(',') === 'bottle-b,bottle-a' && revised.command.pm[0].productId === 'bottle-b', 'Reused order or explicit edit lost');
++  await click('Load assigned client products'); await text('Latest issued version: 2'); await screenshot('reused-issued-readback');
++  await click('Add SYNTHETIC recorded cleanser to am'); await click('Review intended sequence'); mode = 'denied';
++  await click('Issue this intended version'); await text('Practitioner editor unavailable');
++  assert(!(await cdp.value(`document.querySelector('#practitioner-plan').innerText.includes('SYNTHETIC recorded')`)), 'Authority refusal retained private draft or readback');
++  assert(issued.size === 2, 'Denied issuance mutated history'); await screenshot('authority-denied');
++  await click('Clear practitioner draft'); await text('Practitioner intended plan');
++  mode = 'empty'; await click('Load assigned client products'); await text('No shared products are available');
++  assert(await cdp.value(`[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent==='Review intended sequence').disabled`), 'Empty review permitted');
++  await click('Clear practitioner draft'); mode = 'denied'; await click('Load assigned client products'); await text('Practitioner editor unavailable');
++  assert(!(await cdp.value(`document.body.innerText.includes('SYNTHETIC-PRIVATE-ERROR')`)), 'Private error leaked');
++  mode = 'forged'; await click('Load assigned client products'); await text('Practitioner editor unavailable');
++  mode = 'hold'; await click('Load assigned client products'); await text('Loading assigned client products'); await click('Clear practitioner draft');
++  if (held) await cdp.send('Fetch.fulfillRequest', { requestId: held, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify({ kind: 'source', context: 'old', source })).toString('base64') }).catch(() => {});
++  await delay(100); await text('Practitioner intended plan'); assert(!(await cdp.value(`document.querySelector('#practitioner-plan').innerText.includes('SYNTHETIC recorded')`)), 'Late private source republished');
++  await screenshot('cleared'); assert(!cdp.events.some(e => e.method === 'Runtime.exceptionThrown'), 'Browser exception'); assert(overflow.every(Boolean), 'Horizontal overflow');
++  const ax = await cdp.send('Accessibility.getFullAXTree');
++  writeFileSync(path.join(evidence, 'summary.json'), JSON.stringify({ surface: 'Actual Vite browser, synthetic positive HTTP contracts only; real API503', width, height,
++    order: true, reviewCancel: true, retiredCallbacks: true, keyboard: true, focus: true, exactUnknownRetry: true, empty: true, denied: true, forged: true, clearLateRead: true,
++    latestReadback: true, historicalReuse: true, reuseCancel: true, reuseKeyboardFocus: true, reusedRevisionReadback: true,
++    authorityDenialClearsPrivateDraft: true, overflow, commands: sent.map(s => s.kind), axRoles: ax.nodes.filter(n => !n.ignored).map(n => n.role?.value) }, null, 2));
++  console.log(`PASS professional authoring ${width}x${height}`);
++} catch (error) { if (cdp) { await screenshot('failure').catch(() => {}); writeFileSync(path.join(evidence, 'keyboard-diagnostic.json'), JSON.stringify(await cdp.value('globalThis.__keyboard').catch(() => null), null, 2)); } throw error; }
++finally {
++  writeFileSync(path.join(evidence, 'server.log'), serverLog); cdp?.ws.close();
++  for (const child of [browser, server]) if (child?.pid) {
++    if (process.platform === 'win32') await new Promise(resolve => spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).once('exit', resolve)); else child.kill();
++  }
++}
+diff --git a/scripts/e2e/professional-grant.mjs b/scripts/e2e/professional-grant.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..52e5de242e3467ef3c577e80bfd616aec63e88f1
+--- /dev/null
++++ b/scripts/e2e/professional-grant.mjs
+@@ -0,0 +1,106 @@
++import { spawn } from 'node:child_process';
++import { existsSync, mkdirSync, writeFileSync, mkdtempSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local UI qualification only. Positive invitation/session/directory responses
++// are explicitly synthetic HTTP contracts, never installed production authority.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const width = Number(process.argv[2] || 375), height = Number(process.argv[3] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering11/browser', `grant-${width}`); mkdirSync(evidence, { recursive: true });
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local browser unavailable');
++const port = 4331, debugPort = 9461, origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser, cdp;
++class Client {
++  constructor(url) { this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } }; }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve, reject) => { this.pending.set(id, { resolve, reject }); this.ws.send(JSON.stringify({ id, method, params })); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (condition, message) => { if (!condition) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now() + timeout; while (Date.now() < end) { try { const value = await work(); if (value) return value; } catch {} await delay(100); } throw new Error(message); }
++const scopeText = () => cdp.value(`document.querySelector('#grant-invitation').innerText`);
++const text = expected => poll(async () => (await scopeText()).includes(expected), `Missing ${expected}`);
++async function click(label) {
++  const point = await cdp.value(`(() => { const n=[...document.querySelectorAll('#grant-invitation button')].find(n=>n.textContent===${JSON.stringify(label)}); if(!n||n.disabled)return null; n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);
++  assert(point, `Missing enabled ${label}`); await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', clickCount: 1, ...point }); await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', clickCount: 1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(path.join(evidence, `${name}.png`), Buffer.from(r.data, 'base64')); }
++async function keySpace() { await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32 }); await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32 }); }
++async function code(value) { await cdp.value(`document.querySelector('#grant-invitation input[type=text]').focus()`); await cdp.send('Input.insertText', { text: value }); await click('Look up practice invitation'); }
++async function choose() {
++  assert(await cdp.value(`[...document.querySelectorAll('#grant-invitation input[type=checkbox]')].every(n=>!n.checked)`), 'Permission selected automatically');
++  for (const label of ['Saved products', 'Routine review', 'Read selected text']) {
++    await cdp.value(`(() => {const n=[...document.querySelectorAll('#grant-invitation label')].find(n=>n.textContent===${JSON.stringify(label)}).querySelector('input');n.scrollIntoView({block:'center'});n.focus();})()`); await keySpace();
++  }
++  await click('Review selected permission'); await text('Confirm selected practice permission');
++}
++const first = '11111111-1111-4111-8111-111111111111', second = '22222222-2222-4222-8222-222222222222', third = '33333333-3333-4333-8333-333333333333';
++let mode = 'normal', current = null, held = null; const sent = [], overflow = [];
++const check = async () => { const ok = await cdp.value('document.documentElement.scrollWidth <= innerWidth'); overflow.push(ok); assert(ok, 'Horizontal overflow'); };
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/grant-invitation`, { method: 'POST' })).status === 503, 'Unconfigured API must remain503');
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-grant-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(tab => tab.type === 'page'), 'Browser unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl); await cdp.send('Page.enable'); await cdp.send('Runtime.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false }); await cdp.send('Page.navigate', { url: origin });
++  await text('Review a practice invitation'); await code(first); await text('Invitation unavailable'); await screenshot('real-unavailable');
++  await cdp.send('Fetch.enable', { patterns: [{ urlPattern: `${origin}/api/professional/grant-invitation`, requestStage: 'Request' }] });
++  cdp.onEvent = async event => {
++    if (event.method !== 'Fetch.requestPaused') return; const { requestId, request } = event.params; const input = JSON.parse(request.postData); sent.push(input);
++    if (mode === 'hold') { held = requestId; return; }
++    const context = 'synthetic-owner-health-epoch'; let status = 200, output;
++    if (mode === 'denied') { status = 403; output = { private: 'SYNTHETIC-PRIVATE-ERROR' }; }
++    else if (input.kind === 'current') output = { kind: 'current', context, connection: current ? { workspaceId: current.workspaceId, grantId: current.id,
++      expectedGrantRevision: current.revision, expectedCapacityRevision: 0, expiresAt: 1800000100000, expired: false, ...current.selection } : null };
++    else if (input.kind === 'review') output = { kind: 'review', context, review: {
++      invitation: { id: mode === 'forged' ? third : input.invitationId, workspaceId: input.invitationId === first ? 'practice-b' : input.invitationId === second ? 'practice-c' : 'practice-d',
++        workspaceName: input.invitationId === first ? 'SYNTHETIC practice B' : input.invitationId === second ? 'SYNTHETIC practice C' : 'SYNTHETIC practice D', expiresAt: 1800000060000, grantExpiresAt: 1800000100000,
++        fields: ['products', 'intended_plans'], purposes: ['routine_review', 'pre_visit'], permissions: ['read', 'plan_write', 'export'], contentHash: 'a'.repeat(64) },
++      expectedGrantRevision: current?.revision ?? 0, previousGrantId: current?.id ?? null, previousWorkspaceId: current?.workspaceId ?? null,
++      expectedCapacityRevision: current ? 0 : null, expectedHealthEpoch: 1, expectedConsentReceiptId: 'health-a', alreadyConnected: current?.id === input.invitationId,
++    } };
++    else if (input.kind === 'accept') {
++      if (mode === 'changed') { status = 409; output = { private: 'SYNTHETIC-PRIVATE-ERROR' }; }
++      else { current = { id: input.command.invitationId, workspaceId: input.command.invitationId === first ? 'practice-b' : 'practice-c', revision: input.command.expectedGrantRevision + 1, selection: input.command.selection };
++        output = { kind: 'recorded', context }; if (mode === 'lost') { status = 503; mode = 'normal'; output = { status: 'unavailable' }; } }
++    } else throw new Error('Unexpected synthetic contract');
++    await cdp.send('Fetch.fulfillRequest', { requestId, responseCode: status, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify(output)).toString('base64') });
++  };
++  await code(first); await text('Choose practice permission'); await choose(); await check(); await screenshot('accept-review');
++  assert(await cdp.value(`document.activeElement.tagName==='H2' && !!document.activeElement.closest('#grant-invitation')`), 'Review heading focus');
++  await cdp.value(`globalThis.__oldGrant=[...document.querySelectorAll('#grant-invitation button')].find(n=>n.textContent==='Confirm this practice permission')`);
++  await click('Keep permission unchanged'); assert(!current, 'Cancel wrote permission'); await choose();
++  await cdp.value('globalThis.__oldGrant.click()'); await delay(100); assert(!current, 'Retired confirmation applied successor');
++  mode = 'lost'; await click('Confirm this practice permission'); await text('Permission outcome unknown'); await screenshot('unknown');
++  await click('Retry identical permission request'); await text('Permission request recorded');
++  const attempts = sent.filter(input => input.kind === 'accept'); assert(attempts.length === 2 && JSON.stringify(attempts[0]) === JSON.stringify(attempts[1]), 'Unknown retry identity changed');
++  await click('Reload current practice permission'); await text('Current practice permission'); await text('Saved products'); await screenshot('current');
++  await code(second); await text('Choose practice permission'); await choose(); await text('replaces your current practice permission'); await screenshot('switch-review'); await check();
++  await click('Confirm switch to this practice'); await text('Permission request recorded'); assert(current.id === second, 'Switch fixture not recorded');
++  await click('Reload current practice permission'); await text('Current practice permission'); await code(third); await text('Choose practice permission'); await choose(); mode = 'denied';
++  await click('Confirm switch to this practice'); await text('Invitation unavailable'); assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Error body leaked'); await screenshot('denied');
++  mode = 'forged'; await code(first); await text('Invitation unavailable'); assert(!(await scopeText()).includes('SYNTHETIC practice'), 'Mismatched invitation displayed');
++  await click('Clear invitation screen'); mode = 'hold'; await code(first); await text('Checking practice permission'); await poll(() => held, 'Held request missing'); await click('Clear invitation screen');
++  await text('Review a practice invitation'); await cdp.send('Fetch.fulfillRequest', { requestId: held, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }],
++    body: Buffer.from(JSON.stringify({ kind: 'review', context: 'old', review: { private: 'SYNTHETIC-PRIVATE-ERROR' } })).toString('base64') }).catch(() => {});
++  await delay(100); assert(!(await scopeText()).includes('SYNTHETIC'), 'Cleared late response displayed'); await screenshot('cleared'); await check();
++  assert(!cdp.events.some(event => event.method === 'Runtime.exceptionThrown'), 'Browser exception');
++  writeFileSync(path.join(evidence, 'summary.json'), JSON.stringify({ surface: 'Actual Vite UI; real API503; synthetic invitation/owner HTTP positives only', width, height,
++    explicitPermissionSelection: true, accept: true, switch: true, cancel: true, retiredConfirm: true, identicalUnknownRetry: true, currentReadback: true,
++    deniedPrivateBody: true, wrongInvitationRefused: true, clearLateRead: true, keyboard: true, focus: true, overflow, commands: sent.map(input => input.kind) }, null, 2));
++  console.log(`PASS professional grant ${width}x${height}`);
++} catch (error) { if (cdp) await screenshot('failure').catch(() => {}); throw error; }
++finally { writeFileSync(path.join(evidence, 'server.log'), serverLog); cdp?.ws.close();
++  for (const child of [browser, server]) if (child?.pid) { if (process.platform === 'win32') await new Promise(resolve => spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).once('exit', resolve)); else child.kill(); }
++}
+diff --git a/scripts/e2e/professional-history.mjs b/scripts/e2e/professional-history.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..72479915d8ad8a16108c160a92b658cc4c758568
+--- /dev/null
++++ b/scripts/e2e/professional-history.mjs
+@@ -0,0 +1,128 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering11/browser', `history-${width}`); mkdirSync(evidence, { recursive: true });
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4332; const debugPort = 9462; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual, ...(key === 'Enter' ? {text:'\r'} : {})});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++const plans = [1, 2].map(sequence => ({ planId: `${sequence}${String(sequence).repeat(7)}-${String(sequence).repeat(4)}-4${String(sequence).repeat(3)}-8${String(sequence).repeat(3)}-${String(sequence).repeat(12)}`,
++  planHash: String(sequence).repeat(64), sequence, issuedAt: 1800000000000 + sequence }));
++let mode = 'normal'; let held = null; const sent = []; const overflow = [];
++const scopeText = () => cdp.value(`document.querySelector('#practitioner-history').innerText`);
++const oldLabel = `Review issued version 1 · ${new Date(plans[0].issuedAt).toISOString()}`;
++const checkOverflow = async () => { const ok = await cdp.value('document.documentElement.scrollWidth <= innerWidth'); overflow.push(ok); assert(ok, 'horizontal overflow'); };
++const fixtureText = input => `SYNTHETIC original intended version ${input.planId === plans[0].planId ? '1\nMorning: SYNTHETIC older cleanser' : '2\nMorning: SYNTHETIC newer cream'}\n\nOriginal intended sequence only; no actual routine, use or owner acknowledgement. Downloaded copies cannot be recalled.`;
++async function reviewOld() { await click(oldLabel); await text('SYNTHETIC older cleanser'); }
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/practitioner-plan`, { method: 'POST' })).status === 503, 'Unconfigured real API must refuse');
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`,
++    `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-history-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(tab => tab.type === 'page'), 'Chrome unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl);
++  await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: evidence });
++  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Network.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
++  await cdp.send('Page.navigate', { url: origin }); await text('Practice connection');
++  await poll(() => cdp.value(`!!document.querySelector('#practitioner-history button')`), 'History panel unavailable');
++  assert(await cdp.value('scrollY === 0'), 'Initial panel mount changed scroll');
++  await click('Load issued history'); await text('Intended history unavailable'); await screenshot('real-unavailable');
++  await cdp.send('Fetch.enable', { patterns: [{ urlPattern: `${origin}/api/professional/practitioner-plan`, requestStage: 'Request' }] });
++  cdp.onEvent = async event => {
++    if (event.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = event.params; const input = JSON.parse(request.postData); sent.push(input);
++    if (mode === 'hold') { held = requestId; return; }
++    const context = 'synthetic-history-assignment'; let status = 200; let output;
++    if (mode === 'denied' || mode === 'changed') { status = mode === 'denied' ? 403 : 409; output = { private: 'SYNTHETIC-PRIVATE-NEVER-DISPLAY' }; }
++    else if (mode === 'forged') output = { kind: 'history', context, plans: [{ private: 'SYNTHETIC-PRIVATE-NEVER-DISPLAY' }], grantVersion: 1, grantEpoch: 1 };
++    else if (input.kind === 'history') output = { kind: 'history', context, plans: mode === 'empty' ? [] : [...plans].reverse(), grantVersion: 1, grantEpoch: 1 };
++    else output = { kind: input.kind, context, text: fixtureText(input) };
++    await cdp.send('Fetch.fulfillRequest', { requestId, responseCode: status,
++      responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify(output)).toString('base64') });
++  };
++  await click('Load issued history'); await text('Issued intended versions');
++  assert(await cdp.value(`document.activeElement.tagName === 'H2' && document.activeElement.closest('#practitioner-history') !== null`), 'Index heading focus');
++  await keyboard('Tab'); await keyboard('Tab'); await keyboard('Enter'); await text('SYNTHETIC older cleanser');
++  assert(!(await scopeText()).includes('SYNTHETIC newer cream'), 'Unselected text included');
++  assert(sent.filter(input => input.kind === 'history-export').length === 0, 'Review initiated export');
++  await screenshot('older-review'); await checkOverflow();
++  await cdp.value(`globalThis.__oldHistoryDownload = [...document.querySelectorAll('#practitioner-history button')].find(node => node.textContent === 'Download this intended version')`);
++  await click('Back to issued versions'); await text('Issued intended versions');
++  await reviewOld(); await cdp.value('globalThis.__oldHistoryDownload.click()'); await delay(100);
++  assert(sent.filter(input => input.kind === 'history-export').length === 0, 'Retired review exported successor');
++  await click('Download this intended version'); await text('Intended version downloaded');
++  await poll(() => existsSync(path.join(evidence, 'onskin-intended-version.txt')), 'Selected historical download absent');
++  const downloaded = readFileSync(path.join(evidence, 'onskin-intended-version.txt'), 'utf8');
++  assert(downloaded.includes('SYNTHETIC older cleanser') && !downloaded.includes('SYNTHETIC newer cream'), 'Downloaded different version');
++  assert(sent.at(-1).planId === plans[0].planId && sent.at(-1).planHash === plans[0].planHash, 'Export identity changed');
++  await screenshot('downloaded');
++  for (const refusal of ['changed', 'denied']) {
++    await click('Load issued history'); await text('Issued intended versions'); await reviewOld(); mode = refusal;
++    await click('Download this intended version'); await text('Intended history unavailable');
++    assert(!(await scopeText()).includes('SYNTHETIC older') && !(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Refusal retained private text or error body');
++    await screenshot(`${refusal}-export`); mode = 'normal';
++  }
++  mode = 'forged'; await click('Load issued history'); await text('Intended history unavailable');
++  assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Malformed success exposed private text');
++  mode = 'empty'; await click('Load issued history'); await text('No issued versions are visible'); await screenshot('empty');
++  mode = 'hold'; await click('Load issued history'); await text('Checking intended history');
++  await poll(() => held !== null, 'Held history missing'); await click('Cancel intended history loading'); await text('Load versions under the current');
++  await cdp.send('Fetch.fulfillRequest', { requestId: held, responseCode: 200,
++    responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }],
++    body: Buffer.from(JSON.stringify({ kind: 'history', context: 'retired-context', plans, grantVersion: 1, grantEpoch: 1 })).toString('base64') }).catch(() => {});
++  await delay(100); assert(!(await scopeText()).includes('Review issued version'), 'Canceled history republished');
++  await screenshot('cancelled'); await checkOverflow();
++  assert(!cdp.events.some(event => event.method === 'Runtime.exceptionThrown'), 'Browser exception');
++  const ax = await cdp.send('Accessibility.getFullAXTree');
++  writeFileSync(path.join(evidence, 'summary.json'), JSON.stringify({ surface: 'Actual Vite UI; real API503; positive HTTP responses explicitly synthetic', width, height,
++    twoVersionIndex: true, exactOlderReview: true, backAndCancel: true, staleDownloadRefused: true, selectedDownload: true,
++    changedSourceRefused: true, deniedExport: true, forgedResponseRefused: true, empty: true, lateCancelledIndexRefused: true,
++    keyboard: true, focus: true, startupTop: true, overflow, commands: sent.map(input => input.kind),
++    axRoles: ax.nodes.filter(node => !node.ignored).map(node => node.role?.value) }, null, 2));
++  console.log(`PASS professional history ${width}x${height}`);
++} catch (error) { if (cdp) await screenshot('failure').catch(() => {}); throw error; }
++finally {
++  writeFileSync(path.join(evidence, 'server.log'), serverLog); cdp?.ws.close();
++  for (const child of [browser, server]) if (child?.pid) {
++    if (process.platform === 'win32') await new Promise(resolve => spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).once('exit', resolve));
++    else child.kill();
++  }
++}
+diff --git a/scripts/e2e/professional-owner.mjs b/scripts/e2e/professional-owner.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c14c6cd7c25d8220d779ba9f39821944bcd1b9ea
+--- /dev/null
++++ b/scripts/e2e/professional-owner.mjs
+@@ -0,0 +1,214 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync, unlinkSync } from 'node:fs';
++import { createHash } from 'node:crypto';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/continuation07', `professional-${width}`); mkdirSync(evidence, { recursive: true });
++const downloadFile = path.join(evidence, 'onskin-received-plans.txt'); if (existsSync(downloadFile)) unlinkSync(downloadFile);
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4326; const debugPort = 9456; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1'], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++const plan = { planId:'11111111-1111-4111-8111-111111111111', planHash:'a'.repeat(64), sequence:1, issuedAt:1800000000000 };
++let fixtureMode = 'index'; let ended = false; let declined = false; let receivedNew = false; const sent = []; const overflow = [];
++let latestResponse = { kind: 'received', recordedAt: plan.issuedAt }; let responseHash = null; const responseCommands = new Map();
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/owner`, { method:'POST' })).status === 503, 'Actual unconfigured API must refuse');
++  assert((await fetch(`${origin}/api/professional/workspace-status`, {method:'POST'})).status===503,'No default workspace adapter');
++  browser = spawn(browserPath, ['--headless=new','--disable-gpu','--no-first-run',`--remote-debugging-port=${debugPort}`,`--user-data-dir=${mkdtempSync(path.join(tmpdir(),'onskin-owner-'))}`,'about:blank'], {windowsHide:true, stdio:'ignore'});
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(t=>t.type==='page'), 'Chrome unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl);
++  await cdp.send('Browser.setDownloadBehavior', {behavior:'allow', downloadPath:evidence});
++  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Network.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width,height,deviceScaleFactor:1,mobile:false });
++  await cdp.send('Page.navigate',{url:origin}); await text('Your practice records');
++  await click('Check connection'); await text('Records unavailable'); await screenshot('unavailable');
++  await click('Clear this screen'); await text('Your practice records');
++  // A second tab/device is never fabricated. Interception only supplies a
++  // labeled synthetic HTTP contract to exercise the real browser screens.
++  await cdp.send('Fetch.enable',{patterns:[{urlPattern:`${origin}/api/professional/*`, requestStage:'Request'}]});
++  let hold = null;
++  cdp.onEvent = async m => {
++    if(m.method !== 'Fetch.requestPaused') return;
++    const {requestId,request} = m.params; const input = JSON.parse(request.postData); sent.push(input);
++    if(fixtureMode === 'hold') { hold = requestId; return; }
++    const context = 'synthetic-session-1'; let status = 200; let output; let refusal;
++    if(fixtureMode === 'denied') {status=401; output={private:'SYNTHETIC-ERROR-DO-NOT-DISPLAY'};}
++    else if(fixtureMode === 'forged') output={status:'approved', paid:true};
++    else if(input.kind==='accept' && ['capacity','coverage'].includes(fixtureMode)) {status=422;refusal=fixtureMode;output={private:'SYNTHETIC-ERROR-DO-NOT-DISPLAY'};}
++    else if(['accept','decline'].includes(input.kind) && fixtureMode==='response-changed') {status=409;output={private:'SYNTHETIC-ERROR-DO-NOT-DISPLAY'};}
++    else if(input.kind==='status') output={kind:'workspace-status',summary:{status:'active',access:'unknown',tier:'solo',acceptedPlans:21,planLimit:20,overLimit:true,selectedPlans:null,paidThrough:1800000100000,verifiedUntil:1800000100000}};
++    else if(input.kind==='index') output={kind:'index',context,plans:fixtureMode==='empty'?[]:[{...plan,latestResponse}]};
++    else if(input.kind==='incoming') output={kind:'incoming',context,workspaceId:'practice-a',plans:receivedNew?[]:[{...plan,sequence:2,latestResponse:null}]};
++    else if(input.kind==='incoming-review') output={kind:'incoming-review',context,workspaceId:'practice-a',text:'SYNTHETIC new intended version 2 — not yet received\nMorning: Recorded cleanser\nReview is not receipt, acknowledgement or apply.'};
++    else if(input.kind==='receive') {
++      receivedNew=true;
++      if(fixtureMode==='lost') {fixtureMode='index';status=503;output={status:'unavailable'};} else output={kind:'received',context};
++    }
++    else if(input.kind==='accept-review') output={kind:'accept-review',context,workspaceId:'practice-a',expectedCapacityRevision:0,expectedResponseHash:responseHash,text:'SYNTHETIC exact intended version 1\nMorning: Recorded cleanser\nReceipt is not apply intent.'};
++    else if(input.kind==='decline-review') output={kind:'decline-review',context,expectedResponseHash:responseHash,text:'SYNTHETIC exact intended version 1\nMorning: Recorded cleanser\nEarlier responses remain historical; a later response requires a fresh review.'};
++    else if(input.kind==='accept' || input.kind==='decline') {
++      const saved = responseCommands.get(input.command.receiptId); const exact = JSON.stringify(input.command);
++      assert(saved ? saved === exact : input.command.expectedResponseHash === responseHash, 'Synthetic response predecessor/command changed');
++      if(!saved) {
++        responseCommands.set(input.command.receiptId,exact); responseHash=createHash('sha256').update(exact).digest('hex');
++        latestResponse={kind:input.kind==='accept'?'acknowledged':'declined',recordedAt:plan.issuedAt+responseCommands.size};
++      }
++      if(input.kind==='decline') declined=true;
++      if(fixtureMode==='lost') {fixtureMode='index';status=503;output={status:'unavailable'};}
++      else output={kind:input.kind==='accept'?'accepted':'declined',context};
++    }
++    else if(input.kind==='connection') output={kind:'connection',context,connection:ended?null:{ workspaceId:'practice-a',grantId:'grant-a',expectedGrantRevision:1,expectedCapacityRevision:1,expiresAt:1800000100000,expired:true,fields:['intended_plans'],purposes:['routine_review'],permissions:['read','plan_write'] }};
++    else if(input.kind==='end') { ended=true; if(fixtureMode==='lost') {fixtureMode='index'; status=503; output={status:'unavailable'};} else output={kind:'ended',context}; }
++    else output={kind:'report',context,text:'SYNTHETIC selected historical suggestion\nMorning: Recorded cleanser\nRecorded owner response: Received · 2027-01-15T08:00:00.000Z\nRecorded owner response: Acknowledged · 2027-01-15T08:01:00.000Z\n'+(declined?'Recorded owner response: Declined · 2027-01-15T08:02:00.000Z\n':'')+'Receipt entries are historical facts, not current acceptance.\nReceiving does not apply it or prove use.\nDownloaded copies cannot be recalled.'};
++    await cdp.send('Fetch.fulfillRequest',{requestId,responseCode:status,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'},...(refusal?[{name:'X-OnSkin-Refusal',value:refusal}]:[])],body:Buffer.from(JSON.stringify(output)).toString('base64')});
++  };
++  await click('Check connection'); await text('Your received plans');
++  assert(await cdp.value(`document.activeElement.textContent === 'Your received plans'`),'index heading focus');
++  await click('Review new practice suggestions'); await text('New practice suggestions');
++  const incomingLabel='Review new intended version 2 · '+new Date(plan.issuedAt).toISOString();
++  await click(incomingLabel); await text('Receive intended version 2?'); await screenshot('receive-review');
++  overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth'));
++  assert(await cdp.value(`document.activeElement.tagName==='H2'`),'receipt review focus');
++  await cdp.value(`globalThis.__oldReceive=[...document.querySelectorAll('button')].find(n=>n.textContent==='Confirm receipt of this version')`);
++  await click('Keep received history unchanged'); await text('Your received plans'); assert(!receivedNew,'review cancellation received the plan');
++  await click('Review new practice suggestions'); await text('New practice suggestions'); await click(incomingLabel); await text('Receive intended version 2?');
++  await cdp.value('globalThis.__oldReceive.click()'); await delay(100); assert(!receivedNew,'retired receipt callback confirmed a successor');
++  fixtureMode='lost'; await click('Confirm receipt of this version'); await text('Receipt outcome unknown'); await screenshot('receipt-unknown');
++  await click('Retry receipt request'); await text('Version received');
++  const receiveAttempts=sent.filter(s=>s.kind==='receive'); assert(receiveAttempts.length===2&&JSON.stringify(receiveAttempts[0])===JSON.stringify(receiveAttempts[1]),'receipt retry changed identity');
++  await click('Back to received plans'); await text('Your received plans'); await click('Review new practice suggestions'); await text('No new versions are available');
++  await click('Back to received plans'); await text('Your received plans');
++  assert(await cdp.value(`document.querySelector('input[type=checkbox]').checked === false`),'selection must start empty');
++  await keyboard('Tab'); await keyboard(' ', 'Space');
++  assert(await cdp.value(`document.querySelector('input[type=checkbox]').checked`),'keyboard checkbox');
++  await click('Review selected plans'); await text('SYNTHETIC selected historical suggestion'); await text('Recorded owner response: Acknowledged'); await screenshot('review');
++  overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth'));
++  await click('Back to received plans'); await text('Your received plans');
++  for (const [review, confirm, success, retry, command] of [
++    ['Review one version to acknowledge…','Confirm acknowledgement of this version','Acknowledgement recorded','Retry acknowledgement request','accept'],
++    ['Review one version to decline…','Confirm decline of this version','Decline recorded','Retry decline request','decline'],
++  ]) {
++    await keyboard('Tab'); await keyboard(' ', 'Space'); await click(review);
++    await text(command==='accept'?'Acknowledge intended version 1?':'Decline intended version 1?');
++    overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth')); await screenshot(`${command}-review`);
++    assert(await cdp.value(`document.activeElement.tagName==='H2'`),'response review heading focus');
++    await cdp.value(`globalThis.__oldResponse=[...document.querySelectorAll('button')].find(n=>n.textContent===${JSON.stringify(confirm)})`);
++    await click('Keep response unchanged'); await text('Your received plans');
++    await keyboard('Tab'); await keyboard(' ', 'Space'); await click(review);
++    const before=sent.filter(s=>s.kind===command).length;
++    await cdp.value('globalThis.__oldResponse.click()'); await delay(100);
++    assert(sent.filter(s=>s.kind===command).length===before,'retired response confirmed a successor');
++    fixtureMode='lost'; await click(confirm); await text(command==='accept'?'Acknowledgement outcome unknown':'Response outcome unknown');
++    await screenshot(`${command}-unknown`); await click(retry); await text(success);
++    const attempts=sent.filter(s=>s.kind===command); assert(attempts.length===2&&JSON.stringify(attempts[0])===JSON.stringify(attempts[1]),'response retry changed identity');
++    assert(Object.hasOwn(attempts[0].command,'expectedResponseHash'),'reviewed response predecessor missing');
++    await screenshot(`${command}-recorded`); await click('Back to received plans'); await text('Your received plans');
++  }
++  await text('Latest recorded response: Declined'); await screenshot('latest-decline-history');
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review selected plans'); await text('Recorded owner response: Declined');
++  await click('Back to received plans'); await text('Your received plans');
++  for (const [mode,heading] of [['capacity','Practice plan capacity reached'],['coverage','Practice activation is paused']]) {
++    await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review one version to acknowledge…');
++    await text('Acknowledge intended version 1?'); fixtureMode=mode;
++    await click('Confirm acknowledgement of this version'); await text(heading);
++    assert(await cdp.value(`document.activeElement.tagName==='H2'`),'refusal heading focus');
++    assert(!(await cdp.value(`document.body.innerText.includes('SYNTHETIC-ERROR')`)),'refusal leaked private body');
++    overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth')); await screenshot(`refused-${mode}`);
++    fixtureMode='index'; await click('Retry acknowledgement request'); await text('Acknowledgement recorded');
++    const attempts=sent.filter(s=>s.kind==='accept').slice(-2); assert(JSON.stringify(attempts[0])===JSON.stringify(attempts[1]),'refusal retry changed identity');
++    await click('Back to received plans'); await text('Your received plans');
++  }
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review one version to acknowledge…');
++  await text('Acknowledge intended version 1?'); fixtureMode='response-changed';
++  await click('Confirm acknowledgement of this version'); await text('Records unavailable');
++  assert(!(await cdp.value(`document.body.innerText.includes('SYNTHETIC-ERROR')`)),'changed response leaked private body');
++  fixtureMode='index'; declined=true; responseHash='d'.repeat(64); latestResponse={kind:'declined',recordedAt:plan.issuedAt+100};
++  await click('Check connection'); await text('Latest recorded response: Declined'); await screenshot('changed-response-reloaded');
++  await keyboard('Tab'); await keyboard(' ', 'Space');
++  await click('Download selected plans'); await text('SYNTHETIC selected historical suggestion');
++  await poll(() => existsSync(path.join(evidence,'onskin-received-plans.txt')), 'Explicit download missing');
++  assert(readFileSync(path.join(evidence,'onskin-received-plans.txt'),'utf8').includes('SYNTHETIC selected'), 'download contents');
++  await click('Back to received plans'); await text('Your received plans');
++  await click('Review practice permission'); await text('Expired permission'); await click('End relationship…'); await text('End this practice relationship?');
++  await cdp.value(`globalThis.__oldConfirm = [...document.querySelectorAll('button')].find(n=>n.textContent==='Confirm end relationship')`);
++  await click('Keep relationship'); assert(!ended,'cancel must not end relationship'); await click('End relationship…');
++  await cdp.value(`globalThis.__oldConfirm.click()`); await delay(100);
++  assert(!ended,'A stale confirmation callback advanced a successor review');
++  fixtureMode='lost'; await click('Confirm end relationship'); await text('The outcome is unknown'); await screenshot('unknown-outcome');
++  await click('Retry end-relationship request'); await text('Practice relationship ended');
++  const attempts=sent.filter(s=>s.kind==='end'); assert(JSON.stringify(attempts[0])===JSON.stringify(attempts[1]),'retry must preserve exact command');
++  await click('Back to received plans'); await text('Your received plans'); await screenshot('retained-history');
++  await click('Review practice permission'); await text('No practice permission is recorded');
++  await click('Back to received plans'); await text('Your received plans');
++  fixtureMode='denied'; await click('Review practice permission'); await text('Records unavailable');
++  assert(!(await cdp.value(`document.body.innerText.includes('SYNTHETIC-ERROR')`)),'error body leaked');
++  fixtureMode='forged'; await click('Check connection'); await text('Records unavailable');
++  fixtureMode='empty'; await click('Check connection'); await text('No received plans are recorded');
++  fixtureMode='hold'; await click('Clear this screen');
++  // Explicit clear retires a late response even if the transport ignores abort.
++  await click('Check connection'); await text('Checking your records'); await click('Clear this screen');
++  await text('Your practice records');
++  if(hold) await cdp.send('Fetch.fulfillRequest',{requestId:hold,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'}],body:Buffer.from(JSON.stringify({kind:'index',context:'old-session',plans:[{...plan,latestResponse}]})).toString('base64')}).catch(()=>{});
++  await delay(100); assert(!(await cdp.value(`document.body.innerText.includes('Intended version')`)),'late owner content leaked');
++  overflow.push(await cdp.value('document.documentElement.scrollWidth <= innerWidth'));
++  await screenshot('cleared');
++  // Real browser deadline recovery: a stalled response never strands either panel.
++  fixtureMode='hold'; hold=null; await click('Check connection'); await text('Checking your records');
++  await poll(()=>cdp.value(`document.body.innerText.includes('Records unavailable')`),'Owner deadline did not recover',18000);
++  await screenshot('owner-deadline'); fixtureMode='empty'; await click('Check connection'); await text('No received plans are recorded');
++  if(hold) await cdp.send('Fetch.fulfillRequest',{requestId:hold,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'}],body:Buffer.from(JSON.stringify({kind:'index',context:'old-session',plans:[plan]})).toString('base64')}).catch(()=>{});
++  await delay(100); assert(!(await cdp.value(`document.body.innerText.includes('Intended version')`)),'Timed-out owner result republished');
++  fixtureMode='hold'; hold=null; await click('Check workspace billing status'); await text('Checking current workspace evidence');
++  await poll(()=>cdp.value(`document.body.innerText.includes('Workspace status unavailable')`),'Workspace deadline did not recover',18000);
++  await screenshot('workspace-deadline');
++  fixtureMode='index'; await click('Check workspace billing status'); await text('Over the recorded limit.'); await text('Unavailable or expired');
++  assert(!(await cdp.value(`document.querySelector('#workspace-status').innerText.includes('practice-a')`)),'workspace internal identity leaked');
++  await screenshot('read-only-workspace'); await click('Clear workspace status'); await text('No workspace status has been loaded.');
++  assert(!cdp.events.some(e=>e.method==='Runtime.exceptionThrown'),'browser exception');
++  const ax = await cdp.send('Accessibility.getFullAXTree');
++  writeFileSync(path.join(evidence,'summary.json'),JSON.stringify({surface:'Actual professional Vite browser; synthetic positive HTTP fixtures only; real API remains503',width,height,overflow,commands:sent.map(s=>s.kind),keyboard:true,focus:true,incomingReceiptReviewCancelRetry:true,exactResponseReview:true,latestRecordedDecline:true,changedResponseRefusedAndReloaded:true,reviewedResponsePredecessor:true,responseCancelAndStaleCallback:true,responseUnknownOutcomeRetry:true,capacityCoverageRefusalExactRetry:true,explicitDownload:true,unknownOutcomeRetry:true,deadlineRecovery:true,cleared:true,axRoles:ax.nodes.filter(n=>!n.ignored).map(n=>n.role?.value)},null,2));
++  assert(overflow.every(Boolean),'horizontal overflow'); console.log(`PASS professional owner ${width}x${height}`);
++} catch(error) { if(cdp) await screenshot('failure').catch(()=>{}); throw error; }
++finally {
++  writeFileSync(path.join(evidence,'server.log'),serverLog);
++  cdp?.ws.close();
++  for(const child of [browser,server]) if(child?.pid) { if(process.platform==='win32') await new Promise(resolve=>spawn('taskkill',['/pid',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'}).once('exit',resolve)); else child.kill(); }
++}
+diff --git a/scripts/e2e/professional-previsit.mjs b/scripts/e2e/professional-previsit.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..46c1f59e6524d87bc1b769251ba029dced13bc7c
+--- /dev/null
++++ b/scripts/e2e/professional-previsit.mjs
+@@ -0,0 +1,177 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync, unlinkSync } from 'node:fs';
++import { createHash } from 'node:crypto';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering09/browser', `previsit-${width}`); mkdirSync(evidence, { recursive: true });
++// Require this run's observed download; an old evidence file cannot satisfy it.
++const downloadFile = path.join(evidence, 'onskin-selected-previsit.txt'); if (existsSync(downloadFile)) unlinkSync(downloadFile);
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4330; const debugPort = 9460; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++const server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++let serverLog = ''; server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++const product = { productId: 'bottle-a', name: 'SYNTHETIC recorded cleanser' };
++const plans = [1, 2].map(sequence => ({ planId: `plan-${sequence}`, planHash: String(sequence).repeat(64), sequence, issuedAt: 1800000000000 + sequence }));
++const canonical = value => value === null || typeof value !== 'object' ? JSON.stringify(value) : Array.isArray(value) ? `[${value.map(canonical).join(',')}]` : `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`;
++const digest = value => createHash('sha256').update(canonical(value)).digest('hex');
++const fact = body => ({ ...body, contentHash: digest(body) });
++const common = { sourceHash: 'a'.repeat(64), recordedAt: '2026-11-15T12:00:00.000Z' };
++const records = [
++  fact({ ...common, field: 'actual_routine', id: 'synthetic-actual-1', sequence: 1, am: [product], pm: [] }),
++  fact({ ...common, field: 'use_events', id: 'synthetic-use-1', observedOn: '2026-11-15', productId: product.productId, name: product.name,
++    phase: 'am', routineVersion: 1, kind: 'use', targetId: null }),
++  fact({ ...common, field: 'use_events', id: 'synthetic-retraction-1', observedOn: '2026-11-15', productId: product.productId, name: product.name,
++    phase: 'am', routineVersion: 1, kind: 'retraction', targetId: 'synthetic-use-1' }),
++  fact({ ...common, field: 'formulas', id: 'synthetic-formula-1', productId: product.productId, name: product.name, labelStatus: 'user_confirmed_label',
++    labelText: 'SYNTHETIC UNSELECTED PRIVATE LABEL', market: null, variant: null, observedOn: '2026-11-15', atUse: true }),
++];
++let mode = 'normal'; let held = null; const sent = []; const overflow = [];
++const scopeText = () => cdp.value(`document.querySelector('#previsit-panel').innerText`);
++const checkOverflow = async () => { const ok = await cdp.value('document.documentElement.scrollWidth <= innerWidth'); overflow.push(ok); assert(ok, 'horizontal overflow'); };
++async function choose() {
++  // Source heading has focus. Keyboard selects the product and first version.
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await keyboard('Tab'); await keyboard(' ', 'Space');
++}
++try {
++  await poll(async () => (await fetch(origin)).ok, 'Vite unavailable', 20000);
++  assert((await fetch(`${origin}/api/professional/previsit`, { method: 'POST' })).status === 503, 'Unconfigured real API must refuse');
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`,
++    `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-previsit-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  const tabs = await poll(async () => (await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(tab => tab.type === 'page'), 'Chrome unavailable');
++  cdp = new Client(tabs[0].webSocketDebuggerUrl);
++  await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: evidence });
++  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Network.enable');
++  await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
++  await cdp.send('Page.navigate', { url: origin }); await text('Practice connection');
++  await poll(() => cdp.value(`!!document.querySelector('#previsit-panel button')`), 'Previsit panel unavailable');
++  assert(await cdp.value('scrollY === 0'), 'Initial panel mount must not jump to pre-visit panel');
++  await click('Load products and plans for pre-visit'); await text('Pre-visit records unavailable'); await screenshot('real-unavailable');
++  assert(await cdp.value(`document.activeElement.closest('#previsit-panel')?.id === 'previsit-panel' && document.activeElement.tagName === 'H2'`), 'Unavailable focus');
++  await cdp.send('Fetch.enable', { patterns: [{ urlPattern: `${origin}/api/professional/previsit`, requestStage: 'Request' }] });
++  cdp.onEvent = async event => {
++    if (event.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = event.params; const input = JSON.parse(request.postData); sent.push(input);
++    if (mode === 'hold') { held = requestId; return; }
++    const context = 'synthetic-assignment-epoch'; let status = 200; let output;
++    if (mode === 'denied') { status = 403; output = { private: 'SYNTHETIC-PRIVATE-DO-NOT-DISPLAY' }; }
++    else if (mode === 'forged') output = { kind: 'source', context, source: { private: 'SYNTHETIC-PRIVATE-DO-NOT-DISPLAY' } };
++    else if (input.kind === 'source') output = { kind: 'source', context, source: { fields: input.fields,
++      products: mode === 'empty' || !input.fields.includes('products') ? [] : [product],
++      plans: mode === 'empty' || !input.fields.includes('intended_plans') ? [] : plans,
++      records: mode === 'empty' ? [] : records.filter(row => input.fields.includes(row.field)),
++      recordSourceHash: input.fields.some(field => ['actual_routine', 'use_events', 'formulas'].includes(field)) ? digest(records) : null,
++      grantVersion: 1, grantEpoch: 1 } };
++    else if (mode === 'renamed') { status = 409; output = { private: 'SYNTHETIC-PRIVATE-DO-NOT-DISPLAY' }; }
++    else output = { kind: input.kind, context, text: ['SYNTHETIC selected factual pre-visit report',
++      ...input.products.map(item => `Selected saved product: ${item.name}`), ...input.plans.map(item => `Intended version ${item.planId.slice(-1)}`),
++      ...(input.records ?? []).map(item => { const row = records.find(row => row.id === item.id && row.contentHash === item.contentHash);
++        assert(row, 'Synthetic selected record identity changed'); return row.field === 'actual_routine' ? `Actual routine version ${row.sequence}` :
++          row.field === 'use_events' ? `Earlier recorded use (retracted): ${row.name}` : `Formula observation: ${row.labelText ?? 'unknown label'}`; }),
++      input.records?.length ? 'Only selected owner record facts are included. Device recorded dates are not independently trusted server times.' :
++        'Saved product names are not formula identification. Actual routine, recorded use and formula-at-use evidence are not included.',
++      'Intended plans are suggestions, not proof of use, treatment effect or a clinical assessment. No photos are included.',
++      'Previously downloaded copies cannot be recalled.'].join('\n\n') };
++    await cdp.send('Fetch.fulfillRequest', { requestId, responseCode: status,
++      responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }], body: Buffer.from(JSON.stringify(output)).toString('base64') });
++  };
++  await click('Load products and plans for pre-visit'); await text('Choose individual facts');
++  assert(await cdp.value(`document.activeElement.tagName === 'H2' && document.activeElement.closest('#previsit-panel') !== null`), 'Source heading focus');
++  await choose(); await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  assert(!(await scopeText()).includes('Intended version 2'), 'Unselected intended version included');
++  assert(sent.filter(input => input.kind === 'export').length === 0, 'Review triggered export');
++  await checkOverflow(); await screenshot('review');
++  await cdp.value(`globalThis.__oldPrevisitDownload = [...document.querySelectorAll('#previsit-panel button')].find(node => node.textContent === 'Download reviewed pre-visit report')`);
++  await click('Cancel pre-visit review'); await text('Choose the text fields');
++  await click('Load products and plans for pre-visit'); await text('Choose individual facts'); await choose();
++  await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  await cdp.value('globalThis.__oldPrevisitDownload.click()'); await delay(100);
++  assert(sent.filter(input => input.kind === 'export').length === 0, 'Retired review initiated successor export');
++  await click('Download reviewed pre-visit report');
++  await poll(() => existsSync(path.join(evidence, 'onskin-selected-previsit.txt')), 'Explicit selected download missing');
++  const downloaded = readFileSync(path.join(evidence, 'onskin-selected-previsit.txt'), 'utf8');
++  assert(downloaded.includes(product.name) && downloaded.includes('Intended version 1') && !downloaded.includes('Intended version 2'), 'Download selection mismatch');
++  await screenshot('downloaded'); await checkOverflow();
++  // Fresh review followed by a changed source/denied export is unavailable.
++  await click('Load products and plans for pre-visit'); await text('Choose individual facts'); await choose();
++  await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report'); mode = 'renamed';
++  await click('Download reviewed pre-visit report'); await text('Pre-visit records unavailable'); await screenshot('source-changed');
++  assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Changed-source body exposed');
++  mode = 'normal'; await click('Load saved products for pre-visit'); await text('Choose individual facts');
++  assert(!(await scopeText()).includes('Intended version'), 'Products-only chooser leaked plan projection');
++  await keyboard('Tab'); await keyboard(' ', 'Space'); await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  mode = 'denied'; await click('Download reviewed pre-visit report'); await text('Pre-visit records unavailable');
++  assert(!(await scopeText()).includes('SYNTHETIC-PRIVATE'), 'Denied export body exposed');
++  mode = 'forged'; await click('Load saved products for pre-visit'); await text('Pre-visit records unavailable');
++  mode = 'empty'; await click('Load intended plans for pre-visit'); await text('No records are available'); await screenshot('empty');
++  await click('Clear pre-visit screen'); mode = 'normal';
++  await click('Load all five pre-visit fields'); await text('Earlier recorded use (retracted)');
++  // One review can combine explicitly chosen products, intended and actual
++  // versions and use, while skipping another intended version and the formula.
++  await choose(); await keyboard('Tab'); await keyboard('Tab'); await keyboard(' ', 'Space'); await keyboard('Tab'); await keyboard(' ', 'Space');
++  await click('Review selected pre-visit facts'); await text('SYNTHETIC selected factual pre-visit report');
++  assert((await scopeText()).includes('Actual routine version 1') && (await scopeText()).includes('Earlier recorded use (retracted)'), 'Selected actual/use facts missing');
++  assert((await scopeText()).includes('Selected saved product') && (await scopeText()).includes('Intended version 1') && !(await scopeText()).includes('Intended version 2'), 'Mixed selected product/intended facts mismatch');
++  assert(!(await scopeText()).includes('SYNTHETIC UNSELECTED PRIVATE LABEL'), 'Unselected formula disclosed');
++  await checkOverflow(); await screenshot('actual-use-review');
++  const recordReview = sent.at(-1); assert(recordReview.products.length === 1 && recordReview.plans.length === 1 && recordReview.records.length === 2 && recordReview.records.every(row => !Object.hasOwn(row, 'labelText')) && recordReview.recordSourceHash, 'Exact selected original identities missing');
++  unlinkSync(path.join(evidence, 'onskin-selected-previsit.txt'));
++  await click('Download reviewed pre-visit report'); await poll(() => existsSync(path.join(evidence, 'onskin-selected-previsit.txt')), 'Selected record download missing');
++  const recordDownload = readFileSync(path.join(evidence, 'onskin-selected-previsit.txt'), 'utf8');
++  assert(recordDownload.includes('Earlier recorded use (retracted)') && !recordDownload.includes('SYNTHETIC UNSELECTED PRIVATE LABEL'), 'Record export omitted retraction or disclosed unselected formula');
++  await click('Clear pre-visit screen'); mode = 'hold'; await click('Load saved products for pre-visit'); await text('Checking selected records');
++  await poll(() => held !== null, 'Held request missing'); await click('Cancel pre-visit loading'); await text('Choose the text fields');
++  if (held) await cdp.send('Fetch.fulfillRequest', { requestId: held, responseCode: 200,
++    responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Cache-Control', value: 'no-store' }],
++    body: Buffer.from(JSON.stringify({ kind: 'source', context: 'old-session', source: { fields: ['products'], products: [product], plans: [], records: [], recordSourceHash: null, grantVersion: 1, grantEpoch: 1 } })).toString('base64') }).catch(() => {});
++  await delay(100); assert(!(await scopeText()).includes(product.name), 'Cancelled late source exposed'); await screenshot('cancelled'); await checkOverflow();
++  assert(!cdp.events.some(event => event.method === 'Runtime.exceptionThrown'), 'Browser exception');
++  const ax = await cdp.send('Accessibility.getFullAXTree');
++  writeFileSync(path.join(evidence, 'summary.json'), JSON.stringify({ surface: 'Actual Vite UI; real API503; positive HTTP responses explicitly synthetic', width, height,
++    explicitSelection: true, reviewCancel: true, staleReviewRefused: true, download: true, changedSourceRefused: true, deniedExport: true,
++    fieldIsolation: true, allFiveFields: true, mixedExplicitSelection: true, selectedActualUse: true, retractionContext: true, unselectedFormulaExcluded: true, empty: true, lateCancelledReadRefused: true, keyboard: true, focus: true, startupTop: true, overflow,
++    commands: sent.map(input => input.kind), axRoles: ax.nodes.filter(node => !node.ignored).map(node => node.role?.value) }, null, 2));
++  console.log(`PASS professional pre-visit ${width}x${height}`);
++} catch (error) { if (cdp) await screenshot('failure').catch(() => {}); throw error; }
++finally {
++  writeFileSync(path.join(evidence, 'server.log'), serverLog); cdp?.ws.close();
++  for (const child of [browser, server]) if (child?.pid) {
++    if (process.platform === 'win32') await new Promise(resolve => spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).once('exit', resolve));
++    else child.kill();
++  }
++}
+diff --git a/scripts/e2e/professional-reconciliation.mjs b/scripts/e2e/professional-reconciliation.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..90afca10ad447514dd0e2b76cb49be41c9b1b5fd
+--- /dev/null
++++ b/scripts/e2e/professional-reconciliation.mjs
+@@ -0,0 +1,127 @@
++import { spawn } from 'node:child_process';
++import { existsSync, readFileSync, mkdirSync, writeFileSync, mkdtempSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath, pathToFileURL } from 'node:url';
++import { createRequire } from 'node:module';
++import { setTimeout as delay } from 'node:timers/promises';
++
++// Local development only. Positive responses below are synthetic HTTP fixtures,
++// never an authentication/repository adapter or a real professional approval.
++const root = fileURLToPath(new URL('../../', import.meta.url));
++const args = process.argv.slice(2);
++const width = Number(args[0] || 375); const height = Number(args[1] || 667);
++const evidence = path.join(root, process.env.ONSKIN_E2E_EVIDENCE ?? '.tmp/engineering12/browser', `queue-${width}`); mkdirSync(evidence, { recursive: true });
++const browserPath = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => p && existsSync(p));
++if (!browserPath) throw new Error('Local Chrome/Edge unavailable');
++const port = 4334; const debugPort = 9464; const origin = `http://127.0.0.1:${port}`;
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const vite = path.join(path.dirname(require.resolve('vite/package.json')), 'bin/vite.js');
++let server;
++let serverLog = '';
++let browser; let cdp;
++class Client {
++  constructor(url) {
++    this.ws = new WebSocket(url); this.id = 0; this.pending = new Map(); this.events = [];
++    this.ready = new Promise((resolve, reject) => { this.ws.onopen = resolve; this.ws.onerror = reject; });
++    this.ws.onmessage = event => { const m = JSON.parse(event.data); if (m.id) { const p = this.pending.get(m.id); this.pending.delete(m.id); if (m.error) p.reject(new Error(m.error.message)); else p.resolve(m.result); } else { this.events.push(m); this.onEvent?.(m); } };
++  }
++  async send(method, params = {}) { await this.ready; const id = ++this.id; return new Promise((resolve,reject) => { this.pending.set(id,{resolve,reject}); this.ws.send(JSON.stringify({id,method,params})); }); }
++  async value(expression) { const r = await this.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value; }
++}
++const assert = (value, message) => { if (!value) throw new Error(message); };
++async function poll(work, message, timeout = 10000) { const end = Date.now()+timeout; while(Date.now()<end) { try { const result = await work(); if (result) return result; } catch {} await delay(100); } throw new Error(message); }
++async function text(expected) { await poll(() => cdp.value(`document.body.innerText.includes(${JSON.stringify(expected)})`), `Missing ${expected}`); }
++async function click(label) {
++  const point = await cdp.value(`(() => { const n = [...document.querySelectorAll('button')].find(n => n.textContent === ${JSON.stringify(label)}); if(!n || n.disabled) return null; n.scrollIntoView({block:'center'}); const r=n.getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
++  assert(point, `Missing enabled control ${label}`);
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', button:'left', clickCount:1, ...point });
++  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button:'left', clickCount:1, ...point });
++}
++async function screenshot(name) { const r = await cdp.send('Page.captureScreenshot', { format:'png', captureBeyondViewport:false }); writeFileSync(path.join(evidence,`${name}.png`),Buffer.from(r.data,'base64')); }
++async function keyboard(key, code = key, virtual = key === 'Tab' ? 9 : key === 'Enter' ? 13 : 32) {
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown', key, code, windowsVirtualKeyCode:virtual, ...(key === 'Enter' ? {text:'\r'} : {})});
++  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp', key, code, windowsVirtualKeyCode:virtual});
++}
++
++// Compile only pure domain modules into ignored local evidence. No service,
++// production identity/driver or external event source is installed in Vite.
++const ts = require('typescript'); const modules = path.join(evidence, 'domain'); mkdirSync(modules, { recursive:true });
++for (const name of ['authority','grants','practiceTemplates','templateMapping29','intendedPlans','reconciliation']) {
++  const output = ts.transpileModule(readFileSync(path.join(root, 'apps/professional-web/src', `${name}.ts`),'utf8'),
++    { compilerOptions: { target: ts.ScriptTarget.ES2022, module:ts.ModuleKind.ESNext } }).outputText.replace(/from '\.\/([^']+)'/g, "from './$1.mjs'");
++  writeFileSync(path.join(modules,`${name}.mjs`),output);
++}
++const { enqueueMaterial, transitionCase } = await import(pathToFileURL(path.join(modules,'reconciliation.mjs')));
++const { recordHash } = await import(pathToFileURL(path.join(modules,'grants.mjs')));
++const now=1800000000000;
++const authority={session:{subjectId:'synthetic-staff',ownerId:null,workspaceId:'practice-a',epoch:1,startedAt:now,lastActivityAt:now,stepUpAt:now,aal:2,totp:true,adult:true,revoked:false},
++ membership:{subjectId:'synthetic-staff',workspaceId:'practice-a',roles:['assigned_practitioner'],revision:1,active:true},
++ assignment:{subjectId:'synthetic-staff',workspaceId:'practice-a',ownerId:'client-a',active:true},
++ licence:{subjectId:'synthetic-staff',jurisdiction:'CA',verifiedAt:now,expiresAt:now+100000},
++ grant:{id:'grant-a',ownerId:'client-a',workspaceId:'practice-a',version:1,epoch:1,healthEpoch:1,expiresAt:now+100000,consentReceiptId:'health-a',fields:['exceptions','intended_plans'],purposes:['routine_review'],permissions:['read','plan_write'],status:'active'},
++ health:{ownerId:'client-a',epoch:1,consentReceiptId:'health-a',active:true,deletionPending:false},billing:'write_allowed'};
++const eventBody={id:'11111111-1111-4111-8111-111111111111',version:1,ownerId:'client-a',workspaceId:'practice-a',grantVersion:1,planHash:'b'.repeat(64),kind:'product_started',detail:'SYNTHETIC selected owner report; no actual person or care.'};
++const event={...eventBody,contentHash:await recordHash(eventBody)};let log=[];let mode='normal';let held=null;const sent=[];const overflow=[];
++let ownerResponses=[];
++const model=()=>({sourceHash:'a'.repeat(64),writeAvailable:mode!=='readonly',grantVersion:1,grantEpoch:1,events:mode==='empty'?[]:[event],
++ plans:mode==='empty'?[]:[{planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,sequence:1}],acknowledgements:[],responses:mode==='empty'?[]:ownerResponses,rows:mode==='empty'?[]:log});
++const scopeText=()=>cdp.value(`document.querySelector('#reconciliation').innerText`);
++const checkOverflow=async()=>{const ok=await cdp.value('document.documentElement.scrollWidth <= innerWidth');overflow.push(ok);assert(ok,'horizontal overflow');};
++async function fill(label,value){const point=await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label='+${JSON.stringify(JSON.stringify(label))}+']');if(!n)return null;n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);assert(point,`Missing ${label}`);await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await cdp.send('Input.insertText',{text:value});}
++async function choose(value){await cdp.value(`(()=>{const n=document.querySelector('#reconciliation [aria-label="Next review state"]');n.scrollIntoView({block:'center'});n.focus();})()`);await keyboard('Home','Home',36);const options=await cdp.value(`Array.from(document.querySelector('#reconciliation [aria-label="Next review state"]').options).map(o=>o.value)`);for(let i=0;i<options.indexOf(value);i++)await keyboard('ArrowDown','ArrowDown',40);await keyboard('Enter');assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Next review state"]').value`)===value,'Select keyboard state');}
++async function filter(label,value){
++ await cdp.value(`(()=>{const n=[...document.querySelectorAll('#reconciliation select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();})()`);
++ const options=await cdp.value(`Array.from([...document.querySelectorAll('#reconciliation select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}).options).map(o=>o.value)`);
++ assert(options.includes(value),'Filter option exists');await keyboard('Home','Home',36);for(let i=0;i<options.indexOf(value);i++)await keyboard('ArrowDown','ArrowDown',40);await keyboard('Enter');
++ assert(await cdp.value(`document.activeElement.getAttribute('aria-label')===${JSON.stringify(label)}&&document.activeElement.value===${JSON.stringify(value)}`),'Filter keyboard selection and focus');
++}
++try{
++ // Fixture compilation/import must succeed before a server can be owned.
++ server = spawn(process.execPath, [vite, '--host', '127.0.0.1', '--port', String(port)], { cwd: path.join(root, 'apps/professional-web'), windowsHide: true, stdio: ['ignore','pipe','pipe'] });
++ server.stdout.on('data', b => { serverLog += b; }); server.stderr.on('data', b => { serverLog += b; });
++ await poll(async()=>(await fetch(origin)).ok,'Vite unavailable',20000);
++ assert((await fetch(`${origin}/api/professional/reconciliation`,{method:'POST'})).status===503,'Real queue must refuse');
++ browser=spawn(browserPath,['--headless=new','--disable-gpu','--no-first-run',`--remote-debugging-port=${debugPort}`,`--user-data-dir=${mkdtempSync(path.join(tmpdir(),'onskin-queue-'))}`,'about:blank'],{windowsHide:true,stdio:'ignore'});
++ const tabs=await poll(async()=>(await(await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json()).filter(t=>t.type==='page'),'Chrome unavailable');cdp=new Client(tabs[0].webSocketDebuggerUrl);
++ await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});await cdp.send('Page.navigate',{url:origin});await text('Practice connection');await poll(()=>cdp.value(`!!document.querySelector('#reconciliation button')`),'Queue mount');assert(await cdp.value('scrollY===0'),'Mount stole scroll');
++ await click('Load current review records');await text('Review queue unavailable');await screenshot('real-unavailable');
++ await cdp.send('Fetch.enable',{patterns:[{urlPattern:`${origin}/api/professional/reconciliation`,requestStage:'Request'}]});
++ cdp.onEvent=async e=>{if(e.method!=='Fetch.requestPaused')return;const {requestId,request}=e.params;const input=JSON.parse(request.postData);sent.push(input);if(mode==='hold'){held=requestId;return;}
++  let status=200;let response={kind:input.kind,context:'synthetic-queue-context',model:model()};
++  try{if(input.kind==='save'){const c=input.command;log=c.kind==='enqueue'?await enqueueMaterial(log,authority,event,c.caseId,now):await transitionCase(log,authority,{caseId:c.caseId,expectedHash:c.expectedHash,next:c.next,reason:c.reason,communication:c.communication,changedPlanHash:c.changedPlanHash,acknowledgement:null,nonAcknowledgementReason:c.nonAcknowledgementReason},now);response.model=model();}
++   if(mode==='unknown'&&input.kind==='save'){status=503;response={status:'unavailable',private:'NEVER_RENDER_PRIVATE_BODY'};mode='normal';}
++   if(mode==='changed'){status=409;response={private:'NEVER_RENDER_PRIVATE_BODY'};}if(mode==='denied'){status=403;response={private:'NEVER_RENDER_PRIVATE_BODY'};}
++   if(mode==='forged')response.model={...model(),unexpected:'NEVER_RENDER_PRIVATE_BODY'};
++  }catch{status=409;response={status:'changed'};}
++  await cdp.send('Fetch.fulfillRequest',{requestId,responseCode:status,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:mode==='cacheable'?'public,max-age=3600':'no-store'}],body:Buffer.from(JSON.stringify(response)).toString('base64')}).catch(()=>{});
++ };
++ await click('Load current review records');await text('Review owner record 1');assert(await cdp.value(`document.activeElement===document.querySelector('#reconciliation h2')`),'Load focus');
++ await click('Review owner record 1');await text(event.detail);await text('Exact intended version: 1');await screenshot('event-review');await checkOverflow();
++ await cdp.value(`globalThis.__retiredQueueConfirm=[...document.querySelectorAll('#reconciliation button')].find(b=>b.textContent==='Confirm review record').onclick`);await click('Cancel review');const count=sent.length;await cdp.value('__retiredQueueConfirm()');await delay(100);assert(sent.length===count,'Canceled callback submitted');
++ await click('Review owner record 1');mode='unknown';await click('Confirm review record');await text('Review save outcome unknown');const original=JSON.stringify(sent.at(-1));await click('Retry identical review save');await text('Review revision saved');assert(JSON.stringify(sent.at(-1))===original&&log.length===1,'Unknown retry duplicated');
++ await click('Open case 1 history');await text(event.detail);await fill('Reason for this decision','SYNTHETIC exact event reviewed');await choose('in_review');await click('Review decision before saving');await screenshot('decision-review');await click('Confirm review record');await text('Review revision saved');assert(log.length===2,'Decision append');
++ await click('Open case 1 history');await choose('awaiting_client_ack');await fill('Reason for this decision','SYNTHETIC intended version needs owner response');await filter('Changed intended version',event.planHash);
++ await click('Review decision before saving');await text('No explicit response recorded');await click('Confirm review record');await text('Review revision saved');
++ ownerResponses=[{id:'33333333-3333-4333-8333-333333333333',contentHash:'c'.repeat(64),planId:'22222222-2222-4222-8222-222222222222',planHash:event.planHash,kind:'declined',recordedAt:now}];
++ await click('Load current review records');await text('Open case 1 history');await click('Open case 1 history');await text('Latest recorded owner response to intended version 1: Declined');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Recorded owner acknowledgement"]').options.length`)===1,'Decline offered as acknowledgement');await screenshot('owner-declined');await checkOverflow();
++ await choose('resolved');await fill('Reason for this decision','SYNTHETIC factual resolution');await fill('Communication already provided (record only)','SYNTHETIC prior contact recorded; no message sent');await fill('Reason for closing without exact acknowledgement','SYNTHETIC exact version declined; no actual use inferred');
++ await click('Review decision before saving');await text('Latest recorded owner response to intended version 1: Declined');await click('Confirm review record');await text('Review revision saved');assert(log.length===4&&log.at(-1).state==='resolved','Closure');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await screenshot('history');await checkOverflow();await click('Back to queue; discard draft');
++ const beforeFilters=sent.length;await filter('Filter cases by recorded state','open');await text('No current cases match these filters.');
++ assert(!(await scopeText()).includes('Open case 1 history'),'Closed history misclassified as open');await screenshot('filter-open-empty');
++ await filter('Filter cases by recorded state','resolved');await text('Open case 1 history');
++ await filter('Filter material records by kind','concern_reported');await text('No shared material records match this filter.');await text('No current cases match these filters.');
++ await filter('Filter material records by kind','product_started');await text('Open case 1 history');assert(sent.length===beforeFilters,'Display filter read or wrote private records');
++ await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await click('Back to queue; discard draft');
++ assert(await cdp.value(`document.querySelector('#reconciliation [aria-label="Filter cases by recorded state"]').value==='resolved'&&document.querySelector('#reconciliation [aria-label="Filter material records by kind"]').value==='product_started'`),'History return lost filters');
++ await checkOverflow();await screenshot('filtered-history-return');
++ await cdp.value(`new BroadcastChannel('onskin-professional-session').postMessage('retired')`);await poll(async()=>(await scopeText()).includes('Current assigned practitioner'),'Session retirement');assert(!(await scopeText()).includes(event.detail),'Session retained text');
++ mode='readonly';await click('Load current review records');await text('Read-only:');await click('Open case 1 history');await text('SYNTHETIC prior contact recorded');await click('Back to queue; discard draft');
++ for(const branch of ['changed','denied','forged','cacheable']){mode=branch;await click('Load current review records');await text(branch==='changed'?'Review records changed':'Review queue unavailable');assert(!(await scopeText()).includes('NEVER_RENDER_PRIVATE_BODY'),'Private error rendered');}
++ mode='empty';await click('Load current review records');await text('No current shared material events');await text('No current cases.');
++ mode='hold';await click('Load current review records');await poll(()=>held,'Held read');await click('Clear review screen');await cdp.send('Fetch.fulfillRequest',{requestId:held,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Cache-Control',value:'no-store'}],body:Buffer.from(JSON.stringify({kind:'source',context:'retired',model:model()})).toString('base64')}).catch(()=>{});await delay(100);assert(!(await scopeText()).includes(event.detail),'Late read republished');
++ mode='normal';await click('Load current review records');await text('Open case 1 history');await keyboard('Tab');assert(await cdp.value('document.activeElement?.tagName')==='SELECT','Keyboard navigation');await checkOverflow();await screenshot('final');assert(!cdp.events.some(e=>e.method==='Runtime.exceptionThrown'),'Browser exception');const ax=await cdp.send('Accessibility.getFullAXTree');
++ writeFileSync(path.join(evidence,'summary.json'),JSON.stringify({surface:'Actual Vite UI; real API503; domain-generated HTTP positives explicitly synthetic',width,height,eventReviewCancel:true,retiredCallback:true,unknownExactRetry:true,encryptedIntegration:'separate source tests',decisionAndClosure:true,historyReadback:true,stateAndKindFilters:true,filterEmptyAndHistoryReturn:true,filterKeyboardFocus:true,readOnly:true,sessionRetirement:true,changedDeniedForgedCacheable:true,empty:true,lateClear:true,keyboard:true,focus:true,startupTop:true,overflow,commands:sent.map(i=>i.kind),axRoles:ax.nodes.filter(n=>!n.ignored).map(n=>n.role?.value)},null,2));console.log(`PASS queue ${width}x${height}`);
++}catch(error){if(cdp)await screenshot('failure').catch(()=>{});throw error;}
++finally{writeFileSync(path.join(evidence,'server.log'),serverLog);cdp?.ws.close();for(const child of[browser,server])if(child?.pid){if(process.platform==='win32')await new Promise(resolve=>spawn('taskkill',['/pid',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'}).once('exit',resolve));else child.kill();}}
+diff --git a/scripts/e2e/retained-daily-loop.mjs b/scripts/e2e/retained-daily-loop.mjs
+index f7a0f564b37c57ce6eb71c23d1ed65e73f3ecbc9..6d3e40f1ffe3304044793e8c0d8f6eb424c57c7e 100644
+--- a/scripts/e2e/retained-daily-loop.mjs
++++ b/scripts/e2e/retained-daily-loop.mjs
+@@ -1,4 +1,5 @@
+ import assert from 'node:assert/strict';
++import { chooseManualUnopened30 } from './manual-opening-choice30.mjs';
+ 
+ // Runs inside the maintained fresh-profile onboarding harness. No authority,
+ // consent, entitlement, corpus receipt, or local completion is fabricated here.
+@@ -56,7 +57,7 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
+   await clickByText(client, 'Category, Moisturiser (tube)');
+   await clickByText(client, 'Continue');
+   await waitForText(client, 'Not opened yet');
+-  await clickByText(client, 'Not opened yet');
++  await chooseManualUnopened30({ client, scrollTextIntoView, clickByText, waitForText });
+   await scrollTextIntoView(client, 'Add to shelf');
+   await clickByText(client, 'Add to shelf');
+   await waitForText(client, 'M102 synthetic moisturizer');
+diff --git a/scripts/e2e/runtime-admission-trace32.mjs b/scripts/e2e/runtime-admission-trace32.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..98f243e9e3e4cc29ce4f599868a6a1376ad5dc94
+--- /dev/null
++++ b/scripts/e2e/runtime-admission-trace32.mjs
+@@ -0,0 +1,24 @@
++// Content-free diagnostics only. This observer never retries or grants access.
++export async function traceRuntimeAdmission32(client, record) {
++  client.ws.addEventListener('message', event => {
++    const message = JSON.parse(event.data);
++    if (message.method !== 'Runtime.consoleAPICalled') return;
++    const value = message.params.args?.[0]?.value;
++    if (typeof value === 'string' && value.startsWith('ADMISSION32:')) record(JSON.parse(value.slice(12)));
++  });
++  await client.send('Page.addScriptToEvaluateOnNewDocument', { source: `(() => {
++    const documentId = crypto.randomUUID(); globalThis.__runtimeDocument32 = documentId; let requestId = 0;
++    const emit = (event, facts = {}) => console.info('ADMISSION32:' + JSON.stringify({documentId, event, at: performance.now(), ...facts}));
++    emit('document');
++    for (const event of ['pagehide', 'pageshow']) addEventListener(event, e => emit(event, {persisted: e.persisted}));
++    if (!navigator.locks) { emit('unsupported'); return; }
++    const original = navigator.locks.request;
++    navigator.locks.request = function(name, options, callback) {
++      if (name !== 'layerwell.private-runtime.v1') return Reflect.apply(original, this, arguments);
++      const id = ++requestId; emit('request', {id, ifAvailable: !!options.ifAvailable});
++      return Reflect.apply(original, this, [name, options, lock => {
++        emit('callback', {id, acquired: lock !== null}); return callback(lock);
++      }]).then(value => { emit('settled', {id}); return value; }, error => { emit('rejected', {id, errorName: error.name}); throw error; });
++    };
++  })()` });
++}
+diff --git a/scripts/e2e/runtime-handoff32.mjs b/scripts/e2e/runtime-handoff32.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..5206b1e47a97eab11059d3b37f2e00034b976c9e
+--- /dev/null
++++ b/scripts/e2e/runtime-handoff32.mjs
+@@ -0,0 +1,120 @@
++// Finite runtime-only real-browser matrix. No external retry supervisor.
++import assert from 'node:assert/strict';
++import { spawn } from 'node:child_process';
++import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++import { traceRuntimeAdmission32 } from './runtime-admission-trace32.mjs';
++
++const out = process.env.ONSKIN_RUNTIME32_EVIDENCE;
++assert(out); mkdirSync(out);
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
++const appPort = await b.findAvailablePort(8520), debugPort = await b.findAvailablePort(9520), origin = `http://localhost:${appPort}`;
++const receipt = { ordinary: [], induced: [], interventions: [], failures: [], traces: [] };
++json('DECLARED_MATRIX.json', { repeats: 3, viewports: [[375,667],[390,844],[430,932]], ordinary: ['startup','reload','direct entry','return navigation'],
++  induced: ['transient closing holder','live second tab refusal and explicit retry','pending reload termination','unsupported','denied'], ordinaryRetryBudget: 0 });
++let server, browser;
++const clients = new Set();
++const evaluate = (client, source) => b.evaluate(client, source, true);
++const state = client => evaluate(client, `({status:globalThis.__layerwellPrivateWebRuntime?.snapshot(),transitions:globalThis.__layerwellPrivateWebRuntime?.diagnostics(),privateCalls:globalThis.__privateCalls32??0,privateDatabaseCalls:globalThis.__privateDatabaseCalls32??0})`);
++async function page(width, height, setup = '') {
++  const client = await b.connectToPage(debugPort, origin); clients.add(client);
++  await client.send('Runtime.enable'); await client.send('Page.enable'); await b.setViewport(client, { width, height });
++  await traceRuntimeAdmission32(client, event => { receipt.traces.push(event); json('TRACE.json', receipt.traces); });
++  await client.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__privateDatabaseCalls32=0;const open32=IDBFactory.prototype.open;IDBFactory.prototype.open=function(name,...args){if(name==='layerwell.routine-decision-ciphertext.v1')++globalThis.__privateDatabaseCalls32;return Reflect.apply(open32,this,[name,...args])}` });
++  await client.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__privateCalls32=0;for(const method of ['getItem','setItem','removeItem']){const original=Storage.prototype[method];Storage.prototype[method]=function(key,...args){if(/^(layerwell\\.|sb-)/.test(key))++globalThis.__privateCalls32;return Reflect.apply(original,this,[key,...args])}};${setup}` });
++  return client;
++}
++async function newDocument(client, action) {
++  const previous = await evaluate(client, 'globalThis.__runtimeDocument32??null');
++  await action();
++  await b.waitForCondition(client, `!!globalThis.__runtimeDocument32&&globalThis.__runtimeDocument32!==${JSON.stringify(previous)}`,30000,'successor document identity');
++}
++async function navigate(client, route = '/') { await newDocument(client, () => client.send('Page.navigate', { url: origin + route })); }
++async function admitted(client) { await b.waitForCondition(client, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='admitted'`, 30000, 'actual exclusive admission'); return state(client); }
++async function close(client) {
++  const { targetInfo } = await client.send('Target.getTargetInfo');
++  await client.send('Target.closeTarget', { targetId: targetInfo.targetId }).catch(() => {}); client.close(); clients.delete(client);
++}
++try {
++  server = b.startExpoServer({ appPort, evidenceDir: out, group: { id: 'runtime32', env: { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner', EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'false' } } });
++  await b.waitForUrl(origin);
++  for (const [width,height] of [[375,667],[390,844],[430,932]]) for (let repeat=1; repeat<=3; repeat++) {
++    // A new browser process/profile is a fresh session at each matrix cell.
++    browser = spawn(process.env.BROWSER_PATH ?? 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
++      ['--headless=new',`--remote-debugging-port=${debugPort}`,`--user-data-dir=${mkdtempSync(path.join(tmpdir(),'onskin-runtime32-'))}`,
++        '--no-first-run','--no-default-browser-check','--disable-background-networking','--disable-extensions','--disable-sync',
++        '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1','about:blank'], { stdio:'ignore', windowsHide:true });
++    json(`owned-${width}-${repeat}.json`, { browserPid: browser.pid, serverPid: server.pid, appPort, debugPort });
++    const client = await page(width,height); await navigate(client);
++    const startup = await admitted(client);
++    await newDocument(client, () => client.send('Page.reload')); const reload = await admitted(client);
++    await navigate(client,'/routine/records'); const direct = await admitted(client);
++    await navigate(client,'/you'); await admitted(client);
++    const history = await client.send('Page.getNavigationHistory');
++    await newDocument(client, () => client.send('Page.navigateToHistoryEntry', { entryId: history.entries[history.currentIndex-1].id }));
++    const returned = await admitted(client);
++    for (const result of [startup,reload,direct,returned]) {
++      assert.equal(result.transitions.filter(row=>row.reason==='exclusive-request').length,1);
++      assert(!result.transitions.some(row=>row.status==='occupied'||row.status==='unavailable'));
++    }
++    receipt.ordinary.push({width,height,repeat,startup,reload,direct,returned,automaticRetries:0,manualRetries:0,pass:true});
++    const shot = await client.send('Page.captureScreenshot',{format:'png'}); writeFileSync(path.join(out,`${width}-${repeat}.png`),Buffer.from(shot.data,'base64'));
++    await close(client); await b.stopProcessBestEffort(browser); browser=undefined;
++  }
++  // Induced cases use a separate session and never count as ordinary success.
++  browser = spawn(process.env.BROWSER_PATH ?? 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
++    ['--headless=new',`--remote-debugging-port=${debugPort}`,`--user-data-dir=${mkdtempSync(path.join(tmpdir(),'onskin-contention32-'))}`,'--no-first-run','--disable-background-networking','about:blank'], {stdio:'ignore',windowsHide:true});
++  let holder = await page(390,844); await navigate(holder); await admitted(holder);
++  let next = await page(390,844); await navigate(next);
++  await b.waitForCondition(next, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='checking'`,30000,'handoff queued');
++  const pending = await state(next); assert.equal(pending.privateCalls,0); assert.equal(pending.privateDatabaseCalls,0);
++  await close(holder); const handoff = await admitted(next);
++  receipt.induced.push({case:'transient closing holder',pending,handoff,manualRetries:0,pass:true}); holder=next;
++  next=await page(390,844); await navigate(next);
++  await b.waitForCondition(next, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='occupied'`,30000,'bounded live-holder refusal');
++  const occupied=await state(next); assert.equal(occupied.privateCalls,0); assert.equal(occupied.privateDatabaseCalls,0); assert.equal((await state(holder)).status,'admitted');
++  await close(holder); assert.equal((await state(next)).status,'occupied');
++  await b.clickByText(next,'Retry private app access'); receipt.interventions.push({case:'true contention',action:'explicit visible Retry private app access'});
++  const recovered=await admitted(next); receipt.induced.push({case:'live second tab',occupied,recovered,manualRetries:1,pass:true}); holder=next;
++  next=await page(390,844); await navigate(next);
++  await b.waitForCondition(next, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='checking'`,30000,'pending before reload');
++  await newDocument(next, () => next.send('Page.reload'));
++  await b.waitForCondition(next, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='checking'`,30000,'successor pending');
++  await close(holder); await admitted(next); await close(next);
++  receipt.induced.push({case:'pending document reload termination',pass:true});
++  for(const [name,setup] of [['unsupported',`Object.defineProperty(navigator,'locks',{configurable:true,value:undefined})`],
++    ['denied',`Object.defineProperty(navigator,'locks',{configurable:true,value:{request:()=>Promise.reject(new DOMException('synthetic','SecurityError'))}})`]]) {
++    const refused=await page(390,844,setup); await navigate(refused);
++    await b.waitForCondition(refused, `globalThis.__layerwellPrivateWebRuntime?.snapshot()==='unavailable'`,30000,name);
++    const result=await state(refused); assert.equal(result.privateCalls,0); assert.equal(result.privateDatabaseCalls,0); receipt.induced.push({case:name,result,pass:true}); await close(refused);
++  }
++  // Separate raw-storage boundary fixtures: no owner payload or live capability.
++  const storagePage=await page(390,844); await navigate(storagePage); await admitted(storagePage);
++  const storageBoundary=await evaluate(storagePage, `(async()=>{
++    const entry=[...__r.getModules().values()].find(row=>(row.verboseName??'').replaceAll('\\\\','/').endsWith('/lib/storage/privateAsyncStorage.web.ts'));
++    const raw=entry.publicModule.exports.default, name='layerwell.routine-decision-ciphertext.v1', key='layerwell.routineDecisionRecovery.v1';
++    const legacyKeys=['layerwell.healthDataLifecycle.v1','layerwell.healthDataCollectionConsent.v1','layerwell.completions.v1','layerwell.shelf.v1','layerwell.skinprofile.v1','layerwell.conflict.overrides','layerwell.routineOrder.v1'];
++    const legacySaved=legacyKeys.map(k=>localStorage.getItem(k)),listDatabases=indexedDB.databases,priorOpens=globalThis.__privateDatabaseCalls32;
++    let legacyReadPreserved=false,legacyReadCreatedNoDatabase=false;
++    try{
++      // Isolated raw-port fixture for a legacy installation without the DB.
++      indexedDB.databases=async()=>[];
++      for(const k of legacyKeys)localStorage.setItem(k,'synthetic opaque legacy ciphertext');
++      legacyReadPreserved=(await Promise.all(legacyKeys.map(k=>raw.getItem(k)))).every(value=>value==='synthetic opaque legacy ciphertext');
++      legacyReadCreatedNoDatabase=globalThis.__privateDatabaseCalls32===priorOpens;
++    }finally{indexedDB.databases=listDatabases;for(const [i,k] of legacyKeys.entries()){if(legacySaved[i]===null)localStorage.removeItem(k);else localStorage.setItem(k,legacySaved[i]);}}
++    const original=IDBDatabase.prototype.transaction;let denied=false;
++    IDBDatabase.prototype.transaction=function(store,mode,options){if(this.name===name&&mode==='readwrite')throw new DOMException('synthetic strict refusal','SecurityError');return Reflect.apply(original,this,[store,mode,options])};
++    try{await raw.setItem(key,'synthetic opaque storage-port value');}catch{denied=true;}finally{IDBDatabase.prototype.transaction=original;}
++    const unchanged=await raw.getItem(key)===null;
++    await new Promise((resolve,reject)=>{const open=indexedDB.open(name,2);open.onerror=()=>reject(Error('fixture open'));open.onupgradeneeded=()=>open.result.createObjectStore('unsupported-fixture').put('synthetic','row');open.onsuccess=()=>{open.result.close();resolve()}});
++    let futureRefused=false;try{await raw.getItem(key);}catch{futureRefused=true;}
++    const version=(await indexedDB.databases()).find(row=>row.name===name)?.version;
++    return {legacyReadPreserved,legacyReadCreatedNoDatabase,strictWriteDenied:denied,noCiphertextWritten:unchanged,futureRefused,versionPreserved:version===2};
++  })()`);
++  assert(Object.values(storageBoundary).every(Boolean)); receipt.induced.push({case:'raw storage denial and unsupported schema',storageBoundary,syntheticPortOnly:true,pass:true}); await close(storagePage);
++} catch(error) { receipt.failures.push({message:String(error),stack:error.stack}); process.exitCode=1; }
++finally { for(const client of clients) client.close(); await b.stopProcessBestEffort(browser); await b.stopProcessBestEffort(server); json('SUMMARY.json',receipt); }
++assert.equal(receipt.failures.length,0);
+diff --git a/scripts/e2e/template-mapping29.mjs b/scripts/e2e/template-mapping29.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..25d0f501093e1ee4ce29bd69e27400829e3de326
+--- /dev/null
++++ b/scripts/e2e/template-mapping29.mjs
+@@ -0,0 +1,119 @@
++// Real local UI/API/domain/encryption; ALL trust, keys and serial driver are
++// explicitly synthetic. No original-owner ingestion or live admission follows.
++import assert from 'node:assert/strict';
++import { spawn, execFileSync } from 'node:child_process';
++import { createRequire } from 'node:module';
++import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
++import path from 'node:path';
++import { tmpdir } from 'node:os';
++import { fileURLToPath, pathToFileURL } from 'node:url';
++import { setTimeout as delay } from 'node:timers/promises';
++import * as b from './cat04-catalog-recovery-audit.mjs';
++
++const repo = fileURLToPath(new URL('../../', import.meta.url));
++const require = createRequire(new URL('../../apps/professional-web/package.json', import.meta.url));
++const { createServer } = await import(pathToFileURL(require.resolve('vite')).href);
++const out = path.resolve(process.env.ONSKIN_MAPPING_EVIDENCE ?? path.join(repo, '../ENGINEERING29_EVIDENCE/mapping-browser'));
++mkdirSync(out, { recursive: false });
++const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
++const port = await b.findAvailablePort(4336), debugPort = await b.findAvailablePort(9466), origin = `http://localhost:${port}`;
++const root = path.join(repo, 'apps/professional-web');
++const browserPath = process.env.BROWSER_PATH ?? 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
++assert(existsSync(browserPath));
++const git = (...args) => execFileSync('git', args, { cwd: repo, encoding: 'utf8', windowsHide: true }).trim();
++const receipt = { start: new Date().toISOString(), head: git('rev-parse', 'HEAD'), tree: git('rev-parse', 'HEAD^{tree}'), status: git('status', '--porcelain=v1'),
++  surface: 'Actual local Edge and source UI/API/domain/encrypted repository; synthetic trust/key/serial ports only', viewports: [], requests: [], blocked: [], interceptionErrors: [], pass: false };
++let server, browser, client, f, handler, context, loseNext = false, denied = false;
++const submitted = [], responses = [];
++async function wait(work) { for (let n = 0; n < 100; n++) { try { if (await work()) return; } catch {} await delay(100); } throw new Error('Local browser readiness timeout'); }
++async function capture(name) {
++  const state = await b.evaluate(client, `({text:document.querySelector('#practitioner-plan').innerText,focus:document.activeElement?.textContent,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),persisted:JSON.stringify([Object.entries(localStorage),Object.entries(sessionStorage)])})`);
++  assert.equal(state.overflow, 0); assert(!/Recorded cleanser|Recorded cream|Generic roles/.test(state.persisted)); json(name + '.json', state);
++  const shot = await client.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(path.join(out, name + '.png'), Buffer.from(shot.data, 'base64'));
++}
++const text = expected => b.waitForCondition(client, `document.querySelector('#practitioner-plan').innerText.includes(${JSON.stringify(expected)})`, 10000, expected);
++const click = label => b.clickByText(client, label);
++async function keyboard(label) {
++  const result = await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();const r=n.getBoundingClientRect();return {focused:document.activeElement===n,height:r.height,visible:r.y>=0&&r.bottom<=innerHeight}})()`);
++  assert(result.focused && result.height >= 44 && result.visible);
++  for (const type of ['keyDown', 'keyUp']) await client.send('Input.dispatchKeyEvent', { type, key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, ...(type === 'keyDown' ? { text: '\r' } : {}) });
++}
++async function choose(label, value) {
++  const found = await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('#practitioner-plan select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)});n.scrollIntoView({block:'center'});n.focus();const index=[...n.options].findIndex(o=>o.value===${JSON.stringify(value)});return {index,height:n.getBoundingClientRect().height,focused:document.activeElement===n}})()`);
++  assert(found.index >= 0 && found.height >= 44 && found.focused);
++  await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Home', code: 'Home', windowsVirtualKeyCode: 36 });
++  await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Home', code: 'Home', windowsVirtualKeyCode: 36 });
++  // Each native selection change rerenders and retires the old select. Focus
++  // its fresh replacement before the next keyboard step.
++  for (let n = 0; n < found.index; n++) {
++    await b.evaluate(client, `[...document.querySelectorAll('#practitioner-plan select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}).focus()`);
++    await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'ArrowDown', code: 'ArrowDown', windowsVirtualKeyCode: 40 });
++    await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'ArrowDown', code: 'ArrowDown', windowsVirtualKeyCode: 40 });
++  }
++  assert.equal(await b.evaluate(client, `[...document.querySelectorAll('#practitioner-plan select')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}).value`), value);
++}
++async function begin() { await click('Load assigned client products'); await text('Compose intended sequence'); await click('Choose a practice template revision'); await text('Choose an exact template revision'); await click('Map Generic roles revision 1'); await text('Map ordered template roles'); }
++async function map() { await choose('am role 1: cleanser', 'product:bottle-a'); await choose('am role 2: moisturizer', 'omit'); await choose('pm role 1: moisturizer', 'product:bottle-b'); await click('Review mapped intended sequence'); await text('Review intended sequence before issuing'); }
++try {
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true } }); await server.listen();
++  assert.equal((await fetch(origin + '/api/professional/practitioner-plan', { method: 'POST' })).status, 503); await server.close();
++  server = await createServer({ root, server: { host: '127.0.0.1', port, strictPort: true }, plugins: [{ name: 'synthetic-mapping-browser-only', enforce: 'pre',
++    configureServer(s) { s.middlewares.use('/api/professional/practitioner-plan', async (req, res) => {
++      try {
++        const chunks = []; for await (const chunk of req) chunks.push(chunk); const body = Buffer.concat(chunks), input = JSON.parse(body.toString()); submitted.push(input);
++        f.controls.loseCommitReply = loseNext && input.kind === 'issue'; if (f.controls.loseCommitReply) loseNext = false;
++        const response = denied ? new Response('{"status":"unavailable"}', { status: 503, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }) :
++          await handler(new Request(origin + '/api/professional/practitioner-plan', { method: req.method, headers: req.headers, body }));
++        f.controls.loseCommitReply = false; const reply = await response.text(); responses.push({ status: response.status, reply });
++        res.writeHead(response.status, Object.fromEntries(response.headers)); res.end(reply);
++      } catch (error) { responses.push({ fixtureError: String(error) }); res.writeHead(503, { 'Cache-Control': 'no-store' }); res.end(); }
++    }); } }] });
++  const { templateMappingFixture29 } = await server.ssrLoadModule('/src/test/templateMappingFixture29.ts');
++  const { createPractitionerApi } = await server.ssrLoadModule('/src/practitionerApi.ts');
++  const { practiceTemplates } = await server.ssrLoadModule('/src/templateService.ts');
++  await server.listen();
++  browser = spawn(browserPath, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${mkdtempSync(path.join(tmpdir(), 'onskin-mapping29-'))}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' });
++  json('owned-processes.json', { browserPid: browser.pid, appPort: port, debugPort });
++  await wait(async () => (await fetch(`http://127.0.0.1:${debugPort}/json/version`)).ok); client = await b.connectToPage(debugPort, origin);
++  await client.send('Page.enable'); await client.send('Runtime.enable'); await client.send('Network.enable');
++  await client.send('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
++  client.ws.addEventListener('message', event => { const m = JSON.parse(event.data); if (m.method !== 'Fetch.requestPaused') return;
++    const { requestId, request } = m.params, url = new URL(request.url);
++    if (url.origin === origin) { receipt.requests.push({ method: request.method, path: url.pathname }); void client.send('Fetch.continueRequest', { requestId }).catch(error => receipt.interceptionErrors.push(String(error))); }
++    else { receipt.blocked.push(url.origin); void client.send('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' }).catch(error => receipt.interceptionErrors.push(String(error))); }
++  });
++  for (const [width, height] of [[375, 667], [390, 844], [430, 932]]) {
++    f = await templateMappingFixture29(); context = 'synthetic-session';
++    await practiceTemplates(f.repository, 'synthetic', 'practice-a', { id: crypto.randomUUID(), templateId: f.templates[0].templateId,
++      expectedHeadHash: f.templates[0].contentHash, kind: 'revise', title: 'Later generic roles', am: ['other'], pm: [], confirmed: true });
++    handler = createPractitionerApi({ origin, repository: f.repository, authenticate: async () => ({ token: 'synthetic', workspaceId: 'practice-a', ownerId: 'client-a', context, grantVersion: 1, grantEpoch: 1 }) });
++    await client.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false }); await client.send('Page.navigate', { url: origin });
++    denied = true; await click('Load assigned client products'); await text('Practitioner editor unavailable'); await capture(width + '-unavailable'); denied = false;
++    await begin(); await click('Review mapped intended sequence'); await text('Unshelved and unresolved roles cannot be issued');
++    await choose('am role 1: cleanser', 'unshelved'); await capture(width + '-unshelved');
++    await choose('am role 1: cleanser', 'product:bottle-a'); await choose('am role 2: moisturizer', 'product:bottle-a'); await choose('pm role 1: moisturizer', 'product:bottle-b');
++    await click('Review mapped intended sequence'); await text('A product can appear only once per phase'); await capture(width + '-duplicate');
++    await choose('am role 2: moisturizer', 'omit'); await click('Review mapped intended sequence'); await text('Review intended sequence before issuing'); await capture(width + '-review');
++    assert(await b.evaluate(client, `document.activeElement===document.querySelector('#practitioner-plan h2')`));
++    await b.evaluate(client, `globalThis.__oldMappingIssue=[...document.querySelectorAll('#practitioner-plan button')].find(n=>n.textContent==='Issue this intended version').onclick`);
++    await click('Return to draft'); const before = submitted.length; await b.evaluate(client, 'globalThis.__oldMappingIssue()'); assert.equal(submitted.length, before);
++    await click('Review mapped intended sequence'); loseNext = true; await keyboard('Issue this intended version'); await text('Issuance outcome unknown'); const first = submitted.at(-1); await capture(width + '-unknown');
++    await keyboard('Retry identical issuance request'); await text('Intended version issued'); assert.deepEqual(submitted.at(-1), first);
++    const plans = await f.repository.transaction({ workspaceId: 'practice-a', ownerId: 'client-a' }, tx => tx.plans('client-a', 'practice-a'));
++    assert.equal(plans.length, 1); assert.equal(plans[0].templateOrigin.revision, 1); assert.equal(plans[0].templateOrigin.revisionId, f.templates[0].id);
++    assert(!f.bytes().includes('Recorded cleanser')); json(width + '-retained-intended.json', plans);
++    await client.send('Page.reload'); await begin(); await map();
++    await f.replaceProducts([]); await keyboard('Issue this intended version'); await text('Review current client records again'); await capture(width + '-source-changed');
++    await f.replaceProducts([{ productId: 'bottle-a', name: 'Recorded cleanser' }, { productId: 'bottle-b', name: 'Recorded cream' }]);
++    await begin(); await map(); await practiceTemplates(f.repository, 'synthetic', 'practice-a', { id: crypto.randomUUID(), templateId: f.templates[0].templateId,
++      expectedHeadHash: (await practiceTemplates(f.repository, 'synthetic', 'practice-a')).at(-1).contentHash, kind: 'retire', confirmed: true });
++    await keyboard('Issue this intended version'); await text('Review current client records again'); await capture(width + '-retired-template');
++    await click('Clear practitioner draft'); await click('Load assigned client products'); await text('Compose intended sequence'); await click('Choose a practice template revision'); await text('No active practice template revisions');
++    await click('Keep draft without a template'); await text('Compose intended sequence');
++    f.mutate(a => ({ ...a, licence: null })); await click('Choose a practice template revision'); await text('Practitioner editor unavailable'); await capture(width + '-retired-licence');
++    receipt.viewports.push({ width, height, pass: true });
++  }
++  receipt.pass = true;
++} catch (error) { json('FAILURE-TRACE.json', { message: String(error), stack: error.stack }); if (client) await capture('failure-state').catch(() => {}); process.exitCode = 1;
++} finally { json('responses.json', responses); json('submitted-commands.json', submitted); client?.close(); await b.stopProcessBestEffort(browser); await server?.close(); receipt.end = new Date().toISOString(); receipt.ownedBrowserAndServerStopped = true; json('summary.json', receipt); }
++console.log(JSON.stringify(receipt));

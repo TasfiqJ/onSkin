@@ -1,0 +1,40 @@
+{
+  "label": "working-drain-lint",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--",
+    "eslint",
+    "src/lib/storage/privateAsyncStorage.web.ts",
+    "src/lib/storage/privateAsyncStorage32.test.ts",
+    "--max-warnings=0"
+  ],
+  "before": {
+    "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+    "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+    "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+    "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+  },
+  "start": "2026-11-20T16:12:08.491811+00:00",
+  "freeBytesBefore": 147152101376,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 1,
+  "after": {
+    "head": "7236d3f4dd90b7d2384adf45857f853f3b85010f",
+    "tree": "39cc528532aa8d5e85db1a330721757b184bc85a",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts\n?? apps/mobile/src/lib/storage/privateAsyncStorage32.test.ts",
+    "indexSha256": "5f31785451a0d6a2eadf9febf8292e5385a305c2a90ef4fdd67edd9568923d6f",
+    "diffSha256": "e67365ecac0223563b4cff0285bcb0f1112082d012c760b84674956430842b3a"
+  },
+  "end": "2026-11-20T16:12:13.915387+00:00",
+  "freeBytesAfter": 147152601088,
+  "logBytes": 343,
+  "logSha256": "d66f36aa93b00113e1d1c81e2fae84152e1960069d9f840d4b205bc163b85815"
+}

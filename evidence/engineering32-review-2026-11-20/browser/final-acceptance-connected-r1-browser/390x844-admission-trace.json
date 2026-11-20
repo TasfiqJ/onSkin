@@ -1,0 +1,152 @@
+[
+  {
+    "documentId": "041db5bb-2d22-4f08-9e14-8c322610fbe7",
+    "event": "document",
+    "at": 1155.0999999642372
+  },
+  {
+    "documentId": "041db5bb-2d22-4f08-9e14-8c322610fbe7",
+    "event": "pageshow",
+    "at": 1677.800000011921,
+    "persisted": false
+  },
+  {
+    "documentId": "041db5bb-2d22-4f08-9e14-8c322610fbe7",
+    "event": "request",
+    "at": 1843.699999988079,
+    "id": 1,
+    "ifAvailable": false
+  },
+  {
+    "documentId": "041db5bb-2d22-4f08-9e14-8c322610fbe7",
+    "event": "callback",
+    "at": 1851.5999999642372,
+    "id": 1,
+    "acquired": true
+  },
+  {
+    "documentId": "1558402a-3b42-4400-9e12-9d7ae7c72781",
+    "event": "document",
+    "at": 610.9000000357628
+  },
+  {
+    "documentId": "1558402a-3b42-4400-9e12-9d7ae7c72781",
+    "event": "pageshow",
+    "at": 1017.1000000238419,
+    "persisted": false
+  },
+  {
+    "documentId": "1558402a-3b42-4400-9e12-9d7ae7c72781",
+    "event": "request",
+    "at": 1080.800000011921,
+    "id": 1,
+    "ifAvailable": false
+  },
+  {
+    "documentId": "1558402a-3b42-4400-9e12-9d7ae7c72781",
+    "event": "callback",
+    "at": 1086.800000011921,
+    "id": 1,
+    "acquired": true
+  },
+  {
+    "documentId": "31cfa912-785d-4043-bf21-997564002fc3",
+    "event": "document",
+    "at": 518.8999999761581
+  },
+  {
+    "documentId": "31cfa912-785d-4043-bf21-997564002fc3",
+    "event": "pageshow",
+    "at": 903.1999999880791,
+    "persisted": false
+  },
+  {
+    "documentId": "31cfa912-785d-4043-bf21-997564002fc3",
+    "event": "request",
+    "at": 957,
+    "id": 1,
+    "ifAvailable": false
+  },
+  {
+    "documentId": "31cfa912-785d-4043-bf21-997564002fc3",
+    "event": "callback",
+    "at": 963.6999999880791,
+    "id": 1,
+    "acquired": true
+  },
+  {
+    "documentId": "a6610c8d-b5da-4c04-9181-bc55ed74ef69",
+    "event": "document",
+    "at": 566.0999999642372
+  },
+  {
+    "documentId": "a6610c8d-b5da-4c04-9181-bc55ed74ef69",
+    "event": "pageshow",
+    "at": 949.8000000119209,
+    "persisted": false
+  },
+  {
+    "documentId": "a6610c8d-b5da-4c04-9181-bc55ed74ef69",
+    "event": "request",
+    "at": 1001.8000000119209,
+    "id": 1,
+    "ifAvailable": false
+  },
+  {
+    "documentId": "a6610c8d-b5da-4c04-9181-bc55ed74ef69",
+    "event": "callback",
+    "at": 1009.5,
+    "id": 1,
+    "acquired": true
+  },
+  {
+    "documentId": "21db4081-084d-42b4-94df-839f017d9495",
+    "event": "document",
+    "at": 614.1999999880791
+  },
+  {
+    "documentId": "21db4081-084d-42b4-94df-839f017d9495",
+    "event": "pageshow",
+    "at": 977.8999999761581,
+    "persisted": false
+  },
+  {
+    "documentId": "21db4081-084d-42b4-94df-839f017d9495",
+    "event": "request",
+    "at": 1033.0999999642372,
+    "id": 1,
+    "ifAvailable": false
+  },
+  {
+    "documentId": "21db4081-084d-42b4-94df-839f017d9495",
+    "event": "callback",
+    "at": 1039.5999999642372,
+    "id": 1,
+    "acquired": true
+  },
+  {
+    "documentId": "55efc23c-e290-46a3-b405-2847bbefab8f",
+    "event": "document",
+    "at": 1104.8999999761581
+  },
+  {
+    "documentId": "55efc23c-e290-46a3-b405-2847bbefab8f",
+    "event": "pageshow",
+    "at": 1614.5,
+    "persisted": false
+  },
+  {
+    "documentId": "55efc23c-e290-46a3-b405-2847bbefab8f",
+    "event": "request",
+    "at": 1790.0999999642372,
+    "id": 1,
+    "ifAvailable": false
+  },
+  {
+    "documentId": "55efc23c-e290-46a3-b405-2847bbefab8f",
+    "event": "callback",
+    "at": 1797.3999999761581,
+    "id": 1,
+    "acquired": true
+  }
+]

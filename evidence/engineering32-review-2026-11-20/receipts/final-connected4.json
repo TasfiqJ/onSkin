@@ -1,0 +1,35 @@
+{
+  "label": "final-connected4",
+  "command": [
+    "node",
+    "scripts/e2e/actual-apply-outcome29.mjs"
+  ],
+  "before": {
+    "head": "4144bdf02cf4e76436735ce535a814bdac0b7c41",
+    "tree": "65163f7cb136e94a2698839f357e57a4b38bdb53",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "899731b0d5e4da5643ab6e332bb8885d8ad01668216a827542f93ef4a3afb0ae",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-20T15:31:26.618979+00:00",
+  "freeBytesBefore": 147782856704,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {
+    "ONSKIN_OUTCOME_EVIDENCE": "<HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING32_EVIDENCE_20261120\\final-connected4-browser"
+  },
+  "exit": 1,
+  "after": {
+    "head": "4144bdf02cf4e76436735ce535a814bdac0b7c41",
+    "tree": "65163f7cb136e94a2698839f357e57a4b38bdb53",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "899731b0d5e4da5643ab6e332bb8885d8ad01668216a827542f93ef4a3afb0ae",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-20T15:34:28.933256+00:00",
+  "freeBytesAfter": 147750408192,
+  "logBytes": 1231,
+  "logSha256": "f72b47db3d085984ee85d332e2037a598700a432428347b992d44ad4f3039aa2"
+}

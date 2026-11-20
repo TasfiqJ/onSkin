@@ -1,0 +1,43 @@
+{
+  "label": "withdrawal-durability-tests",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/healthConsent/lifecycle.test.ts",
+    "src/features/healthConsent/lifecycleStore.test.ts",
+    "src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+    "src/features/routine/routineDecisionRecovery32.test.ts",
+    "src/features/settings/localPrivateDataKeys.test.ts",
+    "--maxWorkers=2"
+  ],
+  "before": {
+    "head": "9d07a79c09036e371a14a07b6f37987505100176",
+    "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+    "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+    "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+  },
+  "start": "2026-11-20T15:29:41.176141+00:00",
+  "freeBytesBefore": 147784552448,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "9d07a79c09036e371a14a07b6f37987505100176",
+    "tree": "2015cfd90a73880e66b41d443721ff8705039d0b",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/features/healthConsent/lifecycle.test.ts\n M apps/mobile/src/features/healthConsent/lifecycle.ts\n M apps/mobile/src/features/healthConsent/selectiveCleanup.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/lib/storage/privateAsyncStorage.web.ts",
+    "indexSha256": "bc8f5a7b86ea6038089a35857adc56ae99343c7be3da8ee5602f14e6c564c472",
+    "diffSha256": "c4b372a6719a2d696137ec8b6cf91305308518ba77dcbe49b571fcc04acdb38d"
+  },
+  "end": "2026-11-20T15:29:44.474149+00:00",
+  "freeBytesAfter": 147784024064,
+  "logBytes": 592,
+  "logSha256": "2b5a93d4c385b71f6b05471564329a9b38a3964a8d40b0f295b05feabcb7b589"
+}

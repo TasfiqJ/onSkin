@@ -1,0 +1,115 @@
+{
+  "start": "2026-11-20T16:14:23.214Z",
+  "head": "18dbd2b4b0ba256b3938ee4d8ffe56d5af9f2417",
+  "tree": "ad23caca97a6d497d5f9e8e4651e1bc6c6717100",
+  "status": "",
+  "surface": "Actual local Expo/Edge UI and encrypted records; synthetic owner and acknowledgement faults, no native qualification",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true,
+      "continuity31": {
+        "pass": true,
+        "clearAndRetractionExactInspection": true,
+        "ciphertextAndKeysPreserved": true,
+        "genuineVisibleUse": true,
+        "unknownAndReadRetry": true,
+        "keyboardContained": true,
+        "escapeCancel": true,
+        "browserText200": true,
+        "exactBriefSelectionPreReviewConflict": true,
+        "syntheticShareHandoffOnly": true,
+        "nativeDiaryRefusal": true
+      },
+      "durable32": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "df32e698-5baa-4e4a-a7d9-90b44215db8f",
+        "exactClearId": "a1b94676-20ec-4dc2-aaa2-624971c2b932",
+        "exactRetractionId": "284d20cd-f286-4d90-aa03-1f4a6ad269de",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true,
+      "continuity31": {
+        "pass": true,
+        "clearAndRetractionExactInspection": true,
+        "ciphertextAndKeysPreserved": true,
+        "genuineVisibleUse": true,
+        "unknownAndReadRetry": true,
+        "keyboardContained": true,
+        "escapeCancel": true,
+        "browserText200": true,
+        "exactBriefSelectionPreReviewConflict": true,
+        "syntheticShareHandoffOnly": true,
+        "nativeDiaryRefusal": true
+      },
+      "durable32": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "04742058-a2d9-44c9-a5bd-47cb59eb3850",
+        "exactClearId": "9cfbb06f-0a50-46c6-9af1-2c960481d60a",
+        "exactRetractionId": "b1b91367-307f-475c-9746-96ebda6dd0c4",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true,
+      "continuity31": {
+        "pass": true,
+        "clearAndRetractionExactInspection": true,
+        "ciphertextAndKeysPreserved": true,
+        "genuineVisibleUse": true,
+        "unknownAndReadRetry": true,
+        "keyboardContained": true,
+        "escapeCancel": true,
+        "browserText200": true,
+        "exactBriefSelectionPreReviewConflict": true,
+        "syntheticShareHandoffOnly": true,
+        "nativeDiaryRefusal": true
+      },
+      "durable32": {
+        "pass": true,
+        "processRestart": true,
+        "exactApplyId": "df0ae91c-5da3-40d8-827a-26679382ea7a",
+        "exactClearId": "42b5dcee-e6a7-4795-aded-a39ed3acea21",
+        "exactRetractionId": "5a35a34c-4600-4d97-bf9a-2fe0b2ed6ccf",
+        "originalTimesPreserved": true,
+        "readOnlyCiphertextAndKeys": true,
+        "originalUsePreserved": true,
+        "noStartupReplay": true,
+        "explicitRetryOnly": true,
+        "actualWithdrawalAndRestart": true
+      }
+    }
+  ],
+  "blocked": [],
+  "pass": true,
+  "end": "2026-11-20T16:19:14.216Z",
+  "ownedBrowserAndServerStopped": true
+}

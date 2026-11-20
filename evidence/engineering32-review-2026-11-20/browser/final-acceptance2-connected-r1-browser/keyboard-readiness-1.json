@@ -1,0 +1,11 @@
+{
+  "label": "Open my private Diary. Existing photos, note history and manual comparison on this device.",
+  "first": {
+    "focus": false,
+    "height": 82,
+    "y": 333,
+    "hit": true
+  },
+  "viewportHeight": 844,
+  "reason": "Wait for actual focus ownership/hit testing after platform modal transition; geometry assertions unchanged."
+}
