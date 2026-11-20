@@ -1,0 +1,276 @@
+{
+  "at": "2026-11-20T00:22:26.631518+00:00",
+  "safeForPublication": true,
+  "unreviewedMatches": 0,
+  "hits": [
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 179,
+      "matchSha256": "f57e627d1c7ae64af847d5f8cd7b2e6d5e18bb31b7ba834d8094773cd0eb9b7d",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 184,
+      "matchSha256": "3df00b603eac9e48cf14f70fd398ba6101410121a59e787a742c28e8d0cd08d4",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 189,
+      "matchSha256": "f8da0a7c46dc9b970cbd390ffffad85c1f8665b2e3319f4013e4db7e14237159",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 199,
+      "matchSha256": "9a21b3a84dfa808b66f7315a06a173df7adcea124a1d47d98a1decc768901bc5",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 204,
+      "matchSha256": "8818b89a1f941bd15429d072ab06158192cc6ad5c499ea620b9fd647edcab54b",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 209,
+      "matchSha256": "87b8238afbf4f46ba5e8378bff773b6cd3d13b9ee64aa47bc342d44c28a28146",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 804,
+      "matchSha256": "f57e627d1c7ae64af847d5f8cd7b2e6d5e18bb31b7ba834d8094773cd0eb9b7d",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 809,
+      "matchSha256": "3df00b603eac9e48cf14f70fd398ba6101410121a59e787a742c28e8d0cd08d4",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 814,
+      "matchSha256": "f8da0a7c46dc9b970cbd390ffffad85c1f8665b2e3319f4013e4db7e14237159",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 824,
+      "matchSha256": "9a21b3a84dfa808b66f7315a06a173df7adcea124a1d47d98a1decc768901bc5",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 829,
+      "matchSha256": "8818b89a1f941bd15429d072ab06158192cc6ad5c499ea620b9fd647edcab54b",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 834,
+      "matchSha256": "87b8238afbf4f46ba5e8378bff773b6cd3d13b9ee64aa47bc342d44c28a28146",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 1429,
+      "matchSha256": "f57e627d1c7ae64af847d5f8cd7b2e6d5e18bb31b7ba834d8094773cd0eb9b7d",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 1434,
+      "matchSha256": "3df00b603eac9e48cf14f70fd398ba6101410121a59e787a742c28e8d0cd08d4",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 1439,
+      "matchSha256": "f8da0a7c46dc9b970cbd390ffffad85c1f8665b2e3319f4013e4db7e14237159",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 1449,
+      "matchSha256": "9a21b3a84dfa808b66f7315a06a173df7adcea124a1d47d98a1decc768901bc5",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 1454,
+      "matchSha256": "8818b89a1f941bd15429d072ab06158192cc6ad5c499ea620b9fd647edcab54b",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "BUILD_ARTIFACTS.json",
+      "kind": "email",
+      "line": 1459,
+      "matchSha256": "87b8238afbf4f46ba5e8378bff773b6cd3d13b9ee64aa47bc342d44c28a28146",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/CUMULATIVE_PR48_TO_FINAL.patch.003.txt",
+      "kind": "email",
+      "line": 375,
+      "matchSha256": "a1d5d4103d619e71d41f4d8e96798978615d95d0ed9f31a860b4524840fd8ccf",
+      "disposition": "Exact value in previously screened Engineering30 source fixtures."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 264,
+      "matchSha256": "f57e627d1c7ae64af847d5f8cd7b2e6d5e18bb31b7ba834d8094773cd0eb9b7d",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 269,
+      "matchSha256": "3df00b603eac9e48cf14f70fd398ba6101410121a59e787a742c28e8d0cd08d4",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 274,
+      "matchSha256": "f8da0a7c46dc9b970cbd390ffffad85c1f8665b2e3319f4013e4db7e14237159",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 284,
+      "matchSha256": "9a21b3a84dfa808b66f7315a06a173df7adcea124a1d47d98a1decc768901bc5",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 289,
+      "matchSha256": "8818b89a1f941bd15429d072ab06158192cc6ad5c499ea620b9fd647edcab54b",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 294,
+      "matchSha256": "87b8238afbf4f46ba5e8378bff773b6cd3d13b9ee64aa47bc342d44c28a28146",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 889,
+      "matchSha256": "f57e627d1c7ae64af847d5f8cd7b2e6d5e18bb31b7ba834d8094773cd0eb9b7d",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 894,
+      "matchSha256": "3df00b603eac9e48cf14f70fd398ba6101410121a59e787a742c28e8d0cd08d4",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 899,
+      "matchSha256": "f8da0a7c46dc9b970cbd390ffffad85c1f8665b2e3319f4013e4db7e14237159",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 909,
+      "matchSha256": "9a21b3a84dfa808b66f7315a06a173df7adcea124a1d47d98a1decc768901bc5",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 914,
+      "matchSha256": "8818b89a1f941bd15429d072ab06158192cc6ad5c499ea620b9fd647edcab54b",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 919,
+      "matchSha256": "87b8238afbf4f46ba5e8378bff773b6cd3d13b9ee64aa47bc342d44c28a28146",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 1514,
+      "matchSha256": "f57e627d1c7ae64af847d5f8cd7b2e6d5e18bb31b7ba834d8094773cd0eb9b7d",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 1519,
+      "matchSha256": "3df00b603eac9e48cf14f70fd398ba6101410121a59e787a742c28e8d0cd08d4",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 1524,
+      "matchSha256": "f8da0a7c46dc9b970cbd390ffffad85c1f8665b2e3319f4013e4db7e14237159",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 1534,
+      "matchSha256": "9a21b3a84dfa808b66f7315a06a173df7adcea124a1d47d98a1decc768901bc5",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 1539,
+      "matchSha256": "8818b89a1f941bd15429d072ab06158192cc6ad5c499ea620b9fd647edcab54b",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    },
+    {
+      "path": "parts/LOCAL_ARTIFACT_INVENTORY.json.001.txt",
+      "kind": "email",
+      "line": 1544,
+      "matchSha256": "87b8238afbf4f46ba5e8378bff773b6cd3d13b9ee64aa47bc342d44c28a28146",
+      "disposition": "Generated density asset or explicit synthetic fixture address; no customer identity."
+    }
+  ],
+  "rawCommitIdentityHashes": [
+    "69919571314510ce2bbe0497eecb7a80937ed04d841845ee1f01289c327094b0"
+  ],
+  "allIdentitiesAlreadyPublished": true,
+  "realCustomerDataIncluded": false,
+  "privateKeysIncluded": false,
+  "profilesIncluded": false,
+  "sourcePatchesByteExact": true,
+  "sourceReview": "21 files: consumer recovery/review/discovery, pure observational inspection, synthetic tests/drivers and documentation. No native crypto, production adapters, credentials or clinical inference added.",
+  "screenshots": "Representative screenshots visually reviewed; all input is explicitly synthetic. Encoded PNGs preserve decoded hash; no private device screen or native photo is included."
+}

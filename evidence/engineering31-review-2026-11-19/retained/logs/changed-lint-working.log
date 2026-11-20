@@ -1,0 +1,18 @@
+
+> @layerwell/mobile@0.1.0 lint
+> eslint . --max-warnings=0
+
+
+<HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile\src\features\shelf\SavedProductCompare.tsx
+  36:29  warning  The ref value 'serial.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'serial.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 1 problem (0 errors, 1 warning)
+
+ESLint found too many warnings (maximum: 0).
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint . --max-warnings=0

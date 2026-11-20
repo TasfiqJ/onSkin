@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/actualRoutineJourney.test.ts src/features/shelf/coreJourney.campaign06.test.ts src/features/photos/photoRecoveryCopy.test.ts
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+
+ Test Files  3 passed (3)
+      Tests  69 passed (69)
+   Start at  18:32:56
+   Duration  7.10s (transform 1.63s, setup 0ms, import 2.38s, tests 11.36s, environment 0ms)
+

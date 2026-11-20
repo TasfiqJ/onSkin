@@ -1,0 +1,4 @@
+{
+  "message": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(g.focus && g.hit && g.height >= 44 && g.y >= 0 && g.y + g.height <= height)\n",
+  "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(g.focus && g.hit && g.height >= 44 && g.y >= 0 && g.y + g.height <= height)\n\n    at keyboard (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:38:3)\n    at async consumerContinuity31 (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/consumer-continuity31.mjs:96:3)\n    at async file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:105:26"
+}

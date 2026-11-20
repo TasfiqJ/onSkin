@@ -1,0 +1,123 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/coreJourney.campaign06.test.ts src/features/shelf/savedProductCompare.test.ts src/features/photos/progressDetailUX.c08b2.test.ts src/features/photos/progressDataAuthority.c08a1.test.ts src/features/routine/actualRoutineJourney.test.ts
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/photos/progressDataAuthority.c08a1.test.ts > C-08A1 Progress photo read authority > does not display unknown exception text as a recovery explanation
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/photos/progressDataAuthority.c08a1.test.ts (17 tests | 1 failed) 4349ms
+     × does not display unknown exception text as a recovery explanation 169ms
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > retires removed editor callbacks while the same-owner storage recovery gate is visible
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > keeps temporary image cleanup retry above a failed storage gate, never resends and coalesces duplicate retries
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > keeps the unsaved draft across a failed refetch and the existing storage Retry gate
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > does not save a stale rendered note callback after close/regrant or owner replacement
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > runs one local deletion and waits for successful sensitive-memory purge before leaving detail
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > purges at forced health teardown without late navigation or later-owner continuation
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > cancels retained and in-flight photo snapshots so a deleted image cannot republish later
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps a failed save and generic exit recovery visible through a failed source refetch
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > blocks captured Back and native/replacement removal through store and memory awaits, then releases exactly once
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > forced lock removal purges immediately and the old completion cannot navigate or borrow a new authority
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps a memory-only retry reachable even when mutation readback and the source gate fail
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/photos/progressDetailUX.c08b2.test.ts (45 tests | 11 failed) 36835ms
+     × retires removed editor callbacks while the same-owner storage recovery gate is visible 617ms
+     × keeps temporary image cleanup retry above a failed storage gate, never resends and coalesces duplicate retries 584ms
+     × keeps the unsaved draft across a failed refetch and the existing storage Retry gate 431ms
+     × does not save a stale rendered note callback after close/regrant or owner replacement 430ms
+     × runs one local deletion and waits for successful sensitive-memory purge before leaving detail 478ms
+     × purges at forced health teardown without late navigation or later-owner continuation 474ms
+     × cancels retained and in-flight photo snapshots so a deleted image cannot republish later 445ms
+     × keeps a failed save and generic exit recovery visible through a failed source refetch 677ms
+     × blocks captured Back and native/replacement removal through store and memory awaits, then releases exactly once 476ms
+     × forced lock removal purges immediately and the old completion cannot navigate or borrow a new authority 477ms
+     × keeps a memory-only retry reachable even when mutation readback and the source gate fail 600ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/photos/progressDataAuthority.c08a1.test.ts > C-08A1 Progress photo read authority > does not display unknown exception text as a recovery explanation
+AssertionError: expected ' Private storage Your timeline could …' to contain 'Recovery work may be unfinished'
+
+Expected: "Recovery work may be unfinished"
+Received: " Private storage Your timeline could not open. Native encrypted photo storage is unavailable in this browser. This does not mean your Diary is empty. Open the original supported device to inspect existing photos. A retry cannot add native storage or replace a missing key. Try again DETAIL_UNAVAILABLE"
+
+ ❯ src/features/photos/progressDataAuthority.c08a1.test.ts:392:28
+    390|     expect(renderedText()).not.toContain('private-owner-path');
+    391|     expect(renderedText()).not.toContain('Photo files disagree');
+    392|     expect(renderedText()).toContain('Recovery work may be unfinished'…
+       |                            ^
+    393|   });
+    394|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > retires removed editor callbacks while the same-owner storage recovery gate is visible
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > keeps temporary image cleanup retry above a failed storage gate, never resends and coalesces duplicate retries
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > keeps the unsaved draft across a failed refetch and the existing storage Retry gate
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > does not save a stale rendered note callback after close/regrant or owner replacement
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > runs one local deletion and waits for successful sensitive-memory purge before leaving detail
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > purges at forced health teardown without late navigation or later-owner continuation
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2 rendered detail with real source gate, mutation hooks and note coordinator > cancels retained and in-flight photo snapshots so a deleted image cannot republish later
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps a failed save and generic exit recovery visible through a failed source refetch
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > blocks captured Back and native/replacement removal through store and memory awaits, then releases exactly once
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > forced lock removal purges immediately and the old completion cannot navigate or borrow a new authority
+ FAIL  src/features/photos/progressDetailUX.c08b2.test.ts > C-08B2-R3 real React Navigation removal guard > keeps a memory-only retry reachable even when mutation readback and the source gate fail
+Error: [vitest] No "Platform" export is defined on the "react-native" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("react-native"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ❯ PhotoStorageGate src/features/photos/PhotoStorageGate.tsx:96:12
+
+ ❯ Object.react_stack_bottom_frame ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20
+ ❯ renderWithHooks ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22
+ ❯ updateFunctionComponent ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19
+ ❯ beginWork ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18
+ ❯ runWithFiberInDEV ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13
+ ❯ performUnitOfWork ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22
+ ❯ workLoopSync ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+
+ Test Files  2 failed | 3 passed (5)
+      Tests  12 failed | 119 passed (131)
+   Start at  18:35:19
+   Duration  37.96s (transform 2.41s, setup 0ms, import 4.44s, tests 52.73s, environment 1ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/shelf/coreJourney.campaign06.test.ts src/features/shelf/savedProductCompare.test.ts src/features/photos/progressDetailUX.c08b2.test.ts src/features/photos/progressDataAuthority.c08a1.test.ts src/features/routine/actualRoutineJourney.test.ts

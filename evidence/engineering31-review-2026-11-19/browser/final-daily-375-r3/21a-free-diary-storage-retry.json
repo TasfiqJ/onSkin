@@ -1,0 +1,356 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 \u00c2\u00b7 7:08 PM Good evening. 1 step left in your evening routine. Shelf projection \u00c2\u00b7 no actual routine applied. Review and apply to record version-bound use. SKIN CYCLING \u00c2\u00b7 NIGHT 1 OF 7 Week ahead \u00e2\u20ac\u00ba Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Reco ver Evening routine 0 of 1 Glycolic 7% toner On exfoliation nights only. NEXT Your optional change notes Record a change (optional) Open your private recorded changes or start a factual note. This is separate from check-offs. Saved change drafts Private storage Your timeline could not open. Private photo storage could not confirm a complete timeline. Recovery work may be unfinished. Try again when your phone's secure storage is available. Native encrypted photo storage is unavailable in this browser. This does not mean your Diary is empty. Open the original supported device to inspect existing photos. A retry cannot add native storage or replace a missing key. It is still unavailable. A complete timeline has not been confirmed. Try again Saved bottle drafts Saved intake drafts Shelf 3 products \u00ef\u00bc\u2039 Add QUICK FIND \u00c2\u00b7 SAVED PRODUCTS Clear 3 of 3 saved products All Actives Expiring Everything on your shelf, ordered by supported tracked dates. Interaction guidance is unavailable We won't show a compatibility result for these products until that review is complete. FIRST ROUTINE Explore a routine from your Shelf. For 3 saved products. The next screen checks access to the full routine builder. Missing steps stay visible, not invented. Shelf keeps your product list instead of making you remember it. Products awaiting reviewed order or timing stay out of a routine. Your saved records remain available. Build my routine Mineral SPF 50 Sunscreen (SPF) \u00c2\u00b7 opened Nov \u00c2\u00b7 Date unknown Date unknown Glycolic 7% toner Toner / essence \u00c2\u00b7 opened Nov \u00c2\u00b7 Date unknown Date unknown Retinol 0.3% serum Retinol / retinoid serum \u00c2\u00b7 opened Nov \u00c2\u00b7 Date unknown Date unknown Add a product Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Review actual routine version and recorded use",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 124
+    },
+    {
+      "disabled": false,
+      "height": 139,
+      "hitOk": false,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 196
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "selected": false,
+      "width": 287,
+      "x": 44,
+      "y": 403
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Record a change (optional)",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 551
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Try again",
+      "role": "button",
+      "selected": false,
+      "width": 319,
+      "x": 28,
+      "y": 396
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Saved bottle drafts",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 0
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Saved intake drafts",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 56
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 267.94,
+      "y": 120
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Quick Find saved products",
+      "role": "input",
+      "selected": false,
+      "width": 268.61,
+      "x": 24,
+      "y": 220
+    },
+    {
+      "disabled": true,
+      "height": 48,
+      "hitOk": false,
+      "label": "Clear Quick Find",
+      "role": "button",
+      "selected": false,
+      "width": 50.39,
+      "x": 300.61,
+      "y": 221
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 312
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": true,
+      "width": 81.55,
+      "x": 106.1,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 187.5,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 11,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Review actual routine version and recorded use",
+        "role": "button",
+        "selected": false,
+        "width": 327,
+        "x": 24,
+        "y": 124
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 139,
+        "hitOk": false,
+        "label": "See your cycle week ahead",
+        "role": "button",
+        "selected": false,
+        "width": 327,
+        "x": 24,
+        "y": 196
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Glycolic 7% toner",
+        "role": "checkbox",
+        "selected": false,
+        "width": 287,
+        "x": 44,
+        "y": 403
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Record a change (optional)",
+        "role": "button",
+        "selected": false,
+        "width": 293,
+        "x": 41,
+        "y": 551
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Saved bottle drafts",
+        "role": "button",
+        "selected": false,
+        "width": 327,
+        "x": 24,
+        "y": 0
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Saved intake drafts",
+        "role": "button",
+        "selected": false,
+        "width": 327,
+        "x": 24,
+        "y": 56
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Add a product to your shelf",
+        "role": "button",
+        "selected": false,
+        "width": 83.06,
+        "x": 267.94,
+        "y": 120
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Quick Find saved products",
+        "role": "input",
+        "selected": false,
+        "width": 268.61,
+        "x": 24,
+        "y": 220
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "All",
+        "role": "button",
+        "selected": false,
+        "width": 57.19,
+        "x": 24,
+        "y": 312
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Actives",
+        "role": "button",
+        "selected": false,
+        "width": 90.88,
+        "x": 91.19,
+        "y": 312
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Expiring",
+        "role": "button",
+        "selected": false,
+        "width": 96.73,
+        "x": 192.06,
+        "y": 312
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8600/progress",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

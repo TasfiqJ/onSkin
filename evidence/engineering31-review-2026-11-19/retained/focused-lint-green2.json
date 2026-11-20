@@ -1,0 +1,41 @@
+{
+  "label": "focused-lint-green2",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--",
+    "eslint",
+    "src/features/shelf/SavedProductCompare.tsx",
+    "src/features/shelf/AppointmentBriefEditor.tsx",
+    "src/features/routine/ActualRoutinePanel.tsx",
+    "--max-warnings=0"
+  ],
+  "before": {
+    "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+    "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/(tabs)/progress.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/features/photos/PhotoStorageGate.tsx\n M apps/mobile/src/features/photos/photoRecoveryCopy.ts\n M apps/mobile/src/features/photos/progressDataAuthority.c08a1.test.ts\n M apps/mobile/src/features/photos/progressDetailUX.c08b2.test.ts\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx\n M apps/mobile/src/features/shelf/SavedProductCompare.tsx\n M apps/mobile/src/features/shelf/appointmentBriefRecords.ts\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/diary-note-history.mjs\n?? apps/mobile/src/features/photos/photoRecoveryCopy.test.ts\n?? docs/ENGINEERING31_REPORT.md\n?? scripts/e2e/consumer-continuity31.mjs",
+    "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+    "diffSha256": "fac71b95587f53b2bc72a6ee4bc20ba1bfc992ff32b3c110c19a486c587a108a"
+  },
+  "start": "2026-11-19T23:47:59.147122+00:00",
+  "freeBytesBefore": 156170563584,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+    "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/(tabs)/progress.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/features/photos/PhotoStorageGate.tsx\n M apps/mobile/src/features/photos/photoRecoveryCopy.ts\n M apps/mobile/src/features/photos/progressDataAuthority.c08a1.test.ts\n M apps/mobile/src/features/photos/progressDetailUX.c08b2.test.ts\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx\n M apps/mobile/src/features/shelf/SavedProductCompare.tsx\n M apps/mobile/src/features/shelf/appointmentBriefRecords.ts\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M docs/USER_FLOW_TREE.md\n M scripts/e2e/actual-apply-outcome29.mjs\n M scripts/e2e/diary-note-history.mjs\n?? apps/mobile/src/features/photos/photoRecoveryCopy.test.ts\n?? docs/ENGINEERING31_REPORT.md\n?? scripts/e2e/consumer-continuity31.mjs",
+    "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+    "diffSha256": "fac71b95587f53b2bc72a6ee4bc20ba1bfc992ff32b3c110c19a486c587a108a"
+  },
+  "end": "2026-11-19T23:48:05.898597+00:00",
+  "freeBytesAfter": 156170563584,
+  "logBytes": 0,
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

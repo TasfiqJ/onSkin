@@ -1,0 +1,36 @@
+{
+  "label": "final-lint",
+  "command": [
+    "npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "before": {
+    "head": "5d2cb11d2f1922a70061304aada0714445a8e4b5",
+    "tree": "d4169e898f5be0185011ce550bf94aaf93208cda",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "dfb10a4e57ddf1cd057ee78be38e822e4c1d5cf1c88490e84e829ef80e1dc9b2",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-19T23:51:06.221074+00:00",
+  "freeBytesBefore": 156119379968,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "5d2cb11d2f1922a70061304aada0714445a8e4b5",
+    "tree": "d4169e898f5be0185011ce550bf94aaf93208cda",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "dfb10a4e57ddf1cd057ee78be38e822e4c1d5cf1c88490e84e829ef80e1dc9b2",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-19T23:52:33.309312+00:00",
+  "freeBytesAfter": 156042350592,
+  "logBytes": 1536,
+  "logSha256": "f131dfab2f81f77b5d1722d51bbbcbf8f08db52a51b60c5678c4a51f6607b209"
+}

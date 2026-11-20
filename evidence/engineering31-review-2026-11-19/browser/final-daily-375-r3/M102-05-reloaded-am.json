@@ -1,0 +1,102 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 Good morning. 1 step left in your morning routine. Shelf projection \u00c2\u00b7 no actual routine applied. Review and apply to record version-bound use. Morning routine 1 of 2 Recorded - cannot undo M102 synthetic moisturizer Seal everything in. Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Your optional change notes Record a change (optional) Open your private recorded changes or start a factual note. This is separate from check-offs. Saved change drafts \u00e2\u0153\u00a6 A few honest suggestions 1 thing we\u00e2\u20ac\u2122d gently suggest \u00e2\u20ac\u00ba Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Review actual routine version and recorded use",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 124
+    },
+    {
+      "disabled": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "M102 synthetic moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 247
+    },
+    {
+      "disabled": false,
+      "height": 73,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 323
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Record a change (optional)",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 477
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 81.55,
+      "x": 24.85,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 106.25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 187.5,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8600/today?routine=AM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

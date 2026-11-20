@@ -1,0 +1,76 @@
+{
+  "start": "2026-11-20T00:15:03.907Z",
+  "head": "199db7d7b90df9793ca980916701f1dfb9b83df8",
+  "tree": "4a4611c66134ce01046645dc64fed5bcbb249a0f",
+  "status": "",
+  "surface": "Actual local Expo/Edge UI and encrypted records; synthetic owner and acknowledgement faults, no native qualification",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 667,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true,
+      "continuity31": {
+        "pass": true,
+        "clearAndRetractionExactInspection": true,
+        "ciphertextAndKeysPreserved": true,
+        "genuineVisibleUse": true,
+        "unknownAndReadRetry": true,
+        "keyboardContained": true,
+        "escapeCancel": true,
+        "browserText200": true,
+        "exactBriefSelectionPreReviewConflict": true,
+        "syntheticShareHandoffOnly": true,
+        "nativeDiaryRefusal": true
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true,
+      "continuity31": {
+        "pass": true,
+        "clearAndRetractionExactInspection": true,
+        "ciphertextAndKeysPreserved": true,
+        "genuineVisibleUse": true,
+        "unknownAndReadRetry": true,
+        "keyboardContained": true,
+        "escapeCancel": true,
+        "browserText200": true,
+        "exactBriefSelectionPreReviewConflict": true,
+        "syntheticShareHandoffOnly": true,
+        "nativeDiaryRefusal": true
+      }
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "pass": true,
+      "explicitOnboarding": true,
+      "syntheticAcknowledgementFault": true,
+      "exactReadOnlyOutcome": true,
+      "continuity31": {
+        "pass": true,
+        "clearAndRetractionExactInspection": true,
+        "ciphertextAndKeysPreserved": true,
+        "genuineVisibleUse": true,
+        "unknownAndReadRetry": true,
+        "keyboardContained": true,
+        "escapeCancel": true,
+        "browserText200": true,
+        "exactBriefSelectionPreReviewConflict": true,
+        "syntheticShareHandoffOnly": true,
+        "nativeDiaryRefusal": true
+      }
+    }
+  ],
+  "blocked": [],
+  "pass": true,
+  "end": "2026-11-20T00:19:03.245Z",
+  "ownedBrowserAndServerStopped": true
+}

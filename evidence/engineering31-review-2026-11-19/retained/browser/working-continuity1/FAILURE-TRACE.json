@@ -1,0 +1,4 @@
+{
+  "message": "Error: Could not scroll control \"Open my private Diary\" into view.",
+  "stack": "Error: Could not scroll control \"Open my private Diary\" into view.\n    at assert (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:259:25)\n    at Module.scrollControlIntoView (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:1113:3)\n    at async keyboard (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:36:3)\n    at async consumerContinuity31 (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/consumer-continuity31.mjs:89:3)\n    at async file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:105:26"
+}

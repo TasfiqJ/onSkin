@@ -1,0 +1,40 @@
+{
+  "label": "final-driver-regressions-r2",
+  "command": [
+    "node",
+    "--test",
+    "scripts/e2e/manual-opening-choice30.test.mjs",
+    "scripts/e2e/onboarding-first-session35.test.mjs",
+    "scripts/e2e/retained-safety-assertions.test.mjs",
+    "scripts/e2e/optional-change41.test.mjs",
+    "scripts/e2e/owned-bottle-formula38.test.mjs",
+    "scripts/e2e/formula-driver-coverage46.test.mjs",
+    "scripts/e2e/cat04-catalog-recovery-audit.test.mjs"
+  ],
+  "before": {
+    "head": "57532a7e409f7db6eab3b7fc726af19bedeadf41",
+    "tree": "fc957e8492cc0cb6d83c1f8a31b7dd6be0981f04",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "1d841129d1a8fc766d92ffe490b88c959fb92181a1add75e09fd8b401b1fa34f",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-20T00:01:58.409622+00:00",
+  "freeBytesBefore": 154639519744,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "57532a7e409f7db6eab3b7fc726af19bedeadf41",
+    "tree": "fc957e8492cc0cb6d83c1f8a31b7dd6be0981f04",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "1d841129d1a8fc766d92ffe490b88c959fb92181a1add75e09fd8b401b1fa34f",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-20T00:02:00.124172+00:00",
+  "freeBytesAfter": 154633871360,
+  "logBytes": 32230,
+  "logSha256": "9f7b256e1f0cc792628c2d101d9730fa7170cf96880a568e8111a8070420f1ab"
+}

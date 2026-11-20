@@ -1,0 +1,40 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/actualRoutineJourney.test.ts src/features/shelf/coreJourney.campaign06.test.ts src/features/photos/photoRecoveryCopy.test.ts
+
+
+ RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/apps/mobile
+
+stderr | src/features/shelf/coreJourney.campaign06.test.ts > selects the opened Diary text explicitly and rereads it before sharing; changed text and retired detail refuse
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/shelf/coreJourney.campaign06.test.ts (39 tests | 1 failed) 5733ms
+   × selects the opened Diary text explicitly and rereads it before sharing; changed text and retired detail refuse 189ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/shelf/coreJourney.campaign06.test.ts > selects the opened Diary text explicitly and rereads it before sharing; changed text and retired detail refuse
+AssertionError: expected "vi.fn()" to be called 2 times, but got 3 times
+ ❯ src/features/shelf/coreJourney.campaign06.test.ts:440:104
+    438|   const oldShare = renderer!.root.findAll((node) => node.props.label =…
+    439|   const bytes = new Map(ports.bytes);
+    440|   await press('Share reviewed brief'); expect(ports.share).toHaveBeenC…
+       |                                                                                                        ^
+    441|   expect(ports.bytes).toEqual(bytes);
+    442|   ports.diary.mockResolvedValue({ id: 'opened-note', date: '2026-10-05…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 68 passed (69)
+   Start at  18:31:54
+   Duration  7.03s (transform 1.57s, setup 0ms, import 2.31s, tests 11.30s, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location <HOME>\Documents\ChatGPT\MasterV2Code\c16-candidate\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/routine/actualRoutineJourney.test.ts src/features/shelf/coreJourney.campaign06.test.ts src/features/photos/photoRecoveryCopy.test.ts

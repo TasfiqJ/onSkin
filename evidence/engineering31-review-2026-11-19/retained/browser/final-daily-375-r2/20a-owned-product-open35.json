@@ -1,0 +1,113 @@
+{
+  "bodyText": "< Mineral SPF 50 data / Added by you Bottle & formula history View or record this bottle\u00e2\u20ac\u2122s label, variant and market. Confirmation is your observation. CATALOG Added by you Manual Added by hand. It can support your shelf and routine, but not high-confidence product recommendations. category spf Report an issue Opened November 2026 \u00c2\u00b7 edit PAO unknown \u00c2\u00b7 edit Recorded package date not entered \u00c2\u00b7 set Date unknown WHAT IT CONTRIBUTES Sunscreen ROUTINE ROLE Used in your Morning routine. Review the AM/PM plan before you check it off. Replace Mark finished \u00f0\u0178\u2014\u2018\u00ef\u00b8\u017d",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "More options",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 303,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 94,
+      "hitOk": true,
+      "label": "Bottle & formula history",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 152
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Report an issue",
+      "role": "button",
+      "selected": false,
+      "width": 105.48,
+      "x": 43,
+      "y": 423
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit opened date",
+      "role": "button",
+      "selected": false,
+      "width": 289,
+      "x": 43,
+      "y": 503
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit period after opening",
+      "role": "button",
+      "selected": false,
+      "width": 289,
+      "x": 43,
+      "y": 559
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Replace",
+      "role": "button",
+      "selected": false,
+      "width": 127.5,
+      "x": 24,
+      "y": 617
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Mark finished",
+      "role": "button",
+      "selected": false,
+      "width": 129.5,
+      "x": 161.5,
+      "y": 617
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Remove or discard",
+      "role": "button",
+      "selected": false,
+      "width": 50,
+      "x": 301,
+      "y": 617
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8600/shelf/e4cb7006-81b6-4cb7-bdc5-8b46258e6656",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

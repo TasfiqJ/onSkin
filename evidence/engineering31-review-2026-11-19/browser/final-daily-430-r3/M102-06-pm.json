@@ -1,0 +1,135 @@
+{
+  "bodyText": "THURSDAY, NOVEMBER 19 \u00c2\u00b7 7:17 PM 1 day Good evening. Evening routine complete. Shelf projection \u00c2\u00b7 no actual routine applied. Review and apply to record version-bound use. SKIN CYCLING \u00c2\u00b7 NIGHT 1 OF 7 Week ahead \u00e2\u20ac\u00ba Exfoliate Recover Retinoid Recover Retinoid Recover Recover Evening routine 2 of 2 Recorded - cannot undo Glycolic 7% toner On exfoliation nights only. Recorded - cannot undo M102 synthetic moisturizer Seal everything in. For your next visit Evening check-offs saved on this device. Return when you\u00e2\u20ac\u2122re ready for your morning routine. If you\u00e2\u20ac\u2122d like, review your week or choose reminder options. Review this week \u00e2\u2020\u2019 Reminder options \u00e2\u2020\u2019 Your optional change notes Record a change (optional) Open your private recorded changes or start a factual note. This is separate from check-offs. Saved change drafts Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "View your streak and adherence",
+      "role": "button",
+      "selected": false,
+      "width": 85.39,
+      "x": 320.61,
+      "y": -23
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Review actual routine version and recorded use",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 129
+    },
+    {
+      "disabled": false,
+      "height": 109,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 201
+    },
+    {
+      "disabled": true,
+      "height": 94,
+      "hitOk": true,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "selected": false,
+      "width": 342,
+      "x": 44,
+      "y": 378
+    },
+    {
+      "disabled": true,
+      "height": 95,
+      "hitOk": true,
+      "label": "M102 synthetic moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 342,
+      "x": 44,
+      "y": 472
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Review this week",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 44,
+      "y": 743
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Reminder options",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 44,
+      "y": 791
+    },
+    {
+      "disabled": false,
+      "height": 61.61,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 94.4,
+      "x": 26.72,
+      "y": 852.9
+    },
+    {
+      "disabled": false,
+      "height": 61.38,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 94.05,
+      "x": 120.95,
+      "y": 853.31
+    },
+    {
+      "disabled": false,
+      "height": 61.38,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 94.05,
+      "x": 215,
+      "y": 853.31
+    },
+    {
+      "disabled": false,
+      "height": 61.38,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 94.05,
+      "x": 309.05,
+      "y": 853.31
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8602/today?routine=PM",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

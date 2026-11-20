@@ -1,0 +1,1010 @@
+diff --git a/PROGRESS.md b/PROGRESS.md
+index a6f1602b0fc0106cb17db65d5f6a40a042c84e22..318fd9a949c52b78df00b05a46e2961d73821de4 100644
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -9057,3 +9057,7 @@ Repaired false no-apply copy after an uncertain committed apply and later stale
+ # Consumer manual-intake recovery Engineering30 — 2026-11-19
+ 
+ Authorization BRAIN-ONSKIN-AUTONOMOUS-LOCAL-PRODUCT-30. Implemented guarded Cancel/Close and explicit save-before-leave, working opening-choice continuity, accessible named draft inventory/focus, canceled-review retirement, visible conflict recovery and truthful raw/parsed/Shelf/routine/use review. Reproduced the original daily-loop disabled-Add setup and repaired offscreen driver interaction without changing validation. Added connected exact saved-product → bottle correction → actual apply → separate visible use → reload/removal evidence. [Source report](docs/ENGINEERING30_REPORT.md); final clean-source validation and retained failures, all38/all18, patches/ancestry and publication receipts live in the separate Engineering30 evidence-only checkpoint. All38/all18 remain UNACCEPTED; release NO_GO. Production authority/native/provider/scientific acceptance remains closed. No Engineering31 before independent Brain review.
++
++# Connected consumer continuity Engineering31 - 2026-11-19
++
++Authorization BRAIN-ONSKIN-AUTONOMOUS-LOCAL-PRODUCT-31. Extended the existing current-plan/actual-use and selected-brief journeys with exact read-only clear/retraction outcome inspection, retained current/historical names and order, scrollable keyboard-contained routine decisions, fresh pre-review source verification, cancel/reselection and real navigation retirement. You exposes private Diary history directly; browser native-storage absence is distinguished from confirmed-empty history and key/metadata/cleanup failures. Original ciphertext, key inspection, deletion priority, immutable histories and Engineering30 intake/use safeguards remain intact. Focused RED/GREEN, boundary, retained Diary/browser diagnostics and clean final test/build/browser receipts are recorded in the separate Engineering31 GitHub evidence index; failures are preserved. [Source report](docs/ENGINEERING31_REPORT.md). All38/all18 remain UNACCEPTED; release NO_GO. J01 Visible Pores only, positive admission closed. Production authority and native/device/provider/science qualification remain absent. No application source push, hosted CI, paid/native attempt, account change, merge, deployment or release. Independent Brain review is required before Engineering32.
+diff --git a/apps/mobile/src/app/(tabs)/progress.tsx b/apps/mobile/src/app/(tabs)/progress.tsx
+index 63532438d1233dbbf3767aa9425d49aaa4829f91..7f9fc0566228e85c343550a5ac99559e8ed24dc2 100644
+--- a/apps/mobile/src/app/(tabs)/progress.tsx
++++ b/apps/mobile/src/app/(tabs)/progress.tsx
+@@ -119,6 +119,7 @@ function FirstRun({ compact = false }: { compact?: boolean }) {
+   return (
+     <View className={compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'}>
+       <Card className={compact ? 'mb-2 p-3' : 'mb-5'}>
++        <Text accessibilityLiveRegion="polite" variant="bodySm">No existing photos were found in the confirmed local Diary.</Text>
+         <Text
+           variant="titleSm"
+           style={{ fontSize: compact ? 22 : 26, lineHeight: compact ? 25 : 30 }}
+diff --git a/apps/mobile/src/app/(tabs)/you.tsx b/apps/mobile/src/app/(tabs)/you.tsx
+index e6576bda0edd27b808558e7cd7e983d9552cf3aa..cd812fa6409d30e41f9464bc48c9ee99356c86b2 100644
+--- a/apps/mobile/src/app/(tabs)/you.tsx
++++ b/apps/mobile/src/app/(tabs)/you.tsx
+@@ -799,6 +799,7 @@ export default function YouScreen() {
+             <Text variant="label" tone="muted" className="mb-1">YOUR RECORDS</Text>
+             <Text variant="bodySm" tone="muted">Revisit saved routines or prepare a factual brief. Both remain available without Pro or active Shelf products.</Text>
+             <Row label="Review and save routine records" onPress={() => router.push('/routine/records')} />
++            <Row label="Open my private Diary" hint="Existing photos, note history and manual comparison on this device." onPress={() => router.push('/progress')} />
+             <SavedRoutineHistory />
+               <Row label="Edit morning record order" hint="Ordinary edits are free. Source changes still require review." onPress={() => router.push('/routine/reorder?phase=am')} />
+               <Row label="Edit evening record order" hint="Edit saved order without opening paid routine intelligence." onPress={() => router.push('/routine/reorder?phase=pm')} />
+diff --git a/apps/mobile/src/features/photos/PhotoStorageGate.tsx b/apps/mobile/src/features/photos/PhotoStorageGate.tsx
+index 05dd94594cca3744bf80d4f48320aebef4dea3c4..bafcf09d046f5912492e9e2c09925265201301ea 100644
+--- a/apps/mobile/src/features/photos/PhotoStorageGate.tsx
++++ b/apps/mobile/src/features/photos/PhotoStorageGate.tsx
+@@ -1,5 +1,5 @@
+ import { useRef, useState, type ReactNode } from 'react';
+-import { Pressable, ScrollView, View } from 'react-native';
++import { Platform, Pressable, ScrollView, View } from 'react-native';
+ import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ 
+ import { Text } from '@/components/ui';
+@@ -95,6 +95,9 @@ export function PhotoStorageGate({ children, tone = 'night', onExit }: PhotoStor
+         >
+           {PHOTO_COPY.storage.body}
+         </Text>
++        {Platform.OS === 'web' ? <Text variant="bodySm" className="mt-3 text-center" style={{ color: mutedColor, lineHeight: 22 }}>
++          Native encrypted photo storage is unavailable in this browser. This does not mean your Diary is empty. Open the original supported device to inspect existing photos. A retry cannot add native storage or replace a missing key.
++        </Text> : null}
+         {recoveryDetail ? <Text variant="bodySm" className="mt-3 text-center" style={{ color: foregroundColor, lineHeight: 22 }}>
+           {recoveryDetail}
+         </Text> : null}
+diff --git a/apps/mobile/src/features/photos/photoRecoveryCopy.test.ts b/apps/mobile/src/features/photos/photoRecoveryCopy.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..62f6132fba92c1b93db16f735aa8bb3f2f9fa251
+--- /dev/null
++++ b/apps/mobile/src/features/photos/photoRecoveryCopy.test.ts
+@@ -0,0 +1,11 @@
++import { expect, it } from 'vitest';
++import { photoRecoveryCopy } from './photoRecoveryCopy';
++
++it.each(['PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE', 'PHOTO_CONTENT_KEY_INVALID', 'PHOTO_METADATA_UNSUPPORTED', 'PHOTO_STORAGE_CLEAR_UNCONFIRMED'])(
++  'explains %s without describing an empty or restored Diary', code => {
++    expect(photoRecoveryCopy(new Error(code))).toBeTypeOf('string');
++    expect(photoRecoveryCopy(new Error(code))).not.toMatch(/restored|no photos|reset complete/i);
++  });
++it('does not reveal arbitrary exception content', () => {
++  expect(photoRecoveryCopy(new Error('private path or text'))).toBeNull(); expect(photoRecoveryCopy('private text')).toBeNull();
++});
+diff --git a/apps/mobile/src/features/photos/photoRecoveryCopy.ts b/apps/mobile/src/features/photos/photoRecoveryCopy.ts
+index ec3e8147032493cd6b5d08cd0a11f0dc46cad79d..e08edb33a10f482b193380d3fdbf5e583aa878b3 100644
+--- a/apps/mobile/src/features/photos/photoRecoveryCopy.ts
++++ b/apps/mobile/src/features/photos/photoRecoveryCopy.ts
+@@ -10,7 +10,15 @@ export function photoRecoveryCopy(error: unknown): string | null {
+       return 'Recovery could not prove which retained photo file belongs to this operation. Its evidence is preserved. Retrying may remain unavailable; automatic repair is not available.';
+     case 'PHOTO_CONTENT_KEY_MISSING':
+       return 'The original photo key is unavailable. Try again after unlocking your phone. If that key is lost, these encrypted photos cannot be recovered here.';
++    case 'PHOTO_CONTENT_KEY_INVALID':
++      return 'The retained photo key could not be authenticated. Existing encrypted files are preserved. Creating a replacement key would not recover them.';
++    case 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE':
++      return 'Secure photo-key storage is unavailable. A complete Diary has not been confirmed. Unlock the supported device and retry; existing records and keys are not replaced.';
++    case 'PHOTO_METADATA_UNSUPPORTED':
++    case 'PHOTO_METADATA_INVALID':
++      return 'Saved Diary metadata is unreadable or uses an unsupported format. Existing records and photo files are preserved. No empty replacement history was created.';
+     case 'PHOTO_ERASURE_UNCONFIRMED':
++    case 'PHOTO_STORAGE_CLEAR_UNCONFIRMED':
+       return 'Photo cleanup is not fully confirmed. Its remaining work stays recorded. Try again to verify the remaining cleanup.';
+     default:
+       return null;
+diff --git a/apps/mobile/src/features/photos/progressDataAuthority.c08a1.test.ts b/apps/mobile/src/features/photos/progressDataAuthority.c08a1.test.ts
+index 776895a8012fd9f56c7f4d7f75c023ce362ec56a..6715745badcf2cf9edcbad345c6e878d55536870 100644
+--- a/apps/mobile/src/features/photos/progressDataAuthority.c08a1.test.ts
++++ b/apps/mobile/src/features/photos/progressDataAuthority.c08a1.test.ts
+@@ -27,6 +27,7 @@ const mocks = vi.hoisted(() => ({
+ }));
+ 
+ vi.mock('react-native', () => ({
++  Platform: { OS: 'web' },
+   Pressable: 'Pressable',
+   ScrollView: 'ScrollView',
+   View: 'View',
+diff --git a/apps/mobile/src/features/photos/progressDetailUX.c08b2.test.ts b/apps/mobile/src/features/photos/progressDetailUX.c08b2.test.ts
+index bf2ce5d0536928ca1ac1fcca837f4670d9144fae..29b5c02865002a362da8c79fb29c6003e2138641 100644
+--- a/apps/mobile/src/features/photos/progressDetailUX.c08b2.test.ts
++++ b/apps/mobile/src/features/photos/progressDetailUX.c08b2.test.ts
+@@ -50,6 +50,7 @@ const mocks = vi.hoisted(() => ({
+ }));
+ 
+ vi.mock('react-native', () => ({
++  Platform: { OS: 'web' },
+   View: 'View',
+   TextInput: 'TextInput',
+   Pressable: 'Pressable',
+diff --git a/apps/mobile/src/features/routine/ActualRoutinePanel.tsx b/apps/mobile/src/features/routine/ActualRoutinePanel.tsx
+index 29544178dfd43096c773483a7b486818036160ea..c02b549bd73912b276fd1cd111f1512bc82d740e 100644
+--- a/apps/mobile/src/features/routine/ActualRoutinePanel.tsx
++++ b/apps/mobile/src/features/routine/ActualRoutinePanel.tsx
+@@ -3,11 +3,13 @@ import { useFocusEffect } from 'expo-router';
+ import { randomUUID } from 'expo-crypto';
+ import { useQuery, useQueryClient } from '@tanstack/react-query';
+ import { useCallback, useEffect, useRef, useState } from 'react';
+-import { View } from 'react-native';
++import { Modal, ScrollView, View } from 'react-native';
++import { useModalBackgroundIsolation } from '@/lib/accessibility/modalBackground';
++import { motionAwareModalAnimation, useReduceMotionPreference } from '@/lib/accessibility/useReduceMotionPreference';
+ import { Button, Text } from '@/components/ui';
+ import { assertOriginalHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
+ import { applyCurrentActualRoutine, clearCurrentActualRoutine, getActualRoutineSnapshot, retractActualRoutineUse } from '@/features/today/completionsStore';
+-import { actualRoutineStep, formulaAtUseLines, inspectActualRoutineApply, subscribeActualRoutineChanges, type ActualRoutineUse } from './actualRoutine';
++import { actualRoutineStep, formulaAtUseLines, inspectActualRoutineApply, inspectActualRoutineCorrection, subscribeActualRoutineChanges, type ActualRoutineCorrection, type ActualRoutineUse } from './actualRoutine';
+ import type { PlanSourceSnapshot44 } from './planSourceFence44';
+ import type { RecoverablePlanHookResult } from './usePlan';
+ import { sequenceComparisonLines } from './sequenceComparison';
+@@ -29,10 +31,17 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+   const intentRef = useRef<ApplyIntent | null>(null);
+   const [uncertainApply, setUncertainApply] = useState<ApplyIntent | null>(null);
+   const uncertainRef = useRef<ApplyIntent | null>(null);
++  const [uncertainCorrection, setUncertainCorrection] = useState<ActualRoutineCorrection | null>(null);
++  const correctionRef = useRef<ActualRoutineCorrection | null>(null);
++  const replaceCorrection = (next: ActualRoutineCorrection | null) => { correctionRef.current = next; setUncertainCorrection(next); };
+   const replaceUncertain = (next: ApplyIntent | null) => { uncertainRef.current = next; setUncertainApply(next); };
+   const retractionRef = useRef<RetractIntent | null>(null);
+   const replaceIntent = (next: ApplyIntent | null) => { intentRef.current = next; setIntent(next); };
+   const replaceRetraction = (next: RetractIntent | null) => { retractionRef.current = next; setRetraction(next); };
++  const [dialogNode, setDialogNode] = useState<View | null>(null);
++  const decision = intent ?? uncertainApply ?? clearIntent ?? retraction ?? uncertainCorrection;
++  useModalBackgroundIsolation(dialogNode, decision !== null);
++  const reduceMotion = useReduceMotionPreference();
+   const [working, setWorking] = useState(false);
+   const [feedback, setFeedback] = useState<string | null>(null);
+   const [historyOpen, setHistoryOpen] = useState(false);
+@@ -43,9 +52,11 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+   const renderedReviewEpoch = reviewEpoch.current;
+   useFocusEffect(useCallback(() => {
+     focused.current = true; renderFocus(reviewEpoch.current);
++    void client.invalidateQueries({ queryKey: ['actualRoutineHistory'] });
+     return () => { focused.current = false; ++reviewEpoch.current; intentRef.current = null; retractionRef.current = null; clearRef.current = null;
+-      uncertainRef.current = null; setUncertainApply(null); setIntent(null); setRetraction(null); setClearIntent(null); };
+-  }, []));
++      uncertainRef.current = null; correctionRef.current = null; setUncertainCorrection(null); setFeedback(null);
++      setUncertainApply(null); setIntent(null); setRetraction(null); setClearIntent(null); };
++  }, [client]));
+   useEffect(() => { mounted.current = true; return () => { mounted.current = false; intentRef.current = null; retractionRef.current = null; }; }, []);
+   usePreventRemove(working, () => {});
+   const key = ['actualRoutineHistory', lease.ownerUserId, lease.accountGeneration, lease.epoch, lease.generation, lease.expiresAt, leaseId(lease)] as const;
+@@ -78,7 +89,7 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+ 
+   async function reviewCurrent() {
+     if (flight.current || !ready || !currentHistory() || renderedReviewEpoch !== reviewEpoch.current) return;
+-    const review = ++reviewEpoch.current; replaceClear(null);
++    const review = ++reviewEpoch.current; replaceClear(null); replaceCorrection(null);
+     flight.current = true; setWorking(true); setFeedback(null); replaceIntent(null); replaceUncertain(null); replaceRetraction(null);
+     try {
+       const [{ capturePlanSource44 }, crypto] = await Promise.all([import('./planSourceFence44'), import('expo-crypto')]);
+@@ -144,13 +155,13 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+     if (!ledger || flight.current || !currentHistory() || renderedReviewEpoch !== reviewEpoch.current ||
+         !ledger.uses.includes(event) || ledger.uses.some(row => row.kind === 'retraction' && row.targetId === event.id)) return;
+     try {
+-      ++reviewEpoch.current; replaceIntent(null); replaceClear(null); setFeedback(null);
++      ++reviewEpoch.current; replaceIntent(null); replaceClear(null); replaceCorrection(null); setFeedback(null);
+       replaceRetraction({ event, expectedHash: ledger.uses.at(-1)!.contentHash, request: { id: randomUUID(), recordedAt: new Date().toISOString() } });
+     } catch { if (safe()) setFeedback('Retraction could not be prepared. No history changed.'); }
+   }
+   function reviewClear() {
+     if (flight.current || !currentHistory() || !latest || latest.source === 'owner-cleared-local' || renderedReviewEpoch !== reviewEpoch.current) return;
+-    ++reviewEpoch.current; replaceIntent(null); replaceRetraction(null); setFeedback(null);
++    ++reviewEpoch.current; replaceIntent(null); replaceRetraction(null); replaceCorrection(null); setFeedback(null);
+     replaceClear({ id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: latest.contentHash });
+   }
+   async function confirmClear() {
+@@ -163,12 +174,12 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+       await clearCurrentActualRoutine(lease, accepted);
+       if (!stillCurrent()) return;
+       await refreshActualRecords(); if (!stillCurrent()) return;
+-      replaceClear(null);
++      replaceClear(null); replaceCorrection(null);
+       setFeedback('Applied routine cleared and read back. Earlier versions and recorded uses are unchanged.');
+     } catch (error) {
+-      if (stillCurrent()) setFeedback(error instanceof Error && /STALE/.test(error.message)
+-        ? 'The applied version changed. This decision is no longer current. Reload history before reviewing another clear.'
+-        : 'The clear could not be confirmed. Retry this exact decision or cancel and reload history.');
++      if (stillCurrent()) { replaceCorrection({ kind: 'clear', request: accepted }); setFeedback(error instanceof Error && /STALE/.test(error.message)
++        ? 'The applied version changed. A previous clear may already have saved. Check its exact outcome before preparing another decision.'
++        : 'The clear could not be confirmed. Inspect saved history, retry this exact decision or cancel and reload history.'); }
+     } finally { flight.current = false; if (mounted.current) setWorking(false); }
+   }
+   async function confirmRetraction() {
+@@ -181,8 +192,30 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+       await retractActualRoutineUse(lease, accepted.event.id, accepted.expectedHash, accepted.request);
+       if (!stillCurrent()) return;
+       await refreshActualRecords(); if (!stillCurrent()) return;
+-      replaceRetraction(null); setFeedback('Retraction saved. The original use remains in history; current check-off projection is corrected. Legacy streak/replay history is unchanged.');
+-    } catch { if (stillCurrent()) setFeedback('History changed or retraction could not be confirmed. Reload history before reviewing another correction.'); }
++      replaceRetraction(null); replaceCorrection(null); setFeedback('Retraction saved. The original use remains in history; current check-off projection is corrected. Legacy streak/replay history is unchanged.');
++    } catch { if (stillCurrent()) { replaceCorrection({ kind: 'retraction', ...accepted }); setFeedback('History changed or retraction could not be confirmed. Inspect its exact saved outcome before reviewing another correction.'); } }
++    finally { flight.current = false; if (mounted.current) setWorking(false); }
++  }
++  async function inspectCorrectionOutcome() {
++    const accepted = uncertainCorrection;
++    if (!accepted || correctionRef.current !== accepted || !safe() || flight.current) return;
++    const epoch = reviewEpoch.current;
++    const stillCurrent = () => safe() && reviewEpoch.current === epoch && correctionRef.current === accepted;
++    flight.current = true; setWorking(true); setFeedback(null);
++    try {
++      const saved = await getActualRoutineSnapshot(lease);
++      if (!stillCurrent()) return;
++      const outcome = inspectActualRoutineCorrection(saved, accepted);
++      if (outcome.kind === 'not_found') setFeedback('No exact matching correction was found in this readable local history. This does not prove an earlier request failed. Keep the original decision and inspect again when access returns.');
++      else if (outcome.kind === 'conflict') {
++        replaceClear(null); replaceRetraction(null);
++        setFeedback('Saved history conflicts with this correction identity. No record was selected or rewritten. Keep the original decision for review.');
++      } else {
++        replaceClear(null); replaceRetraction(null); replaceCorrection(null);
++        setFeedback(`Exact reviewed ${accepted.kind === 'clear' ? 'clear found as saved version' : 'retraction found as saved entry'} ${outcome.sequence}. ${outcome.kind === 'recorded_current' ? 'Its effect was current at this history read.' : 'A later owner record was current at this history read.'} This check changed no records, keys or recorded use.`);
++        void refreshActualRecords();
++      }
++    } catch { if (stillCurrent()) setFeedback('Saved correction history is unavailable or unsupported. No records were reset or keys recreated. Keep the original decision and retry inspection when access returns.'); }
+     finally { flight.current = false; if (mounted.current) setWorking(false); }
+   }
+   if (!current(lease)) return <Text accessibilityRole="alert">Actual routine history is unavailable under the current privacy authority.</Text>;
+@@ -191,39 +224,22 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+     <Text variant="bodySm">Only an explicit apply creates an actual routine version. Saved snapshots, generated suggestions and old check-offs are not apply intent. This does not confirm use or provide advice. Sequence records commit order; device dates are not a trusted clock.</Text>
+     {history.isFetching || history.isPending ? <Text>Reading actual routine history…</Text> : history.isError ? <Text accessibilityRole="alert">Actual routine history is unavailable. No records were reset.</Text> : ledger ?
+       <Text>{latest ? `${latest.source === 'owner-cleared-local' ? 'Applied routine cleared in version' : 'Current owner-applied version'} ${latest.sequence} · ${latest.createdAt}` : 'No actual routine has been applied on this device.'}</Text> : null}
+-    <Button label={working ? 'Confirming local transaction…' : 'Review current Shelf sequence as actual routine'} disabled={!ready || working} onPress={() => void reviewCurrent()} />
+-    {intent && canConfirm ? <View className="gap-2">
+-      <Text accessibilityRole="header">Review before applying</Text>
+-      <Text variant="bodySm">Replace the current actual routine with the names and sequence below. Previous versions remain unchanged. Today starts a new version-specific check-off view; past taps are not copied into it.</Text>
+-      <Text accessibilityRole="header">Changes from my applied sequence</Text>
+-      {sequenceComparisonLines(latest ?? null, intent.proof).map((line, index) => <Text key={index} variant="bodySm">{line}</Text>)}
+-      {(['am', 'pm'] as const).map(phase => <View key={phase}><Text>{phase === 'am' ? 'Morning actual sequence' : 'Evening actual sequence'}</Text>
+-        {intent.proof[phase].map((step, index) => <Text key={step.productId} variant="bodySm">{index + 1}. {step.name}</Text>)}</View>)}
+-      <Button label="Apply reviewed actual routine" disabled={working} onPress={() => void apply()} />
+-      <Button label="Cancel actual-routine review" disabled={working} variant="ghost" onPress={() => { if (intentRef.current === intent) { replaceIntent(null); replaceUncertain(null); setFeedback(null); } }} />
+-    </View> : intent ? <Text accessibilityRole="alert">Reviewed source is no longer current. Its details are hidden. Cancel or refresh before preparing a new review.</Text> : null}
+-    {intent && !canConfirm ? <Button label="Cancel outdated actual-routine review" disabled={working} variant="ghost" onPress={() => { if (intentRef.current === intent) { replaceIntent(null); replaceUncertain(null); } }} /> : null}
+-    {uncertainApply ? <View className="gap-2">
+-      <Text variant="bodySm">The original apply result is uncertain. Inspect its exact command and predecessor in saved history. This reads records only; it does not apply a routine, infer product use or repair missing proof.</Text>
+-      <Button label="Check saved apply outcome" disabled={working} onPress={() => void inspectApplyOutcome()} />
+-      <Button label="Cancel apply outcome check" disabled={working} variant="ghost" onPress={() => {
+-        if (uncertainRef.current !== uncertainApply) return; ++reviewEpoch.current; replaceUncertain(null); replaceIntent(null); setFeedback(null);
+-      }} />
++    {latest && latest.source !== 'owner-cleared-local' ? <View className="gap-2">
++      <Text variant="bodySm">Applied names and order retained in this version:</Text>
++      <Text variant="bodySm">Morning: {latest.am.map(step => step.name).join(' → ') || 'No recorded products'}</Text>
++      <Text variant="bodySm">Evening: {latest.pm.map(step => step.name).join(' → ') || 'No recorded products'}</Text>
++      {source.data?.actualRoutine?.status === 'needs-review' ? <Text accessibilityRole="alert">Current Shelf/source facts differ from this applied version. Earlier names, versions and use remain unchanged. Review the current source explicitly before applying another version.</Text> : null}
+     </View> : null}
++    <Button label={working ? 'Confirming local transaction…' : 'Review current Shelf sequence as actual routine'} disabled={!ready || working} onPress={() => void reviewCurrent()} />
+     {latest && latest.source !== 'owner-cleared-local' ? <Button label="Review clearing my applied routine" variant="ghost" disabled={working || !ledger} onPress={reviewClear} /> : null}
+-    {clearIntent ? <View className="gap-2">
+-      <Text accessibilityRole="header">Clear the applied routine?</Text>
+-      <Text>No products will be applied to Today until you explicitly apply another version. Earlier versions and uses stay in history. This does not record whether you used any products, remove Shelf products or change reminder preferences.</Text>
+-      <Button label="Confirm clearing applied routine" disabled={working} onPress={() => void confirmClear()} />
+-      <Button label="Cancel clearing applied routine" variant="ghost" disabled={working} onPress={() => { if (clearRef.current === clearIntent) { ++reviewEpoch.current; replaceClear(null); } }} />
+-    </View> : null}
+     <Button label="Reload actual routine and source" disabled={working} variant="ghost" onPress={() => {
+-      if (!safe() || flight.current) return; ++reviewEpoch.current; replaceIntent(null); replaceUncertain(null); replaceRetraction(null); replaceClear(null); setFeedback(null);
++      if (!safe() || flight.current) return; ++reviewEpoch.current; replaceIntent(null); replaceUncertain(null); replaceCorrection(null); replaceRetraction(null); replaceClear(null); setFeedback(null);
+       void Promise.all([history.refetch({ throwOnError: true }), source.retry()]).catch(() => { if (safe()) setFeedback('Current records could not be reloaded. Existing history is unchanged.'); });
+     }} />
+     <Button label={historyOpen ? 'Hide actual routine and use history' : 'Show actual routine and use history'} disabled={working || !ledger} variant="ghost" onPress={() => { if (safe()) setHistoryOpen(value => !value); }} />
+     {historyOpen && ledger ? <View className="gap-3">
+       {[...ledger.versions].reverse().map(version => <View key={version.id}><Text>{version.source === 'owner-cleared-local' ? 'Cleared applied routine' : 'Applied version'} {version.sequence} · device recorded {version.createdAt}</Text>
++        <Text variant="bodySm">{version === latest ? 'Current applied record at this history read.' : 'Historical applied record, superseded by a later owner version.'}</Text>
+         <Text variant="bodySm">Morning: {version.am.map(step => step.name).join(' → ') || 'No recorded products'}</Text>
+         <Text variant="bodySm">Evening: {version.pm.map(step => step.name).join(' → ') || 'No recorded products'}</Text></View>)}
+       <Text>Version-bound recorded use</Text>
+@@ -240,11 +256,57 @@ function ActualRoutineForLease({ source, lease }: { source: RecoverablePlanHookR
+       })}
+       {ledger.uses.length > visibleCount ? <Button label="Show more actual-use history" variant="ghost" onPress={() => setVisibleCount(count => count + 10)} /> : null}
+     </View> : null}
++    {!decision && feedback ? <Text accessibilityLiveRegion="polite">{feedback}</Text> : null}
++    <Modal visible={decision !== null} transparent animationType={motionAwareModalAnimation(reduceMotion, 'fade')} onRequestClose={() => {
++      if (flight.current || decision !== (intentRef.current ?? uncertainRef.current ?? clearRef.current ?? retractionRef.current ?? correctionRef.current)) return;
++      ++reviewEpoch.current; replaceIntent(null); replaceUncertain(null); replaceCorrection(null); replaceClear(null); replaceRetraction(null); setFeedback(null);
++    }}>
++      {decision ? <View className="flex-1 justify-center bg-paper px-5 py-6" ref={setDialogNode} role="dialog" aria-modal accessibilityViewIsModal accessibilityLabel="Review routine decision">
++        <ScrollView keyboardShouldPersistTaps="handled" contentContainerClassName="gap-3 pb-8">
++    {intent && canConfirm ? <View className="gap-2">
++      <Text accessibilityRole="header">Review before applying</Text>
++      <Text variant="bodySm">Replace the current actual routine with the names and sequence below. Previous versions remain unchanged. Today starts a new version-specific check-off view; past taps are not copied into it.</Text>
++      <Text accessibilityRole="header">Changes from my applied sequence</Text>
++      {sequenceComparisonLines(latest ?? null, intent.proof).map((line, index) => <Text key={index} variant="bodySm">{line}</Text>)}
++      {(['am', 'pm'] as const).map(phase => <View key={phase}><Text>{phase === 'am' ? 'Morning actual sequence' : 'Evening actual sequence'}</Text>
++        {intent.proof[phase].map((step, index) => <Text key={step.productId} variant="bodySm">{index + 1}. {step.name}</Text>)}</View>)}
++      <Button label="Apply reviewed actual routine" disabled={working} onPress={() => void apply()} />
++      <Button label="Cancel actual-routine review" disabled={working} variant="ghost" onPress={() => { if (intentRef.current === intent) { replaceIntent(null); replaceUncertain(null); setFeedback(null); } }} />
++    </View> : intent ? <Text accessibilityRole="alert">Reviewed source is no longer current. Its details are hidden. Cancel or refresh before preparing a new review.</Text> : null}
++    {intent && !canConfirm ? <Button label="Cancel outdated actual-routine review" disabled={working} variant="ghost" onPress={() => { if (intentRef.current === intent) { replaceIntent(null); replaceUncertain(null); } }} /> : null}
++    {uncertainApply ? <View className="gap-2">
++      <Text variant="bodySm">The original apply result is uncertain. Inspect its exact command and predecessor in saved history. This reads records only; it does not apply a routine, infer product use or repair missing proof.</Text>
++      <Button label="Check saved apply outcome" disabled={working} onPress={() => void inspectApplyOutcome()} />
++      <Button label="Cancel apply outcome check" disabled={working} variant="ghost" onPress={() => {
++        if (uncertainRef.current !== uncertainApply) return; ++reviewEpoch.current; replaceUncertain(null); replaceIntent(null); setFeedback(null);
++      }} />
++    </View> : null}
++
++    {clearIntent ? <View className="gap-2">
++      <Text accessibilityRole="header">Clear the applied routine?</Text>
++      <Text>No products will be applied to Today until you explicitly apply another version. Earlier versions and uses stay in history. This does not record whether you used any products, remove Shelf products or change reminder preferences.</Text>
++      <Button label="Confirm clearing applied routine" disabled={working} onPress={() => void confirmClear()} />
++      <Button label="Cancel clearing applied routine" variant="ghost" disabled={working} onPress={() => { if (clearRef.current === clearIntent) { ++reviewEpoch.current; replaceClear(null); replaceCorrection(null); } }} />
++    </View> : null}
++
+     {retraction && ledger ? <View className="gap-2"><Text>Retract recorded use entry {retraction.event.sequence}? This appends a correction, preserves the original and does not rewrite historical streaks or server replay.</Text>
+       <Button label="Confirm actual-use retraction" disabled={working} onPress={() => void confirmRetraction()} />
+-      <Button label="Cancel actual-use retraction" disabled={working} variant="ghost" onPress={() => { if (retractionRef.current === retraction) { ++reviewEpoch.current; replaceRetraction(null); } }} />
++      <Button label="Cancel actual-use retraction" disabled={working} variant="ghost" onPress={() => { if (retractionRef.current === retraction) { ++reviewEpoch.current; replaceRetraction(null); replaceCorrection(null); } }} />
+     </View> : null}
+-    {feedback ? <Text accessibilityLiveRegion="polite">{feedback}</Text> : null}
++
++    {uncertainCorrection ? <View className="gap-2">
++      <Text variant="bodySm">This correction has an uncertain outcome. Check the original command, target and predecessor in saved history. Similar current content is not proof. Leaving or canceling retires this in-memory decision; later history reads cannot reconstruct a missing command.</Text>
++      <Button label="Check saved correction outcome" disabled={working} onPress={() => void inspectCorrectionOutcome()} />
++      <Button label="Cancel correction outcome check" disabled={working} variant="ghost" onPress={() => {
++        if (correctionRef.current !== uncertainCorrection || flight.current) return;
++        ++reviewEpoch.current; replaceCorrection(null); replaceClear(null); replaceRetraction(null); setFeedback(null);
++      }} />
++    </View> : null}
++
++          {feedback ? <Text accessibilityLiveRegion="polite">{feedback}</Text> : null}
++        </ScrollView>
++      </View> : null}
++    </Modal>
+   </View>;
+ }
+ 
+diff --git a/apps/mobile/src/features/routine/actualRoutine.ts b/apps/mobile/src/features/routine/actualRoutine.ts
+index dfd426f6c2321e2427419d1dab70fbe388d56811..b482d8fe83a18e89643dca62b52ddf8a1b2b9f7e 100644
+--- a/apps/mobile/src/features/routine/actualRoutine.ts
++++ b/apps/mobile/src/features/routine/actualRoutine.ts
+@@ -163,6 +163,33 @@ export function currentActualUses(ledger: ActualRoutineLedger, planId: string, d
+   }
+   return [...active.values()];
+ }
++
++export type ActualRoutineCorrection = Readonly<
++  { kind: 'clear'; request: { id: string; createdAt: string; expectedParentHash: string } } |
++  { kind: 'retraction'; event: ActualRoutineUse; expectedHash: string; request: { id: string; recordedAt: string } }
++>;
++/** Inspect only an authenticated ledger with the original decision. A similar
++ * current projection cannot supply a lost command, target or predecessor. */
++export function inspectActualRoutineCorrection(ledger: ActualRoutineLedger, decision: ActualRoutineCorrection):
++  Readonly<{ kind: 'not_found' | 'conflict' | 'recorded_current' | 'recorded_historical'; sequence?: number }> {
++  if (decision.kind === 'clear') {
++    const found = ledger.versions.find(version => version.id === decision.request.id);
++    if (!found) return { kind: 'not_found' };
++    if (found.source !== 'owner-cleared-local' || found.actorOwnerId !== ledger.ownerUserId ||
++        found.createdAt !== decision.request.createdAt || found.parentHash !== decision.request.expectedParentHash ||
++        found.sourceHash !== decision.request.expectedParentHash || found.am.length || found.pm.length) return { kind: 'conflict' };
++    return { kind: found === ledger.versions.at(-1) ? 'recorded_current' : 'recorded_historical', sequence: found.sequence };
++  }
++  const found = ledger.uses.find(event => event.id === decision.request.id);
++  if (!found) return { kind: 'not_found' };
++  const target = ledger.uses.find(event => event.id === decision.event.id);
++  if (!target || canonical41(target) !== canonical41(decision.event) || found.kind !== 'retraction' ||
++      found.actorOwnerId !== ledger.ownerUserId || found.targetId !== target.id || found.previousHash !== decision.expectedHash ||
++      found.recordedAt !== decision.request.recordedAt || found.planId !== target.planId || found.planHash !== target.planHash ||
++      found.stepKey !== target.stepKey || found.observedOn !== target.observedOn) return { kind: 'conflict' };
++  const latest = ledger.uses.findLast(event => event.planId === found.planId && event.stepKey === found.stepKey && event.observedOn === found.observedOn);
++  return { kind: latest === found ? 'recorded_current' : 'recorded_historical', sequence: found.sequence };
++}
+ export function clearActualRoutine(current: ActualRoutineLedger, request: { id: string; createdAt: string; expectedParentHash: string }): ActualRoutineLedger {
+   if (!uuid(request.id) || !instant(request.createdAt)) fail();
+   const existing = current.versions.find(version => version.id === request.id);
+diff --git a/apps/mobile/src/features/routine/actualRoutineJourney.test.ts b/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
+index 20879c3844fd38100b979c820c125dd7829ff1d9..158ab13616b80b9e3f26f801768393d55437fb5a 100644
+--- a/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
++++ b/apps/mobile/src/features/routine/actualRoutineJourney.test.ts
+@@ -391,3 +391,68 @@ it('admits a fresh review after blur/refocus with unchanged cached history and n
+   expect(text()).not.toContain('Review before applying');
+   await press('Review current Shelf sequence as actual routine'); expect(text()).toContain('Review before applying');
+ });
++
++it.each(['clear', 'retract'] as const)('inspects an uncertain %s through the original command without rewriting ciphertext or keys', async kind => {
++  await mount(); await press('Review current Shelf sequence as actual routine'); await press('Apply reviewed actual routine');
++  const lease = source!.orderLease!, actual = source!.data!.actualRoutine!, version = actual.ledger.versions[0]!;
++  if (kind === 'retract') {
++    await act(async () => { await toggleCompletion(`AM:${productId}`, localDateString(), undefined, undefined,
++      { originalLease: lease, source: actual.source!, versionId: version.id, versionHash: version.contentHash }); }); await flush26();
++    await press('Show actual routine and use history'); await press('Review retraction of use 1');
++    const original = completionStore.retractActualRoutineUse;
++    vi.spyOn(completionStore, 'retractActualRoutineUse').mockImplementationOnce(async (...args) => { await original(...args); throw new Error('SYNTHETIC_LOST_ACK'); });
++  } else {
++    await press('Review clearing my applied routine');
++    const original = completionStore.clearCurrentActualRoutine;
++    vi.spyOn(completionStore, 'clearCurrentActualRoutine').mockImplementationOnce(async (...args) => { await original(...args); throw new Error('SYNTHETIC_LOST_ACK'); });
++  }
++  await press(kind === 'clear' ? 'Confirm clearing applied routine' : 'Confirm actual-use retraction');
++  const before = new Map(ports26.bytes);
++  await press('Check saved correction outcome');
++  expect(text()).toContain(kind === 'clear' ? 'Exact reviewed clear found as saved version 2' : 'Exact reviewed retraction found as saved entry 2');
++  expect(text()).toContain('This check changed no records'); expect(ports26.bytes).toEqual(before);
++});
++
++it('keeps an absent correction unknown, supports read retry and retires canceled inspection callbacks', async () => {
++  await mount(); await press('Review current Shelf sequence as actual routine'); await press('Apply reviewed actual routine');
++  await press('Review clearing my applied routine');
++  vi.spyOn(completionStore, 'clearCurrentActualRoutine').mockRejectedValueOnce(new Error('SYNTHETIC_UNKNOWN'));
++  await press('Confirm clearing applied routine');
++  const before = new Map(ports26.bytes);
++  await press('Check saved correction outcome'); expect(text()).toContain('No exact matching correction was found');
++  ports26.failRead = 'layerwell.completions.v1'; await press('Check saved correction outcome');
++  expect(text()).toContain('Saved correction history is unavailable or unsupported'); ports26.failRead = null;
++  const old = renderer!.root.findAll(node => node.props.label === 'Check saved correction outcome' && typeof node.props.onPress === 'function')[0]!.props.onPress;
++  await press('Cancel correction outcome check');
++  const reader = vi.spyOn(completionStore, 'getActualRoutineSnapshot'); reader.mockClear();
++  await act(async () => old()); expect(reader).not.toHaveBeenCalled(); expect(ports26.bytes).toEqual(before);
++});
++
++it.each(['navigation', 'consent', 'owner-aba'] as const)('retires a held correction inspection at %s without publishing into successor authority', async boundary => {
++  const routing = await import('expo-router');
++  let focus: (() => void | (() => void)) | undefined, blur: (() => void) | undefined;
++  vi.spyOn(routing, 'useFocusEffect').mockImplementation(effect => useEffect(() => {
++    focus = effect; blur = effect() || undefined; return () => blur?.();
++  }, [effect]));
++  await mount(); await press('Review current Shelf sequence as actual routine'); await press('Apply reviewed actual routine');
++  const owner = source!.orderLease!.ownerUserId;
++  await press('Review clearing my applied routine');
++  vi.spyOn(completionStore, 'clearCurrentActualRoutine').mockRejectedValueOnce(new Error('SYNTHETIC_UNKNOWN'));
++  await press('Confirm clearing applied routine');
++  const read = completionStore.getActualRoutineSnapshot;
++  let release!: () => void, started!: () => void;
++  const gate = new Promise<void>(resolve => { release = resolve; }), start = new Promise<void>(resolve => { started = resolve; });
++  vi.spyOn(completionStore, 'getActualRoutineSnapshot').mockImplementationOnce(async lease => { const result = await read(lease); started(); await gate; return result; });
++  const inspect = renderer!.root.findAll(node => node.props.label === 'Check saved correction outcome' && typeof node.props.onPress === 'function')[0]!.props.onPress;
++  try {
++    await act(async () => { inspect(); await start; });
++    await act(async () => {
++      if (boundary === 'navigation') { blur?.(); blur = focus?.() || undefined; }
++      else { if (boundary === 'owner-aba') await grant26('synthetic-successor'); await grant26(owner); }
++    });
++    await act(async () => { release(); }); await flush26();
++    expect(text()).not.toContain('No exact matching correction was found');
++    expect(text()).not.toContain('Check saved correction outcome');
++    expect((await read(captureHealthDataWriteLease())).versions).toHaveLength(1);
++  } finally { release(); }
++});
+diff --git a/apps/mobile/src/features/routine/actualRoutineStore.test.ts b/apps/mobile/src/features/routine/actualRoutineStore.test.ts
+index 71f9c81117b4fbefdfe763eaa707e0bc899e6077..8c7f1891f785055c598490e796cfa7414ff29fc2 100644
+--- a/apps/mobile/src/features/routine/actualRoutineStore.test.ts
++++ b/apps/mobile/src/features/routine/actualRoutineStore.test.ts
+@@ -11,7 +11,7 @@ import { appendOptionalChange41, applyCurrentActualRoutine, getActualRoutineSnap
+   getOptionalChanges41, clearCurrentActualRoutine, retractActualRoutineUse, toggleCompletion } from '@/features/today/completionsStore';
+ import { localDateString } from '@/features/today/useToday';
+ import { capturePlanSource44 } from './planSourceFence44';
+-import { appendActualUse, decodeActualRoutine, decodeActualRoutineEnvelope, encodeActualRoutineEnvelope, inspectActualRoutineApply } from './actualRoutine';
++import { appendActualUse, decodeActualRoutine, decodeActualRoutineEnvelope, encodeActualRoutineEnvelope, inspectActualRoutineApply, inspectActualRoutineCorrection } from './actualRoutine';
+ import * as generation from './generate';
+ import { projectAppointmentBriefRecords } from '@/features/shelf/appointmentBriefRecords';
+ 
+@@ -39,6 +39,34 @@ it('inspection requires the original exact ID, predecessor, source and ordered f
+   expect(inspectActualRoutineApply(f.ledger, { ...f.source, sourceHash: 'a'.repeat(64) }, f.request).kind).toBe('conflict');
+   expect(ports26.bytes).toEqual(before);
+ });
++
++it('inspects clear command identity and the original predecessor, even after a later apply, without changing records', async () => {
++  const f = await applied();
++  const request = { id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: f.context.versionHash };
++  const cleared = await clearCurrentActualRoutine(f.lease, request);
++  const decision = { kind: 'clear' as const, request };
++  expect(inspectActualRoutineCorrection(cleared, decision)).toEqual({ kind: 'recorded_current', sequence: 2 });
++  expect(inspectActualRoutineCorrection(cleared, { ...decision, request: { ...request, expectedParentHash: 'a'.repeat(64) } }).kind).toBe('conflict');
++  expect(inspectActualRoutineCorrection(cleared, { ...decision, request: { ...request, createdAt: '2020-01-01T00:00:00.000Z' } }).kind).toBe('conflict');
++  expect(inspectActualRoutineCorrection(cleared, { ...decision, request: { ...request, id: randomUUID() } }).kind).toBe('not_found');
++  const later = await applyCurrentActualRoutine(f.source, f.lease, { id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: cleared.versions[1]!.contentHash });
++  const before = new Map(ports26.bytes);
++  expect(inspectActualRoutineCorrection(later, decision)).toEqual({ kind: 'recorded_historical', sequence: 2 }); expect(ports26.bytes).toEqual(before);
++});
++it('inspects retraction target/hash/stream identity without confusing re-recorded use with the original correction effect', async () => {
++  const f = await applied(); await toggleCompletion(`AM:${productId}`, localDateString(), undefined, undefined, f.context);
++  const initial = await getActualRoutineSnapshot(f.lease), event = initial.uses[0]!;
++  const request = { id: randomUUID(), recordedAt: new Date().toISOString() };
++  const decision = { kind: 'retraction' as const, event, expectedHash: event.contentHash, request };
++  const retracted = await retractActualRoutineUse(f.lease, event.id, decision.expectedHash, request);
++  expect(inspectActualRoutineCorrection(retracted, decision)).toEqual({ kind: 'recorded_current', sequence: 2 });
++  expect(inspectActualRoutineCorrection(retracted, { ...decision, expectedHash: 'a'.repeat(64) }).kind).toBe('conflict');
++  expect(inspectActualRoutineCorrection(retracted, { ...decision, event: { ...event, observedOn: '2020-01-01' } }).kind).toBe('conflict');
++  expect(inspectActualRoutineCorrection(retracted, { ...decision, request: { ...request, id: randomUUID() } }).kind).toBe('not_found');
++  await toggleCompletion(`AM:${productId}`, localDateString(), undefined, undefined, f.context);
++  const before = new Map(ports26.bytes), later = await getActualRoutineSnapshot(f.lease);
++  expect(inspectActualRoutineCorrection(later, decision)).toEqual({ kind: 'recorded_historical', sequence: 2 }); expect(ports26.bytes).toEqual(before);
++});
+ it('clears explicitly, preserves the original record prefix, survives reload and restarts without copying use', async () => {
+   const { lease, source, context } = await applied();
+   await toggleCompletion(`AM:${productId}`, localDateString(), undefined, undefined, context);
+diff --git a/apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx b/apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx
+index 2d95032f6eb4cd5e7964ce23dfc41dcca3f3c3d9..c5b6c1964ec97a0b356fc709a0e9e29958a5753f 100644
+--- a/apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx
++++ b/apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx
+@@ -15,6 +15,7 @@ import { buildAppointmentBrief, type AppointmentBriefSelection } from './appoint
+ import { findSavedProducts } from './quickFind';
+ import {
+   shareReviewedAppointmentBrief,
++  revalidateAppointmentBrief,
+   type ReviewedAppointmentBrief,
+ } from './shareAppointmentBrief';
+ import { useShelf } from './useShelf';
+@@ -28,7 +29,7 @@ type Review = ReviewedAppointmentBrief & {
+   photo: ReviewedDiaryPhoto | null;
+ };
+ 
+-export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () => void; diaryAccess?: DiaryBriefAccess }) {
++export function AppointmentBriefEditor({ onClose, diaryAccess, assertEntryCurrent }: { onClose: () => void; diaryAccess?: DiaryBriefAccess; assertEntryCurrent: () => void }) {
+   const shelf = useShelf();
+   const qc = useQueryClient();
+   const insets = useSafeAreaInsets();
+@@ -62,6 +63,8 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+   const reviewRef = useRef<Review | null>(null);
+   const alive = useRef(true);
+   const sharing = useRef(false);
++  const reviewFlight = useRef<object | null>(null);
++  const [verifying, setVerifying] = useState(false);
+   useEffect(() => {
+     alive.current = true;
+     return () => {
+@@ -70,6 +73,7 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+       photoFlight.current = null;
+       recordsFlight.current = null;
+       recordChoiceSource.current = null;
++      reviewFlight.current = null;
+     };
+   }, []);
+   const products = [...(shelf.data?.items ?? []), ...(shelf.data?.archive ?? [])].map(
+@@ -77,6 +81,7 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+   );
+   const choices = findSavedProducts(products, query);
+   const assertSource = (source: Review['source']) => {
++    assertEntryCurrent();
+     diaryAccess?.assertCurrent();
+     const state = qc.getQueryState(['shelf']);
+     if (
+@@ -156,8 +161,10 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+       /* Never render retired preview text. */
+     }
+   }
+-  function prepare() {
+-    if (!shelf.data || sharing.current || !alive.current || photoLoading || recordsLoading || cleanupPending) return;
++  async function prepare() {
++    if (!shelf.data || sharing.current || reviewFlight.current || !alive.current || photoLoading || recordsLoading || cleanupPending) return;
++    const flight = {}; reviewFlight.current = flight; setVerifying(true); setFeedback(null);
++    let verifyingSource = false;
+     try {
+       assertSource(shelf.data);
+       const lease = selectedPhoto?.lease ?? captureHealthDataWriteLease();
+@@ -180,16 +187,37 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+         text: buildAppointmentBrief(products, selection, preparedOn, records),
+       });
+       assertOriginalHealthDataWriteLease(lease);
++      // Review must describe a fresh authenticated selection. Sharing repeats
++      // this read and fences final dispatch; this check grants no recipient access.
++      verifyingSource = true;
++      await revalidateAppointmentBrief(accepted, () => {
++        if (!alive.current || reviewFlight.current !== flight) throw new Error('APPOINTMENT_BRIEF_INVALID_OR_STALE');
++        assertSource(accepted.source);
++      });
++      if (!alive.current || reviewFlight.current !== flight) return;
++      assertOriginalHealthDataWriteLease(lease); assertSource(accepted.source);
+       reviewRef.current = accepted;
+       setReview(accepted);
+       setPhotoPreviewReady(false);
+       setFeedback(null);
+-    } catch {
+-      setFeedback(
+-        'Choose current products or write a question/observation. Remove unsupported control characters and keep each text field within 2,000 characters. If records changed, close and start again.',
+-      );
++    } catch (error) {
++      if (!alive.current || reviewFlight.current !== flight) return;
++      const code = error instanceof Error ? error.message : '';
++      if (verifyingSource && (code === 'APPOINTMENT_BRIEF_INVALID_OR_STALE' || code === 'APPOINTMENT_BRIEF_SOURCE_UNAVAILABLE')) {
++        reviewRef.current = null; setReview(null); recordChoiceSource.current = null;
++        setRecordSource(null); setRecordIds([]); setSelected([]); setSelectedPhoto(null); setPhotoPreviewReady(false); setRecordsNeedRefresh(true);
++        setFeedback(code === 'APPOINTMENT_BRIEF_INVALID_OR_STALE'
++          ? 'Selected records changed before review. Refresh recorded choices, select exact sources again, and review. Your questions and observations are kept. Nothing was shared.'
++          : 'Current records could not be verified before review. No records were reset. Refresh choices and select sources again. Your questions and observations are kept. Nothing was shared.');
++      } else setFeedback('Choose current products or write a question/observation. Remove unsupported control characters and keep each text field within 2,000 characters. If records changed, close and start again.');
++    } finally {
++      if (reviewFlight.current === flight) { reviewFlight.current = null; if (alive.current) setVerifying(false); }
+     }
+   }
++  function cancelVerification() {
++    reviewFlight.current = null; setVerifying(false);
++    setFeedback('Brief verification canceled. Nothing was shared. Your selections, questions and observations are kept for a fresh review.');
++  }
+   async function choosePhoto() {
+     if (!diaryAccess || sharing.current || cleanupPending) return;
+     if (photoLoading || selectedPhoto) {
+@@ -244,7 +272,7 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+         if (alive.current)
+         setFeedback(
+           shared
+-            ? 'The system share sheet reported completion.'
++            ? 'The system share sheet reported completion. Recipient receipt, review or action is not confirmed.'
+             : 'Sharing was not completed. Your brief is still here.',
+         );
+       }
+@@ -295,7 +323,10 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+           sent. Names, brands and status are included only for products you select. No appointment
+           or clinician advice is generated. Images are excluded unless you separately select the opened Diary photo.
+         </Text>
+-        {review ? (
++        {verifying ? <View className="gap-3" accessibilityLiveRegion="polite">
++          <Text>Verifying selected source records before review… Nothing has been shared.</Text>
++          <Button label="Cancel brief verification" variant="ghost" onPress={cancelVerification} />
++        </View> : review ? (
+           <>
+             <Text accessibilityRole="header" variant="bodySm" className="font-sans-semibold">
+               Review everything before sharing
+@@ -534,7 +565,7 @@ export function AppointmentBriefEditor({ onClose, diaryAccess }: { onClose: () =
+               style={{ minHeight: 96, textAlignVertical: 'top' }}
+               className="rounded-card border border-hairline p-3 font-sans text-ink"
+             />
+-            <Button label="Review appointment brief" disabled={photoLoading || recordsLoading || cleanupPending} onPress={prepare} />
++            <Button label="Review appointment brief" disabled={photoLoading || recordsLoading || cleanupPending} onPress={() => void prepare()} />
+           </>
+         )}
+         {feedback ? (
+diff --git a/apps/mobile/src/features/shelf/SavedProductCompare.tsx b/apps/mobile/src/features/shelf/SavedProductCompare.tsx
+index 73c2c615b4c5f3c461b1e43c5cdb066bea0b2eb9..39d2b0f210654e7c38523b2418af90c0c668c520 100644
+--- a/apps/mobile/src/features/shelf/SavedProductCompare.tsx
++++ b/apps/mobile/src/features/shelf/SavedProductCompare.tsx
+@@ -1,4 +1,5 @@
+-import { useState, useSyncExternalStore } from 'react';
++import { useContext, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
++import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
+ import { Modal, Pressable, ScrollView, TextInput, View } from 'react-native';
+ import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ 
+@@ -24,15 +25,29 @@ import type { DiaryBriefAccess } from './appointmentBriefRecords';
+ 
+ /** Selection and search are memory-only and discarded at every privacy epoch. */
+ export function SavedProductCompare({ briefOnly = false, diaryAccess }: { briefOnly?: boolean; diaryAccess?: DiaryBriefAccess }) {
++  const navigation = useContext(NavigationContext);
++  const serial = useRef(0);
++  const [focusRevision, setFocusRevision] = useState(0);
++  const [focused, setFocused] = useState(() => navigation?.isFocused() ?? true);
++  useLayoutEffect(() => {
++    const retire = () => { ++serial.current; };
++    setFocusRevision(serial.current); setFocused(navigation?.isFocused() ?? true);
++    const blur = navigation?.addListener('blur', () => { retire(); setFocusRevision(serial.current); setFocused(false); });
++    const focus = navigation?.addListener('focus', () => { retire(); setFocusRevision(serial.current); setFocused(true); });
++    return () => { retire(); blur?.(); focus?.(); };
++  }, [navigation]);
+   const authority = useSyncExternalStore(
+     subscribeActiveHealthProcessingLeaseChanges,
+     activeHealthProcessingLeaseSnapshot,
+     () => null,
+   );
+-  return authority ? <CompareSession key={authority.generation} briefOnly={briefOnly} diaryAccess={diaryAccess} /> : null;
++  const assertEntryCurrent = () => {
++    if (!focused || serial.current !== focusRevision || !(navigation?.isFocused() ?? true)) throw new Error('APPOINTMENT_BRIEF_INVALID_OR_STALE');
++  };
++  return authority && focused ? <CompareSession key={`${authority.generation}:${focusRevision}`} briefOnly={briefOnly} diaryAccess={diaryAccess} assertEntryCurrent={assertEntryCurrent} /> : null;
+ }
+ 
+-function CompareSession({ briefOnly, diaryAccess }: { briefOnly: boolean; diaryAccess?: DiaryBriefAccess }) {
++function CompareSession({ briefOnly, diaryAccess, assertEntryCurrent }: { briefOnly: boolean; diaryAccess?: DiaryBriefAccess; assertEntryCurrent: () => void }) {
+   const [open, setOpen] = useState<'compare' | 'brief' | null>(null);
+   const [dialogNode, setDialogNode] = useState<View | null>(null);
+   useModalBackgroundIsolation(dialogNode, open !== null);
+@@ -73,7 +88,7 @@ function CompareSession({ briefOnly, diaryAccess }: { briefOnly: boolean; diaryA
+               exitLabel={open === 'brief' ? 'Close appointment brief' : 'Close comparison'}
+             >
+               {open === 'brief' ? (
+-                <AppointmentBriefEditor onClose={() => setOpen(null)} diaryAccess={diaryAccess} />
++                <AppointmentBriefEditor onClose={() => setOpen(null)} diaryAccess={diaryAccess} assertEntryCurrent={assertEntryCurrent} />
+               ) : (
+                 <CompareContent onClose={() => setOpen(null)} />
+               )}
+diff --git a/apps/mobile/src/features/shelf/appointmentBriefRecords.ts b/apps/mobile/src/features/shelf/appointmentBriefRecords.ts
+index af03b129b3478e0d744e4f339cd3a9b90db359bc..0868ef25f90c7edd61f41692d8fc474d087bc577 100644
+--- a/apps/mobile/src/features/shelf/appointmentBriefRecords.ts
++++ b/apps/mobile/src/features/shelf/appointmentBriefRecords.ts
+@@ -140,6 +140,7 @@ function projectActualRoutineRecords(products: readonly BriefProduct[], ledger?:
+       id: `actual-plan:${version.id}`, kind: 'actual-plan', available: available(version),
+       title: `${version.source === 'owner-cleared-local' ? 'Cleared actual routine' : 'Applied actual routine'} ${version.sequence} · ${version.createdAt}`,
+       lines: available(version) ? [
++        version === ledger.versions.at(-1) ? 'Status at source read: current owner-applied record.' : 'Status at source read: historical record; a later owner version supersedes it.',
+         version.source === 'owner-cleared-local'
+           ? `Source: explicit owner decision to clear the applied routine on this device, following version ${version.sequence - 1}. This version records no applied products; this is not evidence of non-use, a retraction or advice.`
+           : 'Source: explicit owner apply on this device; not evidence of use or professional advice.',
+diff --git a/apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts b/apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts
+index b0da353c06ea8dae908ba60009d2b4fe8abc665b..e3ea553d2c6f8289dcc55608647b6b00f7690df8 100644
+--- a/apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts
++++ b/apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts
+@@ -11,6 +11,7 @@ import { writeHealthDataLifecycle } from '@/features/healthConsent/lifecycleStor
+ import ProductsScreen from '@/app/onboarding/products';
+ import ShelfScreen from '@/app/(tabs)/shelf';
+ import { SavedProductCompare } from './SavedProductCompare';
++import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
+ import { RecordedFormulaCompare } from './RecordedFormulaCompare';
+ import ArchiveScreen from '@/app/shelf/archive';
+ import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
+@@ -437,7 +438,8 @@ it('selects the opened Diary text explicitly and rereads it before sharing; chan
+   expect(preview).not.toContain('opened-note'); expect(preview).not.toContain('file:');
+   const oldShare = renderer!.root.findAll((node) => node.props.label === 'Share reviewed brief')[0]!.props.onPress;
+   const bytes = new Map(ports.bytes);
+-  await press('Share reviewed brief'); expect(ports.share).toHaveBeenCalledOnce(); expect(ports.diary).toHaveBeenCalledTimes(2);
++  expect(ports.diary).toHaveBeenCalledTimes(2); // chooser + fresh pre-review source
++  await press('Share reviewed brief'); expect(ports.share).toHaveBeenCalledOnce(); expect(ports.diary).toHaveBeenCalledTimes(3);
+   expect(ports.bytes).toEqual(bytes);
+   ports.diary.mockResolvedValue({ id: 'opened-note', date: '2026-10-05', series: 'front', text: 'Changed after review' });
+   await press('Share reviewed brief'); expect(ports.share).toHaveBeenCalledOnce();
+@@ -512,6 +514,71 @@ it('keeps valid approval retryable after a platform-only sharing failure', async
+   await press('Share reviewed brief'); expect(ports.share).toHaveBeenCalledTimes(2);
+ });
+ 
++it('refuses a cached recorded selection changed before review and keeps authored questions for explicit reselection', async () => {
++  const lease = captureHealthDataWriteLease(), source = await getOptionalChanges41(lease);
++  const saved = await appendOptionalChange41({ id: randomUUID(), expectedRevision: source.revision, expectedSourceProof: source.sourceProof,
++    expectedSourceBytes: source.sourceBytes, observedOn: '2026-01-01', category: 'personal_note', text: 'Cached selection before review',
++    kind: 'note', targetEventId: null, confirmation: true }, lease);
++  await mount(() => createElement(SavedProductCompare, { briefOnly: true }));
++  const press = async (label: string) => {
++    const node = renderer!.root.findAll(node => node.props.label === label || node.props.accessibilityLabel?.startsWith(label))[0]!;
++    expect(node, label).toBeDefined(); await act(async () => { await node.props.onPress(); }); await flush();
++  };
++  await press('Prepare appointment brief'); await press('Choose recorded notes and saved plans'); await press('Include Today entry 1');
++  const question = () => renderer!.root.findAll(node => node.type === ('TextInput' as never) && node.props.accessibilityLabel === 'Questions for the professional')[0]!;
++  await act(async () => { question().props.onChangeText('Keep this authored question'); });
++  await appendOptionalChange41({ id: randomUUID(), expectedRevision: saved.revision, expectedSourceProof: saved.sourceProof,
++    expectedSourceBytes: saved.sourceBytes, observedOn: '2026-01-01', category: 'personal_note', text: 'Successor selected fact',
++    kind: 'correction', targetEventId: saved.events[0]!.id, confirmation: true }, lease);
++  await press('Review appointment brief');
++  expect(renderer!.root.findAll(node => node.props.accessibilityLabel === 'Reviewed appointment brief')).toHaveLength(0);
++  expect(rendered()).toContain('Selected records changed before review'); expect(rendered()).not.toContain('Cached selection before review');
++  expect(question().props.value).toBe('Keep this authored question'); expect(ports.share).not.toHaveBeenCalled();
++  await press('Refresh recorded choices'); await press('Include Today entry 2'); await press('Review appointment brief');
++  expect(rendered()).toContain('Successor selected fact'); await press('Share reviewed brief');
++  expect(ports.share).toHaveBeenCalledOnce(); expect(rendered()).toContain('Recipient receipt, review or action is not confirmed');
++});
++
++it('cancels pending brief verification and refuses its late result after a successor review', async () => {
++  const service = await import('./shareAppointmentBrief'), original = service.revalidateAppointmentBrief;
++  let release!: () => void, started!: () => void;
++  const gate = new Promise<void>(resolve => { release = resolve; }), start = new Promise<void>(resolve => { started = resolve; });
++  vi.spyOn(service, 'revalidateAppointmentBrief').mockImplementationOnce(async (...args) => { const result = await original(...args); started(); await gate; return result; });
++  await mount(() => createElement(SavedProductCompare, { briefOnly: true }));
++  const press = async (label: string) => { const node = renderer!.root.findAll(node => node.props.label === label)[0]!;
++    expect(node, label).toBeDefined(); await act(async () => { node.props.onPress(); }); await flush(); };
++  const input = () => renderer!.root.findAll(node => node.type === ('TextInput' as never) && node.props.accessibilityLabel === 'Questions for the professional')[0]!;
++  try {
++    await press('Prepare appointment brief'); await act(async () => { input().props.onChangeText('Earlier verification question'); });
++    await press('Review appointment brief'); await start; await press('Cancel brief verification');
++    await act(async () => { input().props.onChangeText('Successor reviewed question'); }); await press('Review appointment brief');
++    await act(async () => { release(); }); await flush();
++    const preview = renderer!.root.findAll(node => node.props.accessibilityLabel === 'Reviewed appointment brief')[0]!.children.join('');
++    expect(preview).toContain('Successor reviewed question'); expect(preview).not.toContain('Earlier verification question');
++    expect(ports.share).not.toHaveBeenCalled(); await press('Share reviewed brief'); expect(ports.share).toHaveBeenCalledOnce();
++  } finally { release(); }
++});
++
++it('retires an open brief and captured share callback on real route blur/refocus', async () => {
++  let focused = true;
++  const listeners = new Map<string, Set<() => void>>();
++  const navigation = { isFocused: () => focused, addListener: (event: string, fn: () => void) => {
++    const set = listeners.get(event) ?? new Set(); set.add(fn); listeners.set(event, set); return () => { set.delete(fn); };
++  } };
++  await mount(() => createElement(NavigationContext.Provider, { value: navigation as never }, createElement(SavedProductCompare, { briefOnly: true })));
++  const press = async (label: string) => { const node = renderer!.root.findAll(node => node.props.label === label)[0]!;
++    expect(node, label).toBeDefined(); await act(async () => { node.props.onPress(); }); await flush(); };
++  await press('Prepare appointment brief');
++  const input = renderer!.root.findAll(node => node.type === ('TextInput' as never) && node.props.accessibilityLabel === 'Questions for the professional')[0]!;
++  await act(async () => { input.props.onChangeText('Private pre-navigation question'); }); await press('Review appointment brief');
++  const oldShare = renderer!.root.findAll(node => node.props.label === 'Share reviewed brief')[0]!.props.onPress;
++  await act(async () => { focused = false; for (const fn of listeners.get('blur') ?? []) fn(); });
++  expect(rendered()).not.toContain('Private pre-navigation question');
++  await act(async () => { focused = true; for (const fn of listeners.get('focus') ?? []) fn(); }); await flush();
++  await act(async () => oldShare()); await flush(); expect(ports.share).not.toHaveBeenCalled();
++  await press('Prepare appointment brief'); expect(rendered()).not.toContain('Private pre-navigation question');
++});
++
+ it('explicitly selects real Today records, recovers from failed source reads, and shares no unselected notes', async () => {
+   await addProduct({ name: 'Wave03 selection source', addedVia: 'manual' });
+   const lease = captureHealthDataWriteLease();
+diff --git a/docs/ENGINEERING31_REPORT.md b/docs/ENGINEERING31_REPORT.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..e26cdf349e0308eb4a146dda50734ae6e9fabf3d
+--- /dev/null
++++ b/docs/ENGINEERING31_REPORT.md
+@@ -0,0 +1,11 @@
++# Engineering31 connected consumer continuity
++
++Authorization BRAIN-ONSKIN-AUTONOMOUS-LOCAL-PRODUCT-31. Exact clean starting source e5b5d0934852dccac5bd90a2017f9536e2ac89f9, tree9de89e78a4d475dbaf154d1d66dd29f34617a0d5, branch stage/m1-native-runtime47. PR48 ancestry, process inventory, no Git lock and capacity were checked before source writes. Sole source writer; no agent writers or history replacement.
++
++Routine records now expose the exact retained applied names/order and current-versus-historical status. Apply, clear and use-retraction reviews share a scrollable modal with platform keyboard containment and background isolation. Clear/retraction acknowledgement failures retain their original in-memory command and offer read-only inspection against authenticated saved history. Exact command/time/predecessor and original retraction target/stream are required. A later apply or renewed use makes a matching correction historical, not absent. Missing or unsupported evidence stays unknown. Inspection neither writes a version nor changes keys or recorded use. Cancellation, focus retirement and original owner/consent guards prevent late results from replacing successor decisions. Navigation/process restart does not invent a lost command from current contents.
++
++Appointment briefs now reread selected original records before exposing a review, then repeat the existing exact-byte dispatch fence at sharing. Changed sources/status require explicit refresh and reselection. Authored questions/observations stay in memory for recovery. Pending verification can be canceled. Real navigation blur/refocus retires the entire selected session and outstanding source checks. Sharing completion explicitly leaves recipient receipt, review and action unconfirmed. Existing image selection, review, cleanup and withdrawal protections are retained.
++
++You now has a direct private Diary entry. Browser native storage absence explicitly differs from an empty Diary. Confirmed empty history is stated only after the existing authenticated read succeeds. Missing/invalid/unavailable keys, unsupported metadata and unconfirmed cleanup have content-free recovery explanations. Original ciphertext/provenance, quarantine, deletion and key-inspection behavior is unchanged; positive native photo recovery is not fabricated.
++
++The separate Engineering31 evidence branch/index records exact clean final identities, complete validation and retained failures, all38/all18 observations, patch/ancestry proofs, public screening, ref/workflow preflight and remote byte readback. Local diagnostic receipts are not independent acceptance. All38 REQUIRED and all18 gates remain UNACCEPTED; release NO_GO. J01 Visible Pores is the sole assessment; positive admission remains closed. Production owner ingress, professional custody, lawful retained-template/unshelved authority and actual iOS/device/provider/scientific qualification remain absent. No production adapter, source push, hosted CI, paid service, native attempt79–86, account mutation, merge, deployment or release is authorized or performed. Do not begin Engineering32 before independent Brain review.
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 5316fab3f38687187f75576072db8d765810a987..80e2c7046c04cbab2021acaac82cc43a38ffa5ec 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -3261,6 +3261,13 @@ Practitioner intended editor -> Load assigned client products -> Choose a practi
+ ## Engineering29: uncertain actual apply and late acknowledgement
+ 
+ My actual routine -> exact current Shelf/source review -> Apply -> unknown acknowledgement or source conflict -> Check saved apply outcome -> original current owner/health authority -> observational encrypted read -> exact command/date/predecessor/source/ordered-fact match -> saved-current-at-read or retained-historical result. No exact match is unknown, not proof of failure. Missing/unsupported/conflicting evidence stays preserved. Cancel/new review/blur/refocus/owner retirement retires the inspection; no stale read changes a successor view. Applied routine, cleared version and use retraction refresh current readers after commit; delayed acknowledgements never assign an older ledger over a newer cache. Inspect/cancel/retry/reload never records product use. Exercise375x667/390x844/430x932 with actual onboarding, keyboard/focus, synthetic before/after-commit acknowledgement faults, unchanged ciphertext/key, unavailable read, clear/cancel and reload. Native and production authority remain unqualified; all38/all18 UNACCEPTED and NO_GO.
++# Engineering31: connected consumer continuity (local qualification only)
++
++- Critical: You → Open my private Diary → authenticated local read. Confirmed zero records, browser native-storage absence and incomplete/unreadable recovery stay distinct. Retry/reload never creates a photo key, chooses conflicting ciphertext or claims restoration. Native-key loss, unsupported metadata and unconfirmed cleanup preserve their evidence. Existing note history/manual comparison/deletion gates remain intact. Browser native ports, when used by the separate retained Diary driver, are explicitly synthetic.
++- Critical: Routine records → current exact applied sequence and historical versions → review apply/clear/use retraction in a scrollable keyboard-contained modal → Escape/cancel returns without a write. Actual apply is separate from the visible Today check-off. Lost clear/retraction acknowledgement → original decision + Check saved correction outcome → authenticated observational read → exact command/date/predecessor/target match. Report current-at-read or superseded-at-read; absent/conflicting/unreadable history remains unknown. Inspection changes no ciphertext or keys. Retry retains the original request. Cancel/navigation/owner/consent retirement invalidates callbacks. Process restart exposes history only; it cannot reconstruct a lost decision.
++- Critical: You → appointment brief → explicitly load/select one exact record/version → authored question → fresh authenticated pre-review source validation. A correction or changed current/historical status before review clears source approval, preserves questions and requires refresh/reselection. Cancel pending verification or leave during read → no late preview. Share revalidates again under the existing exact-byte dispatch fence. Unknown handoff stays unknown; completion does not establish recipient receipt/review/action. Withdrawal, route blur/refocus and owner replacement retire private selections. Temporary image-export cleanup and recipient-copy warnings remain.
++- Automate local browser375×667/390×844/430×932: keyboard Tab containment, Escape/back, 200% browser text, no horizontal overflow, exact clear/retraction outcome and ciphertext equality, separate real visible use, pre-review brief conflict, selected-only projection, synthetic handoff failure/retry and truthful browser Diary refusal. Retained Diary note-history driver also covers all three sizes. No browser result qualifies native VoiceOver, Dynamic Type, real media recovery, providers or independent acceptance.
++
+ # Engineering30: intake recovery and actual saved-product lifecycle
+ 
+ - Critical, local Expo web: explicit adult/consent onboarding → incomplete manual entry → Cancel → contained decision dialog → Keep/Escape returns focus and preserves text with no private write. Save and leave verifies encrypted revision first; refused writes keep the decision and permit identical explicit retry. Leave without saving edits clears only working context; an earlier saved revision remains recoverable.
+diff --git a/scripts/e2e/actual-apply-outcome29.mjs b/scripts/e2e/actual-apply-outcome29.mjs
+index f2a15e30fa84b494fa1a423a9815f7bd6e6f06cb..d1cf1e3383559cca65c60336509cf74cf637076f 100644
+--- a/scripts/e2e/actual-apply-outcome29.mjs
++++ b/scripts/e2e/actual-apply-outcome29.mjs
+@@ -9,6 +9,7 @@ import path from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ import { setTimeout as delay } from 'node:timers/promises';
+ import * as b from './cat04-catalog-recovery-audit.mjs';
++import { consumerContinuity31 } from './consumer-continuity31.mjs';
+ 
+ const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+ const out = path.resolve(process.env.ONSKIN_OUTCOME_EVIDENCE ?? path.join(repo, '../ENGINEERING29_EVIDENCE/outcome-browser'));
+@@ -21,6 +22,7 @@ const receipt = { start: new Date().toISOString(), head: git('rev-parse', 'HEAD'
+   surface: 'Actual local Expo/Edge UI and encrypted records; synthetic owner and acknowledgement faults, no native qualification', viewports: [], blocked: [], pass: false };
+ const json = (name, value) => writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n');
+ let server, browser, client;
++let keyboardProbe = 0;
+ const moduleExpression = `const mod=suffix=>{const entry=[...__r.getModules().values()].find(m=>(m.verboseName??'').replaceAll('\\\\','/').endsWith(suffix));if(!entry?.publicModule?.exports)throw new Error('Missing loaded source module');return entry.publicModule.exports;};const store=mod('/features/today/completionsStore.ts');`;
+ const tap = label => b.scrollControlIntoView(client, label).then(() => b.clickByText(client, label));
+ const contains = label => b.scrollControlIntoView(client, label, { exact: false }).then(() => b.clickByText(client, label, { exact: false }));
+@@ -33,7 +35,14 @@ async function capture(name) {
+ }
+ async function keyboard(label, height) {
+   await b.scrollControlIntoView(client, label);
+-  const g = await b.evaluate(client, `(()=>{const n=[...document.querySelectorAll('[role="button"],button')].filter(n=>n.getClientRects().length&&!n.closest('[aria-hidden="true"],[inert]')).find(n=>n.textContent.trim()===${JSON.stringify(label)}||n.getAttribute('aria-label')===${JSON.stringify(label)});n.focus();const r=n.getBoundingClientRect();return {focus:document.activeElement===n,height:r.height,y:r.y,hit:n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}})()`);
++  const probe = `(()=>{const n=[...document.querySelectorAll('[role="button"],button')].filter(n=>n.getClientRects().length&&!n.closest('[aria-hidden="true"],[inert]')).find(n=>n.textContent.trim()===${JSON.stringify(label)}||n.getAttribute('aria-label')===${JSON.stringify(label)});if(!n)return null;n.focus();const r=n.getBoundingClientRect();return {focus:document.activeElement===n,height:r.height,y:r.y,hit:n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}})()`;
++  const first = await b.evaluate(client, probe);
++  const ready = g => g && g.focus && g.hit && g.height >= 44 && g.y >= 0 && g.y + g.height <= height;
++  if (!ready(first)) {
++    json(`keyboard-readiness-${++keyboardProbe}.json`, { label, first, viewportHeight: height, reason: 'Wait for actual focus ownership/hit testing after platform modal transition; geometry assertions unchanged.' });
++    await b.waitForCondition(client, `(()=>{const g=${probe};return g&&g.focus&&g.hit&&g.height>=44&&g.y>=0&&g.y+g.height<=${height}})()`, 10000, 'keyboard target owns focus and is fully reachable');
++  }
++  const g = await b.evaluate(client, probe);
+   assert(g.focus && g.hit && g.height >= 44 && g.y >= 0 && g.y + g.height <= height);
+   await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
+   await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+@@ -101,7 +110,8 @@ try {
+     const final = await snapshot(); assert.equal(final.versions.length, 3); assert.equal(final.uses.length, 0);
+     json(id + '-canonical-receipt.json', { versions: final.versions.map(({ id, sequence, contentHash, parentHash, source }) => ({ id, sequence, contentHash, parentHash, source })),
+       uses: final.uses.length, ciphertextSha256: sha(final.raw), inspectionPreservedCiphertext: true });
+-    receipt.viewports.push({ width, height, pass: true, explicitOnboarding: true, syntheticAcknowledgementFault: true, exactReadOnlyOutcome: true });
++    const continuity31 = await consumerContinuity31({ b, client, tap, keyboard, text, snapshot, capture, moduleExpression, id, height });
++    receipt.viewports.push({ width, height, pass: true, explicitOnboarding: true, syntheticAcknowledgementFault: true, exactReadOnlyOutcome: true, continuity31 });
+     const target = (await client.send('Target.getTargetInfo')).targetInfo.targetId; await client.send('Target.closeTarget', { targetId: target }).catch(() => {}); client.close(); client = undefined;
+   }
+   assert.equal(receipt.blocked.length, 0); receipt.pass = true;
+diff --git a/scripts/e2e/consumer-continuity31.mjs b/scripts/e2e/consumer-continuity31.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c6ec0499da7050dc41090ac8100e2b6a1e072460
+--- /dev/null
++++ b/scripts/e2e/consumer-continuity31.mjs
+@@ -0,0 +1,109 @@
++// Connected real Expo UI/stores/crypto. All owners, input and injected bridge
++// outcomes are synthetic local evidence; no native/recipient qualification.
++import assert from 'node:assert/strict';
++
++export async function consumerContinuity31({ b, client, tap, keyboard, text, snapshot, capture, moduleExpression, id, height }) {
++  const evaluate = expression => b.evaluate(client, expression, true);
++  const navigate = async route => {
++    await evaluate(`(()=>{${moduleExpression}mod('/node_modules/expo-router/build/exports.js').router.push(${JSON.stringify(route)});return true})()`);
++    await b.waitForPath(client, route.split('?')[0]);
++  };
++  const key = async (name, code) => {
++    await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: name, code: name, windowsVirtualKeyCode: code });
++    await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: name, code: name, windowsVirtualKeyCode: code });
++  };
++  const dialog = '[role="dialog"][aria-label="Review routine decision"]';
++  async function contained() {
++    await b.waitForCondition(client, `(()=>{const d=document.querySelector('${dialog}');return d&&d.contains(document.activeElement)})()`, 10000, 'routine decision focus');
++    assert(await evaluate(`!![...document.querySelectorAll('button,[role="button"]')].find(n=>n.textContent.trim()==='Reload actual routine and source')?.closest('[inert]')`));
++    const ax = await client.send('Accessibility.getFullAXTree');
++    assert(!ax.nodes.some(node => !node.ignored && node.name?.value === 'Reload actual routine and source'));
++    for (let i = 0; i < 7; i++) { await key('Tab', 9); assert(await evaluate(`document.querySelector('${dialog}').contains(document.activeElement)`)); }
++  }
++  async function fault(name, afterCommit) {
++    await evaluate(`(()=>{${moduleExpression}const original=store[${JSON.stringify(name)}];store[${JSON.stringify(name)}]=async(...args)=>{store[${JSON.stringify(name)}]=original;${afterCommit ? 'await original(...args);' : ''}throw new Error('SYNTHETIC31_ACK_UNAVAILABLE');};return true})()`);
++  }
++  const scale = async () => evaluate(`(()=>{const seen=new WeakSet();const scale=()=>{for(const n of document.querySelectorAll('div[dir="auto"]')){if(seen.has(n))continue;seen.add(n);const s=getComputedStyle(n),size=parseFloat(s.fontSize),line=parseFloat(s.lineHeight);n.style.fontSize=size*2+'px';n.style.lineHeight=(Number.isFinite(line)?line:size*1.5)*2+'px';}};scale();globalThis.__continuity31Text=new MutationObserver(scale);globalThis.__continuity31Text.observe(document.body,{childList:true,subtree:true});return true})()`);
++
++  // Exact clear recovery, keyboard containment and 200% browser text pressure.
++  await scale(); await keyboard('Review clearing my applied routine', height); await contained();
++  const beforeCancel = await snapshot(); await capture(id + '-clear-text200-contained'); await key('Escape', 27);
++  await b.waitForCondition(client, `!document.querySelector('${dialog}')`, 10000, 'Escape cancels clear');
++  assert.equal((await snapshot()).raw, beforeCancel.raw);
++  await keyboard('Review clearing my applied routine', height); await fault('clearCurrentActualRoutine', true);
++  await keyboard('Confirm clearing applied routine', height); await text('Check saved correction outcome');
++  const clearBefore = await snapshot(); await keyboard('Check saved correction outcome', height);
++  await text('Exact reviewed clear found as saved version 4'); await capture(id + '-clear-readonly-inspection');
++  assert.equal((await snapshot()).raw, clearBefore.raw); assert.equal((await snapshot()).keyHash, clearBefore.keyHash);
++  await client.send('Page.reload'); await text('Applied routine cleared in version 4');
++  await keyboard('Review current Shelf sequence as actual routine', height); await contained(); await keyboard('Apply reviewed actual routine', height);
++  await text('Current owner-applied version 5'); assert.equal((await snapshot()).uses.length, 0);
++
++  // A genuine visible check-off is separate from apply. Retraction has its own
++  // lost acknowledgement and inspection; no synthetic event is inserted.
++  await navigate('/today');
++  await b.waitForCondition(client, `document.body.innerText.includes('Morning routine')||document.body.innerText.includes('Evening routine')`, 30000, 'current local-clock routine phase');
++  const phase = await evaluate(`document.body.innerText.includes('Morning routine')?'AM':'PM'`);
++  await b.waitForCondition(client, `!![...document.querySelectorAll('[role="checkbox"]')].find(n=>n.getAttribute('aria-label')?.includes('Synthetic29 recorded cleanser'))`, 30000, 'visible applied-product checkoff');
++  const check = await evaluate(`(()=>{const n=[...document.querySelectorAll('[role="checkbox"]')].find(n=>n.getAttribute('aria-label')?.includes('Synthetic29 recorded cleanser'));n.scrollIntoView({block:'center'});n.focus();const r=n.getBoundingClientRect();return n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))&&document.activeElement===n})()`);
++  assert(check); await key('Enter', 13);
++  await b.waitForCondition(client, `!!document.querySelector('[role="checkbox"][aria-checked="true"]')`, 30000, 'recorded actual use');
++  const recorded = await snapshot();
++  assert.equal(recorded.uses.length, 1); assert.equal(recorded.uses[0].planId, recorded.versions.at(-1).id);
++  assert(recorded.uses[0].stepKey.startsWith(phase + ':'));
++  await navigate('/routine/records'); await text('My actual routine'); await tap('Show actual routine and use history');
++  await keyboard('Review retraction of use 1', height); await contained(); await key('Escape', 27);
++  assert.equal((await snapshot()).uses.length, 1);
++  await keyboard('Review retraction of use 1', height); await fault('retractActualRoutineUse', true);
++  await keyboard('Confirm actual-use retraction', height); await text('Check saved correction outcome');
++  const retractBefore = await snapshot(); await keyboard('Check saved correction outcome', height); await text('Exact reviewed retraction found as saved entry 2');
++  assert.equal((await snapshot()).raw, retractBefore.raw); assert.equal((await snapshot()).keyHash, retractBefore.keyHash);
++  await capture(id + '-retraction-readonly-inspection');
++  await keyboard('Review clearing my applied routine', height); await fault('clearCurrentActualRoutine', false);
++  await keyboard('Confirm clearing applied routine', height); await keyboard('Check saved correction outcome', height); await text('No exact matching correction was found');
++  const missing = await snapshot();
++  await evaluate(`(()=>{globalThis.__get31=Storage.prototype.getItem;Storage.prototype.getItem=function(k){if(k==='layerwell.completions.v1')throw Error('SYNTHETIC31_READ');return globalThis.__get31.call(this,k)};return true})()`);
++  await keyboard('Check saved correction outcome', height); await text('Saved correction history is unavailable or unsupported'); await capture(id + '-correction-read-failure');
++  await evaluate(`Storage.prototype.getItem=globalThis.__get31;delete globalThis.__get31;true`);
++  await keyboard('Check saved correction outcome', height); await text('No exact matching correction was found');
++  await keyboard('Cancel correction outcome check', height); assert.equal((await snapshot()).raw, missing.raw);
++
++  // Exact selected plan status changes before review. This deliberate competing
++  // local command models another owner view; it creates no professional authority.
++  await navigate('/you'); await keyboard('Prepare appointment brief', height);
++  await b.fillByLabel(client, 'Questions for the professional', 'Synthetic31 selected-record question');
++  await tap('Choose recorded notes and saved plans');
++  const select = async prefix => {
++    const label = await evaluate(`(()=>{const n=[...document.querySelectorAll('[role="checkbox"]')].find(n=>n.getAttribute('aria-label')?.startsWith(${JSON.stringify(prefix)}));if(!n)throw Error('Exact recorded choice missing');return n.getAttribute('aria-label')})()`);
++    await b.scrollControlIntoView(client, label); await b.clickByText(client, label);
++  };
++  await select('Include Applied actual routine 5');
++  await evaluate(`(async()=>{${moduleExpression}const lease=mod('/lib/consent/healthDataWriteAdmission.ts').captureHealthDataWriteLease(),ledger=await store.getActualRoutineSnapshot(lease);await store.clearCurrentActualRoutine(lease,{id:crypto.randomUUID(),createdAt:new Date().toISOString(),expectedParentHash:ledger.versions.at(-1).contentHash});return true})()`);
++  await keyboard('Review appointment brief', height); await text('Selected records changed before review');
++  assert.equal(await evaluate(`!!document.querySelector('[aria-label="Reviewed appointment brief"]')`), false);
++  await b.waitForInputValue(client, 'Questions for the professional', 'Synthetic31 selected-record question');
++  await tap('Refresh recorded choices'); await select('Include Cleared actual routine 6'); await keyboard('Review appointment brief', height);
++  await text('Status at source read: current owner-applied record');
++  await evaluate(`(()=>{globalThis.__brief31Handoffs=[];Object.defineProperty(navigator,'share',{configurable:true,value:async content=>{globalThis.__brief31Handoffs.push(content);throw Error('SYNTHETIC31_HANDOFF_UNKNOWN')}});return true})()`);
++  await keyboard('Share reviewed brief', height); await text('Sharing was not confirmed by the device');
++  assert.equal(await evaluate(`globalThis.__brief31Handoffs.length`), 1);
++  await evaluate(`Object.defineProperty(navigator,'share',{configurable:true,value:async content=>{globalThis.__brief31Handoffs.push(content);return {action:'sharedAction'}}});true`);
++  await keyboard('Share reviewed brief', height); await text('Recipient receipt, review or action is not confirmed');
++  const content = await evaluate(`globalThis.__brief31Handoffs[1].text`);
++  assert(content.includes('Synthetic31 selected-record question') && content.includes('Cleared actual routine 6'));
++  assert(!content.includes('Synthetic29 recorded cleanser') && !content.includes('Owner-recorded use'));
++  await capture(id + '-selected-brief-unknown-and-retry'); await keyboard('Close appointment brief', height);
++  await keyboard('Prepare appointment brief', height); await b.fillByLabel(client, 'Questions for the professional', 'Synthetic31 retired navigation draft');
++  await keyboard('Review appointment brief', height); await text('Synthetic31 retired navigation draft');
++  await navigate('/routine/records'); await text('My actual routine');
++  assert.equal(await evaluate(`document.body.innerText.includes('Synthetic31 retired navigation draft')`), false);
++  await navigate('/you'); await keyboard('Prepare appointment brief', height);
++  await b.waitForInputValue(client, 'Questions for the professional', ''); await keyboard('Close appointment brief', height);
++  await keyboard('Open my private Diary. Existing photos, note history and manual comparison on this device.', height); await text('Native encrypted photo storage is unavailable in this browser');
++  assert.equal(await evaluate(`document.body.innerText.includes('Take my first photo')`), false);
++  await keyboard('Try again', height); await text('A complete timeline has not been confirmed'); await capture(id + '-diary-native-unavailable');
++  await client.send('Page.reload'); await text('This does not mean your Diary is empty');
++  return { pass: true, clearAndRetractionExactInspection: true, ciphertextAndKeysPreserved: true, genuineVisibleUse: true,
++    unknownAndReadRetry: true, keyboardContained: true, escapeCancel: true, browserText200: true,
++    exactBriefSelectionPreReviewConflict: true, syntheticShareHandoffOnly: true, nativeDiaryRefusal: true };
++}
+diff --git a/scripts/e2e/diary-note-history.mjs b/scripts/e2e/diary-note-history.mjs
+index 82a5b3bc1ee709416680d64e189469a9710c1338..5ec36d08a180a6b72117894e38198b895f5d3d9c 100644
+--- a/scripts/e2e/diary-note-history.mjs
++++ b/scripts/e2e/diary-note-history.mjs
+@@ -82,7 +82,7 @@ export async function runDiaryNoteHistory({ evidenceDir }) {
+     await browser.waitForCondition(client, `${moduleExpression('src/lib/consent/healthProcessingEpoch.ts')}.activeHealthProcessingLeaseSnapshot()?.ownerUserId === 'local-device-unclaimed'`, 60000, 'actual consent activation');
+     await navigate('/progress');
+     await browser.evaluate(client, `(${installNativePhotoLayoutFixture.toString()})()`, true);
+-    for (const [width, height] of [[375, 667], [430, 932]]) {
++    for (const [width, height] of [[375, 667], [390, 844], [430, 932]]) {
+       await browser.setViewport(client, { width, height });
+       await browser.evaluate(client, `__C08B2_LAYOUT_FIXTURE__.seed('none',true)`, true);
+       // A malformed legacy URI must not become an implicit network image read.

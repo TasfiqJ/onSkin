@@ -1,0 +1,36 @@
+{
+  "label": "mobile-types-working",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "typecheck"
+  ],
+  "before": {
+    "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+    "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/(tabs)/progress.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/features/photos/PhotoStorageGate.tsx\n M apps/mobile/src/features/photos/photoRecoveryCopy.ts\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx\n M apps/mobile/src/features/shelf/appointmentBriefRecords.ts\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n?? apps/mobile/src/features/photos/photoRecoveryCopy.test.ts",
+    "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+    "diffSha256": "147c208d17dbb7af8e608512dcc7f8dd1d3b977bed7bed42fb6c118c9a9b0c3e"
+  },
+  "start": "2026-11-19T23:34:00.679002+00:00",
+  "freeBytesBefore": 156262469632,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "e5b5d0934852dccac5bd90a2017f9536e2ac89f9",
+    "tree": "9de89e78a4d475dbaf154d1d66dd29f34617a0d5",
+    "branch": "stage/m1-native-runtime47",
+    "status": "M apps/mobile/src/app/(tabs)/progress.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/features/photos/PhotoStorageGate.tsx\n M apps/mobile/src/features/photos/photoRecoveryCopy.ts\n M apps/mobile/src/features/routine/ActualRoutinePanel.tsx\n M apps/mobile/src/features/routine/actualRoutine.ts\n M apps/mobile/src/features/routine/actualRoutineJourney.test.ts\n M apps/mobile/src/features/routine/actualRoutineStore.test.ts\n M apps/mobile/src/features/shelf/AppointmentBriefEditor.tsx\n M apps/mobile/src/features/shelf/appointmentBriefRecords.ts\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n?? apps/mobile/src/features/photos/photoRecoveryCopy.test.ts",
+    "indexSha256": "a4f2c3bbafcf47716dd7cac00aa83f59908c6bc1b7d7445b271b4faf84a4433d",
+    "diffSha256": "147c208d17dbb7af8e608512dcc7f8dd1d3b977bed7bed42fb6c118c9a9b0c3e"
+  },
+  "end": "2026-11-19T23:34:19.609749+00:00",
+  "freeBytesAfter": 156262391808,
+  "logBytes": 53,
+  "logSha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290"
+}
