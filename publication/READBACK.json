@@ -1,0 +1,17 @@
+{
+  "status": "PUBLISHED_VERIFIED",
+  "payload_commit": "c75917a04eb58fcbb70b0ac07f3a8afeba0a7ae9",
+  "payload_tree": "c7aaa2bb9e13963228a89bcae8bac8596b0dd470",
+  "branch": "brain/masterv2",
+  "files_verified": 160,
+  "public_archive_sha256": "cbb7cae2010c11f0570aa21a59d5bac3b34b12945ae0cfb49a0c66222632a7e0",
+  "observed_publication_actions": 0,
+  "protected_refs_unchanged": true,
+  "application_worktree_modified_by_publisher": false,
+  "account_settings_changed": false,
+  "new_paid_operations_initiated": 0,
+  "index_url": "https://github.com/TasfiqJ/onSkin/blob/c75917a04eb58fcbb70b0ac07f3a8afeba0a7ae9/START_HERE.md",
+  "stable_url": "https://github.com/TasfiqJ/onSkin/blob/brain/masterv2/START_HERE.md",
+  "first_codex_task_url": "https://github.com/TasfiqJ/onSkin/blob/c75917a04eb58fcbb70b0ac07f3a8afeba0a7ae9/tasks/BR-000/ASSIGNMENT.md",
+  "note": "First Codex return and independent review under new protocol remain pending; no claim of beta readiness."
+}

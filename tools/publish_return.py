@@ -56,6 +56,7 @@ def main():
  files=[];manifest=[]
  for f in sorted(a.report_dir.rglob('*')):
   if not f.is_file():continue
+  if f.relative_to(a.report_dir).as_posix()=='MANIFEST.json':continue  # Generated from payload, never self-referential.
   if f.is_symlink():raise RuntimeError('No symlink payloads')
   rel=f.relative_to(a.report_dir).as_posix();assert '..' not in pathlib.PurePosixPath(rel).parts
   raw=f.read_bytes();text=raw.decode('utf-8')
