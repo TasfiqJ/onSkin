@@ -1,9 +1,0 @@
-{
-  "observedAt": "2026-11-18T19:03:15.224911+00:00",
-  "branch": "stage/m1-native-runtime47",
-  "head": "1962b44aec384545638f4aaede36ac64ef31aebe",
-  "tree": "ad97b496949cdaae0cbfe5d8c778b3c54576e14f",
-  "status": "",
-  "pr48Ancestor": 0,
-  "writerObservation": "Only current Engineering29 task active for this workspace; Engineering28 notLoaded; previous task idle; Desktop Commander no active sessions; no git lock. System-service command lines partly unavailable. No observed competing source writer; not a global OS lock proof."
-}

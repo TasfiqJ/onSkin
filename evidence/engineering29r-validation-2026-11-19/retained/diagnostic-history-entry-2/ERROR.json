@@ -1,8 +1,0 @@
-{
-  "status": "FAIL",
-  "message": "Cannot read properties of null (reading 'sync')",
-  "viewport": {
-    "height": 667,
-    "width": 375
-  }
-}

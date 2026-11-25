@@ -1,4 +1,0 @@
-{
-  "message": "Error: Timed out waiting for text \"Begin\": condition false",
-  "stack": "Error: Timed out waiting for text \"Begin\": condition false\n    at waitForCondition (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:967:9)\n    at async Module.waitForText (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:971:3)\n    at async onboarding (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:62:78)\n    at async file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:93:68"
-}

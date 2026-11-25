@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-25T15:40:44.648387+00:00",
+  "main_head": "53a84d921d14dbff1d2e9b8f1b3bb27e10dcede6",
+  "application_remote_head": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+  "pr48_draft": true,
+  "hooks": [],
+  "rulesets": [],
+  "pages": false,
+  "workflow_blob_ids": {
+    "g97-security-acceptance.yml": "6afd4e34c6142c1a28814f2deb73483b1365d863",
+    "ios-launch-contract.yml": "3f80c9f19ac4a3675d82446501a0d3aae4c511a0",
+    "ios-simulator-compile.yml": "0564dea4c256471ab139a7fd03acc59f3e8d2a78",
+    "quality.yml": "e983e936097fe2f8478804ba23d69a713e9a1b2c",
+    "security-candidate22.yml": "02f80cd4a48b3bb82b09028adc8970673a504eba",
+    "security.yml": "34416c61c8712303b45cf072c7754d54d0e8dd76"
+  },
+  "target_branch": "brain/masterv2",
+  "target_has_workflows": false,
+  "action": "new docs/evidence-only ref; no PR, app push, dispatch, account setting or hosted service operation",
+  "policy": "Changed workflow bytes stop publication pending review."
+}

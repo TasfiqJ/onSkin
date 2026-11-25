@@ -1,7 +1,0 @@
-{
-  "commandId": "8c00eff4-34a6-4b9e-b07e-0f3c6173c516",
-  "originalTime": "2026-11-20T15:00:58.844Z",
-  "ciphertextSha256": "992bc5a25ca4879ff0ae2db3c955ab29d7cce58b33e38b25d6a63bff1a3687c0",
-  "ledgerSha256": "130d458429aaac0f7e5b393ea9831f4d25bcb93340e200ff089f3312e03138c2",
-  "termination": "owned browser process tree force termination"
-}

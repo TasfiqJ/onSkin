@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-25T04:39:12.327758+00:00",
+  "patches": [
+    {
+      "file": "CUMULATIVE_PR48_TO_FINAL.patch",
+      "base": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+      "baseTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8",
+      "target": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "targetTree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "bytes": 4222834,
+      "sha256": "07fa612cd8a9447da74d5840b3806fbe93bfa2d40302d2a85e23b35e0ec7c30a",
+      "forwardExactTree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "reverseExactTree": "ae54eb34d8f5b0ff56aaaba3e4d0ee4474344fd8"
+    },
+    {
+      "file": "SESSION_ENGINEERING38_TO_ENGINEERING39.patch",
+      "base": "6d4ce5ce2ed8db22a779dfa55c60f6480cbb3e0a",
+      "baseTree": "f430348f90ddd5162cbf42b24a7a22042ed48230",
+      "target": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "targetTree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "bytes": 82497,
+      "sha256": "4296b7680c2885a5ced92dfa40910afd9eb1cee1ebcb0918ee2adb2ce5f78c9b",
+      "forwardExactTree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "reverseExactTree": "f430348f90ddd5162cbf42b24a7a22042ed48230"
+    }
+  ],
+  "activeIndexUnchanged": true,
+  "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+  "method": "Separate retained indexes, forward/reverse git apply --cached --binary, exact tree equality; no checkout/reset/active-index mutation."
+}

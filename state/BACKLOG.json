@@ -1,0 +1,62 @@
+[
+  {
+    "id": "BR-000",
+    "priority": 0,
+    "state": "AUTHORIZED_COORDINATION_ONLY",
+    "outcome": "Safely adopt E40 and publish first exact return",
+    "depends_on": []
+  },
+  {
+    "id": "BR-001",
+    "priority": 1,
+    "state": "DRAFT",
+    "outcome": "Working runner and complete real core loop",
+    "depends_on": [
+      "BR-000"
+    ]
+  },
+  {
+    "id": "BR-002",
+    "priority": 2,
+    "state": "PLANNED",
+    "outcome": "Close beta-core P0/P1 defects and freeze candidate",
+    "depends_on": [
+      "BR-001"
+    ]
+  },
+  {
+    "id": "BR-003",
+    "priority": 3,
+    "state": "OWNER_AND_CUSTODIAN_APPROVAL_REQUIRED",
+    "outcome": "Exact signed private-beta qualification",
+    "depends_on": [
+      "BR-002"
+    ]
+  },
+  {
+    "id": "BR-004",
+    "priority": 4,
+    "state": "NOT_AUTHORIZED",
+    "outcome": "Founder decision for a named small beta cohort",
+    "depends_on": [
+      "BR-003"
+    ]
+  },
+  {
+    "id": "J01-INTAKE",
+    "priority": 2,
+    "state": "DRAFT_RESEARCH_ONLY",
+    "outcome": "Authentic scientific intake and optical protocol",
+    "depends_on": []
+  },
+  {
+    "id": "FULL",
+    "priority": 5,
+    "state": "PLANNED_NO_GO",
+    "outcome": "Original full product all38/applicable gates",
+    "depends_on": [
+      "BR-004",
+      "J01-INTAKE"
+    ]
+  }
+]

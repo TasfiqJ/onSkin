@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "task_id": "REPLACE",
+  "task_revision": 1,
+  "reviewed_report_commit": "REPLACE",
+  "reviewed_application_head": "REPLACE",
+  "reviewed_application_tree": "REPLACE",
+  "decision": "CHANGES_REQUESTED",
+  "verified_scope": [],
+  "independently_executed": [],
+  "inspected_codex_receipts": [],
+  "not_verified": [],
+  "findings": [],
+  "session_choice": "CONTINUE",
+  "next_task": null,
+  "formal_release": "NO_GO"
+}

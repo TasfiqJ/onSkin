@@ -1,3 +1,0 @@
-Error: Timed out waiting for http://127.0.0.1:9490/json/version: fetch failed
-    at waitForUrl (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:362:9)
-    at async run (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:1573:5)

@@ -1,9 +1,0 @@
-{
-  "startedAt": "2026-11-17T12:14:36.868Z",
-  "surface": "Actual local Expo web in Edge; synthetic local owner, no providers",
-  "userDataDir": "[LOCAL_USER_HOME]\\AppData\\Local\\Temp\\[TEMP_BROWSER_PROFILE]",
-  "viewports": [],
-  "pass": false,
-  "error": "Could not scroll control \"Synthetic durable bottle\" into view.",
-  "endedAt": "2026-11-17T12:15:56.632Z"
-}

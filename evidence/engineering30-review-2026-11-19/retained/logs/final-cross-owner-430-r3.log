@@ -1,5 +1,0 @@
-Error: B Shelf product button is unavailable
-    at assert (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:77:25)
-    at crossOwnerFlow (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:1237:3)
-    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at async run (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:2011:7)

@@ -1,0 +1,341 @@
+[
+  {
+    "original_archive_path": "FINAL_REPORT.md",
+    "original_sha256": "3a90ad22256e18645978be533b2692db6ba4bc4b4ae2c4c091232ae414575bb1",
+    "published_sha256": "3a90ad22256e18645978be533b2692db6ba4bc4b4ae2c4c091232ae414575bb1",
+    "published_bytes": 3883,
+    "parts": [
+      "sources/engineering39/FINAL_REPORT.md"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "ALL38_ALL18.md",
+    "original_sha256": "1a049e8fa7149d2e2b0592f7b509c83f209c2888ae60ed43a774565a37033288",
+    "published_sha256": "1a049e8fa7149d2e2b0592f7b509c83f209c2888ae60ed43a774565a37033288",
+    "published_bytes": 9281,
+    "parts": [
+      "sources/engineering39/ALL38_ALL18.md"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "RELEASE_READINESS.md",
+    "original_sha256": "8e95f092c48ca50099c3ef48acb07efb54aea803d1592fb9734dc09a170e8e51",
+    "published_sha256": "8e95f092c48ca50099c3ef48acb07efb54aea803d1592fb9734dc09a170e8e51",
+    "published_bytes": 19098,
+    "parts": [
+      "sources/engineering39/RELEASE_READINESS.md"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "QUALIFICATION.md",
+    "original_sha256": "4312b06802c448be1e03947127bf42db01a8f86a6c8b550451ad33b69e8203a9",
+    "published_sha256": "4312b06802c448be1e03947127bf42db01a8f86a6c8b550451ad33b69e8203a9",
+    "published_bytes": 13957,
+    "parts": [
+      "sources/engineering39/QUALIFICATION.md"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "CHECKPOINT_CONTINUATION.json",
+    "original_sha256": "2cf0a89114edb04f645ca0908ebe20beafd290894a42b631b426e00957ecf08a",
+    "published_sha256": "a4eec64208a137353aaee2d69410ec39d9c4d0af590b3ece5d3479a21898b658",
+    "published_bytes": 887,
+    "parts": [
+      "sources/engineering39/CHECKPOINT_CONTINUATION.json"
+    ],
+    "transformation": "owner home path replaced with <OWNER_HOME>; not source-patch redaction"
+  },
+  {
+    "original_archive_path": "FINAL_IDENTITY.json",
+    "original_sha256": "47babd8a2d5454209728dee2b2991acc833062feffbfa0ef945c24423042b3b6",
+    "published_sha256": "47babd8a2d5454209728dee2b2991acc833062feffbfa0ef945c24423042b3b6",
+    "published_bytes": 776,
+    "parts": [
+      "sources/engineering39/FINAL_IDENTITY.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "PATCH_VERIFICATION.json",
+    "original_sha256": "e82a60942a7da54d5ccc12b8da1543e39f766c2b72c5e9279cea44d4890fe31c",
+    "published_sha256": "e82a60942a7da54d5ccc12b8da1543e39f766c2b72c5e9279cea44d4890fe31c",
+    "published_bytes": 1448,
+    "parts": [
+      "sources/engineering39/PATCH_VERIFICATION.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "ANCESTRY_VERIFICATION.json",
+    "original_sha256": "a8a6ad137ec747738ac69cfbe9bb242bdccd25861f591d907598dc2e825dbbfe",
+    "published_sha256": "a8a6ad137ec747738ac69cfbe9bb242bdccd25861f591d907598dc2e825dbbfe",
+    "published_bytes": 253,
+    "parts": [
+      "sources/engineering39/ANCESTRY_VERIFICATION.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "FROZEN_CONTRACTS.json",
+    "original_sha256": "90cac5011914558334fd87c4eed6eb332063d2082ff546800eec98457f44407d",
+    "published_sha256": "90cac5011914558334fd87c4eed6eb332063d2082ff546800eec98457f44407d",
+    "published_bytes": 856,
+    "parts": [
+      "sources/engineering39/FROZEN_CONTRACTS.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "SUCCESSOR_SOURCE_CANDIDATE.json",
+    "original_sha256": "8515775aeb04d007731b6b1af6f9ef41c0c1d173733c6725cadc115e26013a54",
+    "published_sha256": "8515775aeb04d007731b6b1af6f9ef41c0c1d173733c6725cadc115e26013a54",
+    "published_bytes": 7263,
+    "parts": [
+      "sources/engineering39/SUCCESSOR_SOURCE_CANDIDATE.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "RELEASE_SOURCE_HASH_DIAGNOSIS.json",
+    "original_sha256": "5039a55d73ab10996d315b50031bc46ee7d1588e5257c53449560c5fb3fe0a3e",
+    "published_sha256": "5039a55d73ab10996d315b50031bc46ee7d1588e5257c53449560c5fb3fe0a3e",
+    "published_bytes": 18565,
+    "parts": [
+      "sources/engineering39/RELEASE_SOURCE_HASH_DIAGNOSIS.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "SECURITY_INVENTORY_DIAGNOSIS.json",
+    "original_sha256": "12d6fb3d7da0a3f2d5998d360c4e0288aa721e4c7aa16d2d3f93eb2283bf7e3d",
+    "published_sha256": "12d6fb3d7da0a3f2d5998d360c4e0288aa721e4c7aa16d2d3f93eb2283bf7e3d",
+    "published_bytes": 1126322,
+    "parts": [
+      "sources/engineering39/SECURITY_INVENTORY_DIAGNOSIS.json.parts/part-001.txt",
+      "sources/engineering39/SECURITY_INVENTORY_DIAGNOSIS.json.parts/part-002.txt",
+      "sources/engineering39/SECURITY_INVENTORY_DIAGNOSIS.json.parts/part-003.txt",
+      "sources/engineering39/SECURITY_INVENTORY_DIAGNOSIS.json.parts/part-004.txt",
+      "sources/engineering39/SECURITY_INVENTORY_DIAGNOSIS.json.parts/part-005.txt",
+      "sources/engineering39/SECURITY_INVENTORY_DIAGNOSIS.json.parts/part-006.txt",
+      "sources/engineering39/SECURITY_INVENTORY_DIAGNOSIS.json.parts/part-007.txt"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "BUILD_ARTIFACTS.json",
+    "original_sha256": "01af54121800e2901bed9f56b4ed3601df857b8272006787b70d82bd276aea71",
+    "published_sha256": "13a1ff2cf8835646ccc88cb0c3d79d15d88b66209ae11bdb38cdd737f32053af",
+    "published_bytes": 22313,
+    "parts": [
+      "sources/engineering39/BUILD_ARTIFACTS.json"
+    ],
+    "transformation": "owner home path replaced with <OWNER_HOME>; not source-patch redaction"
+  },
+  {
+    "original_archive_path": "BROWSER_MATRIX.json",
+    "original_sha256": "8245a0898d3e584ef0441d7a7ac528a4f3fa22a81fc9c7448e3da7ab702b3386",
+    "published_sha256": "8245a0898d3e584ef0441d7a7ac528a4f3fa22a81fc9c7448e3da7ab702b3386",
+    "published_bytes": 1949,
+    "parts": [
+      "sources/engineering39/BROWSER_MATRIX.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "BROWSER_OBSERVATION.md",
+    "original_sha256": "95e08278c683f84b068a97fdab9260d6564c150e4157128aa9bc1cd8dda2dee8",
+    "published_sha256": "95e08278c683f84b068a97fdab9260d6564c150e4157128aa9bc1cd8dda2dee8",
+    "published_bytes": 698,
+    "parts": [
+      "sources/engineering39/BROWSER_OBSERVATION.md"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "EXECUTION_RECEIPTS.json",
+    "original_sha256": "968820f3de141173b716447827ea6a20151675e60ee20eb06938a18ad942d4b9",
+    "published_sha256": "0ac628d5418902cc438cb2ae2c28c6a3b152005ebd9fd25eba7092799dac91c4",
+    "published_bytes": 22871,
+    "parts": [
+      "sources/engineering39/EXECUTION_RECEIPTS.json"
+    ],
+    "transformation": "owner home path replaced with <OWNER_HOME>; not source-patch redaction"
+  },
+  {
+    "original_archive_path": "final-root-tests.json",
+    "original_sha256": "baeff7c579feb0377b7596e81c81253cdef1c31cdeb5e70a8081369a6c1c0544",
+    "published_sha256": "baeff7c579feb0377b7596e81c81253cdef1c31cdeb5e70a8081369a6c1c0544",
+    "published_bytes": 1274,
+    "parts": [
+      "sources/engineering39/final-root-tests.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "final-typecheck.json",
+    "original_sha256": "5260e7fd814be63e8afabefaf703cac50f615d8bec24741c12f142202ba18b19",
+    "published_sha256": "5260e7fd814be63e8afabefaf703cac50f615d8bec24741c12f142202ba18b19",
+    "published_bytes": 1255,
+    "parts": [
+      "sources/engineering39/final-typecheck.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "final-lint.json",
+    "original_sha256": "de51e0d83ac4349452a63696849a8abcb20eb5d372c98c8e774af5803361862e",
+    "published_sha256": "de51e0d83ac4349452a63696849a8abcb20eb5d372c98c8e774af5803361862e",
+    "published_bytes": 1245,
+    "parts": [
+      "sources/engineering39/final-lint.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "final-consumer-build.json",
+    "original_sha256": "fed234f81ec2f7d12b4312c5a6614fc1486d3853df242a4e3a7c0f9229fd7b54",
+    "published_sha256": "900a6b2cd4ad5c36d3fd89ca0b6d6a09e9ec5b1d00174eb2c5819d0b090ed825",
+    "published_bytes": 1441,
+    "parts": [
+      "sources/engineering39/final-consumer-build.json"
+    ],
+    "transformation": "owner home path replaced with <OWNER_HOME>; not source-patch redaction"
+  },
+  {
+    "original_archive_path": "final-professional-build.json",
+    "original_sha256": "b3d1dc56efb8d84c6903f222e620bb1a6825907bf048c867d7b87e78a47ce74b",
+    "published_sha256": "66ff06a22ae796edcc47c3cb647469d3f28b654c9cb02a3e19f4df5d54f0eeae",
+    "published_bytes": 1379,
+    "parts": [
+      "sources/engineering39/final-professional-build.json"
+    ],
+    "transformation": "owner home path replaced with <OWNER_HOME>; not source-patch redaction"
+  },
+  {
+    "original_archive_path": "final-operator-build.json",
+    "original_sha256": "2808f080f6d98ae20b276447113b28b4028cb3eabef134024e15d938d5e6f500",
+    "published_sha256": "b1f0e183c68cdbf74f7141fec251a6785e7cc0fd9ed9de88d85382f6ca6da97b",
+    "published_bytes": 1378,
+    "parts": [
+      "sources/engineering39/final-operator-build.json"
+    ],
+    "transformation": "owner home path replaced with <OWNER_HOME>; not source-patch redaction"
+  },
+  {
+    "original_archive_path": "final-custody-restart.json",
+    "original_sha256": "8ff06ae9d37a5b96585ad774b3d10d0caaa82045602bb50f887dd1dc3d1d31b6",
+    "published_sha256": "8ff06ae9d37a5b96585ad774b3d10d0caaa82045602bb50f887dd1dc3d1d31b6",
+    "published_bytes": 1220,
+    "parts": [
+      "sources/engineering39/final-custody-restart.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "final-custody-restart.log",
+    "original_sha256": "45f14149243a26be035b00912018746d22342853a845fa8d7d2b16e8c0d265af",
+    "published_sha256": "45f14149243a26be035b00912018746d22342853a845fa8d7d2b16e8c0d265af",
+    "published_bytes": 1349,
+    "parts": [
+      "sources/engineering39/final-custody-restart.log"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "predecessor-native-source.json",
+    "original_sha256": "5d5dbfe6cacefee755eff4674e23ec0db66c5c5c75d44bc4826c9128d952f590",
+    "published_sha256": "5d5dbfe6cacefee755eff4674e23ec0db66c5c5c75d44bc4826c9128d952f590",
+    "published_bytes": 1234,
+    "parts": [
+      "sources/engineering39/predecessor-native-source.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "final-g97.log",
+    "original_sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d",
+    "published_sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d",
+    "published_bytes": 111,
+    "parts": [
+      "sources/engineering39/final-g97.log"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "final-release-contract.log",
+    "original_sha256": "991e621d9391c5ae05c276b5aa26a902f71a970bf192808f80fab5939f115133",
+    "published_sha256": "991e621d9391c5ae05c276b5aa26a902f71a970bf192808f80fab5939f115133",
+    "published_bytes": 16,
+    "parts": [
+      "sources/engineering39/final-release-contract.log"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "source-proof/COMMIT_ANCESTRY_WITNESS.json",
+    "original_sha256": "86a2d51e6296abb5796da23e07363d3a82c0f937301603d772bd39c23532686c",
+    "published_sha256": "86a2d51e6296abb5796da23e07363d3a82c0f937301603d772bd39c23532686c",
+    "published_bytes": 141173,
+    "parts": [
+      "sources/engineering39/source-proof/COMMIT_ANCESTRY_WITNESS.json"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "source-proof/verify_ancestry.py",
+    "original_sha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9",
+    "published_sha256": "51f9d57a7e348b014417de61e8a745a969786fc186781a8be34126bd183191a9",
+    "published_bytes": 1516,
+    "parts": [
+      "sources/engineering39/source-proof/verify_ancestry.py"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "source-proof/CUMULATIVE_PR48_TO_FINAL.patch",
+    "original_sha256": "07fa612cd8a9447da74d5840b3806fbe93bfa2d40302d2a85e23b35e0ec7c30a",
+    "published_sha256": "07fa612cd8a9447da74d5840b3806fbe93bfa2d40302d2a85e23b35e0ec7c30a",
+    "published_bytes": 4222834,
+    "parts": [
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-001.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-002.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-003.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-004.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-005.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-006.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-007.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-008.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-009.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-010.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-011.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-012.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-013.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-014.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-015.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-016.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-017.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-018.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-019.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-020.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-021.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-022.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-023.txt",
+      "sources/engineering39/source-proof/CUMULATIVE_PR48_TO_FINAL.patch.parts/part-024.txt"
+    ],
+    "transformation": "none"
+  },
+  {
+    "original_archive_path": "source-proof/SESSION_ENGINEERING38_TO_ENGINEERING39.patch",
+    "original_sha256": "4296b7680c2885a5ced92dfa40910afd9eb1cee1ebcb0918ee2adb2ce5f78c9b",
+    "published_sha256": "4296b7680c2885a5ced92dfa40910afd9eb1cee1ebcb0918ee2adb2ce5f78c9b",
+    "published_bytes": 82497,
+    "parts": [
+      "sources/engineering39/source-proof/SESSION_ENGINEERING38_TO_ENGINEERING39.patch"
+    ],
+    "transformation": "none"
+  }
+]

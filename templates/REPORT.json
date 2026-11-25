@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "REPLACE",
+  "task_revision": 1,
+  "task_sha256": "REPLACE",
+  "control_commit": "REPLACE",
+  "starting_head": "REPLACE",
+  "starting_tree": "REPLACE",
+  "final_head": "REPLACE",
+  "final_tree": "REPLACE",
+  "worktree_status": "REPLACE",
+  "status": "PARTIAL",
+  "user_outcomes": [],
+  "changed_paths": [],
+  "test_receipts": [],
+  "runtime_evidence": [],
+  "failures_retained": [],
+  "not_run": [],
+  "source_patch_parts": [],
+  "source_patch_sha256": "REPLACE",
+  "security_findings": [],
+  "owner_actions": [],
+  "operations": {
+    "application_pushes": 0,
+    "hosted_runs": 0,
+    "paid_operations": 0,
+    "native_attempts": 0
+  },
+  "formal_requirements_accepted": 0,
+  "formal_gates_accepted": 0,
+  "release": "NO_GO"
+}

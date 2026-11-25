@@ -1,0 +1,1235 @@
+[
+  {
+    "id": "F01",
+    "name": "Brand and legal identity",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Exact public spelling, seller, territory, owned policy/support destinations and store copy cleared and authenticated",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "RIGHTS",
+      "APPLE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Existing readiness and public-surface refusal foundations",
+    "qualification_gap": "Owner and counsel must confirm brand, seller, jurisdiction and publication destinations",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "docs/brand-decision-memo.md"
+    ],
+    "related_ids": [
+      "V2-C01"
+    ]
+  },
+  {
+    "id": "F02",
+    "name": "Accounts, age, privacy and consent",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Adult18+ guest/Apple/email lifecycle, same-owner linking, separate consents, withdrawal/export/deletion and no owner-content flash",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Synthetic custody revalidates separate checkpoint before operation and at commit. Tombstoned ciphertext reappearance can be re-erased.",
+    "qualification_gap": "Real checkpoint, key, media, backup and device custody.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/onboarding/ageGate.test.ts",
+      "apps/mobile/src/features/onboarding/ageGate.ts",
+      "apps/mobile/src/features/onboarding/ageGateStore.test.ts",
+      "apps/mobile/src/lib/auth/accountGeneration.ts",
+      "apps/mobile/src/lib/auth/sessionOwner.test.ts",
+      "apps/mobile/src/lib/auth/sessionOwner.ts",
+      "apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts",
+      "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts",
+      "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts"
+    ],
+    "related_ids": [
+      "V2-C01"
+    ]
+  },
+  {
+    "id": "F03",
+    "name": "Full Shelf intake",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Durable manual plus genuinely supported search/barcode/local label OCR; wrong/unknown match recovery, variant/formula confirmation",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "RIGHTS",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Version-bound use entries can open the existing owned Shelf formula-history route, including retained archived bottles.",
+    "qualification_gap": "Reviewed catalog and native intake remain unqualified.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "apps/mobile/src/features/shelf/intakeSession.ts",
+      "apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts",
+      "apps/mobile/src/features/shelf/store.test.ts",
+      "apps/mobile/src/features/shelf/store.ts"
+    ],
+    "related_ids": [
+      "V2-C02"
+    ]
+  },
+  {
+    "id": "F04",
+    "name": "Rights-reviewed catalog",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Rights/provenance and reviewed usable records, atomic serving/import, source corrections, miss/wrong-match reports and operator closure",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "RIGHTS",
+      "PROVIDER",
+      "OPERATIONS",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local console guards and provider-independent review foundations are present",
+    "qualification_gap": "Rights-approved catalog and authenticated reviewer operations",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/catalog/analytics.test.ts",
+      "apps/mobile/src/features/catalog/client.test.ts",
+      "apps/mobile/src/features/catalog/client.ts",
+      "apps/mobile/src/features/catalog/ingredientParser.test.ts",
+      "apps/mobile/src/features/catalog/normalization.test.ts",
+      "apps/mobile/src/features/catalog/obf.test.ts",
+      "apps/mobile/src/features/catalog/ocrRenderDiagnostics.test.ts",
+      "apps/mobile/src/features/catalog/ocrReview.test.ts",
+      "apps/mobile/src/features/catalog/quality.test.ts",
+      "apps/mobile/src/features/catalog/recoveryReport.test.ts",
+      "apps/mobile/src/features/catalog/reportOperation.test.ts",
+      "apps/mobile/src/features/catalog/reportPresentation.test.ts",
+      "apps/mobile/src/features/catalog/searchQuery.test.ts",
+      "apps/mobile/src/features/catalog/searchRenderDiagnostics.test.ts",
+      "apps/mobile/src/features/catalog/searchRequestCoordinator.test.ts"
+    ],
+    "related_ids": [
+      "F03",
+      "F13",
+      "F20"
+    ]
+  },
+  {
+    "id": "F05",
+    "name": "Reviewed conflict guidance",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Exact evidence corpus, clinical/cosmetic/regulatory review; unknown concentration and eligibility abstain with recovery",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "CLINICAL",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local refusal of unreviewed positive guidance remains in force",
+    "qualification_gap": "Clinical, cosmetic and legal approval of the exact rules and corpus",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts",
+      "apps/mobile/src/features/intelligence/engine.test.ts",
+      "apps/mobile/src/features/intelligence/engine.ts"
+    ],
+    "related_ids": [
+      "F06",
+      "F08",
+      "V2-C06"
+    ]
+  },
+  {
+    "id": "F06",
+    "name": "Version-aware routine builder",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Owned-product immutable formula/routine versions and explicit owner application, stale-CAS/refusal/recovery, intended distinct from actual",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "CLINICAL",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "A separate durable SQLite checkpoint witnesses the encrypted routine archive head. It confirms an exact post-commit head after restart and detects older snapshots.",
+    "qualification_gap": "Live independent checkpoint, unknown rollback adjudication and canonical version/use separation.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/routine/firstValueSources.campaign25.test.ts",
+      "apps/mobile/src/features/routine/generate.test.ts",
+      "apps/mobile/src/features/routine/generate.ts",
+      "apps/mobile/src/features/routine/orderStore.test.ts",
+      "apps/mobile/src/features/routine/orderStore.ts"
+    ],
+    "related_ids": [
+      "V2-C03",
+      "V2-C05"
+    ]
+  },
+  {
+    "id": "F07",
+    "name": "Today and adherence",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "AM/PM/date/offline durable checkoffs, idempotent replay, truthful silence and additive corrections before M2-03 readiness",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Original check-off and exact retraction load through the current professional grant. Stale review refuses and refreshed export shows the correction.",
+    "qualification_gap": "Consumer persistence and browser/device qualification plus canonical history separation.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/today/NextVisitCard.tsx",
+      "apps/mobile/src/features/today/completionSync.test.ts",
+      "apps/mobile/src/features/today/completionsStore.t1.test.ts",
+      "apps/mobile/src/features/today/completionsStore.test.ts",
+      "apps/mobile/src/features/today/cycleCompletion.test.ts",
+      "apps/mobile/src/features/today/localCompletionAccess.t1.test.ts",
+      "apps/mobile/src/features/today/routineClock.cont01.test.ts",
+      "apps/mobile/src/features/today/routineProjection.test.ts",
+      "apps/mobile/src/features/today/todayPersistence.t1.test.ts",
+      "apps/mobile/src/features/today/todayRoute.test.ts",
+      "apps/mobile/src/features/today/useRoutineClock.test.ts",
+      "apps/mobile/src/features/today/useToday.test.ts"
+    ],
+    "related_ids": [
+      "V2-C04",
+      "V2-C05"
+    ]
+  },
+  {
+    "id": "F08",
+    "name": "Cycle, ramp and recovery",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Reviewed cadence and ramp eligibility, interruption recovery and owner changes; no invented medical safety",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "CLINICAL",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local boundaries and refusal remain available",
+    "qualification_gap": "Reviewed cadence and recovery evaluator, claims and clinical review",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/scheduler/cyclePersistence.regression.test.ts",
+      "apps/mobile/src/features/scheduler/orchestrate.test.ts",
+      "apps/mobile/src/features/scheduler/orchestrate.ts"
+    ],
+    "related_ids": [
+      "F05",
+      "F06"
+    ]
+  },
+  {
+    "id": "F09",
+    "name": "Private photo diary and comparison",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Encrypted capture/history/notes/manual side-by-side comparison, app lock and erasure including temp/thumbnail/restore; no automated trend required",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "DEVICE",
+      "G5",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local discovery, absence, refusal, note recovery and erasure paths are present",
+    "qualification_gap": "Original authenticated native image recovery and physical-device validation",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/photos/encryptedStorage.test.ts",
+      "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "apps/mobile/src/features/photos/manualCompare20.test.ts",
+      "apps/mobile/src/features/photos/manualCompare20.ts",
+      "apps/mobile/src/features/photos/manualCompare20Route.test.ts",
+      "apps/mobile/src/features/photos/offlineDiary.retained03.test.ts",
+      "apps/mobile/src/features/photos/photoDeleteJournal.ts",
+      "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+      "apps/mobile/src/features/photos/photoNoteSaveCoordinator.test.ts",
+      "apps/mobile/src/features/photos/photoNoteSaveCoordinator.ts",
+      "apps/mobile/src/features/photos/timeline.ts"
+    ],
+    "related_ids": [
+      "V2-C07"
+    ]
+  },
+  {
+    "id": "F10",
+    "name": "Local OS reminders",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Opt-in local OS delivery, quiet hours, DST/timezone/reschedule/revocation/denial, owner cleanup proven on phone",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local timing, preferences and recovery contracts are present",
+    "qualification_gap": "Signed-device permission, scheduling, delivery and cleanup",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/notifications/deliver.test.ts",
+      "apps/mobile/src/features/notifications/deliver.ts",
+      "apps/mobile/src/features/notifications/reminderRecovery16.test.ts"
+    ],
+    "related_ids": [
+      "V2-C09"
+    ]
+  },
+  {
+    "id": "F11",
+    "name": "Standard subscriptions",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Actual StoreKit/RevenueCat exact-owner purchase/restore/manage/lapse/refund/unknown and event ordering with free rights continuity",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "PAYMENT",
+      "PROVIDER",
+      "APPLE",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Admission remains gated",
+    "qualification_gap": "Store purchase, restore, lapse, refund and merchant authority",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/subscription/entitlement.test.ts",
+      "apps/mobile/src/features/subscription/entitlement.ts",
+      "apps/mobile/src/features/subscription/entitlementActionGuard.test.ts",
+      "apps/mobile/src/features/subscription/entitlementEvidence.test.ts",
+      "apps/mobile/src/features/subscription/entitlementOrdering.test.ts",
+      "apps/mobile/src/features/subscription/entitlementPublication.test.ts",
+      "apps/mobile/src/features/subscription/entitlementPurchaseAttribution.test.ts",
+      "apps/mobile/src/features/subscription/store.test.ts",
+      "apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts",
+      "apps/mobile/src/features/subscription/storefrontCopy.test.ts"
+    ],
+    "related_ids": [
+      "V2-C10"
+    ]
+  },
+  {
+    "id": "F12",
+    "name": "Compliant introductory offer",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Truthful approved Apple-managed offer/trial eligibility and lifecycle; never re-enable custom reverse full-Pro grant to satisfy inventory",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "PAYMENT",
+      "APPLE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Approved system offer path remains gated",
+    "qualification_gap": "Apple-managed eligibility, terms and configuration",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/subscription/clientPolicy.ts",
+      "apps/mobile/src/features/subscription/store.test.ts",
+      "apps/mobile/src/features/subscription/storeTransactionNoticeContracts.test.ts",
+      "apps/mobile/src/features/subscription/storefrontCopy.test.ts"
+    ],
+    "related_ids": [
+      "F11",
+      "V2-C10"
+    ]
+  },
+  {
+    "id": "F13",
+    "name": "Reviewed recommendations",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Approved catalog/rules and exact review, explicit consent, traceable uncertainty, no photo-derived advertising or commission ranking",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "CLINICAL",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local negative paths and professional linkage foundations are present",
+    "qualification_gap": "Rights-reviewed source and rule corpus plus authentic recommendation receipt",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/recommendations/admission.test.ts",
+      "apps/mobile/src/features/recommendations/admission.ts",
+      "apps/mobile/src/features/recommendations/engine.test.ts"
+    ],
+    "related_ids": [
+      "F04",
+      "F05",
+      "V2-C06"
+    ]
+  },
+  {
+    "id": "F14",
+    "name": "Provider-real safe Ask",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Actual permitted provider, grounded reviewed answers/refusals, consent, minimization, rate/abuse/incident operations and failure recovery",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "CLINICAL",
+      "PROVIDER",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local refusal paths are present",
+    "qualification_gap": "Actual provider, grounded source corpus, abuse controls and staffed incidents",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/ask/gate.test.ts",
+      "apps/mobile/src/features/ask/gate.ts",
+      "apps/mobile/src/features/ask/readiness.ts",
+      "apps/mobile/src/features/ask/routeContract.test.ts"
+    ],
+    "related_ids": [
+      "F05",
+      "V2-C06"
+    ]
+  },
+  {
+    "id": "F15",
+    "name": "Private-safe sharing",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Explicit user-confirmed reviewed share/export projection and destination; redaction, revocation limits, temp cleanup and exact claims/rights review",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "CLINICAL",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Existing selected factual brief and source revalidation are available for local work",
+    "qualification_gap": "Native recipient selection, supported-device handoff and review signoffs",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/growth/shareAdmission.test.ts",
+      "apps/mobile/src/features/growth/shareAdmission.ts",
+      "apps/mobile/src/features/growth/shareProjection.test.ts",
+      "apps/mobile/src/features/growth/shareProjectionBuilder.test.ts"
+    ],
+    "related_ids": [
+      "V2-C08"
+    ]
+  },
+  {
+    "id": "F16",
+    "name": "Commerce and replenishment",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Executed partner terms, rights/dataflow/disclosures, independent ranking, real rail/order reconciliation/withdrawal; no health/photo targeting",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "RIGHTS",
+      "PROVIDER",
+      "PAYMENT",
+      "CLINICAL",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local refusal under the closed admission policy",
+    "qualification_gap": "Approved partners, recipient controls, merchant settlement and owner authorization",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/commerce/admission.ts",
+      "apps/mobile/src/features/commerce/commerce.test.ts",
+      "apps/mobile/src/features/commerce/commerceRoutes.test.ts",
+      "apps/mobile/src/features/commerce/consent.test.ts"
+    ],
+    "related_ids": [
+      "F04",
+      "F13",
+      "F20"
+    ]
+  },
+  {
+    "id": "F17",
+    "name": "Moderated community / Skin Notes",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Working posting/report/block/appeal/delete/retention, enforceable staffed moderation, escalation and incident coverage; mock feed insufficient",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "MODERATION",
+      "OPERATIONS",
+      "CLINICAL",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local policy foundations remain in place",
+    "qualification_gap": "Staffed moderation, publication, appeals and escalation",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/community/communityRoutes.test.ts",
+      "apps/mobile/src/features/community/store.test.ts",
+      "apps/mobile/src/features/community/store.ts"
+    ],
+    "related_ids": [
+      "F20"
+    ]
+  },
+  {
+    "id": "F19",
+    "name": "Widgets and Live Activities",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Signed native extensions and physical lock-screen privacy/action/lifecycle/expiry QA; source target or simulator is insufficient",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "DEVICE",
+      "APPLE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local privacy and action lifecycle foundations are present",
+    "qualification_gap": "Exact signed-device lifecycle and OS delivery",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/widgets/contract.test.ts",
+      "apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts",
+      "apps/mobile/src/features/widgets/runtimeGate.ts"
+    ],
+    "related_ids": [
+      "F07",
+      "F10"
+    ]
+  },
+  {
+    "id": "F20",
+    "name": "Operator, support and administration",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Real catalog/content reviewers and moderation/support/security operators, scoped roles, audit trail, funded coverage and restore/incident runbooks",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "OPERATIONS",
+      "MODERATION",
+      "RIGHTS",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "The operator queue carries an exact PostgreSQL cursor across pages. The session retains confirmed event, operation, version and repair evidence.",
+    "qualification_gap": "Approved live receipt lookup, canonical runtime, real staffing and operator authority.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/catalog-operator-console/src/auth.test.ts",
+      "apps/catalog-operator-console/src/env.test.ts",
+      "apps/catalog-operator-console/src/main.ts",
+      "apps/catalog-operator-console/src/operatorApi.test.ts",
+      "apps/catalog-operator-console/src/sessionTimer.test.ts",
+      "apps/catalog-operator-console/src/sessionWorkEpoch.test.ts",
+      "apps/catalog-operator-console/src/workflow.test.ts"
+    ],
+    "related_ids": [
+      "F04",
+      "F17",
+      "V2-C12",
+      "P01",
+      "P04"
+    ]
+  },
+  {
+    "id": "V2-C01",
+    "name": "Access/consent/rights",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Independent owner access and explicit consent purposes survive practice exit; verified same-owner portability, free export/delete",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Synthetic checkpoint refuses an older active snapshot after tombstone. Existing erasure and reappearance checks passed.",
+    "qualification_gap": "Qualified independent custody, backup and key destruction, and full privacy lifecycle acceptance.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/lib/auth/accountGeneration.ts",
+      "apps/mobile/src/lib/auth/sessionOwner.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F02"
+    ]
+  },
+  {
+    "id": "V2-C02",
+    "name": "Formula-aware intake",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Immutable confirmed bottle/formula versions, market/variant/provenance; reformulation cannot rewrite past observations",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local raw/parsed disclosures, normalized barcode and original label corrections present",
+    "qualification_gap": "Reviewed source admission and native OCR",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/catalog/client.ts",
+      "apps/mobile/src/features/shelf/intakeSession.ts",
+      "apps/mobile/src/features/shelf/store.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F03",
+      "F04"
+    ]
+  },
+  {
+    "id": "V2-C03",
+    "name": "Change ledger",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Append-only actual-use/change/correction ledger, event identity+payload hash, CAS, offline replay and deletion-win projections",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Mobile check-off, acknowledged retraction and applied version preserve original time, phase, ID and content hash in the synthetic API path.",
+    "qualification_gap": "Authenticated live original-owner ingress, canonical ledger and durable host.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/routine/generate.ts",
+      "apps/mobile/src/features/routine/orderStore.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F06",
+      "F07"
+    ]
+  },
+  {
+    "id": "V2-C04",
+    "name": "Optional exceptions",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Optional exceptions and corrections; no checkoff/silence means unknown, no coercive adherence or destructive undo",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local factual drafts, exceptions and explicit corrections remain available",
+    "qualification_gap": "Native verification and authenticated external custody",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F07"
+    ]
+  },
+  {
+    "id": "V2-C05",
+    "name": "Current plan/version",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Owner current actual plan version independent of professional immutable intended plan; acknowledgement never applies routine",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local two-store prepare/confirm witnesses custody-head transitions across interruption. Unknown prior state refuses and preserves evidence.",
+    "qualification_gap": "Live rollback adjudication, independently operated store and canonical history migration.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/routine/generate.ts",
+      "apps/mobile/src/features/routine/orderStore.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F06",
+      "F07"
+    ]
+  },
+  {
+    "id": "V2-C06",
+    "name": "Product decisions",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Basic unlimited factual compare, distinct advanced what-if decisions and atomic free quota; owner-confirm before applying, no causal efficacy",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local owned-product and factual source paths remain available",
+    "qualification_gap": "Reviewed catalog and authenticated professional source response",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/ask/gate.ts",
+      "apps/mobile/src/features/ask/readiness.ts",
+      "apps/mobile/src/features/intelligence/engine.ts",
+      "apps/mobile/src/features/recommendations/admission.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F05",
+      "F13",
+      "F14"
+    ]
+  },
+  {
+    "id": "V2-C07",
+    "name": "Private progress/capture",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Private diary always usable without measurement support; secure capture, cancellation, handle epochs; J01 separately unadmitted",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Diary discovery, key/metadata and purpose cleanup remain independently testable",
+    "qualification_gap": "Native capture, positive recovery, erasure, VoiceOver and Dynamic Type",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "apps/mobile/src/features/photos/manualCompare20.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F09",
+      "J01"
+    ]
+  },
+  {
+    "id": "V2-C08",
+    "name": "Appointment brief",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Free dated factual appointment brief, intended/actual versions and questions, owner-selected local export photos, no hosted media grant",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Draft discovery, exact retry across preview, stale-action refusal, explicit leave choice, continued editing on Shelf refusal and revalidated sharing approval.",
+    "qualification_gap": "Real browser, signed device, genuine recipient handoff and retention.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/growth/shareAdmission.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F15"
+    ]
+  },
+  {
+    "id": "V2-C09",
+    "name": "Reminders",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Owner-approved local scheduling, safe reminder text, quiet hours and real denial/revoke/timezone/device proof",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local choices remain distinct from OS delivery",
+    "qualification_gap": "Signed-device verification for permission, background timing and cleanup",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/notifications/deliver.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F10"
+    ]
+  },
+  {
+    "id": "V2-C10",
+    "name": "Consumer packaging/billing",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Free ordinary edits/history/photos/brief/rights survive expiry; three free advanced decisions never grant Plus; current SKUs preserved",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC",
+      "PAYMENT",
+      "APPLE"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Gated source path remains available for integration preparation",
+    "qualification_gap": "Owner-approved packaging and genuine provider receipts",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "apps/mobile/src/features/subscription/clientPolicy.ts",
+      "apps/mobile/src/features/subscription/entitlement.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F11",
+      "F12"
+    ]
+  },
+  {
+    "id": "V2-C11",
+    "name": "Accessible recovery/IA",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Accessible recovery across all promised native/web flows, small phone and large text/VoiceOver, no provider or permission dead ends",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Saved command list and applied versions are paged. Recorded use can be filtered by applied version and exact owned observation.",
+    "qualification_gap": "Real-browser focus, keyboard and viewport coverage and signed-device accessibility remain open.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "apps/mobile/src/features/notifications/deliver.ts",
+      "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "apps/mobile/src/features/photos/manualCompare20.ts",
+      "apps/mobile/src/features/routine/generate.ts",
+      "apps/mobile/src/features/routine/orderStore.ts",
+      "apps/mobile/src/features/shelf/intakeSession.ts",
+      "apps/mobile/src/features/shelf/store.ts",
+      "apps/mobile/src/lib/auth/accountGeneration.ts",
+      "apps/mobile/src/lib/auth/sessionOwner.ts",
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F02",
+      "F03",
+      "F06",
+      "F07",
+      "F09",
+      "F10"
+    ]
+  },
+  {
+    "id": "V2-C12",
+    "name": "Support/measurement",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Content-free service diagnostics, support/restore/deletion operations with actual staffed capacity; scientific and commercial evidence distinct",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "CORE_BETA_CANDIDATE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Existing reduced diagnostics and local support foundations",
+    "qualification_gap": "Authorized measurement, staffed support and incident/restore operations",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BR-001",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F20"
+    ]
+  },
+  {
+    "id": "P01",
+    "name": "Workspace roles",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Dedicated professional surface; workspace owner/billing admin are not private-content authority; practitioner/assistant/support least privilege",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC",
+      "PROVIDER",
+      "OPERATIONS",
+      "CLINICAL"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Professional template inspection checks the current original practitioner and practice in the same authenticated transaction",
+    "qualification_gap": "Genuine identity, licence, MFA, memberships and account provisions",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F20"
+    ]
+  },
+  {
+    "id": "P02",
+    "name": "Client grants/web",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Independent client web/login, one active scoped text-only grant, atomic practice switch and publication-time epoch recheck; no browser private-text persistence",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC",
+      "PROVIDER",
+      "OPERATIONS",
+      "CLINICAL"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Current grant, transaction and exact receipt checks cover routine, use and formula fields. Use-only reads omit label details.",
+    "qualification_gap": "Real staff, owner, grant and authenticated reference selection authority.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F02"
+    ]
+  },
+  {
+    "id": "P03",
+    "name": "Pro plans/templates",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Immutable practitioner plans/templates and acknowledgement, owner explicit application only; no silent actual-routine edits",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC",
+      "PROVIDER",
+      "OPERATIONS",
+      "CLINICAL"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Professional review uses archived plan, recorded-use and bottle observation facts where granted. A retraction requires the original independently archived use.",
+    "qualification_gap": "Intended-plan and proposal mapping, genuine owner ingress and consumer response bridge.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F06"
+    ]
+  },
+  {
+    "id": "P04",
+    "name": "Queue/reconciliation",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Material-event queue, idempotency, fixed24h grouping/seven-day reopen, capacity/digest/staffing thresholds; no emergency/silence inference",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC",
+      "PROVIDER",
+      "OPERATIONS",
+      "CLINICAL"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Fresh enqueue requires reviewed placement with a final grouping and predecessor check. Assigned readers can recover the exact outcome when workspace billing becomes read-only.",
+    "qualification_gap": "Genuine staff authority, owner event ingress, live provider and serial custody.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F20"
+    ]
+  },
+  {
+    "id": "P05",
+    "name": "Pre-visit/offboarding",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Pre-visit report, lawful retention and owner export, independent account after offboarding, tombstones before restore, export irrevocability disclosed",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC",
+      "PROVIDER",
+      "OPERATIONS",
+      "CLINICAL"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Synthetic review/export checks original corrections, stale selections, tombstones, final grant withdrawal and final checkpoint retirement.",
+    "qualification_gap": "Browser replay, approved live retention rights and hosted deletion/restore.",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F15",
+      "F02"
+    ]
+  },
+  {
+    "id": "P06",
+    "name": "Workspace billing/capacity",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Separate provider-verified workspace billing, atomic accepted-plan capacity and nondestructive downgrade/refund; no Plus from client link, native upsell closed",
+    "gates": [
+      "G97",
+      "DB",
+      "M1-03",
+      "M2-01",
+      "DEVICE",
+      "PUBLIC",
+      "PROVIDER",
+      "OPERATIONS",
+      "CLINICAL",
+      "PAYMENT",
+      "APPLE"
+    ],
+    "lane": "FULL_RELEASE",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Local billing fixture and negative contract remain available",
+    "qualification_gap": "Genuine merchant and provider, seats and staffing",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "BACKLOG_ONLY",
+    "historical_source_paths": [
+      "docs/v2/source-inputs/source_pack/03_Architecture/CORE_CONTRACT.md"
+    ],
+    "related_ids": [
+      "F11"
+    ]
+  },
+  {
+    "id": "J01",
+    "name": "Visible pores",
+    "frozen_disposition": "REQUIRED",
+    "acceptance_behavior": "Only unavailable/retake until exact G1/G2/G3/G5; no quantitative or medical claim; G4 separately required for change",
+    "gates": [
+      "G1",
+      "G2",
+      "G3",
+      "G4",
+      "G5",
+      "G97",
+      "DB",
+      "DEVICE",
+      "PUBLIC"
+    ],
+    "lane": "J01_SCIENTIFIC",
+    "formal_acceptance": "UNACCEPTED",
+    "reported_implementation": "Only J01 stays in scope, with positive admission closed",
+    "qualification_gap": "Rights-approved data, reproducible optical capture, evaluation and G1–G5",
+    "evidence_source": "sources/engineering39/ALL38_ALL18.md",
+    "implementation_source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "runtime_status": "UNQUALIFIED_AT_CURRENT_CANDIDATE",
+    "next_assignment": "J01-INTAKE",
+    "historical_source_paths": [
+      "docs/v2/mirrors/modules.json"
+    ],
+    "related_ids": []
+  }
+]

@@ -1,6 +1,0 @@
-{
-  "observedAt": "2026-11-17T12:32:53.0314456+00:00",
-  "ownedBrowserOrServerProcessesRemaining": 0,
-  "matches": [],
-  "note": "Task-scoped read-only process snapshot after all browser harnesses returned. No unrelated process was terminated."
-}

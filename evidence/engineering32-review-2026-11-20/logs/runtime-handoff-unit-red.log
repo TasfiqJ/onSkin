@@ -1,9 +1,0 @@
-
- RUN  v4.1.12 <HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate
-
-No test files found, exiting with code 1
-
-filter: apps/mobile/src/lib/storage/webRuntimeHandoff32.test.ts
-include: src/**/*.test.ts
-exclude:  **/node_modules/**, **/.git/**
-

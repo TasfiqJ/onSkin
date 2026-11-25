@@ -1,4 +1,0 @@
-{
-  "message": "Error: Timed out waiting for Generic revised 375 · revision 3 · retired: condition false",
-  "stack": "Error: Timed out waiting for Generic revised 375 · revision 3 · retired: condition false\n    at Module.waitForCondition (file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:967:9)\n    at async file:///[LOCAL_USER_HOME]/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/practice-templates28.mjs:107:106"
-}

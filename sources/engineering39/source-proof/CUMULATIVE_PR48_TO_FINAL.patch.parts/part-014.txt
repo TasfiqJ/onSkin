@@ -1,0 +1,2302 @@
+RANT_FIELDS) && value.fields.length > 0 && list(value.purposes, GRANT_PURPOSES) && value.purposes.length > 0 &&
++    list(value.permissions, ['read', 'plan_write', 'export']) && value.permissions.includes('read');
++}
++/** Online, memory-only owner flow. Private content retires during a fresh read.
++ * Failed offboarding retries retain the SAME IDs until clear/navigation. Screen
++ * success never grants admission: the server rechecks each operation. */
++export function createOwnerPortal(request: typeof fetch, render: (state: PortalState) => void, download: (text: string) => void,
++  newId: () => string = () => crypto.randomUUID()) {
++  let state: PortalState = { kind: 'idle' }; let context: string | null = null;
++  let generation = 0; let pending: AbortController | null = null; let retryEnd: EndCommand | null = null;
++  let retryDecline: DeclineCommand | null = null;
++  let retryAccept: AcceptCommand | null = null;
++  let retryReceive: ReceiveCommand | null = null;
++  const show = (next: PortalState) => { state = next; render(next); };
++  async function run(input: Record<string, unknown>, expected: string, exportText = false, planReview?: PlanSummary) {
++    if (pending) return;
++    const admitted = ++generation; const controller = new AbortController(); pending = controller;
++    show({ kind: 'loading' });
++    const timeout = setTimeout(() => controller.abort(), 15_000);
++    try {
++      const response = await untilAborted(controller.signal, request('/api/professional/owner', { method: 'POST', cache: 'no-store', credentials: 'same-origin', redirect: 'error',
++        headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'owner-v1', Accept: 'application/json' },
++        body: JSON.stringify(input), signal: controller.signal }));
++      if (admitted !== generation) return;
++      if (!response.ok) {
++        // Error bodies are deliberately never read.
++        const refusal = response.headers.get('X-OnSkin-Refusal');
++        if (expected === 'accepted' && retryAccept && response.status === 422 &&
++            response.headers.get('Cache-Control') === 'no-store' &&
++            response.headers.get('Content-Type')?.startsWith('application/json') &&
++            (refusal === 'capacity' || refusal === 'coverage')) {
++          // Keep the exact command: an earlier response may have been lost.
++          // A later refusal cannot prove that an earlier attempt did not save.
++          show({ kind: 'blocked-accept', reason: refusal }); return;
++        }
++        if ([400, 401, 403, 409].includes(response.status)) { retryEnd = null; retryDecline = null; retryAccept = null; retryReceive = null; context = null; }
++        throw new Error('OWNER_PORTAL_UNAVAILABLE');
++      }
++      if (!response.headers.get('Content-Type')?.startsWith('application/json') || response.headers.get('Cache-Control') !== 'no-store') throw new Error('OWNER_PORTAL_UNAVAILABLE');
++      const text = await untilAborted(controller.signal, response.text());
++      if (admitted !== generation) return;
++      if (text.length > 3_000_000) throw new Error('OWNER_PORTAL_UNAVAILABLE');
++      const value: unknown = JSON.parse(text);
++      if (!record(value) || value.kind !== expected || !id(value.context) || (context !== null && value.context !== context)) {
++        context = null; retryEnd = null; retryDecline = null; retryAccept = null; retryReceive = null; throw new Error('OWNER_PORTAL_UNAVAILABLE');
++      }
++      let next: PortalState;
++      if (expected === 'index' && exact(value, 'context,kind,plans') && Array.isArray(value.plans) && value.plans.length <= 1000 &&
++          value.plans.every(validPlan) && value.plans.every(plan => plan.latestResponse !== null) && new Set(value.plans.map(plan => plan.planId)).size === value.plans.length) next = { kind: 'index', plans: value.plans };
++      else if (expected === 'connection' && exact(value, 'connection,context,kind') && (value.connection === null || validConnection(value.connection))) next = { kind: 'connection', connection: value.connection };
++      else if (expected === 'report' && exact(value, 'context,kind,text') && typeof value.text === 'string' && value.text.length > 0 && value.text.length <= 3_000_000) next = { kind: 'report', text: value.text };
++      else if (expected === 'decline-review' && planReview && exact(value, 'context,expectedResponseHash,kind,text') &&
++          (value.expectedResponseHash === null || hash(value.expectedResponseHash)) && typeof value.text === 'string' && value.text.length > 0 && value.text.length <= 3_000_000)
++        next = { kind: 'confirm-decline', plan: planReview, text: value.text, expectedResponseHash: value.expectedResponseHash };
++      else if (expected === 'ended' && exact(value, 'context,kind')) next = { kind: 'ended' };
++      else if (expected === 'declined' && exact(value, 'context,kind')) next = { kind: 'declined' };
++      else if (expected === 'accepted' && exact(value, 'context,kind')) next = { kind: 'accepted' };
++      else if (expected === 'received' && exact(value, 'context,kind')) next = { kind: 'received' };
++      else if (expected === 'incoming' && exact(value, 'context,kind,plans,workspaceId') && id(value.workspaceId) && Array.isArray(value.plans) && value.plans.length <= 100 &&
++          value.plans.every(validPlan) && value.plans.every(plan => plan.latestResponse === null) && new Set(value.plans.map(plan => plan.planId)).size === value.plans.length) next = { kind: 'incoming', workspaceId: value.workspaceId, plans: value.plans };
++      else if (expected === 'incoming-review' && planReview && exact(value, 'context,kind,text,workspaceId') && id(value.workspaceId) && value.workspaceId === input.workspaceId &&
++          typeof value.text === 'string' && value.text.length > 0 && value.text.length <= 3_000_000) next = { kind: 'confirm-receive', plan: planReview, text: value.text, workspaceId: value.workspaceId };
++      else if (expected === 'accept-review' && planReview && exact(value, 'context,expectedCapacityRevision,expectedResponseHash,kind,text,workspaceId') &&
++          (value.expectedResponseHash === null || hash(value.expectedResponseHash)) && typeof value.text === 'string' && value.text.length > 0 && value.text.length <= 3_000_000 && id(value.workspaceId) && number(value.expectedCapacityRevision)) {
++        next = { kind: 'confirm-accept', plan: planReview, text: value.text, workspaceId: value.workspaceId, expectedCapacityRevision: value.expectedCapacityRevision, expectedResponseHash: value.expectedResponseHash };
++      }
++      else throw new Error('OWNER_PORTAL_UNAVAILABLE');
++      context = value.context; retryEnd = null; retryDecline = null; retryAccept = null; retryReceive = null;
++      if (exportText && next.kind === 'report') download(next.text);
++      if (admitted === generation) show(next);
++    } catch {
++      if (admitted === generation) show(retryReceive ? { kind: 'failed-receive' } : retryAccept ? { kind: 'failed-accept' } : retryDecline ? { kind: 'failed-decline' } : { kind: 'failed', retryEnd: retryEnd !== null });
++    } finally { clearTimeout(timeout); if (admitted === generation) pending = null; }
++  }
++  return {
++    // DOM callbacks keep the exact screen they represented. A removed button
++    // cannot confirm a successor review or borrow a newly authenticated owner.
++    whenCurrent(expected: PortalState, action: () => unknown) { if (state === expected) return action(); },
++    clear() { generation++; pending?.abort(); pending = null; context = null; retryEnd = null; retryDecline = null; retryAccept = null; retryReceive = null; show({ kind: 'idle' }); },
++    check() { if (pending) return; retryEnd = null; retryDecline = null; retryAccept = null; retryReceive = null; return run({ kind: 'index', context }, 'index'); },
++    connection() { if (!context || pending) return; retryEnd = null; retryDecline = null; retryAccept = null; retryReceive = null; return run({ kind: 'connection', context }, 'connection'); },
++    report(selection: readonly PlanSummary[], operation: 'read' | 'export') {
++      if (!context || state.kind !== 'index' || !selection.length || selection.length > 100 ||
++          new Set(selection.map(plan => plan.planId)).size !== selection.length || selection.some(plan => state.kind !== 'index' ||
++            !state.plans.some(item => item.planId === plan.planId && item.planHash === plan.planHash))) return;
++      return run({ kind: 'report', context, selection: selection.map(({ planId, planHash }) => ({ planId, planHash })), operation }, 'report', operation === 'export');
++    },
++    reviewEnd() { if (!pending && state.kind === 'connection' && state.connection) show({ kind: 'confirm-end', connection: state.connection }); },
++    cancelEnd() { if (!pending && state.kind === 'confirm-end') show({ kind: 'connection', connection: state.connection }); },
++    end() {
++      if (!context || pending || state.kind !== 'confirm-end') return;
++      const c = state.connection;
++      retryEnd = { kind: 'end', context, workspaceId: c.workspaceId, command: { id: newId(), capacityId: newId(), grantId: c.grantId,
++        expectedGrantRevision: c.expectedGrantRevision, expectedCapacityRevision: c.expectedCapacityRevision, confirmed: true } };
++      return run(retryEnd, 'ended');
++    },
++    retryEnd() { if (pending || !retryEnd) return; return run(retryEnd, 'ended'); },
++    reviewDecline(plan: PlanSummary) {
++      if (!context || pending || state.kind !== 'index' || !state.plans.some(item => item.planId === plan.planId && item.planHash === plan.planHash)) return;
++      const selected = state.plans.find(item => item.planId === plan.planId)!;
++      return run({ kind: 'decline-review', context, planId: selected.planId, planHash: selected.planHash }, 'decline-review', false, Object.freeze({ ...selected }));
++    },
++    decline() {
++      if (!context || pending || state.kind !== 'confirm-decline') return;
++      const { planId, planHash } = state.plan;
++      retryDecline = { kind: 'decline', context, command: { receiptId: newId(), planId, planHash, expectedResponseHash: state.expectedResponseHash, confirmed: true } };
++      return run(retryDecline, 'declined');
++    },
++    retryDecline() { if (pending || !retryDecline || state.kind !== 'failed-decline') return; return run(retryDecline, 'declined'); },
++    reviewAcceptance(plan: PlanSummary) {
++      if (!context || pending || state.kind !== 'index' || !state.plans.some(item => item.planId === plan.planId && item.planHash === plan.planHash)) return;
++      const selected = state.plans.find(item => item.planId === plan.planId)!;
++      return run({ kind: 'accept-review', context, planId: selected.planId, planHash: selected.planHash }, 'accept-review', false, Object.freeze({ ...selected }));
++    },
++    accept() {
++      if (!context || pending || state.kind !== 'confirm-accept') return;
++      const { planId, planHash } = state.plan;
++      retryAccept = { kind: 'accept', context, workspaceId: state.workspaceId, command: {
++        receiptId: newId(), capacityId: newId(), expectedCapacityRevision: state.expectedCapacityRevision, expectedResponseHash: state.expectedResponseHash, planId, planHash, confirmed: true,
++      } };
++      return run(retryAccept, 'accepted');
++    },
++    retryAcceptance() { if (pending || !retryAccept || !['failed-accept', 'blocked-accept'].includes(state.kind)) return; return run(retryAccept, 'accepted'); },
++    incoming() { if (!context || pending || state.kind !== 'index') return; return run({ kind: 'incoming', context }, 'incoming'); },
++    reviewReceive(plan: PlanSummary) {
++      if (!context || pending || state.kind !== 'incoming' || !state.plans.some(item => item.planId === plan.planId && item.planHash === plan.planHash)) return;
++      const selected = state.plans.find(item => item.planId === plan.planId)!;
++      // workspaceId binds the reviewed list; server authority still comes from
++      // the current grant and must match this expected workspace.
++      return run({ kind: 'incoming-review', context, planId: selected.planId, planHash: selected.planHash, workspaceId: state.workspaceId }, 'incoming-review', false, Object.freeze({ ...selected }));
++    },
++    receive() {
++      if (!context || pending || state.kind !== 'confirm-receive') return;
++      const { planId, planHash } = state.plan;
++      retryReceive = { kind: 'receive', context, workspaceId: state.workspaceId, command: { receiptId: newId(), planId, planHash, confirmed: true } };
++      return run(retryReceive, 'received');
++    },
++    retryReceipt() { if (pending || !retryReceive || state.kind !== 'failed-receive') return; return run(retryReceive, 'received'); },
++  };
++}
+diff --git a/apps/professional-web/src/ownerRoutineCustody.test.ts b/apps/professional-web/src/ownerRoutineCustody.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..45ef5b5cfa041deb5fa118a1dc7679d80cbbe12e
+--- /dev/null
++++ b/apps/professional-web/src/ownerRoutineCustody.test.ts
+@@ -0,0 +1,238 @@
++import { describe, expect, it } from 'vitest';
++import { ProfessionalAccessError } from './authority';
++import { OwnerRoutineCustody, type OriginalRoutineRecord } from './ownerRoutineCustody';
++import { custodyFixture } from './test/custodyFixture';
++import { recordHash } from './grants';
++
++const scope = { ownerId: 'synthetic-owner-a', healthEpoch: 3 };
++const first: OriginalRoutineRecord = {
++  id: 'original-command-a', kind: 'resolved_command', sourceHash: 'a'.repeat(64),
++  previousReceipt: null, bytes: '{"command":"synthetic exact bytes","outcome":"resolved"}',
++};
++
++describe('owner-scoped serial history custody', () => {
++  it('recovers the exact outcome after a lost response and refuses a second successor', async () => {
++    const fixture = await custodyFixture();
++    const history = new OwnerRoutineCustody(fixture.custody, async () => {});
++    await history.open(scope);
++    fixture.controls.loseCommitReply = true;
++    await expect(history.append(scope, first)).rejects.toThrow('UNAVAILABLE');
++    fixture.controls.loseCommitReply = false;
++    const original = await history.append(scope, first);
++    expect(original.sequence).toBe(1);
++    const snapshot = new Map(fixture.records());
++    expect(await history.inspect(scope, first.id, original.originalHash)).toEqual({ original: first, receipt: original });
++    expect(fixture.records()).toEqual(snapshot);
++    expect([...snapshot.values()].join('')).not.toContain(first.bytes);
++    await expect(history.append(scope, { ...first, bytes: 'different' })).rejects.toThrow('CHANGED');
++    await expect(history.append(scope, { ...first, id: 'fork' })).rejects.toThrow('CHANGED');
++    const results = await Promise.allSettled(['second-a', 'second-b'].map(id =>
++      history.append(scope, { ...first, id, previousReceipt: original.hash })));
++    expect(results.map(result => result.status).sort()).toEqual(['fulfilled', 'rejected']);
++    expect(await history.inspect(scope, first.id, original.originalHash)).toMatchObject({ receipt: original });
++  });
++
++  it('requires original owner admission at publication and preserves prior bytes on revocation', async () => {
++    const fixture = await custodyFixture();
++    let revoked = false;
++    const history = new OwnerRoutineCustody(fixture.custody, async (_tx, request) => {
++      if (revoked || request.scope.ownerId !== scope.ownerId) throw new ProfessionalAccessError('health');
++    });
++    await history.open(scope);
++    const before = new Map(fixture.records());
++    fixture.controls.beforeCommit = () => { revoked = true; };
++    await expect(history.append(scope, first)).rejects.toThrow('HEALTH');
++    expect(fixture.records()).toEqual(before);
++    revoked = false;
++    await expect(history.append({ ...scope, ownerId: 'synthetic-owner-b' }, first)).rejects.toThrow('HEALTH');
++  });
++
++  it('restores only an independently allowed exact receipt and gives an existing tombstone priority', async () => {
++    const originalFixture = await custodyFixture();
++    const originalHistory = new OwnerRoutineCustody(originalFixture.custody, async () => {});
++    await originalHistory.open(scope);
++    const receipt = await originalHistory.append(scope, first);
++    const replacement = await custodyFixture();
++    const history = new OwnerRoutineCustody(replacement.custody, async (_tx, request) => {
++      if (request.action === 'restore' && (request.receiptHash !== receipt.hash || request.originalHash !== receipt.originalHash)) {
++        throw new ProfessionalAccessError('grant');
++      }
++    });
++    await expect(history.restore(scope, first, receipt)).rejects.toThrow('CHANGED');
++    const unprovisionedScope = { ...scope, ownerId: 'synthetic-unprovisioned' };
++    await history.tombstone(unprovisionedScope);
++    await expect(history.open(unprovisionedScope)).rejects.toThrow('CHANGED');
++    await history.open(scope);
++    await expect(history.restore(scope, { ...first, bytes: 'changed' }, receipt)).rejects.toThrow('GRANT');
++    // An authentic receipt from another history cannot start or advance ours.
++    await expect(history.restore(scope, first, receipt)).rejects.toThrow('CHANGED');
++    expect(await history.append(scope, first)).toEqual(receipt);
++    await history.tombstone(scope);
++    await expect(history.inspect(scope, first.id, receipt.originalHash)).rejects.toThrow('CHANGED');
++    await expect(history.restore(scope, first, receipt)).rejects.toThrow('CHANGED');
++    await expect(history.open(scope)).rejects.toThrow('CHANGED');
++    await history.open({ ...scope, healthEpoch: scope.healthEpoch + 1 });
++    await expect(history.restore(scope, first, receipt)).rejects.toThrow('CHANGED');
++    await expect(new OwnerRoutineCustody(null, null).open(scope)).rejects.toThrow('UNAVAILABLE');
++  });
++
++  it('distinguishes missing committed bytes and restores an interior record without moving the head', async () => {
++    const fixture = await custodyFixture();
++    let permitted = '';
++    const history = new OwnerRoutineCustody(fixture.custody, async (_tx, request) => {
++      if (request.action === 'restore' && request.receiptHash !== permitted) throw new ProfessionalAccessError('grant');
++    });
++    await history.open(scope);
++    const original = await history.append(scope, first);
++    const second = { ...first, id: 'second-record', previousReceipt: original.hash };
++    const successor = await history.append(scope, second);
++    const key = `owner-routine-record:v1:${scope.ownerId}:${scope.healthEpoch}:${first.id}`;
++    fixture.records().delete(key);
++    await expect(history.inspect(scope, first.id, original.originalHash)).rejects.toThrow('UNAVAILABLE');
++    await expect(history.append(scope, first)).rejects.toThrow('UNAVAILABLE');
++    expect(await history.inspect(scope, 'never-committed', original.originalHash)).toBeNull();
++    const page = await history.inventory(scope, null, 1);
++    expect(page.committedCount).toBe(2);
++    expect(page.next).not.toBeNull();
++    const tail = await history.inventory(scope, page.next, 1);
++    expect([...page.records, ...tail.records]).toEqual(expect.arrayContaining([
++      { id: first.id, receiptHash: original.hash, present: false },
++      { id: second.id, receiptHash: successor.hash, present: true },
++    ]));
++    await expect(history.restore(scope, first, original)).rejects.toThrow('GRANT');
++    permitted = original.hash;
++    fixture.controls.beforeCommit = () => { throw new Error('INTERRUPTED_RESTORE'); };
++    await expect(history.restore(scope, first, original)).rejects.toThrow('UNAVAILABLE');
++    expect(fixture.records().has(key)).toBe(false);
++    fixture.controls.beforeCommit = null;
++    const prior = new Map(fixture.records());
++    expect(await history.restore(scope, first, original)).toEqual(original);
++    const after = new Map(fixture.records());
++    after.delete(key);
++    expect(after).toEqual(prior);
++    expect(await history.append(scope, { ...first, id: 'third-record', previousReceipt: successor.hash })).toMatchObject({ sequence: 3 });
++    await expect(history.inventory(scope, page.next, 1)).rejects.toThrow('CHANGED');
++  });
++
++  it('rejects an independently hashed older record from another history and refuses stale local heads with a freshness check', async () => {
++    const fixture = await custodyFixture();
++    const otherFixture = await custodyFixture();
++    const history = new OwnerRoutineCustody(fixture.custody, async () => {});
++    const other = new OwnerRoutineCustody(otherFixture.custody, async () => {});
++    await history.open(scope);
++    const original = await history.append(scope, first);
++    const prior = new Map(fixture.records());
++    await history.append(scope, { ...first, id: 'successor', previousReceipt: original.hash });
++    const headKey = `owner-routine-record:v1:${scope.ownerId}:head`;
++    const head = await fixture.custody.transaction(tx => tx.read(headKey));
++    const checkpoint = await recordHash(['owner-routine-checkpoint-v1', scope.ownerId, head]);
++    const anchored = new OwnerRoutineCustody(fixture.custody, async () => {}, async (_tx, _scope, observed) => {
++      if (observed !== checkpoint) throw new ProfessionalAccessError('changed');
++    });
++    expect(await anchored.inspect(scope, first.id, original.originalHash)).toMatchObject({ receipt: original });
++    const headBytes = fixture.records().get(headKey)!;
++    fixture.records().set(headKey, prior.get(headKey)!);
++    await expect(anchored.inspect(scope, first.id, original.originalHash)).rejects.toThrow('CHANGED');
++    fixture.records().set(headKey, headBytes);
++    await other.open(scope);
++    const alternate = await other.append(scope, { ...first, bytes: 'alternate original' });
++    const entry = await other.inspect(scope, first.id, alternate.originalHash);
++    await fixture.custody.transaction(tx => tx.write(`owner-routine-record:v1:${scope.ownerId}:${scope.healthEpoch}:${first.id}`, entry));
++    await expect(history.inspect(scope, first.id, alternate.originalHash)).rejects.toThrow('CHANGED');
++  });
++
++  it('removes verified ciphertext only after tombstoning and resumes exact bounded progress across an epoch change', async () => {
++    const fixture = await custodyFixture();
++    const history = new OwnerRoutineCustody(fixture.custody, async () => {});
++    await history.open(scope);
++    const original = await history.append(scope, first);
++    const second = { ...first, id: 'second-record', previousReceipt: original.hash };
++    const tail = await history.append(scope, second);
++    const third = { ...first, id: 'third-record', previousReceipt: tail.hash };
++    await history.append(scope, third);
++    const key = (id: string) => `owner-routine-record:v1:${scope.ownerId}:${scope.healthEpoch}:${id}`;
++    await expect(history.eraseTombstoned(scope, 0, 2)).rejects.toThrow('CHANGED');
++    await history.tombstone(scope);
++    await history.open({ ...scope, healthEpoch: scope.healthEpoch + 1 });
++    fixture.records().delete(key(second.id));
++    fixture.controls.omitWrite = true;
++    await expect(history.eraseTombstoned(scope, 0, 2)).rejects.toThrow('UNAVAILABLE');
++    expect(fixture.records().has(key(first.id))).toBe(true);
++    fixture.controls.omitWrite = false;
++    fixture.controls.loseCommitReply = true;
++    await expect(history.eraseTombstoned(scope, 0, 2)).rejects.toThrow('UNAVAILABLE');
++    fixture.controls.loseCommitReply = false;
++    await expect(history.eraseTombstoned(scope, 0, 1)).rejects.toThrow('CHANGED');
++    expect(await history.eraseTombstoned(scope, 0, 2)).toMatchObject({ revision: 1, complete: false });
++    expect(await history.eraseTombstoned(scope, 1, 2)).toMatchObject({ revision: 2, removed: 2, missing: 1, complete: true });
++    expect(fixture.records().has(key(first.id))).toBe(false);
++    expect(fixture.records().has(key(third.id))).toBe(false);
++    await expect(history.restore(scope, first, original)).rejects.toThrow('CHANGED');
++    await expect(history.open(scope)).rejects.toThrow('CHANGED');
++  });
++
++  it('rechecks bounded pages after completed erasure and refuses corrupt returned bytes without advancing', async () => {
++    const fixture = await custodyFixture();
++    const headKey = `owner-routine-record:v1:${scope.ownerId}:head`;
++    let checkpoint: string | null = null;
++    const history = new OwnerRoutineCustody(fixture.custody, async () => {}, async (_tx, _scope, observed) => {
++      if (checkpoint !== null && observed !== checkpoint) throw new ProfessionalAccessError('changed');
++    });
++    await history.open(scope);
++    const receipt = await history.append(scope, first);
++    const second = { ...first, id: 'recheck-second', previousReceipt: receipt.hash };
++    await history.append(scope, second);
++    const page = await history.inventory(scope, null, 2);
++    const keys = page.records.map(({ id }) => `owner-routine-record:v1:${scope.ownerId}:${scope.healthEpoch}:${id}`);
++    const originals = keys.map(key => fixture.records().get(key)!);
++    await history.tombstone(scope);
++    const head = await fixture.custody.transaction(tx => tx.read(headKey));
++    checkpoint = await recordHash(['owner-routine-checkpoint-v1', scope.ownerId, head]);
++    await expect(history.recheckTombstonedErasure(scope, 1, 0, 1)).rejects.toThrow('CHANGED');
++    const completed = await history.eraseTombstoned(scope, 0, 2);
++
++    fixture.records().set(keys[0]!, originals[0]!);
++    fixture.records().set(keys[1]!, originals[0]!); // Authenticated ciphertext for a different record key.
++    const before = new Map(fixture.records());
++    await expect(history.recheckTombstonedErasure(scope, 1, 0, 2)).rejects.toThrow('UNAVAILABLE');
++    expect(fixture.records()).toEqual(before);
++
++    const firstPage = await history.recheckTombstonedErasure(scope, 1, 0, 1);
++    expect(firstPage.progress).toMatchObject({ revision: 1, removed: 1, complete: false });
++    await expect(history.recheckTombstonedErasure(scope, 2, 0, 1)).rejects.toThrow('CHANGED');
++    await expect(history.recheckTombstonedErasure(scope, 1, 1, 1)).rejects.toThrow('UNAVAILABLE');
++    fixture.records().set(keys[1]!, originals[1]!);
++    expect(await history.recheckTombstonedErasure(scope, 1, 1, 1)).toMatchObject({ pass: 1,
++      progress: { revision: 2, removed: 2, missing: 0, complete: true } });
++    expect(await history.eraseTombstoned(scope, 0, 2)).toEqual(completed);
++    expect(keys.some(key => fixture.records().has(key))).toBe(false);
++  });
++
++  it('enumerates a multi-page committed inventory once and leaves all originals independently inspectable', async () => {
++    const fixture = await custodyFixture();
++    const history = new OwnerRoutineCustody(fixture.custody, async () => {});
++    await history.open(scope);
++    const commitments = new Map<string, string>();
++    let previousReceipt: string | null = null;
++    for (let index = 0; index < 96; index++) {
++      const id = `synthetic-index-record-${index}`;
++      const receipt = await history.append(scope, { ...first, id, previousReceipt });
++      commitments.set(id, receipt.hash);
++      previousReceipt = receipt.hash;
++    }
++    const seen = new Map<string, string>();
++    let cursor = null;
++    do {
++      const page = await history.inventory(scope, cursor, 11);
++      expect(page.committedCount).toBe(commitments.size);
++      expect(page.records.length).toBeLessThanOrEqual(11);
++      for (const record of page.records) {
++        expect(record.present).toBe(true);
++        expect(seen.has(record.id)).toBe(false);
++        seen.set(record.id, record.receiptHash);
++      }
++      cursor = page.next;
++    } while (cursor);
++    expect(seen).toEqual(commitments);
++  });
++});
+diff --git a/apps/professional-web/src/ownerRoutineCustody.ts b/apps/professional-web/src/ownerRoutineCustody.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..63335f282b1b39062dfd4278bd0789d9ddb4d391
+--- /dev/null
++++ b/apps/professional-web/src/ownerRoutineCustody.ts
+@@ -0,0 +1,390 @@
++import { ProfessionalAccessError } from './authority';
++import { type EncryptedCustody, type EncryptedTransaction } from './encryptedCustody';
++import { canonical, recordHash } from './grants';
++import { OwnerRoutineIndex } from './ownerRoutineIndex';
++
++export type OwnerRoutineScope = Readonly<{ ownerId: string; healthEpoch: number }>;
++export type OriginalRoutineRecord = Readonly<{
++  id: string;
++  kind: 'resolved_command' | 'routine_version' | 'use_event';
++  sourceHash: string;
++  previousReceipt: string | null;
++  bytes: string;
++}>;
++export type OwnerRoutineReceipt = Readonly<{
++  sequence: number;
++  recordedAt: number;
++  originalHash: string;
++  hash: string;
++}>;
++type Access = Readonly<{
++  scope: OwnerRoutineScope;
++  purpose: 'owner_routine_history';
++  action: 'open' | 'append' | 'inspect' | 'recover' | 'tombstone' | 'restore' | 'inventory' | 'erase' | 'recheck_erasure' | 'retire';
++  originalHash: string | null;
++  receiptHash: string | null;
++}>;
++
++/** SERVER ONLY. A host verifies original owner, current purpose and epoch in
++ * its serial transaction. For append it must verify exact original evidence;
++ * for restore it must independently verify the issued receipt and provenance.
++ * None of these capabilities are installed by the default application. */
++export type OwnerRoutineAdmission = (tx: EncryptedTransaction, access: Access) => Promise<void>;
++
++type Head = Readonly<{
++  state: 'active' | 'tombstoned';
++  healthEpoch: number;
++  sequence: number;
++  receiptHash: string | null;
++  indexRoot?: string | null;
++}>;
++/** A host can refuse a stale, absent or unverified local checkpoint against
++ * an independent source. The custodian does not issue that source's proofs. */
++export type OwnerRoutineFreshness = (tx: EncryptedTransaction, scope: OwnerRoutineScope, checkpoint: string | null) => Promise<void>;
++/** A host may durably prepare a compare-and-set against an independent
++ * checkpoint after final authorization and before custody commits. The host
++ * owns post-commit confirmation and reverses no uncertain transition. */
++export type OwnerRoutineCheckpointAdvance = (scope: OwnerRoutineScope, transition: Readonly<{
++  previous: string | null; next: string;
++}>) => Promise<void>;
++export type OwnerRoutineInventoryCursor = Readonly<{ root: string; after: string }>;
++type Erasure = Readonly<{ revision: number; limit: number; root: string | null; after: string | null;
++  removed: number; missing: number; complete: boolean }>;
++type ErasureRecheck = Readonly<{ pass: number; progress: Erasure }>;
++type Entry = Readonly<{ original: OriginalRoutineRecord; receipt: OwnerRoutineReceipt }>;
++const changed = (): never => { throw new ProfessionalAccessError('changed'); };
++const unavailable = (): never => { throw new ProfessionalAccessError('unavailable'); };
++const identifier = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/u.test(value);
++const digest = (value: unknown): value is string => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
++const counter = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) >= 0;
++const namespace = (scope: OwnerRoutineScope) => `owner-routine-record:v1:${scope.ownerId}`;
++const headKey = (scope: OwnerRoutineScope) => `${namespace(scope)}:head`;
++const recordKey = (scope: OwnerRoutineScope, id: string) => `${namespace(scope)}:${scope.healthEpoch}:${id}`;
++const tombstoneKey = (scope: OwnerRoutineScope) => `${namespace(scope)}:${scope.healthEpoch}:control:retired`;
++const progressKey = (scope: OwnerRoutineScope) => `${namespace(scope)}:${scope.healthEpoch}:control:erasure`;
++const indexFor = (tx: EncryptedTransaction, scope: OwnerRoutineScope) =>
++  new OwnerRoutineIndex(tx, `${namespace(scope)}:${scope.healthEpoch}:index`);
++
++function requireHead(value: unknown): Head {
++  const head = value as Head | null;
++  if (!head || (head.state !== 'active' && head.state !== 'tombstoned') || !counter(head.healthEpoch) ||
++    head.healthEpoch === 0 || !counter(head.sequence) ||
++    (head.sequence === 0 ? head.receiptHash !== null : !digest(head.receiptHash)) ||
++    (head.indexRoot !== undefined && (head.sequence === 0 ? head.indexRoot !== null : !digest(head.indexRoot))) ||
++    Object.keys(head).sort().join(',') !== (head.indexRoot === undefined ? 'healthEpoch,receiptHash,sequence,state' :
++      'healthEpoch,indexRoot,receiptHash,sequence,state')) return changed();
++  return head;
++}
++
++function indexRoot(head: Head): string | null {
++  // Old nonempty heads have no authenticated membership proof. Keep their
++  // original bytes intact until an independent archive can verify migration.
++  if (head.indexRoot === undefined && head.sequence > 0) return unavailable();
++  return head.indexRoot ?? null;
++}
++
++function validErasureRequest(revision: number, limit: number): boolean {
++  return counter(revision) && revision < Number.MAX_SAFE_INTEGER && Number.isInteger(limit) && limit >= 1 && limit <= 64;
++}
++
++function readErasure(value: unknown, head: Head): Erasure {
++  const progress = value as Erasure | null;
++  if (!progress || progress.root !== indexRoot(head) || !counter(progress.revision) || progress.revision === 0 ||
++    !counter(progress.removed) || !counter(progress.missing) || progress.removed + progress.missing > head.sequence ||
++    (progress.after !== null && !digest(progress.after)) || !Number.isInteger(progress.limit) || progress.limit < 1 ||
++    progress.limit > 64 || progress.complete !== (progress.after === null) ||
++    (progress.removed + progress.missing === head.sequence) !== progress.complete ||
++    Object.keys(progress).sort().join(',') !== 'after,complete,limit,missing,removed,revision,root') return changed();
++  return progress;
++}
++
++function startErasure(head: Head, limit: number): Erasure {
++  return { revision: 0, limit, root: indexRoot(head), after: null, removed: 0, missing: 0, complete: false };
++}
++
++function requireOriginal(value: OriginalRoutineRecord): void {
++  if (!value || !identifier(value.id) || !['resolved_command', 'routine_version', 'use_event'].includes(value.kind) ||
++    !digest(value.sourceHash) || value.previousReceipt !== null && !digest(value.previousReceipt) ||
++    typeof value.bytes !== 'string' || !value.bytes.length || new TextEncoder().encode(value.bytes).length > 1_048_576 ||
++    Object.keys(value).sort().join(',') !== 'bytes,id,kind,previousReceipt,sourceHash') changed();
++}
++
++async function makeReceipt(scope: OwnerRoutineScope, original: OriginalRoutineRecord, sequence: number, recordedAt: number) {
++  const originalHash = await recordHash(['owner-routine-original-v1', scope, original]);
++  const hash = await recordHash(['owner-routine-receipt-v1', scope, sequence, recordedAt, originalHash]);
++  return { sequence, recordedAt, originalHash, hash };
++}
++
++async function requireEntry(value: unknown, scope: OwnerRoutineScope, id: string, now: number): Promise<Entry> {
++  const entry = value as Entry | null;
++  if (!entry?.receipt || Object.keys(entry).sort().join(',') !== 'original,receipt') return changed();
++  requireOriginal(entry.original);
++  const { receipt } = entry;
++  if (entry.original.id !== id || !counter(receipt.sequence) || receipt.sequence === 0 ||
++    !counter(receipt.recordedAt) || receipt.recordedAt > now ||
++    canonical(await makeReceipt(scope, entry.original, receipt.sequence, receipt.recordedAt)) !== canonical(receipt)) return changed();
++  return entry;
++}
++
++export class OwnerRoutineCustody {
++  constructor(private readonly custody: EncryptedCustody | null, private readonly authorize: OwnerRoutineAdmission | null,
++    private readonly freshness?: OwnerRoutineFreshness, private readonly prepareCheckpoint?: OwnerRoutineCheckpointAdvance) {}
++
++  static async checkpoint(tx: EncryptedTransaction, scope: OwnerRoutineScope): Promise<string | null> {
++    const head = await tx.read(headKey(scope));
++    return head === null ? null : recordHash(['owner-routine-checkpoint-v1', scope.ownerId, requireHead(head)]);
++  }
++
++  private async authorized<T>(request: Omit<Access, 'purpose'>, work: (tx: EncryptedTransaction) => Promise<T>): Promise<T> {
++    const { custody, authorize } = this;
++    if (!custody || !authorize || (this.prepareCheckpoint && !this.freshness)) return unavailable();
++    const { ownerId, healthEpoch } = request.scope;
++    if (!identifier(ownerId) || !counter(healthEpoch) || healthEpoch === 0) return changed();
++    const access: Access = Object.freeze({ ...request, purpose: 'owner_routine_history' });
++    return custody.transaction(async tx => {
++      await authorize(tx, access);
++      const checkpoint = this.freshness ? await OwnerRoutineCustody.checkpoint(tx, access.scope) : null;
++      await this.freshness?.(tx, access.scope, checkpoint);
++      const result = await work(tx);
++      tx.beforeCommit(async () => {
++        await this.freshness?.(tx, access.scope, checkpoint);
++        await authorize(tx, access);
++        if (this.prepareCheckpoint) {
++          const next = await OwnerRoutineCustody.checkpoint(tx, access.scope);
++          if (next !== checkpoint) {
++            if (next === null) return changed();
++            await this.prepareCheckpoint(access.scope, { previous: checkpoint, next });
++          }
++        }
++      });
++      return result;
++    });
++  }
++
++  async open(input: OwnerRoutineScope): Promise<void> {
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    await this.authorized({ scope, action: 'open', originalHash: null, receiptHash: null }, async tx => {
++      const raw = await tx.read(headKey(scope));
++      if (raw !== null) {
++        const previous = requireHead(raw);
++        if (previous.state === 'active' && previous.healthEpoch === scope.healthEpoch) return;
++        if (previous.state !== 'tombstoned' || previous.healthEpoch >= scope.healthEpoch) return changed();
++        const retired = tombstoneKey({ ...scope, healthEpoch: previous.healthEpoch });
++        if (await tx.read(retired) !== null) return changed();
++        await tx.write(retired, previous);
++      }
++      await tx.write(headKey(scope), { state: 'active', healthEpoch: scope.healthEpoch, sequence: 0, receiptHash: null, indexRoot: null });
++    });
++  }
++
++  async tombstone(input: OwnerRoutineScope): Promise<void> {
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    await this.authorized({ scope, action: 'tombstone', originalHash: null, receiptHash: null }, async tx => {
++      const raw = await tx.read(headKey(scope));
++      if (raw === null) {
++        await tx.write(headKey(scope), { state: 'tombstoned', healthEpoch: scope.healthEpoch, sequence: 0, receiptHash: null, indexRoot: null });
++        return;
++      }
++      const head = requireHead(raw);
++      if (head.healthEpoch !== scope.healthEpoch) return changed();
++      if (head.state === 'active') await tx.write(headKey(scope), { ...head, state: 'tombstoned' });
++    });
++  }
++
++  async append(input: OwnerRoutineScope, source: OriginalRoutineRecord): Promise<OwnerRoutineReceipt> {
++    return this.put(input, source);
++  }
++
++  async restore(input: OwnerRoutineScope, source: OriginalRoutineRecord, receipt: OwnerRoutineReceipt): Promise<OwnerRoutineReceipt> {
++    if (!receipt || !digest(receipt.hash) || !digest(receipt.originalHash) || !counter(receipt.sequence) ||
++        receipt.sequence === 0 || !counter(receipt.recordedAt)) return changed();
++    return this.put(input, source, Object.freeze(structuredClone(receipt)));
++  }
++
++  private async put(input: OwnerRoutineScope, source: OriginalRoutineRecord, retained?: OwnerRoutineReceipt): Promise<OwnerRoutineReceipt> {
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    const original = Object.freeze(structuredClone(source));
++    requireOriginal(original);
++    const originalHash = await recordHash(['owner-routine-original-v1', scope, original]);
++    return this.authorized({ scope, action: retained ? 'restore' : 'append', originalHash, receiptHash: retained?.hash ?? null }, async tx => {
++      const head = await OwnerRoutineCustody.activeHead(tx, scope);
++      const key = recordKey(scope, original.id);
++      const root = indexRoot(head);
++      const index = indexFor(tx, scope);
++      const committed = await index.find(root, original.id);
++      const raw = await tx.read(key);
++      if (raw !== null) {
++        const existing = await OwnerRoutineCustody.requireCommitted(raw, scope, original.id, head, committed, tx.now());
++        if (existing.receipt.originalHash !== originalHash || retained && canonical(existing.receipt) !== canonical(retained)) return changed();
++        return existing.receipt;
++      }
++      if (retained) {
++        if (committed !== retained.hash) return changed();
++        await OwnerRoutineCustody.requireCommitted({ original, receipt: retained }, scope, original.id, head, committed, tx.now());
++        await tx.write(key, { original, receipt: retained });
++        return retained;
++      }
++      if (committed !== null) return unavailable();
++      if (head.receiptHash !== original.previousReceipt || !Number.isSafeInteger(head.sequence + 1)) return changed();
++      const receipt = await makeReceipt(scope, original, head.sequence + 1, tx.now());
++      const nextRoot = await index.insert(root, { id: original.id, receiptHash: receipt.hash });
++      await tx.write(key, { original, receipt });
++      await tx.write(headKey(scope), { ...head, sequence: receipt.sequence, receiptHash: receipt.hash, indexRoot: nextRoot });
++      return receipt;
++    });
++  }
++
++  async inspect(input: OwnerRoutineScope, id: string, originalHash: string): Promise<Entry | null> {
++    if (!identifier(id) || !digest(originalHash)) return changed();
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    return this.authorized({ scope, action: 'inspect', originalHash, receiptHash: null }, async tx => {
++      const entry = await OwnerRoutineCustody.readCommitted(tx, scope, id);
++      if (entry && entry.receipt.originalHash !== originalHash) return changed();
++      return entry;
++    });
++  }
++
++  /** Read exact retired evidence from a verified inventory entry, including
++   * after the active journal no longer retains the original command hash. */
++  async recover(input: OwnerRoutineScope, id: string, receiptHash: string): Promise<Entry | null> {
++    if (!this.freshness) return unavailable();
++    if (!identifier(id) || !digest(receiptHash)) return changed();
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    return this.authorized({ scope, action: 'recover', originalHash: null, receiptHash },
++      tx => OwnerRoutineCustody.readCommitted(tx, scope, id, receiptHash));
++  }
++
++  /** Internal serial boundary for an admitted retirement host. The host must
++   * stage its writes in this transaction and obey the same owner and epoch. */
++  async withVerifiedRetirement<T>(input: OwnerRoutineScope, proof: { id: string; originalHash: string; receiptHash: string },
++    stage: (tx: EncryptedTransaction, entry: Entry) => Promise<T>): Promise<T> {
++    if (!this.freshness) return unavailable();
++    const { id, originalHash, receiptHash } = proof;
++    if (!identifier(id) || !digest(originalHash) || !digest(receiptHash)) return changed();
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    return this.authorized({ scope, action: 'retire', originalHash, receiptHash }, async tx => {
++      const entry = await OwnerRoutineCustody.readCommitted(tx, scope, id, receiptHash);
++      if (!entry || entry.original.kind !== 'resolved_command' || entry.receipt.originalHash !== originalHash) return changed();
++      return stage(tx, entry);
++    });
++  }
++
++  async inventory(input: OwnerRoutineScope, cursor: OwnerRoutineInventoryCursor | null, limit: number) {
++    if (!Number.isInteger(limit) || limit < 1 || limit > 64 || cursor && (!digest(cursor.root) || !digest(cursor.after))) return changed();
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    const prior = cursor && { ...cursor };
++    return this.authorized({ scope, action: 'inventory', originalHash: null, receiptHash: null }, async tx => {
++      const head = await OwnerRoutineCustody.activeHead(tx, scope);
++      const root = indexRoot(head);
++      if (prior && prior.root !== root) return changed();
++      const page = await indexFor(tx, scope).page(root, prior?.after ?? null, limit);
++      const records = [];
++      for (const leaf of page.leaves) {
++        const raw = await tx.read(recordKey(scope, leaf.id));
++        if (raw !== null) await OwnerRoutineCustody.requireCommitted(raw, scope, leaf.id, head, leaf.receiptHash, tx.now());
++        records.push({ ...leaf, present: raw !== null });
++      }
++      return { committedCount: head.sequence, records, next: root && page.next ? { root, after: page.next } : null };
++    });
++  }
++
++  /** Remove verified record envelopes from a serial store that supports CAS
++   * deletion. The tombstone, digest inventory and receipt remain. This gives
++   * no assurance about backups, media, keys or provider-level destruction. */
++  async eraseTombstoned(input: OwnerRoutineScope, expectedRevision: number, limit: number): Promise<Erasure> {
++    if (!validErasureRequest(expectedRevision, limit)) return changed();
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    return this.authorized({ scope, action: 'erase', originalHash: null, receiptHash: null }, async tx => {
++      if (!tx.erase) return unavailable();
++      const head = await this.tombstonedHead(tx, scope);
++      const key = progressKey(scope);
++      const existing = await tx.read(key);
++      const prior = existing === null ? startErasure(head, limit) : readErasure(existing, head);
++      if (prior.revision === expectedRevision + 1) return prior.limit === limit ? prior : changed();
++      if (prior.revision !== expectedRevision) return changed();
++      if (prior.complete) return prior;
++      const result = await this.erasePage(tx, scope, head, prior, limit);
++      await tx.write(key, result);
++      return result;
++    });
++  }
++
++  /** Recheck a completed tombstone against the authentic inventory in bounded
++   * pages. A new pass never rewrites the original erasure receipt. A page retry
++   * recovers the recorded result; start another pass to check for later returns. */
++  async recheckTombstonedErasure(input: OwnerRoutineScope, pass: number, expectedRevision: number, limit: number): Promise<ErasureRecheck> {
++    if (!counter(pass) || pass === 0 || !validErasureRequest(expectedRevision, limit)) return changed();
++    if (!this.freshness) return unavailable();
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    return this.authorized({ scope, action: 'recheck_erasure', originalHash: null, receiptHash: null }, async tx => {
++      if (!tx.erase) return unavailable();
++      const head = await this.tombstonedHead(tx, scope);
++      const key = progressKey(scope);
++      if (!readErasure(await tx.read(key), head).complete) return changed();
++      const recheckKey = `${key}:recheck`;
++      const previous = await tx.read(recheckKey) as ErasureRecheck | null;
++      if (previous !== null && (!counter(previous.pass) || previous.pass === 0 ||
++        Object.keys(previous).sort().join(',') !== 'pass,progress')) return changed();
++      const saved = previous === null ? null : readErasure(previous.progress, head);
++      if (previous?.pass === pass && saved?.revision === expectedRevision + 1) return saved.limit === limit ? previous : changed();
++      const nextPass = pass === (previous?.pass ?? 0) + 1 && expectedRevision === 0 && (!saved || saved.complete);
++      const prior = nextPass ? startErasure(head, limit) : previous?.pass === pass ? saved : null;
++      if (!prior || prior.revision !== expectedRevision || prior.complete) return changed();
++      const progress = await this.erasePage(tx, scope, head, prior, limit);
++      const result = { pass, progress };
++      await tx.write(recheckKey, result);
++      return result;
++    });
++  }
++
++  private async erasePage(tx: EncryptedTransaction, scope: OwnerRoutineScope, head: Head, prior: Erasure, limit: number): Promise<Erasure> {
++    const erase = tx.erase;
++    if (!erase) return unavailable();
++    let { removed, missing } = prior;
++    const page = await indexFor(tx, scope).page(prior.root, prior.after, limit);
++    for (const leaf of page.leaves) {
++      const key = recordKey(scope, leaf.id);
++      const raw = await tx.read(key);
++      if (raw === null) { missing++; continue; }
++      await OwnerRoutineCustody.requireCommitted(raw, scope, leaf.id, head, leaf.receiptHash, tx.now());
++      await erase(key);
++      removed++;
++    }
++    return readErasure({ revision: prior.revision + 1, limit, root: prior.root, after: page.next,
++      removed, missing, complete: page.next === null }, head);
++  }
++
++  private async tombstonedHead(tx: EncryptedTransaction, scope: OwnerRoutineScope): Promise<Head> {
++    const current = requireHead(await tx.read(headKey(scope)));
++    const head = current.healthEpoch === scope.healthEpoch ? current : requireHead(await tx.read(tombstoneKey(scope)));
++    if (head.healthEpoch !== scope.healthEpoch || head.state !== 'tombstoned' || current.healthEpoch < scope.healthEpoch) return changed();
++    return head;
++  }
++
++  private static async activeHead(tx: EncryptedTransaction, scope: OwnerRoutineScope): Promise<Head> {
++    const head = requireHead(await tx.read(headKey(scope)));
++    if (head.state !== 'active' || head.healthEpoch !== scope.healthEpoch) return changed();
++    return head;
++  }
++
++  /** Internal archive read. The caller supplies a serial transaction with
++   * current authority; this verifies storage identity, not grant admission. */
++  static async readCommitted(tx: EncryptedTransaction, scope: OwnerRoutineScope, id: string, receiptHash?: string): Promise<Entry | null> {
++    if (!identifier(scope.ownerId) || !counter(scope.healthEpoch) || scope.healthEpoch === 0 || !identifier(id) ||
++      receiptHash !== undefined && !digest(receiptHash)) return changed();
++    const head = await OwnerRoutineCustody.activeHead(tx, scope);
++    const committed = await indexFor(tx, scope).find(indexRoot(head), id);
++    if (receiptHash !== undefined && committed !== null && committed !== receiptHash) return changed();
++    const raw = await tx.read(recordKey(scope, id));
++    if (raw === null) return committed === null ? null : unavailable();
++    return OwnerRoutineCustody.requireCommitted(raw, scope, id, head, committed, tx.now());
++  }
++
++  private static async requireCommitted(raw: unknown, scope: OwnerRoutineScope, id: string, head: Head,
++    committed: string | null, now: number): Promise<Entry> {
++    const entry = await requireEntry(raw, scope, id, now);
++    if (entry.receipt.hash !== committed || entry.receipt.sequence > head.sequence ||
++      entry.receipt.sequence === head.sequence && entry.receipt.hash !== head.receiptHash) return changed();
++    return entry;
++  }
++}
+diff --git a/apps/professional-web/src/ownerRoutineIndex.ts b/apps/professional-web/src/ownerRoutineIndex.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..07558bbfc9528e089009c3a7cb2b73fa46fa61b1
+--- /dev/null
++++ b/apps/professional-web/src/ownerRoutineIndex.ts
+@@ -0,0 +1,91 @@
++import { ProfessionalAccessError } from './authority';
++import type { EncryptedTransaction } from './encryptedCustody';
++import { canonical, recordHash } from './grants';
++
++type Leaf = Readonly<{ id: string; receiptHash: string }>;
++type Branch = Readonly<{ children: Readonly<Record<string, string>> }>;
++type Node = Leaf | Branch;
++const changed = (): never => { throw new ProfessionalAccessError('changed'); };
++const unavailable = (): never => { throw new ProfessionalAccessError('unavailable'); };
++const pathFor = (id: string) => recordHash(['owner-routine-index-id-v1', id]);
++
++/** A sparse radix tree with one committed leaf per original ID. Only the path
++ * to a changed leaf is rewritten. The encrypted head authenticates the root. */
++export class OwnerRoutineIndex {
++  constructor(private readonly tx: EncryptedTransaction, private readonly namespace: string) {}
++
++  private async read(path: string, hash: string): Promise<Node> {
++    const key = `${this.namespace}:${path}`;
++    const node = await this.tx.read(key) as Node | null;
++    if (node === null) return unavailable();
++    if (await recordHash(['owner-routine-index-node-v1', key, node]) !== hash) return changed();
++    return node;
++  }
++
++  private async write(path: string, node: Node): Promise<string> {
++    const key = `${this.namespace}:${path}`;
++    await this.tx.write(key, node);
++    return recordHash(['owner-routine-index-node-v1', key, node]);
++  }
++
++  async find(root: string | null, id: string): Promise<string | null> {
++    const path = await pathFor(id);
++    let hash = root;
++    for (let depth = 0; hash !== null && depth <= path.length; depth++) {
++      const node = await this.read(path.slice(0, depth), hash);
++      if ('id' in node) return node.id === id ? node.receiptHash : null;
++      hash = node.children[path[depth]!] ?? null;
++    }
++    return hash === null ? null : changed();
++  }
++
++  async insert(root: string | null, leaf: Leaf): Promise<string> {
++    const path = await pathFor(leaf.id);
++    const insert = async (prefix: string, hash: string | null): Promise<string> => {
++      if (hash === null) return this.write(prefix, leaf);
++      const node = await this.read(prefix, hash);
++      if (prefix.length >= path.length) return changed();
++      const next = path[prefix.length]!;
++      if ('id' in node) {
++        const oldPath = await pathFor(node.id);
++        if (oldPath === path || !oldPath.startsWith(prefix)) return changed();
++        let split = prefix.length;
++        while (path[split] === oldPath[split]) split++;
++        let joined = await this.write(path.slice(0, split), { children: {
++          [oldPath[split]!]: await this.write(oldPath.slice(0, split + 1), node),
++          [path[split]!]: await this.write(path.slice(0, split + 1), leaf),
++        } });
++        for (let depth = split - 1; depth >= prefix.length; depth--) {
++          joined = await this.write(path.slice(0, depth), { children: { [path[depth]!]: joined } });
++        }
++        return joined;
++      }
++      const children = { ...node.children, [next]: await insert(prefix + next, node.children[next] ?? null) };
++      return canonical(children) === canonical(node.children) ? hash : this.write(prefix, { children });
++    };
++    return insert('', root);
++  }
++
++  /** Enumerate commitments in digest order so each inventory page needs only
++   * its cursor path and the bounded next segment. */
++  async page(root: string | null, after: string | null, limit: number): Promise<{ leaves: Leaf[]; next: string | null }> {
++    const leaves: Leaf[] = [];
++    let last: string | null = null;
++    let more = false;
++    const visit = async (path: string, hash: string): Promise<void> => {
++      if (more || (after !== null && path < after.slice(0, path.length))) return;
++      const node = await this.read(path, hash);
++      if ('id' in node) {
++        const digest = await pathFor(node.id);
++        if (after !== null && digest <= after) return;
++        if (leaves.length === limit) { more = true; return; }
++        leaves.push(node);
++        last = digest;
++        return;
++      }
++      for (const digit of Object.keys(node.children).sort()) await visit(path + digit, node.children[digit]!);
++    };
++    if (root !== null) await visit('', root);
++    return { leaves, next: more ? last : null };
++  }
++}
+diff --git a/apps/professional-web/src/ownerRoutinePrevisit.ts b/apps/professional-web/src/ownerRoutinePrevisit.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..cbc429bfb826753acca17e11640a9cc710c6d0d6
+--- /dev/null
++++ b/apps/professional-web/src/ownerRoutinePrevisit.ts
+@@ -0,0 +1,161 @@
++import { ProfessionalAccessError, validGrant, type Grant } from './authority';
++import type { EncryptedTransaction } from './encryptedCustody';
++import { canonical, recordHash } from './grants';
++import { OwnerRoutineCustody, type OriginalRoutineRecord } from './ownerRoutineCustody';
++import { PREVISIT_RECORD_FIELDS, validPrevisitRecord, type PrevisitRecord, type PrevisitRecordField, type PrevisitRecordSource } from './previsitRecords';
++
++export type OwnerRoutinePrevisitReceipt = Readonly<{ id: string; receiptHash: string }>;
++
++const changed = (): never => { throw new ProfessionalAccessError('changed'); };
++const digest = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{64}$/u.test(value);
++const uuid = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u.test(value);
++const positive = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) > 0;
++type Routine = Extract<PrevisitRecord, { field: 'actual_routine' }>;
++type Use = Extract<PrevisitRecord, { field: 'use_events' }>;
++
++function record(value: unknown, keys: string): Record<string, unknown> {
++  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).sort().join(',') !== keys) return changed();
++  return value as Record<string, unknown>;
++}
++
++function payload(original: OriginalRoutineRecord, grant: Grant) {
++  let parsed: unknown;
++  try { parsed = JSON.parse(original.bytes); } catch { return changed(); }
++  const archive = record(parsed, original.kind === 'use_event' ? 'ownerUserId,processingEpoch,schemaVersion,target' : 'ownerUserId,processingEpoch,saved,schemaVersion,target');
++  if (archive.schemaVersion !== 1 || archive.ownerUserId !== grant.ownerId || archive.processingEpoch !== grant.healthEpoch) return changed();
++  return archive;
++}
++
++async function acknowledgedCommand(raw: unknown, original: OriginalRoutineRecord, target: Record<string, unknown>) {
++  const saved = record(raw, 'acknowledged,command,consentHash,contentHash,outcome');
++  const outcome = record(saved.outcome, 'commandHash,recordHash,sequence');
++  if (saved.acknowledged !== true || !digest(saved.consentHash) || saved.contentHash !== original.sourceHash ||
++      await recordHash({ command: saved.command, consentHash: saved.consentHash, acknowledged: false }) !== original.sourceHash ||
++      outcome.commandHash !== original.sourceHash || outcome.recordHash !== target.contentHash || outcome.sequence !== target.sequence) return changed();
++}
++
++async function projection(body: object): Promise<PrevisitRecord> {
++  const candidate = { ...body, contentHash: await recordHash(body) };
++  if (!validPrevisitRecord(candidate)) return changed();
++  return candidate;
++}
++
++async function projectRoutine(original: OriginalRoutineRecord, grant: Grant, archive: Record<string, unknown>): Promise<Routine> {
++  const saved = record(archive.saved, 'acknowledged,command,consentHash,contentHash,outcome');
++  const kind = (saved.command as { kind?: unknown } | null)?.kind;
++  if (kind !== 'apply' && kind !== 'clear') return changed();
++  const command = record(saved.command, kind === 'apply' ? 'facts,kind,request' : 'kind,request');
++  const request = record(command.request, 'createdAt,expectedParentHash,id');
++  const target = record(archive.target, 'actorOwnerId,am,contentHash,createdAt,id,parentHash,parentId,pm,schemaVersion,sequence,source,sourceHash');
++  const { contentHash: targetHash, ...targetBody } = target;
++  const cleared = kind === 'clear';
++  await acknowledgedCommand(saved, original, target);
++  if (await recordHash(['actual-routine-v1', targetBody]) !== targetHash || target.actorOwnerId !== grant.ownerId ||
++    target.id !== original.id || request.id !== original.id || request.createdAt !== target.createdAt || request.expectedParentHash !== target.parentHash ||
++    (target.sequence === 1 ? target.parentId !== null || target.parentHash !== null : !uuid(target.parentId) || !digest(target.parentHash)) ||
++    target.schemaVersion !== (cleared ? 2 : 1) || target.source !== (cleared ? 'owner-cleared-local' : 'owner-applied-local') || !digest(target.sourceHash)) return changed();
++  if (cleared) {
++    if (target.sourceHash !== target.parentHash) return changed();
++  } else {
++    const facts = record(command.facts, 'activeProductIds,am,pm,source,sourceHash');
++    if (facts.source !== 'local' || facts.sourceHash !== target.sourceHash || canonical([facts.am, facts.pm]) !== canonical([target.am, target.pm])) return changed();
++  }
++  return await projection({ field: 'actual_routine', id: original.id, sourceHash: targetHash, recordedAt: target.createdAt,
++    sequence: target.sequence, am: target.am, pm: target.pm, ...(cleared ? { disposition: 'owner_cleared' } : {}) }) as Routine;
++}
++
++async function projectUse(original: OriginalRoutineRecord, grant: Grant, archive: Record<string, unknown>,
++  routines: ReadonlyMap<string, Routine>, originals: ReadonlyMap<string, Record<string, unknown>>, fields: readonly PrevisitRecordField[]) {
++  const isRetraction = original.kind === 'resolved_command';
++  const schema = (archive.target as { schemaVersion?: unknown } | null)?.schemaVersion;
++  const target = record(archive.target, `actorOwnerId,contentHash,${schema === 2 ? 'formulaAtUse,' : ''}id,kind,observedOn,planHash,planId,previousHash,recordedAt,schemaVersion,sequence,source,stepKey,targetId`);
++  const { contentHash, ...event } = target;
++  if (!positive(event.sequence) || (schema !== 1 && schema !== 2) || (isRetraction && schema !== 1) ||
++      event.source !== 'owner-recorded-local' || event.actorOwnerId !== grant.ownerId || event.id !== original.id ||
++      (event.sequence === 1 ? event.previousHash !== null : !digest(event.previousHash)) ||
++      event.kind !== (isRetraction ? 'retraction' : 'use') || await recordHash(['actual-routine-v1', event]) !== contentHash) return changed();
++
++  const routine = typeof event.planId === 'string' ? routines.get(event.planId) : undefined;
++  const phase = typeof event.stepKey === 'string' && event.stepKey.startsWith('AM:') ? 'am' : 'pm';
++  const step = routine?.[phase].find(candidate => `${phase.toUpperCase()}:${candidate.productId}` === event.stepKey);
++  if (!routine || routine.sourceHash !== event.planHash || !step) return changed();
++  if (isRetraction) {
++    await acknowledgedCommand(archive.saved, original, target);
++    const saved = archive.saved as { command: unknown };
++    const command = record(saved.command, 'event,expectedHash,kind,request');
++    const request = record(command.request, 'id,recordedAt');
++    const prior = typeof event.targetId === 'string' ? originals.get(event.targetId) : undefined;
++    if (command.kind !== 'retraction' || request.id !== event.id || request.recordedAt !== event.recordedAt ||
++        command.expectedHash !== event.previousHash || !prior || !positive(prior.sequence) || prior.sequence >= event.sequence ||
++        canonical(command.event) !== canonical(prior) || prior.planId !== event.planId || prior.planHash !== event.planHash ||
++        prior.observedOn !== event.observedOn || prior.stepKey !== event.stepKey) return changed();
++  } else if (event.targetId !== null || contentHash !== original.sourceHash) return changed();
++
++  const use = await projection({ field: 'use_events', id: event.id, sourceHash: contentHash, recordedAt: event.recordedAt,
++    observedOn: event.observedOn, productId: step.productId, name: step.name, phase, routineVersion: routine.sequence,
++    kind: event.kind, targetId: event.targetId }) as Use;
++  let formula: PrevisitRecord | null = null;
++  if (fields.includes('formulas') && schema === 2 && target.formulaAtUse !== null) {
++    const evidence = record(target.formulaAtUse, 'formula,ownedVersionHash,ownedVersionId');
++    const raw = record(evidence.formula, 'actor,basis,contentHash,id,labelStatus,labelText,market,observedOn,ownedUnitId,ownerUserId,previousFormulaVersionId,recordedAt,schemaVersion,sourceRights,variant');
++    const { id, contentHash: formulaHash, ...observation } = raw;
++    if (!digest(evidence.ownedVersionHash) || evidence.ownedVersionId !== `owned38:${evidence.ownedVersionHash}` ||
++        observation.schemaVersion !== 1 || observation.actor !== 'owner' || observation.sourceRights !== 'owner_private_observation' ||
++        observation.ownerUserId !== grant.ownerId || observation.ownedUnitId !== step.productId ||
++        observation.basis !== (observation.labelStatus === 'unknown' ? 'unavailable' : 'label_in_hand') ||
++        await recordHash(observation) !== formulaHash || id !== `formula38:${formulaHash}`) return changed();
++    const { labelStatus, labelText, market, variant, observedOn, recordedAt } = observation;
++    formula = await projection({ field: 'formulas', id: event.id, sourceHash: formulaHash, recordedAt,
++      productId: step.productId, name: step.name, labelStatus, labelText, market, variant, observedOn, atUse: true });
++  }
++  return { use, formula, sequence: event.sequence };
++}
++
++/** SERVER ONLY. The receipts come from the current grant's trusted, explicit
++ * selection resolved in this transaction. A receipt proves archive membership,
++ * not permission to select another field, practice, owner or retired epoch. */
++export async function readOwnerRoutinePrevisit(tx: EncryptedTransaction, grant: Grant,
++  requested: readonly PrevisitRecordField[], selection: readonly OwnerRoutinePrevisitReceipt[]): Promise<PrevisitRecordSource> {
++  grant = structuredClone(grant);
++  const fields = [...requested];
++  const proofs = structuredClone(selection);
++  if (!validGrant(grant) || grant.status !== 'active' || grant.expiresAt <= tx.now() ||
++    !grant.purposes.includes('pre_visit') || fields.some(field => !grant.fields.includes(field))) throw new ProfessionalAccessError('grant');
++  if (!fields.length || new Set(fields).size !== fields.length || fields.some(field => !PREVISIT_RECORD_FIELDS.includes(field)) ||
++      !Array.isArray(proofs) || proofs.length > 100) return changed();
++  const scope = { ownerId: grant.ownerId, healthEpoch: grant.healthEpoch };
++  const routines = new Map<string, Routine>();
++  const uses: { original: OriginalRoutineRecord; archive: Record<string, unknown> }[] = [];
++  const originals = new Map<string, Record<string, unknown>>();
++  const seen = new Set<string>();
++  for (const proof of proofs) {
++    const { id, receiptHash } = record(proof, 'id,receiptHash');
++    if (!uuid(id) || !digest(receiptHash) || seen.has(id)) return changed();
++    seen.add(id);
++    const entry = await OwnerRoutineCustody.readCommitted(tx, scope, id, receiptHash);
++    if (!entry || entry.original.kind === 'routine_version') return changed();
++    const { original } = entry;
++    const archive = payload(original, grant);
++    const kind = (archive.saved as { command?: { kind?: unknown } } | null)?.command?.kind;
++    if (kind === 'apply' || kind === 'clear') {
++      routines.set(id, await projectRoutine(original, grant, archive));
++    } else {
++      if ((!fields.includes('use_events') && !fields.includes('formulas')) || (original.kind !== 'use_event' && kind !== 'retraction')) return changed();
++      if (original.kind === 'use_event') originals.set(id, archive.target as Record<string, unknown>);
++      uses.push({ original, archive });
++    }
++  }
++  if (new Set(Array.from(routines.values(), row => row.sequence)).size !== routines.size) return changed();
++  const projected = [];
++  for (const { original, archive } of uses) projected.push(await projectUse(original, grant, archive, routines, originals, fields));
++  if (new Set(projected.map(row => row.sequence)).size !== projected.length) return changed();
++  projected.sort((a, b) => a.sequence - b.sequence);
++  const records: PrevisitRecord[] = fields.includes('actual_routine') ? [...routines.values()] : [];
++  for (const { use, formula } of projected) {
++    if (fields.includes('use_events')) records.push(use);
++    if (formula) records.push(formula);
++  }
++  const body = { ownerId: grant.ownerId, workspaceId: grant.workspaceId, grantId: grant.id, grantVersion: grant.version,
++    grantEpoch: grant.epoch, healthEpoch: grant.healthEpoch, fields, records };
++  return { ...body, contentHash: await recordHash(body) };
++}
+diff --git a/apps/professional-web/src/ownerView.ts b/apps/professional-web/src/ownerView.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4ca954cef3294d46ca7977f75313a79786f4b205
+--- /dev/null
++++ b/apps/professional-web/src/ownerView.ts
+@@ -0,0 +1,133 @@
++import { createOwnerPortal, type PlanSummary, type PortalState } from './ownerPortal';
++
++/** Server text uses text nodes, never HTML. Navigation rereads authority rather
++ * than retaining a health-bearing client cache or browser history entry. */
++export function mountOwnerView(root: HTMLElement, request: typeof fetch = fetch) {
++  const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text?: string) => {
++    const node = document.createElement(tag); if (text) node.textContent = text; return node;
++  };
++  const download = (text: string) => {
++    const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
++    const link = element('a'); link.href = url; link.download = 'onskin-received-plans.txt'; document.body.append(link);
++    try { link.click(); } finally { link.remove(); setTimeout(() => URL.revokeObjectURL(url), 0); }
++  };
++  const button = (label: string, action: () => unknown) => {
++    const node = element('button', label); node.type = 'button'; node.addEventListener('click', () => { void action(); }); return node;
++  };
++  function render(state: PortalState) {
++    const control = (label: string, action: () => unknown) => button(label, () => portal.whenCurrent(state, action));
++    const fragment = document.createDocumentFragment(); const heading = element('h2'); heading.tabIndex = -1;
++    const status = element('p'); status.setAttribute('role', 'status'); fragment.append(heading, status);
++    root.setAttribute('aria-busy', String(state.kind === 'loading'));
++    const back = () => fragment.append(control('Back to received plans', () => portal.check()));
++    if (state.kind === 'idle') {
++      heading.textContent = 'Your practice records'; status.textContent = 'No record has been loaded. Service access is unavailable until a trusted owner connection is configured.';
++      fragment.append(control('Check connection', () => portal.check()));
++    } else if (state.kind === 'loading') {
++      heading.textContent = 'Checking your records'; status.textContent = 'Waiting for current owner authorization…';
++    } else if (state.kind === 'failed') {
++      heading.textContent = 'Records unavailable';
++      status.textContent = state.retryEnd ? 'The outcome is unknown. Retry the same end-relationship request to check its outcome. Your received records remain independent.' :
++        'No current permission or record could be confirmed. Check again to reload. No professional approval or paid access was granted.';
++      if (state.retryEnd) fragment.append(control('Retry end-relationship request', () => portal.retryEnd()));
++      fragment.append(control('Check connection', () => portal.check()));
++    } else if (state.kind === 'incoming') {
++      heading.textContent = 'New practice suggestions';
++      status.textContent = state.plans.length ? 'These exact versions have not been received into your independent history. Choose one to review. Nothing is applied or acknowledged by opening it.' : 'No new versions are available under the current practice permission.';
++      for (const plan of state.plans) fragment.append(control(`Review new intended version ${plan.sequence} · ${new Date(plan.issuedAt).toISOString()}`, () => portal.reviewReceive(plan)));
++      back();
++    } else if (state.kind === 'confirm-receive') {
++      heading.textContent = `Receive intended version ${state.plan.sequence}?`;
++      status.textContent = 'Review this exact suggestion. Confirming keeps an independent copy and a dated received entry. It does not acknowledge, apply, record use, reserve an accepted-plan place or create a charge. Your received copy remains available after practice exit or payment expiry.';
++      fragment.append(element('pre', state.text), control('Keep received history unchanged', () => portal.check()), control('Confirm receipt of this version', () => portal.receive()));
++    } else if (state.kind === 'failed-receive') {
++      heading.textContent = 'Receipt outcome unknown';
++      status.textContent = 'This version may already have been received. Retry the same request to check its outcome. Clearing or leaving stops the retry; reload received history before trying again.';
++      fragment.append(control('Retry receipt request', () => portal.retryReceipt())); back();
++    } else if (state.kind === 'received') {
++      heading.textContent = 'Version received';
++      status.textContent = 'The exact copy and received entry were saved together. Your actual routine, use, acknowledgement and accepted-plan capacity were not changed.'; back();
++    } else if (state.kind === 'blocked-accept') {
++      heading.textContent = state.reason === 'capacity' ? 'Practice plan capacity reached' : 'Practice activation is paused';
++      status.textContent = state.reason === 'capacity' ?
++        'The practice cannot currently activate this plan within its recorded capacity. Your received history remains available. Contact the practice about availability.' :
++        'The practice cannot currently confirm review coverage for activation. Your received history remains available. Contact the practice about availability.';
++      fragment.append(element('p', 'You can retry the same request when availability changes. If an earlier response was lost, reload received history to check whether it was already recorded. This does not change your actual routine or subscription.'),
++        control('Retry acknowledgement request', () => portal.retryAcceptance())); back();
++    } else if (state.kind === 'failed-accept') {
++      heading.textContent = 'Acknowledgement outcome unknown';
++      status.textContent = 'The acknowledgement and accepted-plan place may already be recorded. Retry the same request to check its outcome. Clearing or leaving stops the retry; reload this version’s history before responding again.';
++      fragment.append(control('Retry acknowledgement request', () => portal.retryAcceptance())); back();
++    } else if (state.kind === 'accepted') {
++      heading.textContent = 'Acknowledgement recorded';
++      status.textContent = 'This version was acknowledged and its accepted-plan place recorded together. Your actual routine and use history were not changed. This does not grant Plus or establish clinical advice. Reload to review the recorded response.'; back();
++    } else if (state.kind === 'confirm-accept') {
++      heading.textContent = `Acknowledge intended version ${state.plan.sequence}?`;
++      status.textContent = 'Review this exact received version before confirming. Acknowledgement records receiving and understanding the suggestion and reserves its accepted-plan place. It does not apply the routine, establish use, grant Plus or create a charge. Current permission, service availability and capacity must still be confirmed when you save.';
++      fragment.append(element('pre', state.text), control('Keep response unchanged', () => portal.check()), control('Confirm acknowledgement of this version', () => portal.accept()));
++    } else if (state.kind === 'failed-decline') {
++      heading.textContent = 'Response outcome unknown';
++      status.textContent = 'Your decline may already have been recorded. Retry the same request to check its outcome. Clearing or leaving this screen stops the retry; reload the selected version’s history before making another response.';
++      fragment.append(control('Retry decline request', () => portal.retryDecline())); back();
++    } else if (state.kind === 'declined') {
++      heading.textContent = 'Decline recorded';
++      status.textContent = 'Your explicit response was added to this version’s history. It does not change your actual routine, end the relationship, release a place or establish practitioner notification. Earlier responses remain in history.'; back();
++    } else if (state.kind === 'confirm-decline') {
++      heading.textContent = `Decline intended version ${state.plan.sequence}?`;
++      status.textContent = 'Review this exact received version before confirming. This adds a dated personal response; it does not change your actual routine, end the relationship, release a place or establish practitioner notification. Earlier responses remain in history.';
++      fragment.append(element('pre', state.text), control('Keep response unchanged', () => portal.check()), control('Confirm decline of this version', () => portal.decline()));
++    } else if (state.kind === 'index') {
++      heading.textContent = 'Your received plans';
++      status.textContent = state.plans.length ? 'Select up to 100 exact historical versions to review or download. The latest recorded response is historical; it does not establish current activation, an applied routine or use.' : 'No received plans are recorded for this owner.';
++      const selected = new Map<string, PlanSummary>();
++      const review = control('Review selected plans', () => portal.report([...selected.values()], 'read'));
++      const save = control('Download selected plans', () => portal.report([...selected.values()], 'export')); review.disabled = save.disabled = true;
++      const decline = control('Review one version to decline…', () => portal.reviewDecline([...selected.values()][0]!)); decline.disabled = true;
++      const accept = control('Review one version to acknowledge…', () => portal.reviewAcceptance([...selected.values()][0]!)); accept.disabled = true;
++      const fieldset = element('fieldset'); fieldset.append(element('legend', 'Choose received versions'));
++      state.plans.forEach((plan, index) => {
++        const label = element('label'); const input = element('input'); input.type = 'checkbox'; input.id = `received-${index}`;
++        const latest = plan.latestResponse;
++        label.append(input, document.createTextNode(` Intended version ${plan.sequence} · ${new Date(plan.issuedAt).toISOString()} · ${latest ? `Latest recorded response: ${{ received: 'Received', acknowledged: 'Acknowledged', declined: 'Declined' }[latest.kind]} · ${new Date(latest.recordedAt).toISOString()}` : 'Response unavailable'} · Response does not apply this routine`));
++        input.addEventListener('change', () => {
++          if (input.checked) selected.set(plan.planId, plan); else selected.delete(plan.planId);
++          review.disabled = save.disabled = selected.size === 0 || selected.size > 100;
++          decline.disabled = accept.disabled = selected.size !== 1;
++        }); fieldset.append(label);
++      });
++      if (state.plans.length) fragment.append(fieldset, review, save, accept, decline);
++      fragment.append(control('Review new practice suggestions', () => portal.incoming()), control('Review practice permission', () => portal.connection()));
++    } else if (state.kind === 'report') {
++      heading.textContent = 'Selected received plans'; status.textContent = 'Only the versions you selected are included. Downloads cannot be recalled.';
++      fragment.append(element('pre', state.text)); back();
++    } else if (state.kind === 'connection' || state.kind === 'confirm-end') {
++      heading.textContent = state.kind === 'confirm-end' ? 'End this practice relationship?' : 'Your practice permission'; const c = state.connection;
++      if (!c) status.textContent = 'No practice permission is recorded. Your received history remains available.';
++      else {
++        status.textContent = `${c.expired ? 'Expired' : 'Recorded'} permission · expires ${new Date(c.expiresAt).toISOString()}. This does not establish current professional qualification or paid access.`;
++        const fields: Record<string, string> = { products: 'Saved products', formulas: 'Formula observations', actual_routine: 'Actual routine', use_events: 'Recorded use', exceptions: 'Optional observations', intended_plans: 'Intended plans' };
++        const purposes: Record<string, string> = { routine_review: 'Routine review', pre_visit: 'Pre-visit report' };
++        fragment.append(element('p', `Selected text: ${c.fields.map(field => fields[field]).join(', ')}`),
++          element('p', `Purposes: ${c.purposes.map(purpose => purposes[purpose]).join(', ')}`),
++          element('p', `Permissions: ${c.permissions.map(permission => ({ read: 'Read selected text', plan_write: 'Issue intended suggestions', export: 'Export selected text' })[permission]).join(', ')}`));
++        if (state.kind === 'connection') fragment.append(control('End relationship…', () => portal.reviewEnd()));
++        else fragment.append(element('p', 'This revokes this practice permission and releases your accepted-plan place. It keeps your personal account, received plans, actual history and subscription. It cannot recall downloads and does not promise a legal deletion deadline.'),
++          control('Keep relationship', () => portal.cancelEnd()), control('Confirm end relationship', () => portal.end()));
++      }
++      if (state.kind !== 'confirm-end') back();
++    } else {
++      heading.textContent = 'Practice relationship ended'; status.textContent = 'Permission was revoked and the accepted-plan place released. Your independent personal and received records remain available.'; back();
++    }
++    fragment.append(control('Clear this screen', () => portal.clear())); root.replaceChildren(fragment);
++    if (state.kind !== 'loading') heading.focus();
++  }
++  const portal = createOwnerPortal(request, render, download);
++  const clear = () => portal.clear(); const visibility = () => { if (document.hidden) clear(); };
++  window.addEventListener('blur', clear); window.addEventListener('pagehide', clear); window.addEventListener('pageshow', clear); document.addEventListener('visibilitychange', visibility);
++  const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('onskin-professional-session') : null;
++  channel?.addEventListener('message', clear); portal.clear();
++  return () => {
++    clear(); channel?.close(); window.removeEventListener('blur', clear); window.removeEventListener('pagehide', clear); window.removeEventListener('pageshow', clear);
++    document.removeEventListener('visibilitychange', visibility);
++  };
++}
+diff --git a/apps/professional-web/src/practiceTemplates.test.ts b/apps/professional-web/src/practiceTemplates.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c4fa242258cfcc01b148d1b8be50954b8e5cfdc4
+--- /dev/null
++++ b/apps/professional-web/src/practiceTemplates.test.ts
+@@ -0,0 +1,208 @@
++import { randomUUID } from 'node:crypto';
++import { expect, it, vi } from 'vitest';
++import type { Authority } from './authority';
++import { canonical } from './grants';
++import { changePracticeTemplate, decodePracticeTemplates, type TemplateCommand } from './practiceTemplates';
++import { createTemplateApi } from './templateApi';
++import { practiceTemplates } from './templateService';
++import { createTemplateController, type TemplateState } from './templateView';
++import { EncryptedWorkspaceRepository, workspaceRecordKey as key, type WorkspaceTrust } from './encryptedWorkspaceRepository';
++import { emptyWorkspaceBilling, reconcileWorkspaceBilling } from './workspaceBilling';
++import { custodyFixture } from './test/custodyFixture';
++
++const origin = 'https://onskin.test';
++const command = (): Extract<TemplateCommand, { kind: 'revise' }> => ({ id: randomUUID(), templateId: randomUUID(), expectedHeadHash: null,
++  kind: 'revise', title: 'Generic sequence', am: ['cleanser'], pm: ['moisturizer'], confirmed: true });
++async function fixture() {
++  const f = await custodyFixture(), now = f.controls.now;
++  let authority: Authority = { session: { subjectId: 'synthetic-staff', workspaceId: 'practice-a', ownerId: null, epoch: 1,
++    startedAt: now, lastActivityAt: now, stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
++    membership: { subjectId: 'synthetic-staff', workspaceId: 'practice-a', roles: ['assigned_practitioner'], revision: 1, active: true },
++    licence: { subjectId: 'synthetic-staff', jurisdiction: 'CA', verifiedAt: now, expiresAt: now + 100_000 },
++    billing: 'unknown', assignment: null, health: null, grant: null };
++  const billing = await reconcileWorkspaceBilling(emptyWorkspaceBilling('practice-a', 'customer-a', 'subscription-a'), {
++    verifyAndRetrieve: async () => ({ workspaceId: 'practice-a', customerId: 'customer-a', subscriptionId: 'subscription-a',
++      eventId: 'synthetic-event', eventAt: now, retrievedAt: now, verifiedUntil: now + 100_000, paidThrough: now + 100_000,
++      pastDueSince: null, status: 'active', tier: 'solo' }) }, new Uint8Array([1]), 'synthetic-only', now);
++  await f.custody.transaction(async tx => { await tx.write(key.billing('practice-a'), billing); await tx.write(key.templates('practice-a'), []); });
++  const forbidden = vi.fn(async (): Promise<never> => { throw new Error('CLIENT_RECORD_PORT_MUST_NOT_BE_CALLED'); });
++  const trust: WorkspaceTrust = { authority: async () => authority, lifecycle: forbidden, planSource: forbidden, activationAvailable: forbidden };
++  const repository = () => new EncryptedWorkspaceRepository(f.custody, trust);
++  let context = 'synthetic-practice-session';
++  const api = createTemplateApi({ origin, repository: repository(), authenticate: async () => ({ token: 'synthetic-token', workspaceId: 'practice-a', context }) });
++  const transport: typeof fetch = async (_url, init) => api(new Request(origin + '/api/professional/templates', { ...init, headers: { ...init?.headers, Origin: origin } }));
++  return { ...f, repository, forbidden, transport, api, retire: () => { authority = { ...authority, session: { ...authority.session, revoked: true } }; },
++    mutate: (work: (a: Authority) => Authority) => { authority = work(authority); }, replaceContext: () => { context = 'successor-session'; } };
++}
++it('connects authoring, exact retry after lost acknowledgement, revision history, retirement and encrypted reload without client ports', async () => {
++  const f = await fixture(); const render = vi.fn<(s: TemplateState) => void>();
++  const c = createTemplateController(f.transport, render);
++  await c.load(c.generation); c.edit(c.generation); c.title(c.generation, 'Generic morning');
++  c.role(c.generation, 'am', 'cleanser'); c.role(c.generation, 'pm', 'moisturizer'); c.review(c.generation);
++  const review = c.generation; c.cancel(review); await c.confirm(review);
++  expect(await practiceTemplates(f.repository(), 'synthetic', 'practice-a')).toEqual([]);
++  c.review(c.generation); f.controls.loseCommitReply = true; await c.confirm(c.generation);
++  expect(render.mock.lastCall![0].kind).toBe('unknown');
++  f.controls.loseCommitReply = false; await c.confirm(c.generation);
++  const first = await practiceTemplates(f.repository(), 'synthetic', 'practice-a'); expect(first).toHaveLength(1);
++  const firstBytes = canonical(first[0]);
++  const retiredControl = c.generation; c.edit(c.generation, first[0]); c.title(c.generation, 'Generic revised'); c.review(c.generation); await c.confirm(c.generation);
++  const second = await practiceTemplates(f.repository(), 'synthetic', 'practice-a'); expect(second).toHaveLength(2);
++  expect(render.mock.lastCall![0].kind).toBe('index');
++  expect(canonical(second[0])).toBe(firstBytes); expect(second[1]!.parentHash).toBe(first[0]!.contentHash);
++  c.retire(retiredControl, first[0]!); expect(render.mock.lastCall![0].kind).toBe('index');
++  c.retire(c.generation, second[1]!); const oldConfirm = c.generation; c.cancel(c.generation); await c.confirm(oldConfirm);
++  expect(await practiceTemplates(f.repository(), 'synthetic', 'practice-a')).toHaveLength(2);
++  c.retire(c.generation, second[1]!); await c.confirm(c.generation);
++  expect(render.mock.lastCall![0].kind).toBe('index');
++  c.clear(); await c.load(c.generation);
++  const final = await practiceTemplates(f.repository(), 'synthetic', 'practice-a');
++  expect(final.map(t => t.status)).toEqual(['active', 'active', 'retired']); expect(final[2]!.title).toBe('Generic revised');
++  expect(canonical([...f.records()])).not.toContain('Generic'); expect(f.forbidden).not.toHaveBeenCalled();
++  expect([...f.records().keys()].every(k => k.startsWith('workspace/practice-a/'))).toBe(true);
++});
++
++it.each(['current', 'historical'] as const)('reads back the exact %s revision after a lost acknowledgement without resending the save', async status => {
++  const f = await fixture();
++  const transport = vi.fn(f.transport);
++  const render = vi.fn<(s: TemplateState) => void>();
++  const c = createTemplateController(transport, render);
++  await c.load(c.generation);
++  c.edit(c.generation);
++  c.title(c.generation, 'Generic morning');
++  c.role(c.generation, 'am', 'cleanser');
++  c.review(c.generation);
++  f.controls.loseCommitReply = true;
++  await c.confirm(c.generation);
++  expect(render.mock.lastCall![0].kind).toBe('unknown');
++  f.controls.loseCommitReply = false;
++  const saved = (await practiceTemplates(f.repository(), 'synthetic', 'practice-a'))[0]!;
++  if (status === 'historical') {
++    await practiceTemplates(f.repository(), 'synthetic', 'practice-a', {
++      ...command(), title: 'Successor revision', templateId: saved.templateId, expectedHeadHash: saved.contentHash,
++    });
++  }
++  const before = canonical([...f.records()]);
++
++  await c.inspect(c.generation);
++
++  expect(transport.mock.calls).toHaveLength(3);
++  const inspected = JSON.parse(transport.mock.lastCall![1]!.body as string);
++  const sent = JSON.parse(transport.mock.calls[1]![1]!.body as string);
++  expect(inspected).toEqual({ kind: 'inspect', context: 'synthetic-practice-session', command: sent.command });
++  expect(render.mock.lastCall![0]).toMatchObject({ kind: 'index', outcome: { status, revision: saved.revision } });
++  expect(canonical([...f.records()])).toBe(before);
++});
++
++it('keeps the exact retry after an empty inspection and refuses a successor session', async () => {
++  const f = await fixture();
++  const render = vi.fn<(s: TemplateState) => void>();
++  const transport: typeof fetch = (url, init) => {
++    const input = JSON.parse(init!.body as string);
++    return input.kind === 'change' ? Promise.reject(new Error('synthetic transport interruption')) : f.transport(url, init);
++  };
++  const c = createTemplateController(transport, render);
++  await c.load(c.generation);
++  c.edit(c.generation);
++  c.title(c.generation, 'Generic evening');
++  c.role(c.generation, 'pm', 'moisturizer');
++  c.review(c.generation);
++  await c.confirm(c.generation);
++  const original = render.mock.lastCall![0];
++  expect(original.kind).toBe('unknown');
++
++  await c.inspect(c.generation);
++  expect(render.mock.lastCall![0]).toEqual({ ...original, inspection: 'absent' });
++  const before = canonical([...f.records()]);
++  f.replaceContext();
++  await c.inspect(c.generation);
++  expect(render.mock.lastCall![0]).toEqual({ kind: 'changed' });
++  expect(canonical([...f.records()])).toBe(before);
++});
++
++it('does not certify the original receipt for a different practitioner in the same workspace', async () => {
++  const f = await fixture();
++  const original = command();
++  await practiceTemplates(f.repository(), 'synthetic', 'practice-a', original);
++  const before = canonical([...f.records()]);
++  const subjectId = 'synthetic-successor-staff';
++  f.mutate(authority => ({ ...authority, session: { ...authority.session, subjectId },
++    membership: { ...authority.membership!, subjectId }, licence: { ...authority.licence!, subjectId } }));
++
++  const response = await f.transport(`${origin}/api/professional/templates`, {
++    method: 'POST', headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'templates-v1' },
++    body: JSON.stringify({ kind: 'inspect', context: 'synthetic-practice-session', command: original }),
++  });
++
++  expect(response.status).toBe(409);
++  expect(await response.json()).toEqual({ status: 'changed' });
++  expect(canonical([...f.records()])).toBe(before);
++});
++it.each(['session', 'role', 'licence', 'workspace', 'billing'] as const)('denies %s authority initially and at commit, preserving every original byte', async boundary => {
++  for (const final of [false, true]) {
++    const f = await fixture(), before = canonical([...f.records()]);
++    const retire = () => f.mutate(a => boundary === 'session' ? { ...a, session: { ...a.session, revoked: true } } :
++      boundary === 'role' ? { ...a, membership: { ...a.membership!, roles: ['workspace_owner'] } } :
++      boundary === 'licence' ? { ...a, licence: null } :
++      boundary === 'workspace' ? { ...a, session: { ...a.session, workspaceId: 'practice-b' } } : a);
++    if (boundary === 'billing') f.controls.now += final ? 0 : 100_001;
++    if (final) f.controls.beforeCommit = () => { if (boundary === 'billing') f.controls.now += 100_001; else retire(); }; else retire();
++    await expect(practiceTemplates(f.repository(), 'synthetic', 'practice-a', command())).rejects.toThrow();
++    expect(canonical([...f.records()])).toBe(before); expect(f.forbidden).not.toHaveBeenCalled();
++  }
++});
++it('refuses absent history instead of provisioning it and refuses cross-practice access', async () => {
++  const f = await fixture();
++  await expect(practiceTemplates(f.repository(), 'synthetic', 'practice-b')).rejects.toThrow();
++  const before = canonical([...f.records()]);
++  const read = f.custody.transaction.bind(f.custody);
++  vi.spyOn(f.custody, 'transaction').mockImplementation(work => read(tx => work({ ...tx, read: async k => k.endsWith('/templates') ? null : tx.read(k) })));
++  await expect(practiceTemplates(f.repository(), 'synthetic', 'practice-a')).rejects.toThrow('PROFESSIONAL_ACCESS_UNAVAILABLE');
++  expect(canonical([...f.records()])).toBe(before);
++});
++it('refuses changed ID reuse, stale revisions, retirement resurrection, altered hashes and client-text smuggling', async () => {
++  const c = command(), first = await changePracticeTemplate([], 'practice-a', 'staff', c, 1);
++  expect(await changePracticeTemplate(first, 'practice-a', 'staff', c, 2)).toEqual(first);
++  await expect(changePracticeTemplate(first, 'practice-a', 'staff', { ...c, title: 'Different' }, 2)).rejects.toThrow('CONFLICT');
++  await expect(changePracticeTemplate(first, 'practice-a', 'staff', { ...c, id: randomUUID() }, 2)).rejects.toThrow('CONFLICT');
++  const retire = { id: randomUUID(), templateId: c.templateId, expectedHeadHash: first[0]!.contentHash, kind: 'retire', confirmed: true };
++  const final = await changePracticeTemplate(first, 'practice-a', 'staff', retire, 2);
++  await expect(changePracticeTemplate(final, 'practice-a', 'staff', { ...c, id: randomUUID(), expectedHeadHash: final[1]!.contentHash }, 3)).rejects.toThrow('CONFLICT');
++  await expect(decodePracticeTemplates([{ ...first[0], title: 'Tampered' }], 'practice-a')).rejects.toThrow('INVALID');
++  await expect(decodePracticeTemplates(first, 'practice-b')).rejects.toThrow('INVALID');
++  for (const extra of [{ ownerId: 'client-a' }, { clientText: 'private record' }, { am: [{ productId: 'bottle-a', name: 'Private' }] }]) {
++    await expect(changePracticeTemplate([], 'practice-a', 'staff', { ...c, ...extra }, 1)).rejects.toThrow('INVALID');
++  }
++});
++it('reserves terminal retirement beyond the immutable authoring revision ceiling', async () => {
++  const first = command(); let history = await changePracticeTemplate([], 'practice-a', 'staff', first, 1);
++  for (let revision = 2; revision <= 100; revision++) history = await changePracticeTemplate(history, 'practice-a', 'staff', {
++    ...first, id: randomUUID(), title: `Generic revision ${revision}`, expectedHeadHash: history.at(-1)!.contentHash,
++  }, revision);
++  await expect(changePracticeTemplate(history, 'practice-a', 'staff', { ...first, id: randomUUID(), expectedHeadHash: history.at(-1)!.contentHash }, 101)).rejects.toThrow('INVALID');
++  const retired = await changePracticeTemplate(history, 'practice-a', 'staff', { id: randomUUID(), templateId: first.templateId,
++    kind: 'retire', expectedHeadHash: history.at(-1)!.contentHash, confirmed: true }, 101);
++  expect(retired).toHaveLength(101); expect(retired.at(-1)!.status).toBe('retired'); expect(retired.slice(0, 100)).toEqual(history);
++});
++it('keeps the API closed by default, binds server practice/context and rejects cross-origin or oversized input', async () => {
++  const f = await fixture();
++  const request = (input: unknown, headers = {}) => new Request(origin + '/api/professional/templates', { method: 'POST',
++    headers: { Origin: origin, 'Content-Type': 'application/json', 'X-OnSkin-Request': 'templates-v1', ...headers }, body: JSON.stringify(input) });
++  expect((await createTemplateApi(null)(request({}))).status).toBe(503);
++  expect((await f.api(request({ kind: 'list', context: null }, { Origin: 'https://other.test' }))).status).toBe(403);
++  expect((await f.api(request({ kind: 'list', context: null, workspaceId: 'practice-b' }))).status).toBe(400);
++  expect((await f.api(request({ kind: 'change', context: 'retired', command: command() }))).status).toBe(409);
++  expect((await f.api(request({ kind: 'list', context: 'x'.repeat(20_000) }))).status).toBe(400);
++  const response = await f.api(request({ kind: 'list', context: null })); expect(response.status).toBe(200); expect(response.headers.get('Cache-Control')).toBe('no-store');
++});
++it('retires pending transport and captured controls on clear and refuses successor session adoption', async () => {
++  const f = await fixture(), render = vi.fn<(s: TemplateState) => void>(); let release!: () => void;
++  const gate = new Promise<void>(resolve => { release = resolve; });
++  const c = createTemplateController(async (...args) => { await gate; return f.transport(...args); }, render);
++  const pending = c.load(c.generation); c.clear(); release(); await pending;
++  expect(render.mock.lastCall![0].kind).toBe('idle');
++  const current = createTemplateController(f.transport, render); await current.load(current.generation); current.edit(current.generation);
++  current.title(current.generation, 'Generic'); current.role(current.generation, 'am', 'cleanser'); current.review(current.generation);
++  f.replaceContext(); await current.confirm(current.generation); expect(render.mock.lastCall![0].kind).toBe('changed');
++  expect(await practiceTemplates(f.repository(), 'synthetic', 'practice-a')).toHaveLength(0);
++});
+diff --git a/apps/professional-web/src/practiceTemplates.ts b/apps/professional-web/src/practiceTemplates.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ceda982283bf33d7fa0b1eda5582abd18663439d
+--- /dev/null
++++ b/apps/professional-web/src/practiceTemplates.ts
+@@ -0,0 +1,77 @@
++import { canonical, recordHash } from './grants';
++
++// Reusable practice-authored roles only: no owner IDs, bottle IDs, client notes,
++// formula text or import-from-client capability enters this aggregate.
++export const TEMPLATE_ROLES = ['cleanser', 'moisturizer', 'sun_protection', 'other'] as const;
++export type TemplateRole = typeof TEMPLATE_ROLES[number];
++export type PracticeTemplate = Readonly<{
++  schemaVersion: 1; id: string; templateId: string; workspaceId: string; revision: number;
++  actorId: string; createdAt: number; parentHash: string | null; status: 'active' | 'retired';
++  title: string; am: readonly TemplateRole[]; pm: readonly TemplateRole[]; contentHash: string;
++}>;
++export type TemplateCommand = Readonly<{ id: string; templateId: string; expectedHeadHash: string | null; confirmed: true } &
++  ({ kind: 'revise'; title: string; am: readonly TemplateRole[]; pm: readonly TemplateRole[] } | { kind: 'retire' })>;
++export const templateId = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u.test(v);
++export const templateHash = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
++const fail = (): never => { throw new Error('TEMPLATE_INVALID'); };
++export const templateConflict = (): never => { throw new Error('TEMPLATE_CONFLICT'); };
++const identifier = (v: unknown): v is string => typeof v === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u.test(v);
++export function templateTitle(value: unknown): value is string {
++  return typeof value === 'string' && value.trim() === value && value.length > 0 && value.length <= 80 && !/[\p{Cf}\p{Cs}\u0000-\u001f\u007f-\u009f]/u.test(value);
++}
++export function templateRoles(value: unknown): value is readonly TemplateRole[] {
++  return Array.isArray(value) && value.length <= 20 && value.every(role => TEMPLATE_ROLES.includes(role as TemplateRole));
++}
++export function decodeTemplateCommand(value: unknown): TemplateCommand {
++  if (!value || typeof value !== 'object' || Array.isArray(value)) return fail();
++  const c = value as TemplateCommand;
++  const expected = c.kind === 'retire' ? 'confirmed,expectedHeadHash,id,kind,templateId' : 'am,confirmed,expectedHeadHash,id,kind,pm,templateId,title';
++  if (Object.keys(c).sort().join(',') !== expected || !templateId(c.id) || !templateId(c.templateId) || c.confirmed !== true ||
++      (c.expectedHeadHash !== null && !templateHash(c.expectedHeadHash)) || !['revise', 'retire'].includes(c.kind)) return fail();
++  if (c.kind === 'revise' && (!templateTitle(c.title) || !templateRoles(c.am) || !templateRoles(c.pm) || !c.am.length && !c.pm.length)) return fail();
++  return structuredClone(c);
++}
++export async function decodePracticeTemplates(value: unknown, workspaceId: string, now = 8.64e15): Promise<readonly PracticeTemplate[]> {
++  const copied: unknown = structuredClone(value);
++  if (!identifier(workspaceId) || !Array.isArray(copied) || copied.length > 600 || !Number.isFinite(now) || now < 0) return fail();
++  const result: PracticeTemplate[] = [], heads = new Map<string, PracticeTemplate>(), ids = new Set<string>();
++  for (const t of copied as PracticeTemplate[]) {
++    if (!t || Object.keys(t).sort().join(',') !== 'actorId,am,contentHash,createdAt,id,parentHash,pm,revision,schemaVersion,status,templateId,title,workspaceId' ||
++        t.schemaVersion !== 1 || !templateId(t.id) || !templateId(t.templateId) || ids.has(t.id) || t.workspaceId !== workspaceId ||
++        !identifier(t.actorId) || !templateTitle(t.title) || !templateRoles(t.am) || !templateRoles(t.pm) || !t.am.length && !t.pm.length ||
++        !['active', 'retired'].includes(t.status) || !Number.isSafeInteger(t.revision) || t.revision < 1 || t.revision > (t.status === 'retired' ? 101 : 100) ||
++        !Number.isSafeInteger(t.createdAt) || t.createdAt < (result.at(-1)?.createdAt ?? 0) || t.createdAt > Math.min(now, 8.64e15)) return fail();
++    const parent = heads.get(t.templateId);
++    if (t.revision !== (parent?.revision ?? 0) + 1 || t.parentHash !== (parent?.contentHash ?? null) || parent?.status === 'retired' ||
++        t.status === 'retired' && (!parent || canonical([t.title, t.am, t.pm]) !== canonical([parent.title, parent.am, parent.pm]))) return fail();
++    const { contentHash, ...body } = t;
++    if (!templateHash(contentHash) || contentHash !== await recordHash(body)) return fail();
++    const record = Object.freeze({ ...t, am: Object.freeze([...t.am]), pm: Object.freeze([...t.pm]) });
++    result.push(record); ids.add(t.id); heads.set(t.templateId, record);
++  }
++  if (heads.size > 100 || result.filter(t => t.status === 'active').length > 500) return fail();
++  return Object.freeze(result);
++}
++export async function changePracticeTemplate(value: unknown, workspaceId: string, actorId: string, input: unknown, now: number) {
++  const command = decodeTemplateCommand(input);
++  const history = await decodePracticeTemplates(value, workspaceId, now);
++  if (!identifier(actorId)) return fail();
++  const existing = history.find(t => t.id === command.id);
++  if (existing) {
++    if (existing.templateId !== command.templateId || existing.actorId !== actorId || existing.parentHash !== command.expectedHeadHash ||
++        existing.status !== (command.kind === 'retire' ? 'retired' : 'active') || command.kind === 'revise' &&
++        canonical([existing.title, existing.am, existing.pm]) !== canonical([command.title, command.am, command.pm])) return templateConflict();
++    return history; // Exact historical retry certifies this revision only, never currentness.
++  }
++  const parent = history.filter(t => t.templateId === command.templateId).at(-1);
++  if ((parent?.contentHash ?? null) !== command.expectedHeadHash || parent?.status === 'retired') return templateConflict();
++  // Reserve one terminal retirement per template even at the authoring ceiling.
++  if (command.kind === 'retire' && !parent || command.kind === 'revise' &&
++      (history.filter(t => t.status === 'active').length >= 500 || (parent?.revision ?? 0) >= 100) ||
++      !parent && new Set(history.map(t => t.templateId)).size >= 100) return fail();
++  const content = command.kind === 'revise' ? command : parent!;
++  const body = { schemaVersion: 1 as const, id: command.id, templateId: command.templateId, workspaceId,
++    revision: (parent?.revision ?? 0) + 1, actorId, createdAt: now, parentHash: parent?.contentHash ?? null,
++    status: command.kind === 'retire' ? 'retired' as const : 'active' as const, title: content.title, am: content.am, pm: content.pm };
++  return decodePracticeTemplates([...history, { ...body, contentHash: await recordHash(body) }], workspaceId, now);
++}
+diff --git a/apps/professional-web/src/practitioner.test.ts b/apps/professional-web/src/practitioner.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..cca822264207884ad7b3e0ce6a4de024cc16ed02
+--- /dev/null
++++ b/apps/professional-web/src/practitioner.test.ts
+@@ -0,0 +1,445 @@
++import { randomUUID } from 'node:crypto';
++import { expect, it, vi } from 'vitest';
++import { practitionerHistory } from './practitionerHistory';
++import { createPractitionerHistory, type IntendedHistoryState } from './practitionerHistoryView';
++import type { AccessRequest, Authority } from './authority';
++import { recordHash, emptyGrants, canonical } from './grants';
++import type { IntendedPlan } from './intendedPlans';
++import { practitionerPlanSource, practitionerReusedDraft } from './practitionerService';
++import { createPractitionerApi } from './practitionerApi';
++import { createPractitionerController, type PractitionerState } from './practitionerView';
++import { emptyWorkspaceCapacity } from './workspaceCapacity';
++import { emptyWorkspaceBilling, reconcileWorkspaceBilling } from './workspaceBilling';
++import type { WorkspaceRepository, WorkspaceTransaction } from './workspaceService';
++
++const now = 1_800_000_000_000;
++const origin = 'https://onskin.test';
++const historyRequest: AccessRequest = { action: 'client_plan_issue_respond_export', operation: 'read', workspaceId: 'practice-a', ownerId: 'client-a',
++  fields: ['intended_plans'], purpose: 'routine_review', grantVersion: 1, grantEpoch: 1 };
++const request: AccessRequest = { action: 'client_projection_read', operation: 'read', workspaceId: 'practice-a', ownerId: 'client-a',
++  fields: ['products', 'intended_plans'], purpose: 'routine_review', grantVersion: 1, grantEpoch: 1 };
++
++it.each(['source', 'history'] as const)('refuses mutable trust aliases across initial and final %s reads', async operation => {
++  for (const boundary of ['initial authority', 'final authority', 'initial lifecycle', 'final lifecycle', 'authority retires during final lifecycle']) {
++    const f = await issuedFixture(); const original = canonical(f.state());
++    const repository: WorkspaceRepository = { transaction: (scope, work) => f.repo.transaction(scope, tx => {
++      let authorityReads = 0; let lifecycleReads = 0;
++      let authorityAlias: Authority | null = null;
++      let lifecycleAlias: { epoch: number } | null = null;
++      function afterLifecycle<T>(value: T): T {
++        if (lifecycleAlias && boundary === 'initial lifecycle' && lifecycleReads === 1) lifecycleAlias.epoch = 2;
++        if (lifecycleAlias && boundary === 'final lifecycle' && lifecycleReads === 2) lifecycleAlias.epoch = 1;
++        return value;
++      }
++      return work({ ...tx,
++        authority: async (token, r) => {
++          const value = await tx.authority(token, r); authorityAlias = value; authorityReads++;
++          if (boundary === 'final authority' && authorityReads === 2) (value.session as { epoch: number }).epoch = 2;
++          return value;
++        },
++        lifecycle: async ownerId => {
++          lifecycleReads++;
++          if (authorityAlias && boundary === 'initial authority' && lifecycleReads === 1) (authorityAlias.session as { epoch: number }).epoch = 2;
++          if (authorityAlias && boundary === 'final authority' && lifecycleReads === 2) (authorityAlias.session as { epoch: number }).epoch = 1;
++          if (authorityAlias && boundary === 'authority retires during final lifecycle' && lifecycleReads === 2) (authorityAlias.session as { epoch: number }).epoch = 2;
++          const value = await tx.lifecycle(ownerId); lifecycleAlias = value as { epoch: number };
++          if (boundary === 'final lifecycle' && lifecycleReads === 2) lifecycleAlias.epoch = 2;
++          return value;
++        },
++        planSource: async (ownerId, workspaceId) => afterLifecycle(await tx.planSource(ownerId, workspaceId)),
++        plans: async (ownerId, workspaceId) => afterLifecycle(await tx.plans(ownerId, workspaceId)),
++      });
++    }) };
++    const pending = operation === 'source' ? practitionerPlanSource(repository, 'synthetic', request)
++      : practitionerHistory(repository, 'synthetic', historyRequest);
++    await expect(pending, boundary).rejects.toThrow('PROFESSIONAL_ACCESS_CHANGED');
++    expect(canonical(f.state()), boundary).toBe(original);
++  }
++});
++
++async function issuedFixture() {
++  const f = await fixture(); const c = createPractitionerController(f.fetcher, () => {});
++  for (const [phase, product] of [['am', 'bottle-a'], ['pm', 'bottle-b']] as const) {
++    await c.load(); c.edit(c.generation, phase, product, 'add'); c.review(c.generation); await c.confirm(c.generation);
++  }
++  return f;
++}
++it('reads through a frozen transaction port without losing method receivers', async () => {
++  const f = await issuedFixture();
++  const repository: WorkspaceRepository = { transaction: (scope, work) => f.repo.transaction(scope, tx => work(Object.freeze(tx))) };
++  expect((await practitionerPlanSource(repository, 'synthetic', request)).products).toHaveLength(2);
++  expect((await practitionerHistory(repository, 'synthetic', historyRequest)).plans).toHaveLength(2);
++});
++it('connects complete intended history selection, original read, cancel/reload and exact export without products or writes', async () => {
++  const f = await issuedFixture();
++  f.mutate(s => { s.a = { ...s.a, billing: 'read_only', grant: { ...s.a.grant!, fields: ['intended_plans'], permissions: ['read', 'export'] } };
++    s.source = null as unknown as typeof s.source; s.billing = null as unknown as typeof s.billing; s.capacity = null as unknown as typeof s.capacity; });
++  const before = canonical(f.state()); const render = vi.fn<(s: IntendedHistoryState) => void>(); const download = vi.fn();
++  const c = createPractitionerHistory(f.fetcher, render, download); await c.load();
++  const index = render.mock.lastCall![0]; if (index.kind !== 'index') throw new Error('index missing');
++  expect(index.plans.map(p => p.sequence)).toEqual([2, 1]); await c.review(index.plans[1]!);
++  expect(render.mock.lastCall![0]).toMatchObject({ kind: 'review', text: expect.stringContaining('Recorded cleanser') });
++  expect(JSON.stringify(render.mock.lastCall![0])).not.toContain('Recorded cream'); expect(download).not.toHaveBeenCalled();
++  const old = render.mock.lastCall![0]; await c.load(); c.whenCurrent(old, () => c.export()); expect(download).not.toHaveBeenCalled();
++  const refreshed = render.mock.lastCall![0]; if (refreshed.kind !== 'index') throw new Error('index missing');
++  await c.review(refreshed.plans[0]!); await c.export(); expect(download).toHaveBeenCalledOnce();
++  expect(download.mock.lastCall![0]).toContain('Recorded cream'); expect(download.mock.lastCall![0]).not.toContain('Recorded cleanser');
++  expect(render.mock.lastCall![0]).toEqual({ kind: 'downloaded' }); expect(canonical(f.state())).toBe(before);
++});
++it.each(['id', 'version', 'epoch', 'healthEpoch'] as const)('cannot disclose intended text from an earlier grant with changed %s', async field => {
++  const f = await issuedFixture(); const plan = f.state().plans[0]!;
++  f.mutate(s => { s.a = { ...s.a, grant: { ...s.a.grant!, [field]: field === 'id' ? 'successor' : 2 },
++    health: { ...s.a.health!, ...(field === 'healthEpoch' ? { epoch: 2 } : {}) } }; });
++  const r = { ...historyRequest, grantVersion: f.state().a.grant!.version, grantEpoch: f.state().a.grant!.epoch };
++  expect((await practitionerHistory(f.repo, 'synthetic', r)).plans).toEqual([]);
++  await expect(practitionerHistory(f.repo, 'synthetic', r, { planId: plan.id, planHash: plan.contentHash })).rejects.toThrow();
++});
++it.each(['withdrawal', 'deletion', 'session', 'assignment', 'licence', 'history', 'purpose'] as const)('fences final %s before historical text is handed off', async change => {
++  const f = await issuedFixture(); const plan = f.state().plans[0]!;
++  f.before(s => {
++    if (change === 'withdrawal') s.a = { ...s.a, health: null };
++    if (change === 'deletion') s.lifecycle = { ...s.lifecycle, deletionPending: true };
++    if (change === 'session') s.a = { ...s.a, session: { ...s.a.session, epoch: 2 } };
++    if (change === 'assignment') s.a = { ...s.a, assignment: null };
++    if (change === 'licence') s.a = { ...s.a, licence: null };
++    if (change === 'history') s.plans = [];
++    if (change === 'purpose') s.a = { ...s.a, grant: { ...s.a.grant!, purposes: ['pre_visit'] } };
++  });
++  await expect(practitionerHistory(f.repo, 'synthetic', historyRequest, { planId: plan.id, planHash: plan.contentHash })).rejects.toThrow();
++});
++it('historical review survives product permission loss but exporting requires current export scope and step-up', async () => {
++  const f = await issuedFixture(); const plan = f.state().plans[0]!; const selected = { planId: plan.id, planHash: plan.contentHash };
++  f.mutate(s => { s.a = { ...s.a, session: { ...s.a.session, stepUpAt: null }, grant: { ...s.a.grant!, fields: ['intended_plans'], permissions: ['read'] } }; });
++  expect((await practitionerHistory(f.repo, 'synthetic', historyRequest, selected)).text).toContain('Recorded cleanser');
++  await expect(practitionerHistory(f.repo, 'synthetic', { ...historyRequest, operation: 'export' }, selected)).rejects.toThrow('STEP_UP');
++  f.mutate(s => { s.a = { ...s.a, session: { ...s.a.session, stepUpAt: now } }; });
++  await expect(practitionerHistory(f.repo, 'synthetic', { ...historyRequest, operation: 'export' }, selected)).rejects.toThrow('GRANT');
++  await expect(practitionerHistory(null, 'synthetic', historyRequest)).rejects.toThrow('UNAVAILABLE');
++});
++it('a retired historical read/export never replaces newer owner state or downloads a late result', async () => {
++  const f = await issuedFixture(); let release!: (r: Response) => void; let hold = false;
++  const request: typeof fetch = (...args) => hold ? new Promise(resolve => { release = resolve; }) : f.fetcher(...args);
++  const render = vi.fn<(s: IntendedHistoryState) => void>(); const download = vi.fn(); const c = createPractitionerHistory(request, render, download);
++  await c.load(); const index = render.mock.lastCall![0]; if (index.kind !== 'index') throw new Error('index missing');
++  await c.review(index.plans[0]!); hold = true; const exportPending = c.export(); c.clear(); hold = false; await c.load();
++  const current = render.mock.lastCall![0]; release(new Response(JSON.stringify({ kind: 'history-export', context: 'synthetic-session-1', text: 'LATE PRIVATE' }), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }));
++  await exportPending; expect(render.mock.lastCall![0]).toBe(current); expect(download).not.toHaveBeenCalled();
++});
++it('download reentrancy cannot override a successor history load', async () => {
++  const f = await issuedFixture(); const render = vi.fn<(s: IntendedHistoryState) => void>(); let successor!: Promise<void>;
++  const c = createPractitionerHistory(f.fetcher, render, () => { c.clear(); successor = c.load(); });
++  await c.load(); const index = render.mock.lastCall![0]; if (index.kind !== 'index') throw new Error('index missing');
++  await c.review(index.plans[0]!); await c.export(); await successor; expect(render.mock.lastCall![0].kind).toBe('index');
++});
++it.each([401, 403, 409, 500, 503])('historical %s failures mask private records without reading response bodies', async status => {
++  const failure = new Response('PRIVATE provider/session record', { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
++  const read = vi.spyOn(failure, 'text'); const render = vi.fn(); const download = vi.fn();
++  await createPractitionerHistory(vi.fn(async () => failure), render, download).load();
++  expect(render).toHaveBeenLastCalledWith({ kind: 'unavailable' }); expect(read).not.toHaveBeenCalled(); expect(download).not.toHaveBeenCalled();
++});
++it('historical request deadline recovers from a transport that ignores abort', async () => {
++  vi.useFakeTimers();
++  try {
++    const render = vi.fn(); const controller = createPractitionerHistory(vi.fn<typeof fetch>(() => new Promise<Response>(() => {})), render, vi.fn());
++    const pending = controller.load(); await vi.advanceTimersByTimeAsync(15_000); await pending;
++    expect(render).toHaveBeenLastCalledWith({ kind: 'unavailable' }); controller.clear(); expect(render).toHaveBeenLastCalledWith({ kind: 'idle' });
++  } finally { vi.useRealTimers(); }
++});
++it('historical review cannot request an unlisted or altered version and malformed indexes do not become access', async () => {
++  const f = await issuedFixture(); const render = vi.fn<(s: IntendedHistoryState) => void>(); const c = createPractitionerHistory(f.fetcher, render, vi.fn());
++  await c.load(); const index = render.mock.lastCall![0]; if (index.kind !== 'index') throw new Error('missing index');
++  const count = f.sent.length; await c.review({ ...index.plans[0]!, planHash: 'b'.repeat(64) }); expect(f.sent).toHaveLength(count);
++  for (const value of [{ paid: true }, { kind: 'history', context: 'ctx', grantVersion: 1, grantEpoch: 1, plans: [{ ...index.plans[0], sequence: 0 }] },
++    { kind: 'history', context: 'ctx', grantVersion: 1, grantEpoch: 1, plans: [index.plans[0], index.plans[0]] }]) {
++    const view = vi.fn(); await createPractitionerHistory(vi.fn(async () => new Response(JSON.stringify(value), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } })), view, vi.fn()).load();
++    expect(view).toHaveBeenLastCalledWith({ kind: 'unavailable' });
++  }
++});
++/** SYNTHETIC serialized server driver. Never imported by production; this is not
++ * real credentials, encrypted hosted durability or professional qualification. */
++async function fixture() {
++  const a: Authority = {
++    session: { subjectId: 'staff-a', ownerId: null, workspaceId: 'practice-a', epoch: 1, startedAt: now - 1000, lastActivityAt: now, stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
++    membership: { subjectId: 'staff-a', workspaceId: 'practice-a', roles: ['assigned_practitioner'], revision: 1, active: true },
++    assignment: { subjectId: 'staff-a', ownerId: 'client-a', workspaceId: 'practice-a', active: true },
++    licence: { subjectId: 'staff-a', jurisdiction: 'CA', verifiedAt: now, expiresAt: now + 100_000 },
++    grant: { id: 'grant-a', ownerId: 'client-a', workspaceId: 'practice-a', version: 1, epoch: 1, healthEpoch: 1, consentReceiptId: 'health-a',
++      expiresAt: now + 100_000, status: 'active', fields: ['products', 'intended_plans'], permissions: ['read', 'plan_write', 'export'], purposes: ['routine_review'] },
++    health: { ownerId: 'client-a', epoch: 1, consentReceiptId: 'health-a', active: true, deletionPending: false }, billing: 'write_allowed',
++  };
++  const projection = { ownerId: 'client-a', workspaceId: 'practice-a', grantId: 'grant-a', grantVersion: 1,
++    products: [{ productId: 'bottle-a', name: 'Recorded cleanser' }, { productId: 'bottle-b', name: 'Recorded cream' }] };
++  let state = { a, source: { ...projection, contentHash: await recordHash(projection) }, plans: [] as readonly IntendedPlan[],
++    lifecycle: { ownerId: 'client-a', epoch: 1, deletionPending: false }, capacity: emptyWorkspaceCapacity('practice-a'),
++    billing: await reconcileWorkspaceBilling(emptyWorkspaceBilling('practice-a', 'customer-a', 'subscription-a'), { verifyAndRetrieve: async () => ({
++      workspaceId: 'practice-a', customerId: 'customer-a', subscriptionId: 'subscription-a', eventId: 'event-a', eventAt: now - 1000,
++      retrievedAt: now, verifiedUntil: now + 100_000, paidThrough: now + 100_000, pastDueSince: null, status: 'active', tier: 'solo',
++    }) }, new Uint8Array([1]), 'synthetic', now) };
++  type State = typeof state;
++  let before: ((s: State) => void) | null = null;
++  const repo: WorkspaceRepository = { async transaction<T>(_scope: unknown, work: (tx: WorkspaceTransaction) => Promise<T>) {
++    const stage = structuredClone(state); const checks: (() => Promise<void>)[] = [];
++    const tx: WorkspaceTransaction = { now: () => now, authority: async () => stage.a, lifecycle: async () => stage.lifecycle,
++      grants: async () => emptyGrants('client-a'), billing: async () => stage.billing, capacity: async () => stage.capacity,
++      plans: async () => stage.plans, receivedPlans: async () => [], receipts: async () => [], planSource: async () => stage.source,
++      activationAvailable: async () => true, saveBilling: async v => { stage.billing = v; }, saveGrants: async () => { throw new Error('UNUSED'); },
++      saveCapacity: async v => { stage.capacity = v; }, savePlans: async v => { stage.plans = v; },
++      saveOwnerReceiptAndCopy: async () => { throw new Error('NO_OWNER_WRITER'); }, beforeCommit: check => checks.push(check) };
++    const result = await work(tx); before?.(stage); for (const check of checks) await check(); state = stage; return result;
++  } };
++  const principal = { token: 'synthetic-staff', ownerId: 'client-a', workspaceId: 'practice-a', context: 'synthetic-session-1', grantVersion: 1, grantEpoch: 1 };
++  const api = createPractitionerApi({ origin, repository: repo, authenticate: async () => principal });
++  const sent: Record<string, unknown>[] = [];
++  const fetcher = (async (_url, init) => {
++    sent.push(JSON.parse(String(init?.body)));
++    return api(new Request(`${origin}/api/professional/practitioner-plan`, { ...init, headers: { ...init?.headers, Origin: origin } }));
++  }) as typeof fetch;
++  return { repo, api, fetcher, sent, principal, state: () => state, mutate: (f: (s: State) => void) => f(state), before: (f: (s: State) => void) => { before = f; } };
++}
++function latest(states: PractitionerState[]) { return states.at(-1)!; }
++
++it('connects selected historical reuse, cancellation, editing, exact-parent review and a separate immutable issuance', async () => {
++  const f = await issuedFixture(); const original = canonical(f.state().plans); const states: PractitionerState[] = [];
++  const c = createPractitionerController(f.fetcher, state => states.push(state)); await c.load();
++  c.edit(c.generation, 'pm', 'bottle-a', 'add'); const originalDraft = latest(states);
++  await c.chooseReuse(c.generation); const firstIndex = latest(states); expect(firstIndex.kind).toBe('reuse-index');
++  if (firstIndex.kind !== 'reuse-index') throw new Error('missing index');
++  expect(firstIndex.plans.map(plan => plan.sequence)).toEqual([2, 1]); const oldIndex = c.generation;
++  c.cancelReuse(c.generation); expect(latest(states)).toEqual(originalDraft);
++  await c.reuse(oldIndex, firstIndex.plans[1]!); expect(latest(states)).toEqual(originalDraft);
++  await c.chooseReuse(c.generation); const index = latest(states); if (index.kind !== 'reuse-index') throw new Error('missing index');
++  await c.reuse(c.generation, index.plans[1]!);
++  expect(latest(states)).toMatchObject({ kind: 'editing', draft: { am: [{ productId: 'bottle-a' }], pm: [],
++    source: { latestSequence: 2, expectedParentHash: f.state().plans[1]!.contentHash }, reusedVersion: { sequence: 1 } } });
++  expect(canonical(f.state().plans)).toBe(original);
++  c.edit(c.generation, 'pm', 'bottle-b', 'add'); c.review(c.generation); const oldReview = c.generation; c.cancel(c.generation);
++  await c.confirm(oldReview); expect(f.state().plans).toHaveLength(2);
++  c.review(c.generation); await c.confirm(c.generation); expect(latest(states)).toEqual({ kind: 'issued', sequence: 3 });
++  expect(canonical(f.state().plans.slice(0, 2))).toBe(original);
++  expect(f.state().plans[2]).toMatchObject({ parentHash: f.state().plans[1]!.contentHash, am: [{ productId: 'bottle-a' }], pm: [{ productId: 'bottle-b' }] });
++  expect(f.state().capacity.active).toHaveLength(0);
++});
++it('an uncertain old issuance cannot report success after a newer version is issued', async () => {
++  const f = await fixture(); let lost = true; const states: PractitionerState[] = [];
++  const c = createPractitionerController((async (...args) => { const response = await f.fetcher(...args);
++    if (JSON.parse(String(args[1]?.body)).kind === 'issue' && lost) { lost = false; throw new Error('LOST'); } return response; }) as typeof fetch, s => states.push(s));
++  await c.load(); c.edit(c.generation, 'am', 'bottle-a', 'add'); c.review(c.generation); await c.confirm(c.generation);
++  expect(latest(states).kind).toBe('unknown');
++  const second = createPractitionerController(f.fetcher, () => {}); await second.load(); second.edit(second.generation, 'pm', 'bottle-b', 'add');
++  second.review(second.generation); await second.confirm(second.generation); expect(f.state().plans).toHaveLength(2);
++  await c.confirm(c.generation); expect(latest(states)).toEqual({ kind: 'changed' }); expect(f.state().plans).toHaveLength(2);
++});
++it('source and historical reads refuse a future authored fact even when its stored content hash is valid', async () => {
++  const f = await issuedFixture();
++  const { contentHash: _old, ...body } = f.state().plans[1]!; const changed = { ...body, createdAt: now + 1 };
++  const contentHash = await recordHash(changed); f.mutate(s => { s.plans = [s.plans[0]!, { ...changed, contentHash }]; });
++  const before = canonical(f.state()); await expect(practitionerPlanSource(f.repo, 'synthetic', request)).rejects.toThrow('INVALID');
++  await expect(practitionerHistory(f.repo, 'synthetic', historyRequest)).rejects.toThrow('INVALID');
++  expect(canonical(f.state())).toBe(before);
++});
++it.each(['source', 'parent', 'grant', 'health', 'context', 'licence', 'purpose'] as const)('reuse refuses changed %s rather than adopting a newer source or authority', async reason => {
++  const f = await issuedFixture(); const states: PractitionerState[] = []; const c = createPractitionerController(f.fetcher, s => states.push(s));
++  await c.load(); await c.chooseReuse(c.generation); const index = latest(states); if (index.kind !== 'reuse-index') throw new Error('missing index');
++  if (reason === 'source') {
++    const { contentHash: _old, ...body } = f.state().source; const changed = { ...body, products: [{ productId: 'bottle-a', name: 'Renamed' }] };
++    const contentHash = await recordHash(changed); f.mutate(s => { s.source = { ...changed, contentHash }; });
++  }
++  if (reason === 'parent') {
++    const other = createPractitionerController(f.fetcher, () => {}); await other.load(); other.edit(other.generation, 'pm', 'bottle-a', 'add');
++    other.review(other.generation); await other.confirm(other.generation);
++  }
++  if (reason === 'grant') f.mutate(s => { s.a = { ...s.a, grant: { ...s.a.grant!, epoch: 2 } }; });
++  if (reason === 'health') f.mutate(s => { s.a = { ...s.a, health: { ...s.a.health!, active: false } }; });
++  if (reason === 'context') f.principal.context = 'replacement-session';
++  if (reason === 'licence') f.mutate(s => { s.a = { ...s.a, licence: { ...s.a.licence!, expiresAt: now } }; });
++  if (reason === 'purpose') f.mutate(s => { s.a = { ...s.a, grant: { ...s.a.grant!, purposes: ['pre_visit'] } }; });
++  const before = canonical(f.state()); await c.reuse(c.generation, index.plans[1]!);
++  expect(['changed', 'unavailable']).toContain(latest(states).kind); expect('draft' in latest(states)).toBe(false);
++  expect(canonical(f.state())).toBe(before);
++});
++it.each(['removed', 'renamed'] as const)('a historical %s product cannot be silently dropped or rebound while reusing', async reason => {
++  const f = await issuedFixture(); const plan = f.state().plans[0]!;
++  const { contentHash: _old, ...body } = f.state().source;
++  const changed = { ...body, products: reason === 'removed' ? body.products.filter(product => product.productId !== 'bottle-a') : body.products.map(p => ({ ...p, name: 'Renamed' })) };
++  const contentHash = await recordHash(changed); f.mutate(s => { s.source = { ...changed, contentHash }; });
++  const source = await practitionerPlanSource(f.repo, 'synthetic', request); const before = canonical(f.state());
++  await expect(practitionerReusedDraft(f.repo, 'synthetic', request, { planId: plan.id, planHash: plan.contentHash,
++    sourceHash: source.sourceHash, expectedParentHash: source.expectedParentHash })).rejects.toThrow('CHANGED');
++  expect(canonical(f.state())).toBe(before);
++});
++it.each(['session', 'source', 'history', 'deletion', 'regrant'] as const)('reuse final handoff fences %s with no private draft publication', async reason => {
++  const f = await issuedFixture(); const plan = f.state().plans[0]!; const source = await practitionerPlanSource(f.repo, 'synthetic', request);
++  f.before(s => {
++    if (reason === 'session') s.a = { ...s.a, session: { ...s.a.session, epoch: 2 } };
++    if (reason === 'source') s.source = { ...s.source, contentHash: 'a'.repeat(64) };
++    if (reason === 'history') s.plans = [];
++    if (reason === 'deletion') s.lifecycle = { ...s.lifecycle, deletionPending: true };
++    if (reason === 'regrant') s.a = { ...s.a, grant: { ...s.a.grant!, epoch: 2 } };
++  });
++  const before = canonical(f.state()); await expect(practitionerReusedDraft(f.repo, 'synthetic', request,
++    { planId: plan.id, planHash: plan.contentHash, sourceHash: source.sourceHash, expectedParentHash: source.expectedParentHash })).rejects.toThrow();
++  expect(canonical(f.state())).toBe(before);
++});
++it('cancelled in-flight reuse preserves the original draft and cannot publish a late response or retain stale callbacks', async () => {
++  const f = await issuedFixture(); let held: (() => void) | null = null; const states: PractitionerState[] = [];
++  const c = createPractitionerController((async (...args) => { const result = await f.fetcher(...args);
++    if (JSON.parse(String(args[1]?.body)).kind === 'reuse') await new Promise<void>(resolve => { held = resolve; }); return result; }) as typeof fetch, s => states.push(s));
++  await c.load(); c.edit(c.generation, 'pm', 'bottle-a', 'add'); const original = latest(states);
++  await c.chooseReuse(c.generation); const index = latest(states); if (index.kind !== 'reuse-index') throw new Error('missing index');
++  const pending = c.reuse(c.generation, index.plans[1]!); await vi.waitFor(() => expect(held).not.toBeNull());
++  c.cancelReuse(c.generation); expect(latest(states)).toEqual(original); await pending;
++  (held as unknown as () => void)(); await Promise.resolve(); expect(latest(states)).toEqual(original);
++  expect(f.state().plans).toHaveLength(2);
++});
++
++it('connects source, ordered draft, review/cancel, explicit issuance and reload through real HTTP and transaction service', async () => {
++  const f = await fixture(); const states: PractitionerState[] = []; const c = createPractitionerController(f.fetcher, s => states.push(s));
++  await c.load(); expect(latest(states).kind).toBe('editing');
++  c.edit(c.generation, 'am', 'bottle-a', 'add'); c.edit(c.generation, 'am', 'bottle-b', 'add'); c.edit(c.generation, 'am', 'bottle-b', 'up');
++  c.edit(c.generation, 'pm', 'bottle-b', 'add'); c.edit(c.generation, 'pm', 'bottle-b', 'remove');
++  c.review(c.generation); const oldReview = c.generation; c.cancel(c.generation);
++  await c.confirm(oldReview); expect(f.state().plans).toHaveLength(0);
++  c.review(c.generation); await c.confirm(c.generation);
++  expect(latest(states)).toEqual({ kind: 'issued', sequence: 1 });
++  expect(f.state().plans[0]!.am.map(p => p.productId)).toEqual(['bottle-b', 'bottle-a']);
++  expect(f.state().capacity.active).toHaveLength(0);
++  await c.load(); expect(latest(states)).toMatchObject({ kind: 'editing', draft: { source: { latestSequence: 1, expectedParentHash: f.state().plans[0]!.contentHash }, am: [], pm: [] } });
++});
++it('lost commit response retries identical issuance IDs and produces one immutable version', async () => {
++  const f = await fixture(); let lose = true; const states: PractitionerState[] = [];
++  const fetcher = (async (url, init) => { const response = await f.fetcher(url, init);
++    if (JSON.parse(String(init?.body)).kind === 'issue' && lose) { lose = false; throw new Error('LOST_RESPONSE'); } return response; }) as typeof fetch;
++  const c = createPractitionerController(fetcher, s => states.push(s)); await c.load(); c.edit(c.generation, 'am', 'bottle-a', 'add'); c.review(c.generation);
++  const original = c.generation; const first = c.confirm(original); const duplicate = c.confirm(original); await Promise.all([first, duplicate]);
++  expect(latest(states).kind).toBe('unknown'); expect(f.state().plans).toHaveLength(1);
++  await c.confirm(c.generation); expect(latest(states)).toEqual({ kind: 'issued', sequence: 1 });
++  const attempts = f.sent.filter(v => v.kind === 'issue'); expect(attempts).toHaveLength(2); expect(attempts[0]).toEqual(attempts[1]); expect(f.state().plans).toHaveLength(1);
++});
++it.each([401, 403])('explicit %s authority refusal clears private draft and retry after a previously uncertain commit', async status => {
++  const f = await fixture(); let lose = true; const states: PractitionerState[] = [];
++  const fetcher = (async (url, init) => { const response = await f.fetcher(url, init);
++    if (JSON.parse(String(init?.body)).kind === 'issue' && lose) { lose = false; throw new Error('LOST_RESPONSE'); } return response; }) as typeof fetch;
++  const c = createPractitionerController(fetcher, s => states.push(s)); await c.load(); c.edit(c.generation, 'am', 'bottle-a', 'add'); c.review(c.generation);
++  await c.confirm(c.generation); expect(latest(states).kind).toBe('unknown'); expect(f.state().plans).toHaveLength(1);
++  if (status === 401) f.principal.token = ''; else f.mutate(s => { s.a = { ...s.a, health: { ...s.a.health!, active: false } }; });
++  await c.confirm(c.generation); expect(latest(states)).toEqual({ kind: 'unavailable' }); expect('draft' in latest(states)).toBe(false);
++  expect(f.state().plans).toHaveLength(1);
++});
++it('an abandoned uncertain commit reloads the exact immutable latest issued ID, content and order without restoring the old draft', async () => {
++  const f = await fixture(); const states: PractitionerState[] = [];
++  const c = createPractitionerController((async (url, init) => { const response = await f.fetcher(url, init);
++    if (JSON.parse(String(init?.body)).kind === 'issue') throw new Error('LOST_RESPONSE'); return response; }) as typeof fetch, s => states.push(s));
++  await c.load(); c.edit(c.generation, 'pm', 'bottle-b', 'add'); c.review(c.generation); await c.confirm(c.generation);
++  expect(latest(states).kind).toBe('unknown'); c.clear(); await c.load();
++  const saved = f.state().plans[0]!;
++  expect(latest(states)).toMatchObject({ kind: 'editing', draft: { am: [], pm: [], source: {
++    latestIssued: { id: saved.id, contentHash: saved.contentHash, sequence: 1, issuedAt: now, am: [], pm: saved.pm },
++  } } });
++});
++it.each(['grant ID', 'grant version', 'grant epoch', 'health epoch'] as const)('new %s preserves chain metadata but cannot redisclose old-grant issued text', async boundary => {
++  const f = await fixture(); const c = createPractitionerController(f.fetcher, () => {});
++  await c.load(); c.edit(c.generation, 'am', 'bottle-a', 'add'); c.review(c.generation); await c.confirm(c.generation);
++  const original = f.state().plans[0]!;
++  f.mutate(s => {
++    const grant = { ...s.a.grant! };
++    if (boundary === 'grant ID') grant.id = 'grant-b';
++    if (boundary === 'grant version') grant.version = 2;
++    if (boundary === 'grant epoch') grant.epoch = 2;
++    if (boundary === 'health epoch') grant.healthEpoch = 2;
++    s.a = { ...s.a, grant, health: { ...s.a.health!, epoch: grant.healthEpoch } };
++    s.source = { ...s.source, grantId: grant.id, grantVersion: grant.version };
++  });
++  const { contentHash: _old, ...body } = f.state().source;
++  f.mutate(s => { s.source = { ...body, contentHash: '' }; });
++  const contentHash = await recordHash(body); f.mutate(s => { s.source = { ...s.source, contentHash }; });
++  const a = f.state().a;
++  const source = await practitionerPlanSource(f.repo, 'synthetic', { ...request, grantVersion: a.grant!.version, grantEpoch: a.grant!.epoch });
++  expect(source.latestIssued).toBe(null); expect(source.latestSequence).toBe(1); expect(source.expectedParentHash).toBe(original.contentHash);
++  expect(JSON.stringify(source)).not.toContain(original.id); expect(f.state().plans).toEqual([original]);
++});
++it('accepts maximum bounded Unicode source and100step issue/readback without a false32KiB refusal', async () => {
++  const f = await fixture(); const products = Array.from({ length: 50 }, (_, i) => ({ productId: `${'識'.repeat(125)}${String(i).padStart(3, '0')}`, name: '品'.repeat(200) }));
++  const { contentHash: _old, ...body } = f.state().source; const sourceBody = { ...body, products };
++  f.mutate(s => { s.source = { ...sourceBody, contentHash: '' }; });
++  const sourceHash = await recordHash(sourceBody); f.mutate(s => { s.source = { ...s.source, contentHash: sourceHash }; });
++  const input = { kind: 'issue', context: f.principal.context, sourceHash, grantVersion: 1, grantEpoch: 1,
++    command: { id: randomUUID(), expectedParentHash: null, am: products, pm: [...products].reverse(), confirmed: true } };
++  const encoded = JSON.stringify(input); expect(new TextEncoder().encode(encoded).length).toBeGreaterThan(32_768); expect(new TextEncoder().encode(encoded).length).toBeLessThan(131_072);
++  const response = await f.fetcher('', { method: 'POST', body: encoded, headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'practitioner-v1' } });
++  expect(response.status).toBe(200); expect(f.state().plans[0]!.pm).toHaveLength(50);
++  const source = await practitionerPlanSource(f.repo, 'synthetic', request); expect(JSON.stringify(source).length).toBeGreaterThan(32_768);
++  let current: PractitionerState = { kind: 'idle' }; const c = createPractitionerController(f.fetcher, s => { current = s; }); await c.load();
++  expect(current).toMatchObject({ kind: 'editing', draft: { source: { latestIssued: { id: input.command.id, am: products, pm: [...products].reverse() } } } });
++});
++it('a forged version0/null-hash readback cannot be displayed as an issued immutable plan', async () => {
++  const f = await fixture(); const source = await practitionerPlanSource(f.repo, 'synthetic', request);
++  let state: PractitionerState = { kind: 'idle' };
++  const c = createPractitionerController((async () => new Response(JSON.stringify({ kind: 'source', context: 'synthetic-context', source: {
++    ...source, latestIssued: { id: randomUUID(), contentHash: null, sequence: 0, issuedAt: 0, am: [{ productId: 'a', name: 'FORGED_PRIVATE' }], pm: [] },
++  } }), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } })) as typeof fetch, s => { state = s; });
++  await c.load(); expect(state).toEqual({ kind: 'unavailable' }); expect(JSON.stringify(state)).not.toContain('FORGED_PRIVATE');
++});
++it('captured load, edit, review and confirm generations cannot act after cancellation or replacement', async () => {
++  const f = await fixture(); const states: PractitionerState[] = []; const c = createPractitionerController(f.fetcher, s => states.push(s));
++  const original = c.generation; await c.load(); const edit = c.generation; c.edit(edit, 'am', 'bottle-a', 'add');
++  c.edit(edit, 'am', 'bottle-b', 'add'); c.review(edit); await c.load(original);
++  expect(f.sent).toHaveLength(1); expect(latest(states)).toMatchObject({ kind: 'editing', draft: { am: [{ productId: 'bottle-a' }] } });
++  c.review(c.generation); const confirm = c.generation; c.clear(); await c.load(); await c.confirm(confirm);
++  expect(f.state().plans).toHaveLength(0); expect(latest(states).kind).toBe('editing');
++});
++it('old in-flight reads cannot repopulate after clear or overwrite a later source', async () => {
++  const f = await fixture(); let release!: (v: Response) => void; const held = new Promise<Response>(r => { release = r; });
++  let call = 0; const states: PractitionerState[] = [];
++  const c = createPractitionerController((async (...args) => ++call === 1 ? held : f.fetcher(...args)) as typeof fetch, s => states.push(s));
++  const pending = c.load(); c.clear(); await c.load(); const current = latest(states);
++  release(new Response(JSON.stringify({ kind: 'source', context: 'old', source: { private: 'OLD_SOURCE' } }), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }));
++  await pending; expect(latest(states)).toBe(current); expect(JSON.stringify(states)).not.toContain('OLD_SOURCE');
++});
++it.each(['source changed', 'same owner regrant', 'new parent'] as const)('review refuses %s instead of acquiring newer authority', async scenario => {
++  const f = await fixture(); const states: PractitionerState[] = []; const c = createPractitionerController(f.fetcher, s => states.push(s));
++  await c.load(); c.edit(c.generation, 'am', 'bottle-a', 'add'); c.review(c.generation);
++  if (scenario === 'source changed') f.mutate(s => { s.source = { ...s.source, contentHash: 'b'.repeat(64) }; });
++  if (scenario === 'same owner regrant') { f.principal.grantEpoch = 2; f.mutate(s => { s.a = { ...s.a, grant: { ...s.a.grant!, epoch: 2 } }; }); }
++  if (scenario === 'new parent') {
++    const other: PractitionerState[] = []; const second = createPractitionerController(f.fetcher, s => other.push(s));
++    await second.load(); second.edit(second.generation, 'pm', 'bottle-b', 'add'); second.review(second.generation); await second.confirm(second.generation);
++  }
++  await c.confirm(c.generation); expect(['changed', 'unknown']).toContain(latest(states).kind);
++  expect(f.state().plans).toHaveLength(scenario === 'new parent' ? 1 : 0);
++});
++it.each(['withdrawal', 'deletion', 'licence', 'role', 'assignment', 'purpose', 'source', 'lifecycle', 'session'] as const)('source final handoff refuses %s changes and returns no private payload', async reason => {
++  const f = await fixture(); f.before(s => {
++    if (reason === 'withdrawal') s.a = { ...s.a, health: { ...s.a.health!, active: false } };
++    if (reason === 'deletion') s.lifecycle = { ...s.lifecycle, deletionPending: true };
++    if (reason === 'licence') s.a = { ...s.a, licence: null };
++    if (reason === 'role') s.a = { ...s.a, membership: { ...s.a.membership!, roles: ['billing_admin'] } };
++    if (reason === 'assignment') s.a = { ...s.a, assignment: { ...s.a.assignment!, ownerId: 'other' } };
++    if (reason === 'purpose') s.a = { ...s.a, grant: { ...s.a.grant!, purposes: ['pre_visit'] } };
++    if (reason === 'source') s.source = { ...s.source, products: [{ productId: 'other', name: 'PRIVATE_CHANGED' }] };
++    if (reason === 'lifecycle') s.lifecycle = { ...s.lifecycle, epoch: 2 };
++    if (reason === 'session') s.a = { ...s.a, session: { ...s.a.session, epoch: 2 } };
++  });
++  const response = await f.fetcher('', { method: 'POST', body: JSON.stringify({ kind: 'source', context: null }), headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'practitioner-v1' } });
++  expect(response.ok).toBe(false); expect(await response.text()).not.toContain('Recorded');
++});
++it('read source requires assigned product+intended scope and real repository, never admin or client-supplied identities', async () => {
++  const f = await fixture(); await expect(practitionerPlanSource(null, 'synthetic', request)).rejects.toThrow('UNAVAILABLE');
++  await expect(practitionerPlanSource(f.repo, 'synthetic', { ...request, ownerId: 'other' })).rejects.toThrow();
++  f.mutate(s => { s.a = { ...s.a, grant: { ...s.a.grant!, fields: ['intended_plans'] } }; });
++  await expect(practitionerPlanSource(f.repo, 'synthetic', request)).rejects.toThrow('GRANT');
++  const response = await f.fetcher('', { method: 'POST', body: JSON.stringify({ kind: 'source', context: null, ownerId: 'other' }), headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'practitioner-v1' } });
++  expect(response.status).toBe(400); expect((await createPractitionerApi(null)(new Request(`${origin}/api/professional/practitioner-plan`))).status).toBe(503);
++});
++it('strict HTTP origin, context, stream size and confirmed issuance contracts refuse before writes', async () => {
++  const f = await fixture();
++  for (const headers of [{ Origin: 'https://other.test' }, { Origin: origin, 'Sec-Fetch-Site': 'cross-site' }, { Origin: origin }] as Record<string, string>[]) {
++    expect((await f.api(new Request(`${origin}/api/professional/practitioner-plan`, { method: 'POST', headers, body: '{}' }))).status).toBe(403);
++  }
++  const post = (body: unknown) => f.fetcher('', { method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'practitioner-v1' } });
++  expect((await post({ kind: 'source', context: 'old' })).status).toBe(409);
++  expect((await post({ kind: 'source', context: 'x'.repeat(140_000) })).status).toBe(400);
++  const source = await practitionerPlanSource(f.repo, 'synthetic', request);
++  expect((await post({ kind: 'issue', context: f.principal.context, grantVersion: 1, grantEpoch: 1, sourceHash: source.sourceHash,
++    command: { id: randomUUID(), expectedParentHash: null, am: source.products, pm: [], confirmed: false } })).status).toBe(400);
++  expect(f.state().plans).toHaveLength(0);
++});
+diff --git a/apps/professional-web/src/practitionerApi.ts b/apps/professional-web/src/practitionerApi.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..88c776edf4a84504dfe1edeb47a83fd616c50333
+--- /dev/null
++++ b/apps/professional-web/src/practitionerApi.ts
+@@ -0,0 +1,113 @@
++import { ProfessionalAccessError, type AccessRequest } from './authority';
++import { practitionerPlanSource, practitionerReusedDraft, practitionerTemplateOptions } from './practitionerService';
++import { decodeTemplateMapping } from './templateMapping29';
++import { practitionerHistory } from './practitionerHistory';
++import { publishWorkspacePlan, type WorkspaceRepository } from './workspaceService';
++
++/** SERVER ONLY. No implementation/default session, licence or repository is
++ * installed. Context MUST bind the real session and selected assignment. */
++export type PractitionerApiDependencies = Readonly<{ origin: string; repository: WorkspaceRepository;
++  authenticate(request: Request): Promise<Readonly<{ token: string; ownerId: string; workspaceId: string; context: string;
++    grantVersion: number; grantEpoch: number }> | null> }>;
++const headers = { 'Cache-Control': 'no-store', 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff',
++  'Referrer-Policy': 'no-referrer', Vary: 'Cookie', 'Cross-Origin-Resource-Policy': 'same-origin' };
++const reply = (status: number, value: unknown) => new Response(JSON.stringify(value), { status, headers });
++const invalid = (): never => { throw new ProfessionalAccessError('invalid_request'); };
++const id = (v: unknown): v is string => typeof v === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u.test(v);
++const hash = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
++const positive = (v: unknown): v is number => Number.isSafeInteger(v) && (v as number) > 0;
++function keys(v: unknown, expected: string[]): asserts v is Record<string, unknown> {
++  if (!v || typeof v !== 'object' || Array.isArray(v) || Object.keys(v).sort().join(',') !== expected.sort().join(',')) invalid();
++}
++async function readBody(request: Request) {
++  if (!request.body) return invalid();
++  const reader = request.body.getReader(); const chunks: Uint8Array[] = []; let size = 0;
++  try { while (true) { const next = await reader.read(); if (next.done) break;
++    size += next.value.byteLength; if (size > 131_072) { await reader.cancel(); return invalid(); } chunks.push(next.value); }
++  } finally { reader.releaseLock(); }
++  const bytes = new Uint8Array(size); let offset = 0;
++  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
++  return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)) as unknown;
++}
++export function createPractitionerApi(dependencies: PractitionerApiDependencies | null) {
++  const deps = dependencies ? { ...dependencies } : null;
++  return async (request: Request): Promise<Response> => {
++    if (new URL(request.url).pathname !== '/api/professional/practitioner-plan') return reply(404, { status: 'unavailable' });
++    if (!deps) return reply(503, { status: 'unavailable' });
++    try {
++      if (request.method !== 'POST' || new URL(request.url).origin !== deps.origin || request.headers.get('Origin') !== deps.origin ||
++          request.headers.get('X-OnSkin-Request') !== 'practitioner-v1' || request.headers.get('Content-Type') !== 'application/json' ||
++          (request.headers.has('Sec-Fetch-Site') && request.headers.get('Sec-Fetch-Site') !== 'same-origin')) return reply(403, { status: 'denied' });
++      const p = await deps.authenticate(request);
++      if (!p || !p.token || !id(p.ownerId) || !id(p.workspaceId) || !id(p.context) || !positive(p.grantVersion) || !positive(p.grantEpoch)) return reply(401, { status: 'session' });
++      const raw = await readBody(request);
++      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return invalid();
++      const input = raw as Record<string, unknown>;
++      if (input.kind === 'history' || input.kind === 'history-review' || input.kind === 'history-export') {
++        keys(input, input.kind === 'history' ? ['kind', 'context'] : ['kind', 'context', 'planId', 'planHash', 'grantVersion', 'grantEpoch']);
++        if (input.context !== p.context && !(input.kind === 'history' && input.context === null)) return reply(409, { status: 'changed' });
++        if (input.kind !== 'history' && (!id(input.planId) || !hash(input.planHash) || !positive(input.grantVersion) || !positive(input.grantEpoch))) return invalid();
++        if (input.kind !== 'history' && (input.grantVersion !== p.grantVersion || input.grantEpoch !== p.grantEpoch)) return reply(409, { status: 'changed' });
++        const result = await practitionerHistory(deps.repository, p.token, { action: 'client_plan_issue_respond_export',
++          operation: input.kind === 'history-export' ? 'export' : 'read', workspaceId: p.workspaceId, ownerId: p.ownerId,
++          fields: ['intended_plans'], purpose: 'routine_review', grantVersion: p.grantVersion, grantEpoch: p.grantEpoch },
++          input.kind === 'history' ? undefined : { planId: input.planId as string, planHash: input.planHash as string });
++        return input.kind === 'history' ? reply(200, { kind: input.kind, context: p.context, grantVersion: p.grantVersion, grantEpoch: p.grantEpoch, plans: result.plans }) :
++          reply(200, { kind: input.kind, context: p.context, text: result.text });
++      }
++      if (input.kind === 'source') {
++        keys(input, ['kind', 'context']);
++        if (input.context !== null && input.context !== p.context) return reply(409, { status: 'changed' });
++        const r: AccessRequest = { action: 'client_projection_read', operation: 'read', workspaceId: p.workspaceId, ownerId: p.ownerId,
++          fields: ['products', 'intended_plans'], purpose: 'routine_review', grantVersion: p.grantVersion, grantEpoch: p.grantEpoch };
++        return reply(200, { kind: 'source', context: p.context, source: await practitionerPlanSource(deps.repository, p.token, r) });
++      }
++      if (input.kind === 'reuse') {
++        keys(input, ['kind', 'context', 'planId', 'planHash', 'sourceHash', 'expectedParentHash', 'grantVersion', 'grantEpoch']);
++        if (!id(input.planId) || !hash(input.planHash) || !hash(input.sourceHash) ||
++            (input.expectedParentHash !== null && !hash(input.expectedParentHash)) || !positive(input.grantVersion) || !positive(input.grantEpoch)) return invalid();
++        if (input.context !== p.context || input.grantVersion !== p.grantVersion || input.grantEpoch !== p.grantEpoch) return reply(409, { status: 'changed' });
++        const draft = await practitionerReusedDraft(deps.repository, p.token, { action: 'client_projection_read', operation: 'read',
++          workspaceId: p.workspaceId, ownerId: p.ownerId, fields: ['products', 'intended_plans'], purpose: 'routine_review',
++          grantVersion: p.grantVersion, grantEpoch: p.grantEpoch }, { planId: input.planId, planHash: input.planHash,
++          sourceHash: input.sourceHash, expectedParentHash: input.expectedParentHash as string | null });
++        return reply(200, { kind: 'reused', context: p.context, ...draft });
++      }
++      if (input.kind === 'template-options') {
++        keys(input, ['kind', 'context', 'sourceHash', 'expectedParentHash', 'grantVersion', 'grantEpoch']);
++        if (!hash(input.sourceHash) || input.expectedParentHash !== null && !hash(input.expectedParentHash)) return invalid();
++        if (input.context !== p.context || input.grantVersion !== p.grantVersion || input.grantEpoch !== p.grantEpoch) return reply(409, { status: 'changed' });
++        const options = await practitionerTemplateOptions(deps.repository, p.token, { action: 'client_projection_read', operation: 'read',
++          workspaceId: p.workspaceId, ownerId: p.ownerId, fields: ['products', 'intended_plans'], purpose: 'routine_review',
++          grantVersion: p.grantVersion, grantEpoch: p.grantEpoch });
++        if (options.source.sourceHash !== input.sourceHash || options.source.expectedParentHash !== input.expectedParentHash) return reply(409, { status: 'changed' });
++        return reply(200, { kind: 'template-options', context: p.context, workspaceId: p.workspaceId, ...options });
++      }
++      keys(input, ['kind', 'context', 'sourceHash', 'grantVersion', 'grantEpoch', 'command', ...(Object.hasOwn(input, 'templateMapping') ? ['templateMapping'] : [])]);
++      if (input.kind !== 'issue' || !hash(input.sourceHash) || !positive(input.grantVersion) || !positive(input.grantEpoch)) return invalid();
++      if (input.context !== p.context || input.grantVersion !== p.grantVersion || input.grantEpoch !== p.grantEpoch) return reply(409, { status: 'changed' });
++      const c = input.command; keys(c, ['id', 'expectedParentHash', 'am', 'pm', 'confirmed']);
++      if (typeof c.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u.test(c.id) ||
++          (c.expectedParentHash !== null && !hash(c.expectedParentHash)) || !Array.isArray(c.am) || !Array.isArray(c.pm) || c.confirmed !== true) return invalid();
++      // Step shape/source membership are checked by the shared issuance domain.
++      const plan = await publishWorkspacePlan(deps.repository, p.token, { action: 'client_plan_issue_respond_export', operation: 'write',
++        workspaceId: p.workspaceId, ownerId: p.ownerId, fields: ['intended_plans'], purpose: 'routine_review',
++        grantVersion: input.grantVersion, grantEpoch: input.grantEpoch }, {
++        id: c.id, expectedParentHash: c.expectedParentHash as string | null,
++        am: c.am as { productId: string; name: string }[], pm: c.pm as { productId: string; name: string }[],
++      }, input.sourceHash, Object.hasOwn(input, 'templateMapping') ? decodeTemplateMapping(input.templateMapping) : undefined);
++      return reply(200, { kind: 'issued', context: p.context, id: plan.id, contentHash: plan.contentHash, sequence: plan.sequence });
++    } catch (error) {
++      if (error instanceof Error && error.message === 'TEMPLATE_MAPPING_CHANGED') return reply(409, { status: 'changed' });
++      if (error instanceof Error && error.message.startsWith('TEMPLATE_MAPPING_')) return reply(400, { status: 'invalid' });
++      if (error instanceof Error && error.message === 'INTENDED_PLAN_CONFLICT') return reply(409, { status: 'changed' });
++      if (error instanceof ProfessionalAccessError) {
++        if (error.reason === 'changed') return reply(409, { status: 'changed' });
++        if (error.reason === 'invalid_request') return reply(400, { status: 'invalid' });
++        if (error.reason !== 'unavailable') return reply(403, { status: 'denied' });
++      }
++      // Provider responses, tokens, source text and exception messages stay private.
++      return reply(503, { status: 'unavailable' });
++    }
++  };
++}
+diff --git a/apps/professional-web/src/practitionerHistory.ts b/apps/professional-web/src/practitionerHistory.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..9133b2843ae60fc5e36d1a2a23b7e3afe545a7f9
+--- /dev/null
++++ b/apps/professional-web/src/practitionerHistory.ts
+@@ -0,0 +1,44 @@
++import { snapshotWorkspaceTransaction } from './workspaceReadSnapshot';
++import { accessDenial, ProfessionalAccessError, type AccessRequest } from './authority';
++import { canonical } from './grants';
++import { decodeIntendedPlans } from './intendedPlans';
++import type { WorkspaceRepository } from './workspaceService';
++import { templateOriginLines } from './templateMapping29';
++
++export type IntendedHistorySummary = Readonly<{ planId: string; planHash: string; sequence: number; issuedAt: number }>;
++/** Existing immutable history only. A current intended-plan read grant is not
++ * permission for products, a prior grant's text, owner receipts or actual use. */
++export async function practitionerHistory(repository: WorkspaceRepository | null, token: string, request: AccessRequest,
++  selected?: Readonly<{ planId: string; planHash: string }>) {
++  if (!repository) throw new ProfessionalAccessError('unavailable');
++  const { request: r, selected: selection } = structuredClone({ request, selected });
++  if (r.action !== 'client_plan_issue_respond_export' || !['read', 'export'].includes(r.operation) || !r.workspaceId || !r.ownerId ||
++      r.purpose !== 'routine_review' || canonical(r.fields) !== canonical(['intended_plans']) || (!selection && r.operation !== 'read')) throw new ProfessionalAccessError('invalid_request');
++  return repository.transaction({ workspaceId: r.workspaceId, ownerId: r.ownerId }, async rawTx => {
++    const tx = snapshotWorkspaceTransaction(rawTx);
++    const authority = await tx.authority(token, r); const refusal = accessDenial(authority, r, tx.now());
++    if (refusal) throw new ProfessionalAccessError(refusal);
++    const lifecycle = await tx.lifecycle(r.ownerId!);
++    if (lifecycle.ownerId !== r.ownerId || lifecycle.deletionPending || !Number.isSafeInteger(lifecycle.epoch) || lifecycle.epoch < 1) throw new ProfessionalAccessError('changed');
++    const plans = await decodeIntendedPlans(await tx.plans(r.ownerId!, r.workspaceId!), r.ownerId!, r.workspaceId!, tx.now());
++    const grant = authority.grant!;
++    const visible = plans.filter(plan => plan.grantId === grant.id && plan.grantVersion === grant.version && plan.grantEpoch === grant.epoch && plan.healthEpoch === grant.healthEpoch);
++    const chosen = selection ? visible.find(plan => plan.id === selection.planId && plan.contentHash === selection.planHash) : null;
++    if (selection && !chosen) throw new ProfessionalAccessError('changed');
++    const fingerprint = canonical([authority, lifecycle, plans]);
++    tx.beforeCommit(async () => {
++      const current = await tx.authority(token, r); const denied = accessDenial(current, r, tx.now());
++      if (denied) throw new ProfessionalAccessError(denied);
++      if (canonical([current, await tx.lifecycle(r.ownerId!), await tx.plans(r.ownerId!, r.workspaceId!)]) !== fingerprint) throw new ProfessionalAccessError('changed');
++    });
++    return {
++      plans: Object.freeze(visible.slice().reverse().map(plan => Object.freeze({ planId: plan.id, planHash: plan.contentHash, sequence: plan.sequence, issuedAt: plan.createdAt }))),
++      text: chosen ? [`Selected intended version ${chosen.sequence}`, `Issued ${new Date(chosen.createdAt).toISOString()}`,
++        `Morning: ${chosen.am.map(step => step.name).join(' → ') || 'No recorded steps'}`,
++        `Evening: ${chosen.pm.map(step => step.name).join(' → ') || 'No recorded steps'}`,
++        ...templateOriginLines(chosen),
++        'This is the original intended sequence, not the owner’s actual routine, recorded use, acknowledgement or a clinical assessment.',
++        'Only this selected version is included. Previously downloaded copies cannot be recalled.'].join('\n\n') : null,
++    };
++  });
++}
+diff --git a/apps/professional-web/src/practitionerHistoryView.ts b/apps/professional-web/src/practitionerHistoryView.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5587d9967fe8040d9e62826395fa6cb992f21261
+--- /dev/null
++++ b/apps/professional-web/src/practitionerHistoryView.ts
+@@ -0,0 +1,113 @@
++import { untilAborted } from './requestDeadline';
++import type { IntendedHistorySummary } from './practitionerHistory';
++
++type Index = Readonly<{ kind: 'index'; plans: readonly IntendedHistorySummary[]; grantVersion: number; grantEpoch: number }>;
++export type IntendedHistoryState = Readonly<{ kind: 'idle' | 'loading' | 'unavailable' | 'downloaded' }> | Index |
++  Readonly<{ kind: 'review'; plan: IntendedHistorySummary; text: string; grantVersion: number; grantEpoch: number }>;
++const id = (v: unknown): v is string => typeof v === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u.test(v);
++const uuid = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u.test(v);
++const hash = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{64}$/u.test(v);
++const positive = (v: unknown): v is number => Number.isSafeInteger(v) && (v as number) > 0;
++const invalid = (): never => { throw new Error('INTENDED_HISTORY_UNAVAILABLE'); };
++function keys(v: unknown, expected: string[]): asserts v is Record<string, unknown> {
++  if (!v || typeof v !== 'object' || Array.isArray(v) || Object.keys(v).sort().join(',') !== expected.sort().join(',')) invalid();
++}
++export function decodeIntendedHistorySummaries(value: unknown): readonly IntendedHistorySummary[] {
++  if (!Array.isArray(value) || value.length > 100) return invalid();
++  const plans = value.map((item: unknown) => {
++    keys(item, ['planId', 'planHash', 'sequence', 'issuedAt']);
++    if (!uuid(item.planId) || !hash(item.planHash) || !positive(item.sequence) || (item.sequence as number) > 100 ||
++        !Number.isSafeInteger(item.issuedAt) || (item.issuedAt as number) < 0 || (item.issuedAt as number) > 8.64e15) invalid();
++    return Object.freeze({ planId: item.planId as string, planHash: item.planHash as string, sequence: item.sequence as number, issuedAt: item.issuedAt as number });
++  });
++  if (new Set(plans.map(p => p.planId)).size !== plans.length || new Set(plans.map(p => p.sequence)).size !== plans.length) invalid();
++  return Object.freeze(plans);
++}
++/** Private history is memory-only and each control belongs to its exact view.
++ * Export rereads the exact selected immutable version with export authority. */
++export function createPractitionerHistory(request: typeof fetch, render: (state: IntendedHistoryState) => void, download: (text: string) => void) {
++  let state: IntendedHistoryState = { kind: 'idle' }; let generation = 0; let context: string | null = null; let pending: AbortController | null = null;
++  const show = (next: IntendedHistoryState) => { state = next; render(next); };
++  async function send(input: Record<string, unknown>, expected: string, plan?: IntendedHistorySummary, scope?: { grantVersion: number; grantEpoch: number }) {
++    if (pending) return;
++    const admitted = ++generation; const controller = new AbortController(); pending = controller; show({ kind: 'loading' });
++    const timeout = setTimeout(() => controller.abort(), 15_000);
++    try {
++      const response = await untilAborted(controller.signal, request('/api/professional/practitioner-plan', { method: 'POST', credentials: 'same-origin',
++        cache: 'no-store', redirect: 'error', signal: controller.signal, headers: { 'Content-Type': 'application/json', 'X-OnSkin-Request': 'practitioner-v1' }, body: JSON.stringify(input) }));
++      if (generation !== admitted) return;
++      if (!response.ok || response.headers.get('Cache-Control') !== 'no-store' || !response.headers.get('Content-Type')?.startsWith('application/json')) invalid();
++      const raw = await untilAborted(controller.signal, response.text()); if (generation !== admitted) return;
++      if (raw.length > 131_072) invalid();
++      const value: unknown = JSON.parse(raw); keys(value, expected === 'history' ? ['kind', 'context', 'plans', 'grantVersion', 'grantEpoch'] : ['kind', 'context', 'text']);
++      if (value.kind !== expected || !id(value.context) || (context !== null && value.context !== context)) invalid();
++      context = value.context as string;
++      if (expected === 'history') {
++        if (!positive(value.grantVersion) || !positive(value.grantEpoch)) invalid();
++        show({ kind: 'index', plans: decodeIntendedHistorySummaries(value.plans), grantVersion: value.grantVersion as number, grantEpoch: value.grantEpoch as number });
++      } else {
++        if (!plan || !scope || typeof value.text !== 'string' || !value.text.trim()) invalid();
++        if (expected === 'history-review') show({ kind: 'review', plan: plan!, text: value.text as string,
++          grantVersion: scope!.grantVersion, grantEpoch: scope!.grantEpoch });
++        else {
++          download(value.text as string); if (generation !== admitted) return;
++          context = null; show({ kind: 'downloaded' });
++        }
++      }
++    } catch { if (generation === admitted) { context = null; show({ kind: 'unavailable' }); } }
++    finally { clearTimeout(timeout); if (generation === admitted) pending = null; }
++  }
++  return {
++    whenCurrent(rendered: IntendedHistoryState, action: () => unknown) { if (state === rendered) return action(); },
++    clear() { generation++; pending?.abort(); pending = null; context = null; show({ kind: 'idle' }); },
++    load() { return send({ kind: 'history', context }, 'history'); },
++    review(plan: IntendedHistorySummary) {
++      if (state.kind !== 'index' || !context || !state.plans.some(p => p.planId === plan.planId && p.planHash === plan.planHash)) return;
++      const selected = state.plans.find(p => p.planId === plan.planId)!;
++      return send({ kind: 'history-review', context, planId: selected.planId, planHash: selected.planHash, grantVersion: state.grantVersion, grantEpoch: state.grantEpoch }, 'history-review', selected, state);
++    },
++    export() {
++      if (state.kind !== 'review' || !context) return;
++      return send({ kind: 'history-export', context, planId: state.plan.planId, planHash: state.plan.planHash, grantVersion: state.grantVersion, grantEpoch: state.grantEpoch }, 'history-export', state.plan, state);
++    },
++  };
++}
++
++export function mountPractitionerHistory(root: HTMLElement, request: typeof fetch = fetch) {
++  let focusRequested = false;
++  const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text?: string) => { const node = document.createElement(tag); if (text) node.textContent = text; return node; };
++  const controller = createPractitionerHistory(request, state => {
++    const heading = element('h2', ({ idle: 'Practitioner intended history', loading: 'Checking intended history', unavailable: 'Intended history unavailable',
++      index: 'Issued intended versions', review: 'Selected intended version', downloaded: 'Intended version downloaded' })[state.kind]); heading.tabIndex = -1;
++    root.replaceChildren(heading); root.setAttribute('aria-busy', String(state.kind === 'loading'));
++    const status = element('p'); status.setAttribute('role', 'status'); root.append(status);
++    const button = (label: string, action: () => unknown) => { const node = element('button', label); node.type = 'button'; node.onclick = () => {
++      void controller.whenCurrent(state, () => { focusRequested = true; return action(); });
++    }; root.append(node); return node; };
++    if (state.kind === 'idle') status.textContent = 'Load versions under the current intended-plan permission. No product, actual-routine or use record is loaded.';
++    if (state.kind === 'unavailable') status.textContent = 'Current permission or this exact historical version could not be confirmed. Load current history to try again.';
++    if (state.kind === 'loading') status.textContent = 'Checking the current assignment, permission and saved history…';
++    if (state.kind === 'downloaded') status.textContent = 'Only the selected version was handed to the browser. Downloaded copies cannot be recalled. Load fresh history to continue.';
++    if (state.kind === 'index') {
++      status.textContent = state.plans.length ? 'Choose one exact version to review. Earlier permissions do not grant access to their text. Intended history does not establish actual use.' : 'No issued versions are visible under the current permission.';
++      for (const plan of state.plans) button(`Review issued version ${plan.sequence} · ${new Date(plan.issuedAt).toISOString()}`, () => controller.review(plan));
++    }
++    if (state.kind === 'review') {
++      status.textContent = `Version ${state.plan.sequence}. This original saved sequence is separate from the current actual routine and any new practitioner draft.`;
++      root.append(element('pre', state.text)); button('Download this intended version', () => controller.export());
++      button('Back to issued versions', () => controller.load());
++    }
++    if (['idle', 'unavailable', 'downloaded', 'index'].includes(state.kind)) button('Load issued history', () => controller.load());
++    button(state.kind === 'loading' ? 'Cancel intended history loading' : 'Clear intended history', () => controller.clear());
++    if (focusRequested && state.kind !== 'loading') { focusRequested = false; heading.focus(); }
++  }, text => {
++    const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' })); const link = element('a');
++    link.href = url; link.download = 'onskin-intended-version.txt'; document.body.append(link);
++    try { link.click(); } finally { link.remove(); setTimeout(() => URL.revokeObjectURL(url), 0); }
++  });
++  const clear = () => { focusRequested = false; controller.clear(); }; const visibility = () => { if (document.hidden) clear(); };
++  for (const event of ['blur', 'pagehide', 'pageshow']) window.addEventListener(event, clear);
++  document.addEventListener('visibilitychange', visibility);
++  const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('onskin-professional-session') : null; channel?.addEventListener('message', clear); clear();
++  return () => { clear(); channel?.close(); for (const event of ['blur', 'pagehide', 'pageshow']) window.removeEventListener(event, clear); document.removeEventListener('visibilitychange', visibility); };
++}
+diff --git a/apps/professional-web/src/practitionerService.ts b/apps/professional-web/src/practitionerService.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0f72c5d5c04f74d9012abaa224a46f4957123228
+--- /dev/null
++++ b/apps/professional-web/src/practitionerService.ts
+@@ -0,0 +1,83 @@
++import { snapshotWorkspaceTransaction } from './workspaceReadSnapshot';
++import { accessDenial, ProfessionalAccessError, type AccessRequest } from './authority';
++import { canonical } from './grants';
++import { decodeIntendedPlans, validateClientPlanSource } from './intendedPlans';
++import type { WorkspaceRepository } from './workspaceService';
++import { decodePracticeTemplates } from './practiceTemplates';
++import { decodeWorkspaceBilling, workspaceBillingAccess } from './workspaceBilling';
++
++/** SERVER ONLY. Selected client identity comes from an admitted assignment, not
++ * browser JSON. This reads the existing authoritative projection; no draft or
++ * second copy of the client's record is persisted. */
++type ReuseSelection = Readonly<{ planId: string; planHash: string; sourceHash: string; expectedParentHash: string | null }>;
++async function readPlanSource(repository: WorkspaceRepository | null, token: string, request: AccessRequest, reuse?: ReuseSelection, includeTemplates = false) {
++  if (!repository) throw new ProfessionalAccessError('unavailable');
++  const { request: r, reuse: selected } = structuredClone({ request, reuse });
++  if (r.action !== 'client_projection_read' || r.operation !== 'read' || !r.workspaceId || !r.ownerId ||
++      r.purpose !== 'routine_review' || canonical(r.fields) !== canonical(['products', 'intended_plans'])) throw new ProfessionalAccessError('invalid_request');
++  return repository.transaction({ workspaceId: r.workspaceId, ownerId: r.ownerId }, async rawTx => {
++    const tx = snapshotWorkspaceTransaction(rawTx);
++    const a = await tx.authority(token, r); const denied = accessDenial(a, r, tx.now());
++    if (denied) throw new ProfessionalAccessError(denied);
++    const lifecycle = await tx.lifecycle(r.ownerId!);
++    if (lifecycle.ownerId !== r.ownerId || lifecycle.deletionPending || !Number.isSafeInteger(lifecycle.epoch) || lifecycle.epoch < 1) throw new ProfessionalAccessError('changed');
++    const source = await validateClientPlanSource(await tx.planSource(r.ownerId!, r.workspaceId!), r.ownerId!, r.workspaceId!, a.grant!.id, a.grant!.version);
++    const plans = await decodeIntendedPlans(await tx.plans(r.ownerId!, r.workspaceId!), r.ownerId!, r.workspaceId!, tx.now());
++    const templateRequest: AccessRequest = { action: 'template_author_issue', operation: 'write', workspaceId: r.workspaceId,
++      ownerId: null, fields: [], purpose: null, grantVersion: null, grantEpoch: null };
++    async function templateAuthority() {
++      const billing = await decodeWorkspaceBilling(await tx.billing(r.workspaceId!), r.workspaceId!);
++      const authority = { ...await tx.authority(token, r), billing: workspaceBillingAccess(billing, tx.now()) };
++      const denied = accessDenial(authority, templateRequest, tx.now());
++      if (denied) throw new ProfessionalAccessError(denied);
++      if (canonical([authority.session, authority.membership, authority.licence]) !== canonical([a.session, a.membership, a.licence])) throw new ProfessionalAccessError('changed');
++      return { authority, billing };
++    }
++    const templateAccess = includeTemplates ? await templateAuthority() : null;
++    if (includeTemplates && !tx.templates) throw new ProfessionalAccessError('unavailable');
++    const templates = includeTemplates ? await decodePracticeTemplates(await tx.templates!(r.workspaceId!), r.workspaceId!, tx.now()) : null;
++    const fingerprint = canonical([a, lifecycle, source, plans, templateAccess, templates]);
++    tx.beforeCommit(async () => {
++      const current = await tx.authority(token, r); const refusal = accessDenial(current, r, tx.now());
++      if (refusal) throw new ProfessionalAccessError(refusal);
++      if (canonical([current, await tx.lifecycle(r.ownerId!), await tx.planSource(r.ownerId!, r.workspaceId!), await tx.plans(r.ownerId!, r.workspaceId!),
++        includeTemplates ? await templateAuthority() : null, includeTemplates ? await tx.templates!(r.workspaceId!) : null]) !== fingerprint) throw new ProfessionalAccessError('changed');
++    });
++    const latest = plans.at(-1);
++    // The chain parent supports CAS across permission changes; it is not
++    // permission to redisclose earlier-grant text under a later grant.
++    const visible = latest && latest.grantId === a.grant!.id && latest.grantVersion === a.grant!.version &&
++      latest.grantEpoch === a.grant!.epoch && latest.healthEpoch === a.grant!.healthEpoch ? latest : null;
++    const chosen = selected ? plans.find(plan => plan.id === selected.planId && plan.contentHash === selected.planHash &&
++      plan.grantId === a.grant!.id && plan.grantVersion === a.grant!.version && plan.grantEpoch === a.grant!.epoch && plan.healthEpoch === a.grant!.healthEpoch) : null;
++    if (selected && (!chosen || Object.keys(selected).sort().join(',') !== 'expectedParentHash,planHash,planId,sourceHash' ||
++        selected.sourceHash !== source.contentHash || selected.expectedParentHash !== (latest?.contentHash ?? null) ||
++        [...chosen.am, ...chosen.pm].some(step => !source.products.some(product => product.productId === step.productId && product.name === step.name)))) {
++      throw new ProfessionalAccessError('changed');
++    }
++    const project = (plan: NonNullable<typeof latest>) => ({ id: plan.id, contentHash: plan.contentHash, sequence: plan.sequence,
++      issuedAt: plan.createdAt, am: plan.am, pm: plan.pm });
++    return { source: { products: source.products, sourceHash: source.contentHash, grantVersion: a.grant!.version, grantEpoch: a.grant!.epoch,
++      expectedParentHash: latest?.contentHash ?? null, latestSequence: latest?.sequence ?? 0,
++      latestIssued: visible ? project(visible) : null }, reused: chosen ? project(chosen) : null, templates };
++  });
++}
++
++export async function practitionerPlanSource(repository: WorkspaceRepository | null, token: string, request: AccessRequest) {
++  return (await readPlanSource(repository, token, request)).source;
++}
++/** This installs no original-owner ingress or application writer. Both existing
++ * trusted authority ports must be independently admitted; defaults stay closed.
++ * No lawful retained-template read right is inferred after billing/licence exit. */
++export async function practitionerTemplateOptions(repository: WorkspaceRepository | null, token: string, request: AccessRequest) {
++  const result = await readPlanSource(repository, token, request, undefined, true);
++  return { source: result.source, templates: result.templates! };
++}
++/** Reusing an exact prior version is a fresh private read, never publication.
++ * A 

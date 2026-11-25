@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "project": "onSkin MasterV2",
+  "coordination_branch": "brain/masterv2",
+  "epoch": "BETA_RESET_2026-11-25",
+  "revision": 1,
+  "updated_at": "2026-11-25T15:36:39.609523+00:00",
+  "authority": "Founder process-overhaul request; independent Brain coordination decision ADR-BR-001",
+  "workflow_state": "ADOPTION_REQUIRED",
+  "active_task": {
+    "id": "BR-000",
+    "revision": 1,
+    "path": "tasks/BR-000/ASSIGNMENT.md",
+    "sha256": "96b17547dc3692715949eac8bb1e0e19e250833e833d83ab0a27d0341691d62a",
+    "dispatch": "EXISTING_CODEX_SESSION_AT_SAFE_BOUNDARY",
+    "application_edits_authorized_by_this_task": false
+  },
+  "latest_reviewed_application": {
+    "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+    "evidence": "sources/engineering39/PROVENANCE.json"
+  },
+  "published_application": {
+    "head": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+    "pr": 48,
+    "state": "DRAFT_UNMERGED"
+  },
+  "work_in_progress": {
+    "campaign": "Engineering40",
+    "state": "UNCOMMITTED_WORK_OBSERVED_WRITER_STATUS_UNRESOLVED",
+    "observation": "state/WORKTREE_OBSERVATION.json",
+    "do_not_reset": true,
+    "do_not_start_second_writer": true
+  },
+  "latest_return": "returns/LATEST.json",
+  "full_requirements_count": 38,
+  "formal_requirements_accepted": 0,
+  "gate_count": 18,
+  "formal_gates_accepted": 0,
+  "j01_only": true,
+  "beta_distribution": "NOT_AUTHORIZED",
+  "public_release": "NO_GO",
+  "new_spend_authorized": 0,
+  "original_contract": "sources/frozen/contract.v2.json",
+  "next_after_adoption": "Independent review then BR-001 base-pinned authorization; not automatic"
+}

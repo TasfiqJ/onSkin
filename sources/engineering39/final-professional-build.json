@@ -1,0 +1,39 @@
+{
+  "label": "final-professional-build",
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/professional-web",
+    "run",
+    "build",
+    "--",
+    "--outDir",
+    "<OWNER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING39_EVIDENCE_20261124_SUCCESSOR\\build\\professional"
+  ],
+  "before": {
+    "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-25T04:39:53.318622+00:00",
+  "freeBytesBefore": 203218194432,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-25T04:40:01.499271+00:00",
+  "freeBytesAfter": 203211972608,
+  "logBytes": 1030,
+  "logSha256": "7a18315f78e25f555ea1c992624bbb49e17e1c22471616914c965e4ba6913aab"
+}

@@ -1,6 +1,0 @@
-{
-  "text": "Map ordered template roles\n\nGeneric roles · selected revision 1 · 2027-01-15T08:00:00.000Z. Role order is fixed to this revision. No role implies a safe, equivalent or owned product.\n\nChoose only products in the current shared record. Missing, archived or replaced products require a fresh owner source; names do not establish identity. An unshelved proposal records no product, admits nothing to Shelf and blocks issuance until resolved or explicitly omitted.\n\nMorning role decisions\nam role 1: cleanser\nChoose a decision\nUnshelved proposal — no admitted product\nExplicitly omit this role\nRecorded cleanser\nRecorded cream\nam role 2: moisturizer\nChoose a decision\nUnshelved proposal — no admitted product\nExplicitly omit this role\nRecorded cleanser\nRecorded cream\nEvening role decisions\npm role 1: moisturizer\nChoose a decision\nUnshelved proposal — no admitted product\nExplicitly omit this role\nRecorded cleanser\nRecorded cream\nReview mapped intended sequenceCancel template mappingClear practitioner draft",
-  "focus": "Map ordered template roles",
-  "overflow": 0,
-  "persisted": "[[],[]]"
-}

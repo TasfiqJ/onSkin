@@ -1,0 +1,36 @@
+TAP version 13
+# (node:90876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: process death before commit rolls back; after commit recovers the exact encrypted original
+ok 1 - process death before commit rolls back; after commit recovers the exact encrypted original
+  ---
+  duration_ms: 3862.7755
+  type: 'test'
+  ...
+# Subtest: tombstone survives restart; authentic reappeared bytes require an exact, retryable erasure pass
+ok 2 - tombstone survives restart; authentic reappeared bytes require an exact, retryable erasure pass
+  ---
+  duration_ms: 5674.6153
+  type: 'test'
+  ...
+# Subtest: independent checkpoint confirms a committed successor after restart and rejects older authentic custody
+ok 3 - independent checkpoint confirms a committed successor after restart and rejects older authentic custody
+  ---
+  duration_ms: 1770.6356
+  type: 'test'
+  ...
+# Subtest: an interrupted prepared successor with the old custody head remains unavailable to ordinary retry
+ok 4 - an interrupted prepared successor with the old custody head remains unavailable to ordinary retry
+  ---
+  duration_ms: 915.8175
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12492.0418

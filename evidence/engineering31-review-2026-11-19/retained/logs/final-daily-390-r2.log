@@ -1,5 +1,0 @@
-Error: Free private Diary did not preserve truthful native-storage recovery.
-    at assert (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:77:25)
-    at assertFreeDiaryRecovery29R (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:112:3)
-    at run (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:2023:5)
-    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

@@ -1,0 +1,6 @@
+{
+  "source_commit": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+  "contract_sha256": "0578cb851f28aa26c289793fad76edd862d4222073e0fcc5c3b5210849026495",
+  "matrix_sha256": "1daafaa86df15dc14af8250a395ab86a7534f2d2a7738c0c0ce1555c1a91a7f0",
+  "notice": "Exact retained files, not new acceptance. Their historical implementation descriptions are older than Engineering39. Use acceptance behavior as the specification and current reports as implementation evidence."
+}

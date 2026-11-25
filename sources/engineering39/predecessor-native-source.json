@@ -1,0 +1,34 @@
+{
+  "label": "final-native-source",
+  "command": [
+    "node",
+    "--test",
+    "scripts/release/full-app-j01/native_generated47.test.mjs"
+  ],
+  "before": {
+    "head": "bf848102448b0679c502669ee2206c2fe34eedde",
+    "tree": "cc3e19c696cc4c7310da260dedd77c35785f8ed4",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "24de38ceff2e4f2cd2ca3e891e7dab1afc433785a93ff879f0f6f99eb38ec5fd",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-25T04:36:04.994049+00:00",
+  "freeBytesBefore": 203407519744,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 1,
+  "after": {
+    "head": "bf848102448b0679c502669ee2206c2fe34eedde",
+    "tree": "cc3e19c696cc4c7310da260dedd77c35785f8ed4",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "24de38ceff2e4f2cd2ca3e891e7dab1afc433785a93ff879f0f6f99eb38ec5fd",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-25T04:37:36.569332+00:00",
+  "freeBytesAfter": 203169808384,
+  "logBytes": 36099,
+  "logSha256": "d63793206063c39a0f2f0c284750665d6ef631c755f36205f50f228bc1992773"
+}

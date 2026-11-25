@@ -1,4 +1,0 @@
-{
-  "message": "Error: Timed out waiting for visible withdrawn status and complete local cleanup: condition false",
-  "stack": "Error: Timed out waiting for visible withdrawn status and complete local cleanup: condition false\n    at Module.waitForCondition (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/cat04-catalog-recovery-audit.mjs:967:9)\n    at async durableRoutine32 (file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/durable-routine32.mjs:78:3)\n    at async file:///<HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/actual-apply-outcome29.mjs:124:23"
-}

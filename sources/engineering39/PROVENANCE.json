@@ -1,0 +1,10 @@
+{
+  "source_head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+  "source_tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+  "original_archive_sha256": "a9aeacf5f24ad7f0c5c02d1e5fc82fe4103024026f886cbc39425d4ed4088b64",
+  "original_manifest_sha256": "5eec51b20522139aba4716ab0379f3bef70e2b78921bda1e35e11e362087214f",
+  "manifest_entries_verified": 77,
+  "audit_this_turn": "Archive and all manifest entries checked while preparing this publication. Source/ancestry audit from prior Brain review is preserved, not relabeled as a fresh suite rerun. No test suite rerun by this reset.",
+  "current_source_warning": "E40 working changes are NOT included and NOT accepted.",
+  "source_index": "PARTS_INDEX.json"
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "task_id": null,
+  "task_revision": null,
+  "report_commit": null,
+  "report_path": null,
+  "application_head": null,
+  "status": "NO_RETURN_UNDER_NEW_PROTOCOL",
+  "note": "E39 is historical baseline evidence, not completion of BR-000. Codex alone publishes a new return after task adoption."
+}

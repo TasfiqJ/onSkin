@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "authorization": "BRAIN-ONSKIN-ENGINEERING39-RELEASE-PROGRAM",
+  "qualification": "LOCAL_SUCCESSOR_SOURCE_CANDIDATE_ONLY",
+  "release": "NO_GO",
+  "gateAdmissions": 0,
+  "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+  "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+  "startHead": "6d4ce5ce2ed8db22a779dfa55c60f6480cbb3e0a",
+  "startTree": "f430348f90ddd5162cbf42b24a7a22042ed48230",
+  "protectedSource": {
+    "head": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+    "tree": "0745ad5f5595724a9b26de64324065dc3e53d2ea"
+  },
+  "changes": [
+    {
+      "path": "PROGRESS.md",
+      "beforeSha256": "7d7b23e3b8099213518f8142268654dc39bab55397690035b13db92e61f396e4",
+      "afterSha256": "bf0adec821fa33a35a364351f74d0cb617b0547b06354cbff4c584794a0c5409",
+      "bytes": 793644
+    },
+    {
+      "path": "apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts",
+      "beforeSha256": "6e614ba74d087f93794062b68a5dee676bea1e0c7b7b00f175bf68d8aab13cf4",
+      "afterSha256": "fecbfd2f797ed610a49d9cada4415f6f721e87220962f97b5f1c948ef0526be6",
+      "bytes": 56438
+    },
+    {
+      "path": "apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts",
+      "beforeSha256": "9524f959356e9ef2c71fc1f72b4166584610a4953cfecd5e599e6c7248fb998f",
+      "afterSha256": "ab281ce164345dee8340fbf1ce63157d5a667ae09fd1566218cb30f0def1002f",
+      "bytes": 25374
+    },
+    {
+      "path": "apps/professional-web/src/encryptedWorkspaceRepository.ts",
+      "beforeSha256": "d07fceefde11b2605dda81d6342962222ef88e1ba473700cfc732c53273f0f3a",
+      "afterSha256": "4201ba907c01cdadd8258e83658aafc44f7a42693b51e610abdde98d4eb8380c",
+      "bytes": 14687
+    },
+    {
+      "path": "apps/professional-web/src/ownerRoutineCustody.test.ts",
+      "beforeSha256": "5a0bdb486e89ee6d63368ad6d736f66a110686d2324e1e0dc4d36cd65e91e772",
+      "afterSha256": "382a22d247206f090b3656e774d50d7a3e9b7a1cf2fa3c70ddd6f447f62c3d76",
+      "bytes": 14453
+    },
+    {
+      "path": "apps/professional-web/src/ownerRoutineCustody.ts",
+      "beforeSha256": "0ba25a8e45c4caf064c8d5ef687e1e4ec62e6487978c2e37cf27cb6160fb4847",
+      "afterSha256": "8b6c76b80dd69d5036ce9a37e79b462a4bd5efec199953f1923a9dfcb9438ced",
+      "bytes": 23027
+    },
+    {
+      "path": "apps/professional-web/src/ownerRoutinePrevisit.ts",
+      "beforeSha256": null,
+      "afterSha256": "89aa974fb6a5d4b46363c94ae002be494b0523c1edc1d8590bf4617a13b52f1e",
+      "bytes": 12200
+    },
+    {
+      "path": "apps/professional-web/src/previsitRecords.ts",
+      "beforeSha256": "cdf0c1e6ed6cd9fd0c4df2ea742c5f083a08036ba84462b717d3978b58fc6c9b",
+      "afterSha256": "bd1a10f16d69ee5639702c270c116c959165aac3c7083c4572dd7890328cf948",
+      "bytes": 10584
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "beforeSha256": "a02f7722b28a2bd5a0fc16496ff7d5737bf7d7d18c557fb48bad3ee01fa6ff61",
+      "afterSha256": "3fbc44e23a3daeed6edc863abb8e283dbac92c7732682585423a4e49c83414f7",
+      "bytes": 633402
+    },
+    {
+      "path": "scripts/e2e/owner-custody-sqlite-worker.mjs",
+      "beforeSha256": null,
+      "afterSha256": "277baa59308bb890e31a09be0f68fccc1689c8a3d0918408d94c650ab2fe60aa",
+      "bytes": 6526
+    },
+    {
+      "path": "scripts/e2e/owner-custody-sqlite.test.mjs",
+      "beforeSha256": null,
+      "afterSha256": "d57df93cc463a4ee5969a7032e11b3f814e682218b3c4d4304acbf4cbe5072cf",
+      "bytes": 9785
+    }
+  ],
+  "unchangedControls": [
+    {
+      "path": "docs/release/full-app-j01/contract.v1.json",
+      "sha256": "017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996"
+    },
+    {
+      "path": "docs/release/full-app-j01/contract.v2.json",
+      "sha256": "0578cb851f28aa26c289793fad76edd862d4222073e0fcc5c3b5210849026495"
+    },
+    {
+      "path": "docs/release/full-app-j01/matrix.v1.json",
+      "sha256": "3b3fd0bba1c668358326658f8a4dedeab7239ba8d0221dc01f415f506c080fe3"
+    },
+    {
+      "path": "docs/release/full-app-j01/matrix.v2.json",
+      "sha256": "1daafaa86df15dc14af8250a395ab86a7534f2d2a7738c0c0ce1555c1a91a7f0"
+    },
+    {
+      "path": "docs/release/full-app-j01/precedence.v1.json",
+      "sha256": "330804dfc5d3e83c5f7da83aeb53a003b3d68c2cecc8935afc9edd1cbc7a5ec8"
+    },
+    {
+      "path": "docs/release/full-app-j01/precedence.v2.json",
+      "sha256": "d386e395fc42c716f85121e977393b185d2c75344bdd63c4a4b44a896c4efa39"
+    },
+    {
+      "path": "docs/release/full-app-j01/roadmap.v1.json",
+      "sha256": "35ea2bdb913ec62127765108c0e4484a2b9e78914b7f073a20040f8fc3a4d0da"
+    },
+    {
+      "path": "docs/release/full-app-j01/roadmap.v2.json",
+      "sha256": "d057d0a2b6b3f6bb07150cf5a751ae922f186466a12bcd61edba824f0bee5017"
+    },
+    {
+      "path": "docs/release/full-app-j01/owner-ledger33.v1.json",
+      "sha256": "a9390584684fbfef3c4988993be54c12bcfa7211ed2d4dffaa4ef9a2cc8cb420"
+    },
+    {
+      "path": "docs/release/full-app-j01/history-crosswalk.v1.json",
+      "sha256": "2a4018895dc74fda87b265df22ff9aee2468a8ab49de41f39186bc42614563f3"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/gitleaks.toml",
+      "sha256": "f683584269dd6d1af30371c56b6a39def7343e0549f1f4c3c445932bcb075828"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+      "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-engine-linux-x86_64.tar.gz",
+      "sha256": "f94f7e80c9fde88488c52b84a123992f22644513b2a9b99f0dc81bcd6c35f8b9"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
+      "sha256": "617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "d7857d04cb51e99c2fe297270ff5df60b85fdcb5be8ad132c4cee0d04836e8fa"
+    },
+    {
+      "path": "scripts/launch/full-app-contract33.mjs",
+      "sha256": "9bcc7fc1ce631f861faaea2857252a9c7cfc6639a00f742a5b71503e6744e5a0"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+      "sha256": "ae252a36ecade3f3d52a8afd91924d792a9396b2483fd475ec10af307d9deaea"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+    }
+  ],
+  "protectedChecks": {
+    "release": "R33_SOURCE_HASH",
+    "security": "SOURCE_INVENTORY_DRIFT",
+    "native": "See exact final receipt and protected native source log",
+    "database": "Static checks only"
+  },
+  "prerequisites": [
+    "Independent Brain and protected custodians accept a separately authorized source scope",
+    "Owner-authenticated serial production admission and independent freshness for safe retirement",
+    "Authorized real browser runtime and original canonical Linux database runner",
+    "Qualified device, clinical, provider and other required external admissions"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-25T04:39:29.841495+00:00",
+  "source": {
+    "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "freeBytes": 203248885760,
+  "startHead": "6d4ce5ce2ed8db22a779dfa55c60f6480cbb3e0a",
+  "startTree": "f430348f90ddd5162cbf42b24a7a22042ed48230",
+  "pr48": "d292743c99c1fb98f5714789f4fd60fb1e7d5a5d",
+  "indexPreservedForProof": true,
+  "status": "PARTIAL_BLOCKED_PENDING_INDEPENDENT_REVIEW",
+  "all38": "UNACCEPTED",
+  "all18": "UNACCEPTED",
+  "release": "NO_GO"
+}

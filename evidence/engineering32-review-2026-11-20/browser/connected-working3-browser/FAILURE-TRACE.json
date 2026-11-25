@@ -1,7 +1,0 @@
-{
-  "message": "Exact ledger ciphertext equality failed after forced process restart; synthetic payload bytes omitted.",
-  "originalBytes": 40648,
-  "originalSha256": "9c372e32e48308db4df24f19d705014e2ee504449afb0746f517df93d7dfe48e",
-  "stackLocation": "durable-routine32.mjs:40",
-  "payloadOmitted": true
-}

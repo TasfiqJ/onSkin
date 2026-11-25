@@ -1,9 +1,0 @@
-{
-  "startedAt": "2026-11-17T12:07:56.333Z",
-  "surface": "Actual local Expo web in Edge; synthetic local owner, no providers",
-  "userDataDir": "[LOCAL_USER_HOME]\\AppData\\Local\\Packages\\openai.codex_2p2nqsd0c76g0\\AC\\#!sandbox.{6200bccb-efad-4707-b5d8-be07c369f634}\\Temp\\[TEMP_BROWSER_PROFILE]",
-  "viewports": [],
-  "pass": false,
-  "error": "Timed out waiting for http://localhost:8500: fetch failed",
-  "endedAt": "2026-11-17T12:09:56.440Z"
-}

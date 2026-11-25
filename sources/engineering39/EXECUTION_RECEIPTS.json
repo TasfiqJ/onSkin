@@ -1,0 +1,619 @@
+{
+  "root-tests": {
+    "label": "final-root-tests",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force",
+      "--concurrency=1",
+      "--continue=always",
+      "--",
+      "--maxWorkers=4"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:39:08.811327+00:00",
+    "freeBytesBefore": 203277463552,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:41:53.863674+00:00",
+    "freeBytesAfter": 203128664064,
+    "logBytes": 706955,
+    "logSha256": "17da2d7aab1c3d02728e5734b67629d7e7d9358e869a02e780bd746a26569b31"
+  },
+  "typecheck": {
+    "label": "final-typecheck",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force",
+      "--concurrency=2",
+      "--continue=always"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:39:08.812829+00:00",
+    "freeBytesBefore": 203277463552,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:39:51.427970+00:00",
+    "freeBytesAfter": 203221880832,
+    "logBytes": 1586,
+    "logSha256": "c6f9ddd43f9a4066189f89776222e39b5d3e204dc7db35209f67c2c0b84f148c"
+  },
+  "lint": {
+    "label": "final-lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force",
+      "--concurrency=2",
+      "--continue=always"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:39:08.809326+00:00",
+    "freeBytesBefore": 203277463552,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:41:14.931436+00:00",
+    "freeBytesAfter": 203116412928,
+    "logBytes": 1569,
+    "logSha256": "d278082ac26cf6ace7d0048cf5c41323ecdd199e32ef7155294cc16be3f49aa9"
+  },
+  "consumer-build": {
+    "label": "final-consumer-build",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "expo",
+      "export",
+      "--platform",
+      "web",
+      "--output-dir",
+      "<OWNER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING39_EVIDENCE_20261124_SUCCESSOR\\build\\consumer"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:39:08.815831+00:00",
+    "freeBytesBefore": 203277463552,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {
+      "UV_THREADPOOL_SIZE": "1"
+    },
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:30.407679+00:00",
+    "freeBytesAfter": 203139149824,
+    "logBytes": 6530,
+    "logSha256": "08623289704bae995a4a0ccf81057dab34cca6fc5430d2e3f3e7216ca0e22217"
+  },
+  "professional-build": {
+    "label": "final-professional-build",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "run",
+      "build",
+      "--",
+      "--outDir",
+      "<OWNER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING39_EVIDENCE_20261124_SUCCESSOR\\build\\professional"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:39:53.318622+00:00",
+    "freeBytesBefore": 203218194432,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:01.499271+00:00",
+    "freeBytesAfter": 203211972608,
+    "logBytes": 1030,
+    "logSha256": "7a18315f78e25f555ea1c992624bbb49e17e1c22471616914c965e4ba6913aab"
+  },
+  "operator-build": {
+    "label": "final-operator-build",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/catalog-operator-console",
+      "run",
+      "build",
+      "--",
+      "--outDir",
+      "<OWNER_HOME>\\Documents\\ChatGPT\\MasterV2Code\\ENGINEERING39_EVIDENCE_20261124_SUCCESSOR\\build\\operator"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:03.370902+00:00",
+    "freeBytesBefore": 203208192000,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:10.212886+00:00",
+    "freeBytesAfter": 203194785792,
+    "logBytes": 815,
+    "logSha256": "7bea45c3b3ade1256bb1f934e9824588ca7004e92322d1bb9d1d0dcbbcad5c8a"
+  },
+  "custody-restart": {
+    "label": "final-custody-restart",
+    "command": [
+      "node",
+      "--test",
+      "scripts/e2e/owner-custody-sqlite.test.mjs"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:11.864825+00:00",
+    "freeBytesBefore": 203191742464,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:25.123695+00:00",
+    "freeBytesAfter": 203150110720,
+    "logBytes": 1349,
+    "logSha256": "45f14149243a26be035b00912018746d22342853a845fa8d7d2b16e8c0d265af"
+  },
+  "adversarial-mobile": {
+    "label": "final-adversarial-mobile",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "test",
+      "--",
+      "--maxWorkers=2",
+      "appointmentBrief",
+      "routineDecisionRecovery32",
+      "actualRoutineJourney",
+      "localDeviceExport",
+      "optionalChangeDrafts",
+      "selectiveCleanup"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:25.657118+00:00",
+    "freeBytesBefore": 203149729792,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:39.140336+00:00",
+    "freeBytesAfter": 203135434752,
+    "logBytes": 443,
+    "logSha256": "36fbff7793fb9ffbafea2aa9f7ac690844a58637abdf62ed0bc00374078077f2"
+  },
+  "adversarial-professional": {
+    "label": "final-adversarial-professional",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/professional-web",
+      "test",
+      "--",
+      "--maxWorkers=2",
+      "ownerRoutineCustody",
+      "encryptedCustody",
+      "reconciliation",
+      "encryptedWorkspaceRepository",
+      "previsitRecords"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:30.967991+00:00",
+    "freeBytesBefore": 203138641920,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:36.008172+00:00",
+    "freeBytesAfter": 203134242816,
+    "logBytes": 438,
+    "logSha256": "d12189e26e7e03048a19237de2690125fedd363210b334e1cf8d0ae95b305460"
+  },
+  "adversarial-operator": {
+    "label": "final-adversarial-operator",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/catalog-operator-console",
+      "run",
+      "test"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:36.663148+00:00",
+    "freeBytesBefore": 203133321216,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:39.847545+00:00",
+    "freeBytesAfter": 203135127552,
+    "logBytes": 340,
+    "logSha256": "064bde5358f6bc9f4f87adcf153ccc6350101464136210d7494419c2f8c6d9ed"
+  },
+  "db-source": {
+    "label": "final-db-source",
+    "command": [
+      "node",
+      "--test",
+      "--test-timeout=20000",
+      "scripts/phase2/database-types-contract.test.mjs",
+      "scripts/phase2/local-supabase-target-guard.test.mjs"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:39.706296+00:00",
+    "freeBytesBefore": 203135225856,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:42.691933+00:00",
+    "freeBytesAfter": 203131621376,
+    "logBytes": 1401,
+    "logSha256": "2d673c6a9695222ef2352459e31c6b06ab167fe1f4e94e48647398b8d2ab459a"
+  },
+  "edge-tests": {
+    "label": "final-edge-tests",
+    "command": [
+      "deno.cmd",
+      "test",
+      "--cached-only",
+      "--no-config",
+      "--quiet",
+      "--allow-read=supabase",
+      "--lock=supabase/functions/deno.lock",
+      "--frozen=true",
+      "supabase\\functions\\catalog-operator\\httpHandler.test.ts",
+      "supabase\\functions\\catalog-operator\\contract.test.ts",
+      "supabase\\functions\\catalog-operator\\databaseGateway.test.ts",
+      "supabase\\functions\\catalog-operator\\databaseUrl.test.ts",
+      "supabase\\functions\\catalog-operator\\responseContract.test.ts",
+      "supabase\\functions\\catalog-operator\\runtimeContext.test.ts",
+      "supabase\\functions\\catalog-operator\\verifiedAuth.test.ts"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:40.407423+00:00",
+    "freeBytesBefore": 203134828544,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 0,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:42.929776+00:00",
+    "freeBytesAfter": 203131412480,
+    "logBytes": 4149,
+    "logSha256": "90f861c52bd8745f59ce7b551b7b3cf728bc7c11ee8420942b24d0ff500e9e53"
+  },
+  "release-contract": {
+    "label": "final-release-contract",
+    "command": [
+      "node",
+      "scripts/launch/check-contract.mjs",
+      "--scope",
+      "full-app-j01-v2"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:43.273945+00:00",
+    "freeBytesBefore": 203131641856,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:44.217108+00:00",
+    "freeBytesAfter": 203131088896,
+    "logBytes": 16,
+    "logSha256": "991e621d9391c5ae05c276b5aa26a902f71a970bf192808f80fab5939f115133"
+  },
+  "g97": {
+    "label": "final-g97",
+    "command": [
+      "python",
+      "-B",
+      "scripts/phase9/security_acceptance/contract.py",
+      "source"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:40:43.500715+00:00",
+    "freeBytesBefore": 203131510784,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:40:44.622860+00:00",
+    "freeBytesAfter": 203130720256,
+    "logBytes": 111,
+    "logSha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d"
+  },
+  "edge-entrypoint-offline": {
+    "label": "final-edge-entrypoint-offline",
+    "command": [
+      "deno.cmd",
+      "test",
+      "--cached-only",
+      "--no-run",
+      "--no-config",
+      "--lock=supabase/functions/deno.lock",
+      "--frozen=true",
+      "supabase/functions/catalog-operator/index.ts"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:39:08.082771+00:00",
+    "freeBytesBefore": 203282243584,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 1,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:39:08.878893+00:00",
+    "freeBytesAfter": 203277463552,
+    "logBytes": 305,
+    "logSha256": "52c45f61d861c512093e50c8df665cee0559c6667c03716ac5461a1e94a48e87"
+  },
+  "wsl-inventory": {
+    "label": "final-wsl-inventory",
+    "command": [
+      "wsl.exe",
+      "--list",
+      "--quiet"
+    ],
+    "before": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start": "2026-11-25T04:41:09.489721+00:00",
+    "freeBytesBefore": 203122515968,
+    "externalCredentialsRemoved": true,
+    "dotenvDisabled": true,
+    "overrides": {},
+    "exit": 4294967295,
+    "after": {
+      "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+      "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+      "branch": "stage/m1-native-runtime47",
+      "status": "",
+      "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "end": "2026-11-25T04:41:10.107757+00:00",
+    "freeBytesAfter": 203121717248,
+    "logBytes": 104,
+    "logSha256": "46b8edf8f3f124f9e0a8bc7db5af81d88641e44c2f8cf64b825575bda77b73bc"
+  }
+}

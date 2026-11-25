@@ -1,7 +1,0 @@
-# Engineering23 retained validation diagnosis
-
-root-tests-r1 returned exit 1: the unchanged formulaHistoryJourney.test.ts case "refuses captured save/cancel controls behind the review decision" failed in beforeEach at line 22 when "Record label observation" was not yet present. The test body had not begun. Its existing flush26 helper waits a fixed 25 ms; the screen renders that control only after private history is available. This run overlapped root typecheck and lint. Resource-sensitive async setup is the supported diagnosis, not a proven application defect or a waived assertion.
-
-The original failure log and receipt are retained. The unchanged file subsequently passed all 23 tests in formula-journey-diagnostic-r1. A second full uncached root run was scheduled after the other validation jobs completed, with the same command, source, assertions, timeout configuration and worker configuration. Its outcome is recorded separately in root-tests-r2. No shelf/formula implementation, test, fixture or timeout was edited. No failures are removed from the evidence.
-
-The new proof test file expanded from 15 to 17 pure in-memory cases by parameterizing proof-only upgrade over note, correction and retraction. Both proof-invariants-r1 and proof-invariants-r2 receipts are retained. All 17 cases were present in the full root test runs. Existing OptionalChangePanel41.test.tsx assertions were preserved; only its in-memory save/refresh adapter now supplies the ordinary equal-domain predecessor proof.

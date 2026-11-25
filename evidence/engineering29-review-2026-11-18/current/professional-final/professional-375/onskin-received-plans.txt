@@ -1,8 +1,0 @@
-SYNTHETIC selected historical suggestion
-Morning: Recorded cleanser
-Recorded owner response: Received · 2027-01-15T08:00:00.000Z
-Recorded owner response: Acknowledged · 2027-01-15T08:01:00.000Z
-Recorded owner response: Declined · 2027-01-15T08:02:00.000Z
-Receipt entries are historical facts, not current acceptance.
-Receiving does not apply it or prove use.
-Downloaded copies cannot be recalled.

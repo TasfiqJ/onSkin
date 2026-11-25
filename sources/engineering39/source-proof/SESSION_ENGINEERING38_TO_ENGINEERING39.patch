@@ -1,0 +1,1225 @@
+diff --git a/PROGRESS.md b/PROGRESS.md
+index 135e27f00105c36a662e762a54a6e0044f30c2dc..72cf11a3e790de37371e55c705a96d66405cd24b 100644
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -1,3 +1,13 @@
++# Engineering39 custody restart and professional routine review - 2026-11-24
++
++The local synthetic pre-visit API now reads original check-offs, acknowledged retractions and bottle observations retained at check-off. It verifies the applied version and original correction target against authenticated receipt membership. Separate routine, use and formula field choices govern the returned data. A newly selected retraction invalidates older reviews and is reflected in refreshed exports.
++
++A separate synthetic checkpoint store now durably prepares a head transition after final authorization. Restart confirms a committed successor from the authenticated custody head. An ambiguous prior head and restoration of older ciphertext both refuse without changing the independent checkpoint. Live checkpoint authorities, externally verified recovery and protection for records outside the custody head remain open.
++
++The synthetic receipt-backed professional repository now also requires an independently supplied freshness check before resolving receipts and at the existing response revalidation. A current grant alone cannot publish records from an unwitnessed archive head. There is no default freshness authority.
++
++The test-only SQLite custody fixture kills separate Node processes on both sides of durable commit. Exact replay recovers the committed original receipt, competing successors serialize, and tombstones survive restart. A separately admitted bounded recheck removes verified ciphertext that returns after completed erasure and retains the original erasure receipt. A synthetic professional pre-visit source reads committed mobile apply and clear records in the same encrypted transaction as the current grant and revalidates the exact selection before review and export. Through-browser, native, live custody and protected qualification remain open. Release remains NO_GO.
++
+ # Engineering38 continuation - 2026-11-24
+ 
+ Synthetic serial retirement compacts active journal pages and recovers the original command and receipt from the authenticated archive inventory. Private brief retry survives navigation between the editor and preview. An assigned practitioner can inspect an exact decision after billing becomes read-only, while writes still require verified billing. The operator queue retains PostgreSQL timestamp precision across requests. Browser, database runtime, live custody and protected approval remain pending. Release remains NO_GO.
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+index b460f71ab975f3e4112d04e1f4abd42b6b9a9340..d98e84541950bfb27ddbab37f0c2f8e22cd9e2dd 100644
+--- a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
++++ b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
+ import type { QueryClient } from '@tanstack/react-query';
+ import { randomUUID } from 'node:crypto';
+ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+-import { addProduct, updateProduct } from '@/features/shelf/store';
++import { addProduct, confirmOwnedBottleVersion38, loadOwnedBottleHistory38, updateProduct } from '@/features/shelf/store';
+ import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
+ import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+ import { beginAccountGenerationBoundary, endAccountGenerationBoundary, runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+@@ -16,13 +16,17 @@ import { localDateString } from '@/features/today/useToday';
+ import { collectLocalDeviceExportData } from '@/features/settings/localDeviceExport';
+ import { ROUTINE_DECISION_COMMIT_KEY, ROUTINE_DECISION_JOURNAL_KEYS, ROUTINE_DECISION_PAGE_KEYS, ROUTINE_DECISION_SLOT_KEYS } from '@/lib/storage/routineDecisionStorageLocations';
+ import { capturePlanSource44 } from './planSourceFence44';
+-import { acknowledgeRoutineDecision, captureResolvedRoutineEvidence, inspectSavedRoutineDecision, loadRoutineDecisions, prepareCurrentRoutineApply, prepareRoutineDecision, prepareRoutineDecisionRetirement, publishRoutineDecisionRetirement, retrySavedRoutineDecision } from './routineDecisionRecoveryStore';
++import { acknowledgeRoutineDecision, captureRecordedRoutineUseEvidence, captureResolvedRoutineEvidence, inspectSavedRoutineDecision, loadRoutineDecisions, prepareCurrentRoutineApply, prepareRoutineDecision, prepareRoutineDecisionRetirement, publishRoutineDecisionRetirement, retrySavedRoutineDecision } from './routineDecisionRecoveryStore';
+ import { ROUTINE_DECISION_KEY as KEY, ROUTINE_DECISION_LIMIT, decodeRoutineDecisions, decodeRoutineDecisionJournal, encodeRoutineDecisionPage,
+   newRoutineDecisionPage, makeSavedRoutineDecision, makeRoutineDecisionCommit, stageRoutineDecisionPage,
+   routineDecisionHash, type RoutineDecision, type RoutineDecisionPage } from './routineDecisionRecoveryCodec';
+ import { OwnerRoutineCustody, type OriginalRoutineRecord } from '../../../../professional-web/src/ownerRoutineCustody';
+-import { ProfessionalAccessError } from '../../../../professional-web/src/authority';
++import { ProfessionalAccessError, type Grant } from '../../../../professional-web/src/authority';
+ import { custodyFixture } from '../../../../professional-web/src/test/custodyFixture';
++import { EncryptedWorkspaceRepository, workspaceRecordKey } from '../../../../professional-web/src/encryptedWorkspaceRepository';
++import { createPrevisitApi } from '../../../../professional-web/src/previsitApi';
++import { emptyGrants, transitionGrant } from '../../../../professional-web/src/grants';
++import type { OwnerRoutinePrevisitReceipt } from '../../../../professional-web/src/ownerRoutinePrevisit';
+ vi.mock('expo-file-system/legacy', () => ({ documentDirectory: null, cacheDirectory: null }));
+ vi.mock('@/features/notifications/deliver', () => ({ scheduleTrialReminder: async () => {}, waitForHealthNotificationOperationsToSettle: async () => {} }));
+ vi.mock('@/features/notifications/nativeMutation', () => ({ clearNativeNotificationsForAccountIsolation: async () => {} }));
+@@ -180,6 +184,168 @@ it('connects a real mobile decision and exact durable outcome to serial encrypte
+   await grant26('synthetic-first-value-b');
+   await expect(captureResolvedRoutineEvidence(f.lease, original.id, guard)).rejects.toThrow();
+ });
++it('reviews exact mobile routine, retraction and bottle observation evidence through the granted previsit API', async () => {
++  const bottle = (await loadOwnedBottleHistory38(product))!;
++  await confirmOwnedBottleVersion38({ productId: product, expectedUpdatedAt: bottle.productUpdatedAt,
++    expectedProductIdentityHash: bottle.productIdentityHash, expectedRevision: bottle.revision,
++    expectedCurrentVersionId: bottle.currentVersionId, confirmation: 'confirm_label', labelText: 'Aqua, Glycerin',
++    market: 'Canada', variant: null, observedOn: localDateString() });
++  const f = await applied();
++  const scope = { ownerId: f.lease.ownerUserId, healthEpoch: f.lease.epoch };
++  const fixture = await custodyFixture();
++  let latest: OriginalRoutineRecord | undefined;
++  const archive = new OwnerRoutineCustody(fixture.custody, async (_tx, access) => {
++    if (JSON.stringify(access.scope) !== JSON.stringify(scope)) throw new ProfessionalAccessError('health');
++    if (access.action === 'append' && (!latest || access.originalHash !== routineDecisionHash(['owner-routine-original-v1', scope, latest]))) {
++      throw new ProfessionalAccessError('grant');
++    }
++  });
++  await archive.open(scope);
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  latest = { ...await captureResolvedRoutineEvidence(f.lease, f.saved.command.request.id, guard), previousReceipt: null };
++  const appliedReceipt = await archive.append(scope, latest);
++  const custodyCheckpoint = () => fixture.custody.transaction(tx => OwnerRoutineCustody.checkpoint(tx, scope));
++  let expectedCheckpoint = await custodyCheckpoint();
++  const pointers: OwnerRoutinePrevisitReceipt[] = [{ id: latest.id, receiptHash: appliedReceipt.hash }];
++  const usePointers: OwnerRoutinePrevisitReceipt[] = [...pointers];
++
++  const now = fixture.controls.now;
++  const grant: Grant = { ...scope, id: 'synthetic-grant', workspaceId: 'synthetic-practice', version: 1, epoch: 1,
++    expiresAt: now + 1000, consentReceiptId: 'synthetic-consent', fields: ['actual_routine', 'use_events', 'formulas'], purposes: ['pre_visit'],
++    permissions: ['read', 'export'], status: 'active' };
++  const issued = await transitionGrant(emptyGrants(scope.ownerId), { ...scope, actorId: scope.ownerId, current: true, adult: true,
++    deletionPending: false, consentReceiptId: grant.consentReceiptId }, { id: randomUUID(), expectedRevision: 0, kind: 'accept',
++    previousGrantId: null, grant, confirmed: true }, now);
++  await fixture.custody.transaction(tx => tx.write(workspaceRecordKey.grants(scope.ownerId), issued));
++  let granted = true;
++  const subjectId = 'synthetic-practitioner';
++  const repository = new EncryptedWorkspaceRepository(fixture.custody, {
++    authority: async () => ({ grant: granted ? grant : null, billing: 'unknown',
++      session: { subjectId, ownerId: null, workspaceId: grant.workspaceId, epoch: 1, startedAt: now, lastActivityAt: now,
++        stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
++      membership: { subjectId, workspaceId: grant.workspaceId, roles: ['assigned_practitioner'], revision: 1, active: true },
++      assignment: { subjectId, ownerId: scope.ownerId, workspaceId: grant.workspaceId, active: true },
++      licence: { subjectId, jurisdiction: 'CA', verifiedAt: now, expiresAt: now + 1000 },
++      health: { ownerId: scope.ownerId, epoch: scope.healthEpoch, consentReceiptId: grant.consentReceiptId, active: true, deletionPending: false } }),
++    lifecycle: async () => ({ ownerId: scope.ownerId, epoch: 1, deletionPending: false }),
++    activationAvailable: async () => false,
++    planSource: async () => { throw Error('UNREQUESTED_SYNTHETIC_SOURCE'); },
++    previsitRoutineFreshness: async (_tx, current, checkpoint) => {
++      expect(current).toEqual(scope);
++      if (!expectedCheckpoint || checkpoint !== expectedCheckpoint) throw new ProfessionalAccessError('changed');
++    },
++    previsitRoutineReceipts: async (_tx, current, fields) => {
++      expect(current).toEqual(grant);
++      return fields.includes('use_events') || fields.includes('formulas')
++        ? [...usePointers, ...(fields.includes('actual_routine') ? pointers.slice(1) : [])] : pointers;
++    },
++  });
++  const origin = 'http://fixture.test';
++  const api = createPrevisitApi({ origin, repository, authenticate: async () => ({ token: 'synthetic-token', ownerId: scope.ownerId,
++    workspaceId: grant.workspaceId, grantVersion: 1, grantEpoch: 1, context: 'synthetic-context' }) });
++  const send = (body: object) => api(new Request(`${origin}/api/professional/previsit`, { method: 'POST', body: JSON.stringify(body),
++    headers: { Origin: origin, 'X-OnSkin-Request': 'previsit-v1', 'Content-Type': 'application/json' } }));
++  const load = { kind: 'source', context: null, fields: ['actual_routine'] };
++  const earlier = await send(load);
++  expect(earlier.status).toBe(200);
++  const before = await earlier.json();
++  expect(before.source.records).toMatchObject([{ id: pointers[0]!.id, sourceHash: f.ledger.versions[0]!.contentHash, sequence: 1 }]);
++  expect(JSON.stringify(before)).not.toContain('consentHash');
++  const review = (source: typeof before.source, index: number) => {
++    const { id, field, contentHash } = source.records[index];
++    return { kind: 'review', context: 'synthetic-context', grantVersion: 1, grantEpoch: 1, products: [], plans: [],
++      recordFields: source.fields, records: [{ id, field, contentHash }], recordSourceHash: source.recordSourceHash };
++  };
++
++  const version = f.ledger.versions[0]!;
++  const missingEvent = randomUUID();
++  await expect(captureRecordedRoutineUseEvidence(f.lease, missingEvent, guard)).rejects.toThrow('ROUTINE_DECISION_CONFLICT');
++  await toggleCompletion(`AM:${product}`, localDateString(), undefined, undefined,
++    { originalLease: f.lease, source: f.proof, versionId: version.id, versionHash: version.contentHash });
++  const use = (await getActualRoutineSnapshot(f.lease)).uses[0]!;
++  const beforeCapture = new Map(ports26.bytes);
++  latest = { ...await captureRecordedRoutineUseEvidence(f.lease, use.id, guard), previousReceipt: appliedReceipt.hash };
++  expect(ports26.bytes).toEqual(beforeCapture);
++  const useReceipt = await archive.append(scope, latest);
++  usePointers.push({ id: use.id, receiptHash: useReceipt.hash });
++  const loadUses = { ...load, fields: ['use_events'] };
++  const loadFormulas = { ...load, fields: ['formulas'] };
++  expect((await send(loadUses)).status).toBe(409);
++  expectedCheckpoint = await custodyCheckpoint();
++  const originalUse = await (await send(loadUses)).json();
++  expect(originalUse.source.records).toMatchObject([{ field: 'use_events', id: use.id, sourceHash: use.contentHash,
++    recordedAt: use.recordedAt, observedOn: use.observedOn, kind: 'use', routineVersion: 1 }]);
++  expect(originalUse.source.records).toHaveLength(1);
++  expect(JSON.stringify(originalUse)).not.toContain('Aqua');
++  const formulaOnly = await (await send(loadFormulas)).json();
++  expect(formulaOnly.source.records).toMatchObject([{ field: 'formulas', sourceHash: use.formulaAtUse!.formula.contentHash,
++    recordedAt: use.formulaAtUse!.formula.recordedAt, labelText: 'Aqua, Glycerin', labelStatus: 'user_confirmed_label', atUse: true }]);
++  expect(formulaOnly.source.records).toHaveLength(1);
++  const formulaReview = await send({ ...review(formulaOnly.source, 0), kind: 'export' });
++  expect(formulaReview.status).toBe(200);
++  expect((await formulaReview.json()).text).toContain('Aqua, Glycerin');
++  expect((await send({ ...load, fields: ['products'] })).status).toBe(403);
++
++  const correction = await prepareRoutineDecision(f.lease, { kind: 'retraction', event: use, expectedHash: use.contentHash,
++    request: { id: randomUUID(), recordedAt: new Date().toISOString() } }, guard);
++  await retrySavedRoutineDecision(f.lease, correction, guard);
++  await acknowledgeRoutineDecision(f.lease, correction, guard);
++  latest = { ...await captureResolvedRoutineEvidence(f.lease, correction.command.request.id, guard), previousReceipt: useReceipt.hash };
++  const correctionReceipt = await archive.append(scope, latest);
++  usePointers.splice(1, 0, { id: latest.id, receiptHash: correctionReceipt.hash });
++  expect((await send(review(originalUse.source, 0))).status).toBe(409);
++  expectedCheckpoint = await custodyCheckpoint();
++  expect((await send(review(originalUse.source, 0))).status).toBe(409);
++  const corrected = await (await send(loadUses)).json();
++  expect(corrected.source.records).toMatchObject([{ id: use.id, kind: 'use' }, { id: latest.id, kind: 'retraction', targetId: use.id }]);
++  const correctedExport = await send({ ...review(corrected.source, 0), kind: 'export' });
++  expect(correctedExport.status).toBe(200);
++  const correctedText = (await correctedExport.json()).text;
++  expect(correctedText).toContain('Earlier recorded use (retracted)');
++  expect(correctedText).not.toContain('Aqua');
++  const targetProof = usePointers.pop()!;
++  expect((await send(loadUses)).status).toBe(409);
++  usePointers.push(targetProof);
++
++  const clear = await prepareRoutineDecision(f.lease, { kind: 'clear', request: { id: randomUUID(), createdAt: new Date().toISOString(),
++    expectedParentHash: f.ledger.versions[0]!.contentHash } }, guard);
++  await retrySavedRoutineDecision(f.lease, clear, guard);
++  await acknowledgeRoutineDecision(f.lease, clear, guard);
++  latest = { ...await captureResolvedRoutineEvidence(f.lease, clear.command.request.id, guard), previousReceipt: correctionReceipt.hash };
++  const clearReceipt = await archive.append(scope, latest);
++  pointers.push({ id: latest.id, receiptHash: clearReceipt.hash });
++  expectedCheckpoint = await custodyCheckpoint();
++  expect((await send(review(before.source, 0))).status).toBe(409);
++  const after = await (await send(load)).json();
++  expect(after.source.records[1]).toMatchObject({ id: latest.id, disposition: 'owner_cleared', sequence: 2, am: [], pm: [] });
++  const reviewed = await send(review(after.source, 1));
++  expect(reviewed.status).toBe(200);
++  expect((await reviewed.json()).text).toContain('The owner cleared their applied routine');
++  expect((await send({ ...review(after.source, 1), kind: 'export' })).status).toBe(200);
++  const combined = await (await send({ ...load, fields: ['actual_routine', 'use_events', 'formulas'] })).json();
++  expect(combined.source.records.map((row: { field: string }) => row.field)).toEqual(['actual_routine', 'actual_routine', 'use_events', 'formulas', 'use_events']);
++
++  pointers[1] = { id: latest.id, receiptHash: appliedReceipt.hash };
++  expect((await send(load)).status).toBe(409);
++  pointers[1] = { id: latest.id, receiptHash: clearReceipt.hash };
++  const lastCheckpoint = expectedCheckpoint;
++  expect((await send({ ...review(corrected.source, 0), kind: 'export' })).status).toBe(200);
++  fixture.controls.beforeCommit = () => { expectedCheckpoint = null; };
++  expect((await send({ ...review(corrected.source, 0), kind: 'export' })).status).toBe(409);
++  fixture.controls.beforeCommit = null;
++  expectedCheckpoint = lastCheckpoint;
++  fixture.controls.beforeCommit = () => { granted = false; };
++  expect((await send(load)).status).toBe(403);
++  fixture.controls.beforeCommit = null;
++  granted = true;
++  await archive.tombstone(scope);
++  expectedCheckpoint = await custodyCheckpoint();
++  expect((await send(load)).status).toBe(409);
++  expect((await send(loadUses)).status).toBe(409);
++  await grant26('synthetic-first-value-b');
++  await expect(captureRecordedRoutineUseEvidence(f.lease, use.id, guard)).rejects.toThrow();
++});
++
+ it('publishes a whole retirement suffix with a restart-recoverable receipt under the same archive transaction', async () => {
+   const f = await applied();
+   const scope = { ownerId: f.lease.ownerUserId, healthEpoch: f.lease.epoch };
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+index 9499acdbd56c4e6aeae428292c402e21acc7f441..8abbf82471fe5400def85d92782a304f1f3d8edc 100644
+--- a/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+@@ -126,6 +126,24 @@ export async function captureResolvedRoutineEvidence(lease: HealthDataWriteLease
+   return resolvedEvidence(journal, lease, id);
+ }
+ 
++/** Read the exact original check-off under the current purpose and owner. A
++ * retraction uses the separate acknowledged command capture. */
++export async function captureRecordedRoutineUseEvidence(lease: HealthDataWriteLease, id: string, assertCallerCurrent: () => void) {
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  guard();
++  let event: ActualRoutineLedger['uses'][number] | undefined;
++  await updatePrivateItemWithSources(COMPLETION_KEY, AUTH_KEYS, values => {
++    guard();
++    const raw = values.get(COMPLETION_KEY) ?? null;
++    event = actualRoutineSnapshotFromBytes(raw, lease.ownerUserId).uses.find(candidate => candidate.id === id);
++    return raw;
++  }, guard, undefined, undefined, authorization(lease));
++  guard();
++  if (!event || event.kind !== 'use') throw Error(ROUTINE_DECISION_CONFLICT);
++  return Object.freeze({ id, kind: 'use_event' as const, sourceHash: event.contentHash,
++    bytes: JSON.stringify({ schemaVersion: 1, ownerUserId: lease.ownerUserId, processingEpoch: lease.epoch, target: event }) });
++}
++
+ function resolvedEvidence(journal: Awaited<ReturnType<typeof readJournal>>, lease: HealthDataWriteLease, id: string) {
+   const link = journal.resolved.find(record => record.commandId === id);
+   const saved = journal.entries.get(id)?.saved;
+diff --git a/apps/professional-web/src/encryptedWorkspaceRepository.ts b/apps/professional-web/src/encryptedWorkspaceRepository.ts
+index 0c71d86fb825ea608ab8363a55655b244febd56f..158daa064df28ca330c38a7b38f8cdbfbdac9899 100644
+--- a/apps/professional-web/src/encryptedWorkspaceRepository.ts
++++ b/apps/professional-web/src/encryptedWorkspaceRepository.ts
+@@ -1,4 +1,4 @@
+-import { ProfessionalAccessError, type AccessRequest, type Authority } from './authority';
++import { ProfessionalAccessError, type AccessRequest, type Authority, type Grant } from './authority';
+ import { canonical, decodeGrants } from './grants';
+ import { decodeIntendedPlans, decodePlanReceipts, validateIntendedPlan, type IntendedPlan, type PlanReceipt, type ClientPlanSource } from './intendedPlans';
+ import { decodeWorkspaceBilling } from './workspaceBilling';
+@@ -8,6 +8,8 @@ import type { OwnerLifecycle, WorkspaceRepository, WorkspaceTransaction } from '
+ import { decodeReconciliation } from './reconciliation';
+ import type { ReconciliationSource } from './reconciliationService';
+ import type { PrevisitRecordField, PrevisitRecordSource } from './previsitRecords';
++import { readOwnerRoutinePrevisit, type OwnerRoutinePrevisitReceipt } from './ownerRoutinePrevisit';
++import { OwnerRoutineCustody, type OwnerRoutineFreshness } from './ownerRoutineCustody';
+ import { snapshotWorkspaceTransaction } from './workspaceReadSnapshot';
+ import { decodePracticeTemplates } from './practiceTemplates';
+ 
+@@ -22,6 +24,8 @@ export interface WorkspaceTrust {
+   activationAvailable(tx: EncryptedTransaction, workspaceId: string): Promise<boolean>;
+   reconciliationSource?(tx: EncryptedTransaction, ownerId: string, workspaceId: string): Promise<ReconciliationSource>;
+   previsitRecords?(tx: EncryptedTransaction, ownerId: string, workspaceId: string, fields: readonly PrevisitRecordField[]): Promise<PrevisitRecordSource>;
++  previsitRoutineReceipts?(tx: EncryptedTransaction, grant: Grant, fields: readonly PrevisitRecordField[]): Promise<readonly OwnerRoutinePrevisitReceipt[]>;
++  previsitRoutineFreshness?: OwnerRoutineFreshness;
+ }
+ const changed = (): never => { throw new ProfessionalAccessError('changed'); };
+ function id(value: string): string { if (!/^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u.test(value)) return changed(); return value; }
+@@ -109,6 +113,22 @@ export class EncryptedWorkspaceRepository implements WorkspaceRepository {
+           if (!trust.reconciliationSource) throw new ProfessionalAccessError('unavailable');
+           return trust.reconciliationSource(store, owner, workspace); },
+         previsitRecords: async (owner, workspace, fields) => { await assertOwner(owner); await discoverWorkspace(workspace);
++          if (trust.previsitRoutineReceipts) {
++            const requireFresh = trust.previsitRoutineFreshness;
++            if (!requireFresh) throw new ProfessionalAccessError('unavailable');
++            const grant = (await tx.grants(owner)).active;
++            if (!grant || grant.workspaceId !== workspace || grant.expiresAt <= store.now() ||
++              !grant.purposes.includes('pre_visit') || fields.some(field => !grant.fields.includes(field))) throw new ProfessionalAccessError('grant');
++            const captured = structuredClone(grant);
++            const scope = Object.freeze({ ownerId: captured.ownerId, healthEpoch: captured.healthEpoch });
++            const checkpoint = await OwnerRoutineCustody.checkpoint(store, scope);
++            if (checkpoint === null) return changed();
++            await requireFresh(store, scope, checkpoint);
++            const receipts = await trust.previsitRoutineReceipts(store, grant, fields);
++            const source = await readOwnerRoutinePrevisit(store, captured, fields, receipts);
++            await requireFresh(store, scope, checkpoint);
++            return source;
++          }
+           if (!trust.previsitRecords) throw new ProfessionalAccessError('unavailable');
+           return trust.previsitRecords(store, owner, workspace, fields); },
+         saveReconciliation: async value => {
+diff --git a/apps/professional-web/src/ownerRoutineCustody.test.ts b/apps/professional-web/src/ownerRoutineCustody.test.ts
+index b53a41d4c6a094f7fca977a535482c62741d0513..45ef5b5cfa041deb5fa118a1dc7679d80cbbe12e 100644
+--- a/apps/professional-web/src/ownerRoutineCustody.test.ts
++++ b/apps/professional-web/src/ownerRoutineCustody.test.ts
+@@ -171,6 +171,43 @@ describe('owner-scoped serial history custody', () => {
+     await expect(history.open(scope)).rejects.toThrow('CHANGED');
+   });
+ 
++  it('rechecks bounded pages after completed erasure and refuses corrupt returned bytes without advancing', async () => {
++    const fixture = await custodyFixture();
++    const headKey = `owner-routine-record:v1:${scope.ownerId}:head`;
++    let checkpoint: string | null = null;
++    const history = new OwnerRoutineCustody(fixture.custody, async () => {}, async (_tx, _scope, observed) => {
++      if (checkpoint !== null && observed !== checkpoint) throw new ProfessionalAccessError('changed');
++    });
++    await history.open(scope);
++    const receipt = await history.append(scope, first);
++    const second = { ...first, id: 'recheck-second', previousReceipt: receipt.hash };
++    await history.append(scope, second);
++    const page = await history.inventory(scope, null, 2);
++    const keys = page.records.map(({ id }) => `owner-routine-record:v1:${scope.ownerId}:${scope.healthEpoch}:${id}`);
++    const originals = keys.map(key => fixture.records().get(key)!);
++    await history.tombstone(scope);
++    const head = await fixture.custody.transaction(tx => tx.read(headKey));
++    checkpoint = await recordHash(['owner-routine-checkpoint-v1', scope.ownerId, head]);
++    await expect(history.recheckTombstonedErasure(scope, 1, 0, 1)).rejects.toThrow('CHANGED');
++    const completed = await history.eraseTombstoned(scope, 0, 2);
++
++    fixture.records().set(keys[0]!, originals[0]!);
++    fixture.records().set(keys[1]!, originals[0]!); // Authenticated ciphertext for a different record key.
++    const before = new Map(fixture.records());
++    await expect(history.recheckTombstonedErasure(scope, 1, 0, 2)).rejects.toThrow('UNAVAILABLE');
++    expect(fixture.records()).toEqual(before);
++
++    const firstPage = await history.recheckTombstonedErasure(scope, 1, 0, 1);
++    expect(firstPage.progress).toMatchObject({ revision: 1, removed: 1, complete: false });
++    await expect(history.recheckTombstonedErasure(scope, 2, 0, 1)).rejects.toThrow('CHANGED');
++    await expect(history.recheckTombstonedErasure(scope, 1, 1, 1)).rejects.toThrow('UNAVAILABLE');
++    fixture.records().set(keys[1]!, originals[1]!);
++    expect(await history.recheckTombstonedErasure(scope, 1, 1, 1)).toMatchObject({ pass: 1,
++      progress: { revision: 2, removed: 2, missing: 0, complete: true } });
++    expect(await history.eraseTombstoned(scope, 0, 2)).toEqual(completed);
++    expect(keys.some(key => fixture.records().has(key))).toBe(false);
++  });
++
+   it('enumerates a multi-page committed inventory once and leaves all originals independently inspectable', async () => {
+     const fixture = await custodyFixture();
+     const history = new OwnerRoutineCustody(fixture.custody, async () => {});
+diff --git a/apps/professional-web/src/ownerRoutineCustody.ts b/apps/professional-web/src/ownerRoutineCustody.ts
+index 1588059c8096603f5e697b522a1623cefc7f0d5a..63335f282b1b39062dfd4278bd0789d9ddb4d391 100644
+--- a/apps/professional-web/src/ownerRoutineCustody.ts
++++ b/apps/professional-web/src/ownerRoutineCustody.ts
+@@ -20,7 +20,7 @@ export type OwnerRoutineReceipt = Readonly<{
+ type Access = Readonly<{
+   scope: OwnerRoutineScope;
+   purpose: 'owner_routine_history';
+-  action: 'open' | 'append' | 'inspect' | 'recover' | 'tombstone' | 'restore' | 'inventory' | 'erase' | 'retire';
++  action: 'open' | 'append' | 'inspect' | 'recover' | 'tombstone' | 'restore' | 'inventory' | 'erase' | 'recheck_erasure' | 'retire';
+   originalHash: string | null;
+   receiptHash: string | null;
+ }>;
+@@ -41,9 +41,16 @@ type Head = Readonly<{
+ /** A host can refuse a stale, absent or unverified local checkpoint against
+  * an independent source. The custodian does not issue that source's proofs. */
+ export type OwnerRoutineFreshness = (tx: EncryptedTransaction, scope: OwnerRoutineScope, checkpoint: string | null) => Promise<void>;
++/** A host may durably prepare a compare-and-set against an independent
++ * checkpoint after final authorization and before custody commits. The host
++ * owns post-commit confirmation and reverses no uncertain transition. */
++export type OwnerRoutineCheckpointAdvance = (scope: OwnerRoutineScope, transition: Readonly<{
++  previous: string | null; next: string;
++}>) => Promise<void>;
+ export type OwnerRoutineInventoryCursor = Readonly<{ root: string; after: string }>;
+ type Erasure = Readonly<{ revision: number; limit: number; root: string | null; after: string | null;
+   removed: number; missing: number; complete: boolean }>;
++type ErasureRecheck = Readonly<{ pass: number; progress: Erasure }>;
+ type Entry = Readonly<{ original: OriginalRoutineRecord; receipt: OwnerRoutineReceipt }>;
+ const changed = (): never => { throw new ProfessionalAccessError('changed'); };
+ const unavailable = (): never => { throw new ProfessionalAccessError('unavailable'); };
+@@ -76,6 +83,25 @@ function indexRoot(head: Head): string | null {
+   return head.indexRoot ?? null;
+ }
+ 
++function validErasureRequest(revision: number, limit: number): boolean {
++  return counter(revision) && revision < Number.MAX_SAFE_INTEGER && Number.isInteger(limit) && limit >= 1 && limit <= 64;
++}
++
++function readErasure(value: unknown, head: Head): Erasure {
++  const progress = value as Erasure | null;
++  if (!progress || progress.root !== indexRoot(head) || !counter(progress.revision) || progress.revision === 0 ||
++    !counter(progress.removed) || !counter(progress.missing) || progress.removed + progress.missing > head.sequence ||
++    (progress.after !== null && !digest(progress.after)) || !Number.isInteger(progress.limit) || progress.limit < 1 ||
++    progress.limit > 64 || progress.complete !== (progress.after === null) ||
++    (progress.removed + progress.missing === head.sequence) !== progress.complete ||
++    Object.keys(progress).sort().join(',') !== 'after,complete,limit,missing,removed,revision,root') return changed();
++  return progress;
++}
++
++function startErasure(head: Head, limit: number): Erasure {
++  return { revision: 0, limit, root: indexRoot(head), after: null, removed: 0, missing: 0, complete: false };
++}
++
+ function requireOriginal(value: OriginalRoutineRecord): void {
+   if (!value || !identifier(value.id) || !['resolved_command', 'routine_version', 'use_event'].includes(value.kind) ||
+     !digest(value.sourceHash) || value.previousReceipt !== null && !digest(value.previousReceipt) ||
+@@ -102,26 +128,34 @@ async function requireEntry(value: unknown, scope: OwnerRoutineScope, id: string
+ 
+ export class OwnerRoutineCustody {
+   constructor(private readonly custody: EncryptedCustody | null, private readonly authorize: OwnerRoutineAdmission | null,
+-    private readonly freshness?: OwnerRoutineFreshness) {}
++    private readonly freshness?: OwnerRoutineFreshness, private readonly prepareCheckpoint?: OwnerRoutineCheckpointAdvance) {}
++
++  static async checkpoint(tx: EncryptedTransaction, scope: OwnerRoutineScope): Promise<string | null> {
++    const head = await tx.read(headKey(scope));
++    return head === null ? null : recordHash(['owner-routine-checkpoint-v1', scope.ownerId, requireHead(head)]);
++  }
+ 
+   private async authorized<T>(request: Omit<Access, 'purpose'>, work: (tx: EncryptedTransaction) => Promise<T>): Promise<T> {
+     const { custody, authorize } = this;
+-    if (!custody || !authorize) return unavailable();
++    if (!custody || !authorize || (this.prepareCheckpoint && !this.freshness)) return unavailable();
+     const { ownerId, healthEpoch } = request.scope;
+     if (!identifier(ownerId) || !counter(healthEpoch) || healthEpoch === 0) return changed();
+     const access: Access = Object.freeze({ ...request, purpose: 'owner_routine_history' });
+     return custody.transaction(async tx => {
+       await authorize(tx, access);
+-      let checkpoint: string | null = null;
+-      if (this.freshness) {
+-        const head = await tx.read(headKey(access.scope));
+-        checkpoint = head === null ? null : await recordHash(['owner-routine-checkpoint-v1', access.scope.ownerId, requireHead(head)]);
+-        await this.freshness(tx, access.scope, checkpoint);
+-      }
++      const checkpoint = this.freshness ? await OwnerRoutineCustody.checkpoint(tx, access.scope) : null;
++      await this.freshness?.(tx, access.scope, checkpoint);
+       const result = await work(tx);
+       tx.beforeCommit(async () => {
+         await this.freshness?.(tx, access.scope, checkpoint);
+         await authorize(tx, access);
++        if (this.prepareCheckpoint) {
++          const next = await OwnerRoutineCustody.checkpoint(tx, access.scope);
++          if (next !== checkpoint) {
++            if (next === null) return changed();
++            await this.prepareCheckpoint(access.scope, { previous: checkpoint, next });
++          }
++        }
+       });
+       return result;
+     });
+@@ -173,20 +207,20 @@ export class OwnerRoutineCustody {
+     requireOriginal(original);
+     const originalHash = await recordHash(['owner-routine-original-v1', scope, original]);
+     return this.authorized({ scope, action: retained ? 'restore' : 'append', originalHash, receiptHash: retained?.hash ?? null }, async tx => {
+-      const head = await this.activeHead(tx, scope);
++      const head = await OwnerRoutineCustody.activeHead(tx, scope);
+       const key = recordKey(scope, original.id);
+       const root = indexRoot(head);
+       const index = indexFor(tx, scope);
+       const committed = await index.find(root, original.id);
+       const raw = await tx.read(key);
+       if (raw !== null) {
+-        const existing = await this.requireCommitted(raw, scope, original.id, head, committed, tx.now());
++        const existing = await OwnerRoutineCustody.requireCommitted(raw, scope, original.id, head, committed, tx.now());
+         if (existing.receipt.originalHash !== originalHash || retained && canonical(existing.receipt) !== canonical(retained)) return changed();
+         return existing.receipt;
+       }
+       if (retained) {
+         if (committed !== retained.hash) return changed();
+-        await this.requireCommitted({ original, receipt: retained }, scope, original.id, head, committed, tx.now());
++        await OwnerRoutineCustody.requireCommitted({ original, receipt: retained }, scope, original.id, head, committed, tx.now());
+         await tx.write(key, { original, receipt: retained });
+         return retained;
+       }
+@@ -204,7 +238,7 @@ export class OwnerRoutineCustody {
+     if (!identifier(id) || !digest(originalHash)) return changed();
+     const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
+     return this.authorized({ scope, action: 'inspect', originalHash, receiptHash: null }, async tx => {
+-      const entry = await this.readCommitted(tx, scope, id);
++      const entry = await OwnerRoutineCustody.readCommitted(tx, scope, id);
+       if (entry && entry.receipt.originalHash !== originalHash) return changed();
+       return entry;
+     });
+@@ -217,7 +251,7 @@ export class OwnerRoutineCustody {
+     if (!identifier(id) || !digest(receiptHash)) return changed();
+     const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
+     return this.authorized({ scope, action: 'recover', originalHash: null, receiptHash },
+-      tx => this.readCommitted(tx, scope, id, receiptHash));
++      tx => OwnerRoutineCustody.readCommitted(tx, scope, id, receiptHash));
+   }
+ 
+   /** Internal serial boundary for an admitted retirement host. The host must
+@@ -229,7 +263,7 @@ export class OwnerRoutineCustody {
+     if (!identifier(id) || !digest(originalHash) || !digest(receiptHash)) return changed();
+     const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
+     return this.authorized({ scope, action: 'retire', originalHash, receiptHash }, async tx => {
+-      const entry = await this.readCommitted(tx, scope, id, receiptHash);
++      const entry = await OwnerRoutineCustody.readCommitted(tx, scope, id, receiptHash);
+       if (!entry || entry.original.kind !== 'resolved_command' || entry.receipt.originalHash !== originalHash) return changed();
+       return stage(tx, entry);
+     });
+@@ -240,14 +274,14 @@ export class OwnerRoutineCustody {
+     const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
+     const prior = cursor && { ...cursor };
+     return this.authorized({ scope, action: 'inventory', originalHash: null, receiptHash: null }, async tx => {
+-      const head = await this.activeHead(tx, scope);
++      const head = await OwnerRoutineCustody.activeHead(tx, scope);
+       const root = indexRoot(head);
+       if (prior && prior.root !== root) return changed();
+       const page = await indexFor(tx, scope).page(root, prior?.after ?? null, limit);
+       const records = [];
+       for (const leaf of page.leaves) {
+         const raw = await tx.read(recordKey(scope, leaf.id));
+-        if (raw !== null) await this.requireCommitted(raw, scope, leaf.id, head, leaf.receiptHash, tx.now());
++        if (raw !== null) await OwnerRoutineCustody.requireCommitted(raw, scope, leaf.id, head, leaf.receiptHash, tx.now());
+         records.push({ ...leaf, present: raw !== null });
+       }
+       return { committedCount: head.sequence, records, next: root && page.next ? { root, after: page.next } : null };
+@@ -258,59 +292,95 @@ export class OwnerRoutineCustody {
+    * deletion. The tombstone, digest inventory and receipt remain. This gives
+    * no assurance about backups, media, keys or provider-level destruction. */
+   async eraseTombstoned(input: OwnerRoutineScope, expectedRevision: number, limit: number): Promise<Erasure> {
+-    if (!counter(expectedRevision) || expectedRevision === Number.MAX_SAFE_INTEGER || !Number.isInteger(limit) || limit < 1 || limit > 64) return changed();
++    if (!validErasureRequest(expectedRevision, limit)) return changed();
+     const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
+     return this.authorized({ scope, action: 'erase', originalHash: null, receiptHash: null }, async tx => {
+       if (!tx.erase) return unavailable();
+-      const current = requireHead(await tx.read(headKey(scope)));
+-      const head = current.healthEpoch === scope.healthEpoch ? current : requireHead(await tx.read(tombstoneKey(scope)));
+-      if (head.healthEpoch !== scope.healthEpoch || head.state !== 'tombstoned' || current.healthEpoch < scope.healthEpoch) return changed();
+-      const root = indexRoot(head);
++      const head = await this.tombstonedHead(tx, scope);
+       const key = progressKey(scope);
+-      const existing = await tx.read(key) as Erasure | null;
+-      const prior: Erasure = existing ?? { revision: 0, limit, root, after: null, removed: 0, missing: 0, complete: false };
+-      if (prior.root !== root || !counter(prior.revision) || !counter(prior.removed) || !counter(prior.missing) ||
+-          prior.removed + prior.missing > head.sequence || (prior.after !== null && !digest(prior.after)) ||
+-          !Number.isInteger(prior.limit) || prior.limit < 1 || prior.limit > 64 ||
+-          typeof prior.complete !== 'boolean' || (existing && (prior.revision === 0 || prior.complete !== (prior.after === null) ||
+-          (prior.removed + prior.missing === head.sequence) !== prior.complete))) return changed();
+-      if (existing && prior.revision === expectedRevision + 1) return prior.limit === limit ? prior : changed();
++      const existing = await tx.read(key);
++      const prior = existing === null ? startErasure(head, limit) : readErasure(existing, head);
++      if (prior.revision === expectedRevision + 1) return prior.limit === limit ? prior : changed();
+       if (prior.revision !== expectedRevision) return changed();
+       if (prior.complete) return prior;
+-      let { removed, missing } = prior;
+-      const page = await indexFor(tx, scope).page(root, prior.after, limit);
+-      for (const leaf of page.leaves) {
+-        const key = recordKey(scope, leaf.id);
+-        const raw = await tx.read(key);
+-        if (raw === null) { missing++; continue; }
+-        await this.requireCommitted(raw, scope, leaf.id, head, leaf.receiptHash, tx.now());
+-        await tx.erase(key);
+-        removed++;
+-      }
+-      const complete = page.next === null;
+-      if (removed + missing > head.sequence || (removed + missing === head.sequence) !== complete) return changed();
+-      const result = { revision: prior.revision + 1, limit, root, after: page.next, removed, missing, complete };
++      const result = await this.erasePage(tx, scope, head, prior, limit);
+       await tx.write(key, result);
+       return result;
+     });
+   }
+ 
+-  private async activeHead(tx: EncryptedTransaction, scope: OwnerRoutineScope): Promise<Head> {
++  /** Recheck a completed tombstone against the authentic inventory in bounded
++   * pages. A new pass never rewrites the original erasure receipt. A page retry
++   * recovers the recorded result; start another pass to check for later returns. */
++  async recheckTombstonedErasure(input: OwnerRoutineScope, pass: number, expectedRevision: number, limit: number): Promise<ErasureRecheck> {
++    if (!counter(pass) || pass === 0 || !validErasureRequest(expectedRevision, limit)) return changed();
++    if (!this.freshness) return unavailable();
++    const scope = Object.freeze({ ownerId: input.ownerId, healthEpoch: input.healthEpoch });
++    return this.authorized({ scope, action: 'recheck_erasure', originalHash: null, receiptHash: null }, async tx => {
++      if (!tx.erase) return unavailable();
++      const head = await this.tombstonedHead(tx, scope);
++      const key = progressKey(scope);
++      if (!readErasure(await tx.read(key), head).complete) return changed();
++      const recheckKey = `${key}:recheck`;
++      const previous = await tx.read(recheckKey) as ErasureRecheck | null;
++      if (previous !== null && (!counter(previous.pass) || previous.pass === 0 ||
++        Object.keys(previous).sort().join(',') !== 'pass,progress')) return changed();
++      const saved = previous === null ? null : readErasure(previous.progress, head);
++      if (previous?.pass === pass && saved?.revision === expectedRevision + 1) return saved.limit === limit ? previous : changed();
++      const nextPass = pass === (previous?.pass ?? 0) + 1 && expectedRevision === 0 && (!saved || saved.complete);
++      const prior = nextPass ? startErasure(head, limit) : previous?.pass === pass ? saved : null;
++      if (!prior || prior.revision !== expectedRevision || prior.complete) return changed();
++      const progress = await this.erasePage(tx, scope, head, prior, limit);
++      const result = { pass, progress };
++      await tx.write(recheckKey, result);
++      return result;
++    });
++  }
++
++  private async erasePage(tx: EncryptedTransaction, scope: OwnerRoutineScope, head: Head, prior: Erasure, limit: number): Promise<Erasure> {
++    const erase = tx.erase;
++    if (!erase) return unavailable();
++    let { removed, missing } = prior;
++    const page = await indexFor(tx, scope).page(prior.root, prior.after, limit);
++    for (const leaf of page.leaves) {
++      const key = recordKey(scope, leaf.id);
++      const raw = await tx.read(key);
++      if (raw === null) { missing++; continue; }
++      await OwnerRoutineCustody.requireCommitted(raw, scope, leaf.id, head, leaf.receiptHash, tx.now());
++      await erase(key);
++      removed++;
++    }
++    return readErasure({ revision: prior.revision + 1, limit, root: prior.root, after: page.next,
++      removed, missing, complete: page.next === null }, head);
++  }
++
++  private async tombstonedHead(tx: EncryptedTransaction, scope: OwnerRoutineScope): Promise<Head> {
++    const current = requireHead(await tx.read(headKey(scope)));
++    const head = current.healthEpoch === scope.healthEpoch ? current : requireHead(await tx.read(tombstoneKey(scope)));
++    if (head.healthEpoch !== scope.healthEpoch || head.state !== 'tombstoned' || current.healthEpoch < scope.healthEpoch) return changed();
++    return head;
++  }
++
++  private static async activeHead(tx: EncryptedTransaction, scope: OwnerRoutineScope): Promise<Head> {
+     const head = requireHead(await tx.read(headKey(scope)));
+     if (head.state !== 'active' || head.healthEpoch !== scope.healthEpoch) return changed();
+     return head;
+   }
+ 
+-  private async readCommitted(tx: EncryptedTransaction, scope: OwnerRoutineScope, id: string, receiptHash?: string): Promise<Entry | null> {
+-    const head = await this.activeHead(tx, scope);
++  /** Internal archive read. The caller supplies a serial transaction with
++   * current authority; this verifies storage identity, not grant admission. */
++  static async readCommitted(tx: EncryptedTransaction, scope: OwnerRoutineScope, id: string, receiptHash?: string): Promise<Entry | null> {
++    if (!identifier(scope.ownerId) || !counter(scope.healthEpoch) || scope.healthEpoch === 0 || !identifier(id) ||
++      receiptHash !== undefined && !digest(receiptHash)) return changed();
++    const head = await OwnerRoutineCustody.activeHead(tx, scope);
+     const committed = await indexFor(tx, scope).find(indexRoot(head), id);
+     if (receiptHash !== undefined && committed !== null && committed !== receiptHash) return changed();
+     const raw = await tx.read(recordKey(scope, id));
+     if (raw === null) return committed === null ? null : unavailable();
+-    return this.requireCommitted(raw, scope, id, head, committed, tx.now());
++    return OwnerRoutineCustody.requireCommitted(raw, scope, id, head, committed, tx.now());
+   }
+ 
+-  private async requireCommitted(raw: unknown, scope: OwnerRoutineScope, id: string, head: Head,
++  private static async requireCommitted(raw: unknown, scope: OwnerRoutineScope, id: string, head: Head,
+     committed: string | null, now: number): Promise<Entry> {
+     const entry = await requireEntry(raw, scope, id, now);
+     if (entry.receipt.hash !== committed || entry.receipt.sequence > head.sequence ||
+diff --git a/apps/professional-web/src/ownerRoutinePrevisit.ts b/apps/professional-web/src/ownerRoutinePrevisit.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..cbc429bfb826753acca17e11640a9cc710c6d0d6
+--- /dev/null
++++ b/apps/professional-web/src/ownerRoutinePrevisit.ts
+@@ -0,0 +1,161 @@
++import { ProfessionalAccessError, validGrant, type Grant } from './authority';
++import type { EncryptedTransaction } from './encryptedCustody';
++import { canonical, recordHash } from './grants';
++import { OwnerRoutineCustody, type OriginalRoutineRecord } from './ownerRoutineCustody';
++import { PREVISIT_RECORD_FIELDS, validPrevisitRecord, type PrevisitRecord, type PrevisitRecordField, type PrevisitRecordSource } from './previsitRecords';
++
++export type OwnerRoutinePrevisitReceipt = Readonly<{ id: string; receiptHash: string }>;
++
++const changed = (): never => { throw new ProfessionalAccessError('changed'); };
++const digest = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{64}$/u.test(value);
++const uuid = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u.test(value);
++const positive = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) > 0;
++type Routine = Extract<PrevisitRecord, { field: 'actual_routine' }>;
++type Use = Extract<PrevisitRecord, { field: 'use_events' }>;
++
++function record(value: unknown, keys: string): Record<string, unknown> {
++  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).sort().join(',') !== keys) return changed();
++  return value as Record<string, unknown>;
++}
++
++function payload(original: OriginalRoutineRecord, grant: Grant) {
++  let parsed: unknown;
++  try { parsed = JSON.parse(original.bytes); } catch { return changed(); }
++  const archive = record(parsed, original.kind === 'use_event' ? 'ownerUserId,processingEpoch,schemaVersion,target' : 'ownerUserId,processingEpoch,saved,schemaVersion,target');
++  if (archive.schemaVersion !== 1 || archive.ownerUserId !== grant.ownerId || archive.processingEpoch !== grant.healthEpoch) return changed();
++  return archive;
++}
++
++async function acknowledgedCommand(raw: unknown, original: OriginalRoutineRecord, target: Record<string, unknown>) {
++  const saved = record(raw, 'acknowledged,command,consentHash,contentHash,outcome');
++  const outcome = record(saved.outcome, 'commandHash,recordHash,sequence');
++  if (saved.acknowledged !== true || !digest(saved.consentHash) || saved.contentHash !== original.sourceHash ||
++      await recordHash({ command: saved.command, consentHash: saved.consentHash, acknowledged: false }) !== original.sourceHash ||
++      outcome.commandHash !== original.sourceHash || outcome.recordHash !== target.contentHash || outcome.sequence !== target.sequence) return changed();
++}
++
++async function projection(body: object): Promise<PrevisitRecord> {
++  const candidate = { ...body, contentHash: await recordHash(body) };
++  if (!validPrevisitRecord(candidate)) return changed();
++  return candidate;
++}
++
++async function projectRoutine(original: OriginalRoutineRecord, grant: Grant, archive: Record<string, unknown>): Promise<Routine> {
++  const saved = record(archive.saved, 'acknowledged,command,consentHash,contentHash,outcome');
++  const kind = (saved.command as { kind?: unknown } | null)?.kind;
++  if (kind !== 'apply' && kind !== 'clear') return changed();
++  const command = record(saved.command, kind === 'apply' ? 'facts,kind,request' : 'kind,request');
++  const request = record(command.request, 'createdAt,expectedParentHash,id');
++  const target = record(archive.target, 'actorOwnerId,am,contentHash,createdAt,id,parentHash,parentId,pm,schemaVersion,sequence,source,sourceHash');
++  const { contentHash: targetHash, ...targetBody } = target;
++  const cleared = kind === 'clear';
++  await acknowledgedCommand(saved, original, target);
++  if (await recordHash(['actual-routine-v1', targetBody]) !== targetHash || target.actorOwnerId !== grant.ownerId ||
++    target.id !== original.id || request.id !== original.id || request.createdAt !== target.createdAt || request.expectedParentHash !== target.parentHash ||
++    (target.sequence === 1 ? target.parentId !== null || target.parentHash !== null : !uuid(target.parentId) || !digest(target.parentHash)) ||
++    target.schemaVersion !== (cleared ? 2 : 1) || target.source !== (cleared ? 'owner-cleared-local' : 'owner-applied-local') || !digest(target.sourceHash)) return changed();
++  if (cleared) {
++    if (target.sourceHash !== target.parentHash) return changed();
++  } else {
++    const facts = record(command.facts, 'activeProductIds,am,pm,source,sourceHash');
++    if (facts.source !== 'local' || facts.sourceHash !== target.sourceHash || canonical([facts.am, facts.pm]) !== canonical([target.am, target.pm])) return changed();
++  }
++  return await projection({ field: 'actual_routine', id: original.id, sourceHash: targetHash, recordedAt: target.createdAt,
++    sequence: target.sequence, am: target.am, pm: target.pm, ...(cleared ? { disposition: 'owner_cleared' } : {}) }) as Routine;
++}
++
++async function projectUse(original: OriginalRoutineRecord, grant: Grant, archive: Record<string, unknown>,
++  routines: ReadonlyMap<string, Routine>, originals: ReadonlyMap<string, Record<string, unknown>>, fields: readonly PrevisitRecordField[]) {
++  const isRetraction = original.kind === 'resolved_command';
++  const schema = (archive.target as { schemaVersion?: unknown } | null)?.schemaVersion;
++  const target = record(archive.target, `actorOwnerId,contentHash,${schema === 2 ? 'formulaAtUse,' : ''}id,kind,observedOn,planHash,planId,previousHash,recordedAt,schemaVersion,sequence,source,stepKey,targetId`);
++  const { contentHash, ...event } = target;
++  if (!positive(event.sequence) || (schema !== 1 && schema !== 2) || (isRetraction && schema !== 1) ||
++      event.source !== 'owner-recorded-local' || event.actorOwnerId !== grant.ownerId || event.id !== original.id ||
++      (event.sequence === 1 ? event.previousHash !== null : !digest(event.previousHash)) ||
++      event.kind !== (isRetraction ? 'retraction' : 'use') || await recordHash(['actual-routine-v1', event]) !== contentHash) return changed();
++
++  const routine = typeof event.planId === 'string' ? routines.get(event.planId) : undefined;
++  const phase = typeof event.stepKey === 'string' && event.stepKey.startsWith('AM:') ? 'am' : 'pm';
++  const step = routine?.[phase].find(candidate => `${phase.toUpperCase()}:${candidate.productId}` === event.stepKey);
++  if (!routine || routine.sourceHash !== event.planHash || !step) return changed();
++  if (isRetraction) {
++    await acknowledgedCommand(archive.saved, original, target);
++    const saved = archive.saved as { command: unknown };
++    const command = record(saved.command, 'event,expectedHash,kind,request');
++    const request = record(command.request, 'id,recordedAt');
++    const prior = typeof event.targetId === 'string' ? originals.get(event.targetId) : undefined;
++    if (command.kind !== 'retraction' || request.id !== event.id || request.recordedAt !== event.recordedAt ||
++        command.expectedHash !== event.previousHash || !prior || !positive(prior.sequence) || prior.sequence >= event.sequence ||
++        canonical(command.event) !== canonical(prior) || prior.planId !== event.planId || prior.planHash !== event.planHash ||
++        prior.observedOn !== event.observedOn || prior.stepKey !== event.stepKey) return changed();
++  } else if (event.targetId !== null || contentHash !== original.sourceHash) return changed();
++
++  const use = await projection({ field: 'use_events', id: event.id, sourceHash: contentHash, recordedAt: event.recordedAt,
++    observedOn: event.observedOn, productId: step.productId, name: step.name, phase, routineVersion: routine.sequence,
++    kind: event.kind, targetId: event.targetId }) as Use;
++  let formula: PrevisitRecord | null = null;
++  if (fields.includes('formulas') && schema === 2 && target.formulaAtUse !== null) {
++    const evidence = record(target.formulaAtUse, 'formula,ownedVersionHash,ownedVersionId');
++    const raw = record(evidence.formula, 'actor,basis,contentHash,id,labelStatus,labelText,market,observedOn,ownedUnitId,ownerUserId,previousFormulaVersionId,recordedAt,schemaVersion,sourceRights,variant');
++    const { id, contentHash: formulaHash, ...observation } = raw;
++    if (!digest(evidence.ownedVersionHash) || evidence.ownedVersionId !== `owned38:${evidence.ownedVersionHash}` ||
++        observation.schemaVersion !== 1 || observation.actor !== 'owner' || observation.sourceRights !== 'owner_private_observation' ||
++        observation.ownerUserId !== grant.ownerId || observation.ownedUnitId !== step.productId ||
++        observation.basis !== (observation.labelStatus === 'unknown' ? 'unavailable' : 'label_in_hand') ||
++        await recordHash(observation) !== formulaHash || id !== `formula38:${formulaHash}`) return changed();
++    const { labelStatus, labelText, market, variant, observedOn, recordedAt } = observation;
++    formula = await projection({ field: 'formulas', id: event.id, sourceHash: formulaHash, recordedAt,
++      productId: step.productId, name: step.name, labelStatus, labelText, market, variant, observedOn, atUse: true });
++  }
++  return { use, formula, sequence: event.sequence };
++}
++
++/** SERVER ONLY. The receipts come from the current grant's trusted, explicit
++ * selection resolved in this transaction. A receipt proves archive membership,
++ * not permission to select another field, practice, owner or retired epoch. */
++export async function readOwnerRoutinePrevisit(tx: EncryptedTransaction, grant: Grant,
++  requested: readonly PrevisitRecordField[], selection: readonly OwnerRoutinePrevisitReceipt[]): Promise<PrevisitRecordSource> {
++  grant = structuredClone(grant);
++  const fields = [...requested];
++  const proofs = structuredClone(selection);
++  if (!validGrant(grant) || grant.status !== 'active' || grant.expiresAt <= tx.now() ||
++    !grant.purposes.includes('pre_visit') || fields.some(field => !grant.fields.includes(field))) throw new ProfessionalAccessError('grant');
++  if (!fields.length || new Set(fields).size !== fields.length || fields.some(field => !PREVISIT_RECORD_FIELDS.includes(field)) ||
++      !Array.isArray(proofs) || proofs.length > 100) return changed();
++  const scope = { ownerId: grant.ownerId, healthEpoch: grant.healthEpoch };
++  const routines = new Map<string, Routine>();
++  const uses: { original: OriginalRoutineRecord; archive: Record<string, unknown> }[] = [];
++  const originals = new Map<string, Record<string, unknown>>();
++  const seen = new Set<string>();
++  for (const proof of proofs) {
++    const { id, receiptHash } = record(proof, 'id,receiptHash');
++    if (!uuid(id) || !digest(receiptHash) || seen.has(id)) return changed();
++    seen.add(id);
++    const entry = await OwnerRoutineCustody.readCommitted(tx, scope, id, receiptHash);
++    if (!entry || entry.original.kind === 'routine_version') return changed();
++    const { original } = entry;
++    const archive = payload(original, grant);
++    const kind = (archive.saved as { command?: { kind?: unknown } } | null)?.command?.kind;
++    if (kind === 'apply' || kind === 'clear') {
++      routines.set(id, await projectRoutine(original, grant, archive));
++    } else {
++      if ((!fields.includes('use_events') && !fields.includes('formulas')) || (original.kind !== 'use_event' && kind !== 'retraction')) return changed();
++      if (original.kind === 'use_event') originals.set(id, archive.target as Record<string, unknown>);
++      uses.push({ original, archive });
++    }
++  }
++  if (new Set(Array.from(routines.values(), row => row.sequence)).size !== routines.size) return changed();
++  const projected = [];
++  for (const { original, archive } of uses) projected.push(await projectUse(original, grant, archive, routines, originals, fields));
++  if (new Set(projected.map(row => row.sequence)).size !== projected.length) return changed();
++  projected.sort((a, b) => a.sequence - b.sequence);
++  const records: PrevisitRecord[] = fields.includes('actual_routine') ? [...routines.values()] : [];
++  for (const { use, formula } of projected) {
++    if (fields.includes('use_events')) records.push(use);
++    if (formula) records.push(formula);
++  }
++  const body = { ownerId: grant.ownerId, workspaceId: grant.workspaceId, grantId: grant.id, grantVersion: grant.version,
++    grantEpoch: grant.epoch, healthEpoch: grant.healthEpoch, fields, records };
++  return { ...body, contentHash: await recordHash(body) };
++}
+diff --git a/apps/professional-web/src/previsitRecords.ts b/apps/professional-web/src/previsitRecords.ts
+index 6987a2228e364051a6be1288060ee86c97232cbd..9769055b8bf51105e911a053a880ef26cd5cf301 100644
+--- a/apps/professional-web/src/previsitRecords.ts
++++ b/apps/professional-web/src/previsitRecords.ts
+@@ -7,7 +7,7 @@ export const PREVISIT_RECORD_FIELDS = ['actual_routine', 'use_events', 'formulas
+ export type PrevisitRecordField = typeof PREVISIT_RECORD_FIELDS[number];
+ type Fact = Readonly<{ id: string; contentHash: string; sourceHash: string; recordedAt: string }>;
+ export type PrevisitRecord = Fact & (
+-  Readonly<{ field: 'actual_routine'; sequence: number; am: readonly RoutineStep[]; pm: readonly RoutineStep[] }> |
++  Readonly<{ field: 'actual_routine'; sequence: number; am: readonly RoutineStep[]; pm: readonly RoutineStep[]; disposition?: 'owner_cleared' }> |
+   Readonly<{ field: 'use_events'; observedOn: string; productId: string; name: string; phase: 'am' | 'pm'; routineVersion: number;
+     kind: 'use' | 'retraction'; targetId: string | null }> |
+   Readonly<{ field: 'formulas'; productId: string; name: string; labelStatus: 'user_confirmed_label' | 'unknown'; labelText: string | null;
+@@ -36,7 +36,11 @@ export function validPrevisitRecord(record: unknown): record is PrevisitRecord {
+   if (!record || typeof record !== 'object' || Array.isArray(record)) return false;
+   const row = record as PrevisitRecord; const common = ['field', 'id', 'contentHash', 'sourceHash', 'recordedAt'];
+   if (!text(row.id, 256) || !hash(row.contentHash) || !hash(row.sourceHash) || !instant(row.recordedAt)) return false;
+-  if (row.field === 'actual_routine') return exact(row, [...common, 'sequence', 'am', 'pm']) && positive(row.sequence) && steps(row.am) && steps(row.pm) && row.am.length + row.pm.length > 0;
++  if (row.field === 'actual_routine') {
++    const cleared = row.disposition === 'owner_cleared';
++    return exact(row, [...common, 'sequence', 'am', 'pm', ...(cleared ? ['disposition'] : [])]) && positive(row.sequence) &&
++      steps(row.am) && steps(row.pm) && (cleared ? row.sequence > 1 && row.am.length + row.pm.length === 0 : row.am.length + row.pm.length > 0);
++  }
+   if (row.field === 'use_events') return exact(row, [...common, 'observedOn', 'productId', 'name', 'phase', 'routineVersion', 'kind', 'targetId']) &&
+     day(row.observedOn) && text(row.productId, 128) && text(row.name, 200) && ['am', 'pm'].includes(row.phase) && positive(row.routineVersion) &&
+     (row.kind === 'use' ? row.targetId === null : row.kind === 'retraction' && text(row.targetId, 256));
+@@ -95,6 +99,9 @@ export function previsitRecordTitle(row: PrevisitRecord, records: readonly Previ
+ }
+ export function previsitRecordText(row: PrevisitRecord, records: readonly PrevisitRecord[]): string[] {
+   const title = previsitRecordTitle(row, records);
++  if (row.field === 'actual_routine' && row.disposition === 'owner_cleared') {
++    return [title, 'The owner cleared their applied routine. This entry records a plan decision.'];
++  }
+   if (row.field === 'actual_routine') return [title, `Morning: ${row.am.map(step => step.name).join(' → ') || 'No recorded steps'}`,
+     `Evening: ${row.pm.map(step => step.name).join(' → ') || 'No recorded steps'}`];
+   if (row.field === 'use_events') return [title, `Actual routine version ${row.routineVersion}. Device recorded ${row.recordedAt}.`,
+diff --git a/docs/USER_FLOW_TREE.md b/docs/USER_FLOW_TREE.md
+index 07f579b0354f9d309ab921624c96e057fbb0f3aa..dfd0a78703d2461e386c3cf7ba73c2ba802ac4b4 100644
+--- a/docs/USER_FLOW_TREE.md
++++ b/docs/USER_FLOW_TREE.md
+@@ -1,5 +1,12 @@
+ # User Flow Tree
+ 
++## Engineering39 granted routine evidence
++
++- A synthetic owner records a use with a confirmed bottle observation and later retracts the use. In professional pre-visit review, select Recorded use or Formula observations under the respective current grant. Recorded use shows the original phase and version without label details. Formula observations show the retained bottle observation and its original recorded time. After retraction, an older review must request a fresh source. The refreshed report identifies the earlier use as retracted. Missing original receipts, an unconfirmed archive checkpoint, withdrawn grants and retired health epochs refuse.
++- Synthetic owner applies a routine on mobile and explicitly clears that version. Each acknowledged original enters encrypted custody under its own immutable receipt. A professional with a current pre-visit routine grant can load those exact versions and select either for review or export. A clear is presented as the owner's plan decision.
++- Refresh after a selected receipt changes. A stale reviewed source, substituted receipt, ungranted field, grant withdrawal or tombstoned epoch must refuse. At 375×667, 390×844 and 430×932, verify keyboard selection, cancel, review, export, focus and clear wording. Also verify the default professional API returns 503 with no trusted source configured.
++- In the local custody fixture, terminate the writer before commit and after commit but before reply. Reopen from a fresh process, retry the same original and verify the exact outcome. Reinsert a saved synthetic envelope after completed tombstoned erasure. Run a new authorized recheck and verify the removal and original receipt through restart.
++
+ ## Engineering38 connected custody and recovery
+ 
+ - If a private brief save is unconfirmed, review the brief and return to editing. Retry the original save explicitly. The submitted text can be saved while newer typing stays in the editor until the owner chooses which text to keep.
+diff --git a/scripts/e2e/owner-custody-sqlite-worker.mjs b/scripts/e2e/owner-custody-sqlite-worker.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..bfc8ec8fd5fe60b5300c0090b4e75c9b39353f3e
+--- /dev/null
++++ b/scripts/e2e/owner-custody-sqlite-worker.mjs
+@@ -0,0 +1,142 @@
++import assert from 'node:assert/strict';
++import { existsSync } from 'node:fs';
++import { registerHooks } from 'node:module';
++import { extname } from 'node:path';
++import { DatabaseSync } from 'node:sqlite';
++
++// IPC-only synthetic worker. No app, service endpoint or real grants use this driver.
++assert.equal(typeof process.send, 'function');
++const sourceRoot = new URL('../../apps/professional-web/src/', import.meta.url);
++registerHooks({
++  resolve(specifier, context, next) {
++    if (context.parentURL?.startsWith(sourceRoot.href) && specifier.startsWith('./') && !extname(specifier)) {
++      return next(`${specifier}.ts`, context);
++    }
++    return next(specifier, context);
++  },
++});
++
++const { EncryptedCustody } = await import(new URL('encryptedCustody.ts', sourceRoot));
++const { OwnerRoutineCustody } = await import(new URL('ownerRoutineCustody.ts', sourceRoot));
++const { ProfessionalAccessError } = await import(new URL('authority.ts', sourceRoot));
++const [path, input] = process.argv.slice(2);
++const command = JSON.parse(input);
++const scope = { ownerId: 'synthetic-restart-owner', healthEpoch: command.healthEpoch ?? 1 };
++const keyId = 'synthetic-sqlite-key-v1';
++const key = await crypto.subtle.importKey('raw', new Uint8Array(32).fill(39), 'AES-GCM', false, ['encrypt', 'decrypt']);
++const db = new DatabaseSync(path);
++db.exec('PRAGMA busy_timeout=10000; PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL;');
++db.exec('CREATE TABLE IF NOT EXISTS custody (key TEXT PRIMARY KEY, ciphertext TEXT NOT NULL) STRICT');
++const query = db.prepare('SELECT ciphertext FROM custody WHERE key = ?');
++const insert = db.prepare('INSERT INTO custody (key, ciphertext) VALUES (?, ?)');
++const update = db.prepare('UPDATE custody SET ciphertext = ? WHERE key = ? AND ciphertext = ?');
++const remove = db.prepare('DELETE FROM custody WHERE key = ? AND ciphertext = ?');
++const checkpointPath = command.checkpointPath;
++const checkpointDb = checkpointPath && checkpointPath !== path && existsSync(checkpointPath) ? new DatabaseSync(checkpointPath) : null;
++checkpointDb?.exec('PRAGMA busy_timeout=10000; PRAGMA synchronous=FULL;');
++let prepared = null;
++const checkpointChanged = () => { throw new ProfessionalAccessError('changed'); };
++
++// The independent test store keeps a prepared successor across an unknown
++// commit. Only the actual, authenticated successor can confirm it. Seeing the
++// old head is ambiguous, so the fixture refuses instead of adopting it.
++function confirmCheckpoint(observed) {
++  const row = checkpointDb.prepare('SELECT current, pending FROM checkpoint WHERE owner = ?').get(scope.ownerId);
++  if (!row) return checkpointChanged();
++  if (row.pending === null) {
++    if (row.current !== observed) return checkpointChanged();
++    return;
++  }
++  if (observed !== row.pending || checkpointDb.prepare('UPDATE checkpoint SET current = pending, pending = NULL WHERE owner = ? AND current IS ? AND pending = ?')
++    .run(scope.ownerId, row.current, observed).changes !== 1) return checkpointChanged();
++}
++
++async function pauseAt(phase) {
++  if (command.killAt !== phase) return;
++  // Mark the transaction boundary before parking until the parent kills this process.
++  process.once('disconnect', () => process.exit(2));
++  process.send({ phase, pid: process.pid });
++  await new Promise(() => {});
++}
++
++const driver = {
++  async transaction(work) {
++    db.exec('BEGIN IMMEDIATE');
++    let committed = false;
++    try {
++      const checks = [];
++      const result = await work({
++        now: () => 1_800_000_000_000,
++        read: async record => query.get(record)?.ciphertext ?? null,
++        compareAndSet: async (record, expected, ciphertext) => {
++          const result = expected === null ? insert.run(record, ciphertext) : update.run(ciphertext, record, expected);
++          assert.equal(result.changes, 1, 'exact ciphertext set');
++        },
++        compareAndDelete: async (record, expected) => {
++          assert.equal(remove.run(record, expected).changes, 1, 'exact ciphertext deletion');
++        },
++        beforeCommit: check => checks.push(check),
++      });
++      for (const check of checks) await check();
++      await pauseAt('before-commit');
++      db.exec('COMMIT');
++      committed = true;
++      await pauseAt('after-commit');
++      if (prepared !== null) confirmCheckpoint(prepared);
++      return result;
++    } finally {
++      if (!committed && db.isTransaction) db.exec('ROLLBACK');
++    }
++  },
++};
++
++const custody = new EncryptedCustody(driver, {
++  current: async () => ({ id: keyId, key }),
++  retained: async (_record, id) => {
++    assert.equal(id, keyId);
++    return key;
++  },
++});
++let approvals = 0;
++const history = new OwnerRoutineCustody(custody, async (_tx, access) => {
++  assert.deepEqual(access.scope, scope);
++  approvals++;
++  if (command.refuse === access.action || (command.retireBeforeCommit && approvals > 1)) throw new ProfessionalAccessError('grant');
++}, checkpointPath ? async (_tx, _scope, observed) => {
++  if (!checkpointDb) throw new ProfessionalAccessError('unavailable');
++  confirmCheckpoint(observed);
++} : command.checkpoint === undefined ? undefined : async (_tx, _scope, observed) => {
++  if (command.checkpoint !== observed) return checkpointChanged();
++}, checkpointDb ? async (_scope, { previous, next }) => {
++  if (checkpointDb.prepare('UPDATE checkpoint SET pending = ? WHERE owner = ? AND current IS ? AND pending IS NULL')
++    .run(next, scope.ownerId, previous).changes !== 1) return checkpointChanged();
++  prepared = next;
++} : undefined);
++
++async function run() {
++  switch (command.action) {
++    case 'open': return history.open(scope);
++    case 'append': return history.append(scope, command.original);
++    case 'inspect': return history.inspect(scope, command.id, command.originalHash);
++    case 'tombstone': return history.tombstone(scope);
++    case 'restore': return history.restore(scope, command.original, command.receipt);
++    case 'erase': return history.eraseTombstoned(scope, command.revision, command.limit);
++    case 'recheck': return history.recheckTombstonedErasure(scope, command.pass, command.revision, command.limit);
++    case 'checkpoint': return custody.transaction(tx => OwnerRoutineCustody.checkpoint(tx, scope));
++    default: throw new Error('Unknown synthetic command');
++  }
++}
++
++let response;
++try {
++  response = { ok: true, result: await run() ?? null };
++} catch (error) {
++  response = { ok: false, error: error.message };
++} finally {
++  db.close();
++  checkpointDb?.close();
++}
++process.send(response, error => {
++  if (error) process.exitCode = 1;
++  process.disconnect();
++});
+diff --git a/scripts/e2e/owner-custody-sqlite.test.mjs b/scripts/e2e/owner-custody-sqlite.test.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c46f57e2eed5add68a9349349e86645cbfca5cf6
+--- /dev/null
++++ b/scripts/e2e/owner-custody-sqlite.test.mjs
+@@ -0,0 +1,209 @@
++import assert from 'node:assert/strict';
++import { fork } from 'node:child_process';
++import { mkdtempSync, rmSync, rmdirSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
++import { DatabaseSync } from 'node:sqlite';
++import test from 'node:test';
++
++const worker = new URL('./owner-custody-sqlite-worker.mjs', import.meta.url);
++const namespace = 'owner-routine-record:v1:synthetic-restart-owner';
++const original = {
++  id: 'synthetic-original-a', kind: 'resolved_command', sourceHash: 'a'.repeat(64),
++  previousReceipt: null, bytes: '{"command":"synthetic immutable input after restart","outcome":"resolved"}',
++};
++
++function start(database, command) {
++  return new Promise((resolve, reject) => {
++    const child = fork(worker, [database, JSON.stringify(command)], {
++      execArgv: ['--experimental-transform-types', '--disable-warning=ExperimentalWarning'], windowsHide: true,
++    });
++    const messages = [];
++    const deadline = setTimeout(() => {
++      child.kill('SIGKILL');
++      reject(new Error(`Fixture command timed out: ${command.action}`));
++    }, 15000);
++    child.on('message', message => {
++      messages.push(message);
++      if (command.killAt && message.phase === command.killAt && message.pid === child.pid) child.kill('SIGKILL');
++    });
++    child.once('error', error => { clearTimeout(deadline); reject(error); });
++    child.once('exit', (code, signal) => {
++      clearTimeout(deadline);
++      try {
++        assert.equal(messages.length, 1);
++        if (command.killAt) {
++          assert.equal(signal, 'SIGKILL');
++          assert.deepEqual(messages[0], { phase: command.killAt, pid: child.pid });
++        } else {
++          assert.equal(code, 0);
++          assert.equal(signal, null);
++          assert.equal(typeof messages[0].ok, 'boolean');
++        }
++        resolve(messages[0]);
++      } catch (error) { reject(error); }
++    });
++  });
++}
++
++function fixture(t, witness = false) {
++  const folder = mkdtempSync(join(tmpdir(), 'onskin-custody-'));
++  const database = join(folder, 'synthetic.sqlite');
++  const checkpointPath = join(folder, 'synthetic-checkpoint.sqlite');
++  if (witness) {
++    const db = new DatabaseSync(checkpointPath);
++    try {
++      db.exec('PRAGMA synchronous=FULL; CREATE TABLE checkpoint (owner TEXT PRIMARY KEY, current TEXT, pending TEXT) STRICT');
++      db.prepare('INSERT INTO checkpoint (owner, current, pending) VALUES (?, NULL, NULL)').run('synthetic-restart-owner');
++    } finally { db.close(); }
++  }
++  t.after(() => {
++    for (const file of [database, checkpointPath]) {
++      for (const suffix of ['', '-journal', '-shm', '-wal']) rmSync(file + suffix, { force: true });
++    }
++    rmdirSync(folder);
++  });
++  return {
++    run: command => start(database, witness ? { checkpointPath, ...command } : command),
++    read() {
++      const db = new DatabaseSync(database, { readOnly: true });
++      try { return db.prepare('SELECT key, ciphertext FROM custody ORDER BY key').all(); }
++      finally { db.close(); }
++    },
++    reinsert(record) {
++      const db = new DatabaseSync(database);
++      try { db.prepare('INSERT INTO custody (key, ciphertext) VALUES (?, ?)').run(record.key, record.ciphertext); }
++      finally { db.close(); }
++    },
++    restoreFixtureSnapshot(rows) {
++      const db = new DatabaseSync(database);
++      try {
++        db.exec('BEGIN IMMEDIATE; DELETE FROM custody');
++        const insert = db.prepare('INSERT INTO custody (key, ciphertext) VALUES (?, ?)');
++        for (const row of rows) insert.run(row.key, row.ciphertext);
++        db.exec('COMMIT');
++      } finally { db.close(); }
++    },
++    witnessState() {
++      const db = new DatabaseSync(checkpointPath, { readOnly: true });
++      try { return { ...db.prepare('SELECT current, pending FROM checkpoint').get() }; }
++      finally { db.close(); }
++    },
++  };
++}
++
++const good = async (run, command) => {
++  const reply = await run(command);
++  assert.equal(reply.ok, true, reply.error);
++  return reply.result;
++};
++
++const refused = async (run, command, code) => assert.deepEqual(await run(command), { ok: false, error: `PROFESSIONAL_ACCESS_${code}` });
++
++test('process death before commit rolls back; after commit recovers the exact encrypted original', async t => {
++  const { run, read } = fixture(t);
++  await good(run, { action: 'open' });
++  const before = read();
++  await run({ action: 'append', original, killAt: 'before-commit' });
++  assert.deepEqual(read(), before);
++  await run({ action: 'append', original, killAt: 'after-commit' });
++  const committed = read();
++  assert.notDeepEqual(committed, before);
++  assert.match(committed.find(row => row.key.endsWith(original.id)).ciphertext, /"keyId":"synthetic-sqlite-key-v1"/);
++  assert.ok(!JSON.stringify(committed).includes('synthetic immutable input'));
++
++  const receipt = await good(run, { action: 'append', original });
++  assert.equal(receipt.sequence, 1);
++  assert.deepEqual(await good(run, { action: 'inspect', id: original.id, originalHash: receipt.originalHash }), { original, receipt });
++  assert.deepEqual(read(), committed);
++  await refused(run, { action: 'append', original: { ...original, bytes: 'different immutable input' } }, 'CHANGED');
++  const rivals = await Promise.all(['b', 'c'].map(id => run({ action: 'append', original: {
++    ...original, id, previousReceipt: receipt.hash,
++  } })));
++  assert.equal(rivals.filter(result => result.ok && result.result.sequence === 2).length, 1);
++  assert.deepEqual(rivals.filter(result => !result.ok), [{ ok: false, error: 'PROFESSIONAL_ACCESS_CHANGED' }]);
++});
++
++test('tombstone survives restart; authentic reappeared bytes require an exact, retryable erasure pass', async t => {
++  const { run, read, reinsert } = fixture(t);
++  await good(run, { action: 'open' });
++  const receipt = await good(run, { action: 'append', original });
++  const record = read().find(row => row.key === `${namespace}:1:${original.id}`);
++  await run({ action: 'tombstone', killAt: 'after-commit' });
++  await refused(run, { action: 'restore', original, receipt }, 'CHANGED');
++  await good(run, { action: 'open', healthEpoch: 2 });
++  const erase = { action: 'erase', revision: 0, limit: 1 };
++  const completed = await good(run, erase);
++  assert.equal(completed.complete, true);
++  reinsert(record);
++  const beforeRecheck = read();
++  const checkpoint = await good(run, { action: 'checkpoint' });
++  const recheck = { action: 'recheck', pass: 1, revision: 0, limit: 1, checkpoint };
++  await refused(run, { ...recheck, refuse: 'recheck_erasure' }, 'GRANT');
++  await refused(run, { ...recheck, checkpoint: 'b'.repeat(64) }, 'CHANGED');
++  await run({ ...recheck, killAt: 'before-commit' });
++  assert.deepEqual(read(), beforeRecheck);
++  await run({ ...recheck, killAt: 'after-commit' });
++  assert.ok(!read().some(row => row.key === record.key));
++  const result = await good(run, recheck);
++  assert.deepEqual(result, { pass: 1, progress: completed });
++  assert.deepEqual(await good(run, erase), completed);
++  await refused(run, { ...recheck, limit: 2 }, 'CHANGED');
++  await refused(run, { ...recheck, pass: 3 }, 'CHANGED');
++  await refused(run, { action: 'restore', original, receipt }, 'CHANGED');
++
++  reinsert(record);
++  const ciphertextReturned = read();
++  assert.deepEqual(await good(run, recheck), result);
++  assert.deepEqual(read(), ciphertextReturned);
++  assert.equal((await good(run, { ...recheck, pass: 2 })).progress.removed, 1);
++  assert.ok(!read().some(row => row.key === record.key));
++});
++
++test('independent checkpoint confirms a committed successor after restart and rejects older authentic custody', async t => {
++  const { run, read, restoreFixtureSnapshot, witnessState } = fixture(t, true);
++  await good(run, { action: 'open' });
++  const before = read();
++  const oldHead = await good(run, { action: 'checkpoint' });
++  assert.deepEqual(witnessState(), { current: oldHead, pending: null });
++  await refused(run, { action: 'append', original, retireBeforeCommit: true }, 'GRANT');
++  assert.deepEqual(read(), before);
++  assert.deepEqual(witnessState(), { current: oldHead, pending: null });
++
++  await run({ action: 'append', original, killAt: 'after-commit' });
++  const committed = read();
++  const nextHead = await good(run, { action: 'checkpoint' });
++  assert.notEqual(nextHead, oldHead);
++  assert.deepEqual(witnessState(), { current: oldHead, pending: nextHead });
++  const receipt = await good(run, { action: 'append', original });
++  assert.equal(receipt.sequence, 1);
++  assert.deepEqual(witnessState(), { current: nextHead, pending: null });
++  assert.deepEqual(read(), committed);
++
++  restoreFixtureSnapshot(before);
++  await refused(run, { action: 'append', original }, 'CHANGED');
++  assert.deepEqual(read(), before);
++  assert.deepEqual(witnessState(), { current: nextHead, pending: null });
++  restoreFixtureSnapshot(committed);
++  await good(run, { action: 'tombstone' });
++  restoreFixtureSnapshot(committed);
++  await refused(run, { action: 'inspect', id: original.id, originalHash: receipt.originalHash }, 'CHANGED');
++  assert.deepEqual(read(), committed);
++});
++
++test('an interrupted prepared successor with the old custody head remains unavailable to ordinary retry', async t => {
++  const { run, read, witnessState } = fixture(t, true);
++  await good(run, { action: 'open' });
++  const before = read();
++  const oldHead = await good(run, { action: 'checkpoint' });
++  await run({ action: 'append', original, killAt: 'before-commit' });
++  assert.deepEqual(read(), before);
++  const prepared = witnessState();
++  assert.equal(prepared.current, oldHead);
++  assert.match(prepared.pending, /^[a-f0-9]{64}$/u);
++  assert.notEqual(prepared.pending, oldHead);
++  await refused(run, { action: 'append', original }, 'CHANGED');
++  await refused(run, { action: 'open' }, 'CHANGED');
++  assert.deepEqual(read(), before);
++  assert.deepEqual(witnessState(), prepared);
++});

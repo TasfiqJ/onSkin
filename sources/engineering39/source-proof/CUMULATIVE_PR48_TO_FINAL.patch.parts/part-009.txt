@@ -1,0 +1,3141 @@
+s/utils.js';
++import { sha256 } from '@noble/hashes/sha2.js';
++import type { PaoSource } from '@layerwell/types';
++import type { ManualIntakeForm } from './IntakeContext';
++import { PRODUCT_CATEGORIES } from './categories';
++import { createIntakeDraft, type IntakeDraft } from './intakeSession';
++
++export const MANUAL_INTAKE_DRAFT_KEY = 'layerwell.manualIntakeDrafts.v1';
++export const MANUAL_INTAKE_DRAFT_INVALID = 'MANUAL_INTAKE_DRAFT_INVALID';
++export const MANUAL_INTAKE_DRAFT_CONFLICT = 'MANUAL_INTAKE_DRAFT_CONFLICT';
++export const MANUAL_INTAKE_DRAFT_AUTHORITY = 'MANUAL_INTAKE_DRAFT_AUTHORITY';
++export const MANUAL_INTAKE_DRAFT_LIMIT = 20;
++export const MANUAL_INTAKE_DRAFT_MAX_BYTES = 1_000_000;
++
++export type ManualIntakeOpening = Readonly<{
++  mode: 'just' | 'pick' | 'unopened' | null;
++  selectedDate: string | null;
++  paoMonths: number | null;
++  paoSource: PaoSource;
++  customPaoText: string;
++}>;
++/** The exact caller payload is journaled before the first explicit Add. */
++export type ManualIntakeSubmission = Omit<IntakeDraft, 'catalogRecoveryToken'> & {
++  operationId: string;
++  openedAt: string | null;
++  isOpened: boolean;
++};
++export type ManualIntakeDraftFields = Readonly<{
++  form: ManualIntakeForm;
++  intake: IntakeDraft;
++  phase: 'manual' | 'opened';
++  opening: ManualIntakeOpening;
++  attempted: Readonly<{ input: ManualIntakeSubmission }> | null;
++}>;
++export type ManualIntakeDraft = Readonly<{
++  id: string;
++  revision: number;
++  createdAt: string;
++  updatedAt: string;
++  operationId: string;
++  fields: ManualIntakeDraftFields;
++  contentHash: string;
++}>;
++export type ManualIntakeDraftCollection = Readonly<{
++  schemaVersion: 1;
++  provenance: 'owner_unconfirmed_manual_intake';
++  ownerUserId: string;
++  processingEpoch: number;
++  drafts: readonly ManualIntakeDraft[];
++}>;
++
++function invalid(): never { throw new Error(MANUAL_INTAKE_DRAFT_INVALID); }
++function record(value: unknown, keys: readonly string[]): Record<string, unknown> {
++  if (!value || typeof value !== 'object' || Array.isArray(value) ||
++      Object.keys(value).sort().join('|') !== [...keys].sort().join('|')) invalid();
++  return value as Record<string, unknown>;
++}
++function text(value: unknown, max: number, multiline = false): string {
++  if (typeof value !== 'string' || value.length > max || utf8ToBytes(value).length > max * 3 ||
++      (multiline ? /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f\ud800-\udfff]/u : /[\u0000-\u001f\u007f-\u009f\ud800-\udfff]/u).test(value)) invalid();
++  return value;
++}
++function nullableText(value: unknown, max: number): string | null {
++  return value === null ? null : text(value, max);
++}
++function nonempty(value: unknown, max: number): string {
++  const result = text(value, max);
++  if (!result || result.trim() !== result) invalid();
++  return result;
++}
++function integer(value: unknown, min: number, max = Number.MAX_SAFE_INTEGER): number {
++  if (!Number.isSafeInteger(value) || (value as number) < min || (value as number) > max) invalid();
++  return value as number;
++}
++function uuid(value: unknown): string {
++  const result = nonempty(value, 36);
++  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(result)) invalid();
++  return result;
++}
++function timestamp(value: unknown): string {
++  const result = nonempty(value, 30);
++  if (!Number.isFinite(Date.parse(result)) || new Date(result).toISOString() !== result) invalid();
++  return result;
++}
++function date(value: unknown): string | null {
++  if (value === null) return null;
++  const result = text(value, 10);
++  if (!/^\d{4}-\d{2}-\d{2}$/.test(result) || !Number.isFinite(Date.parse(result)) ||
++      new Date(result).toISOString().slice(0, 10) !== result) invalid();
++  return result;
++}
++function category(value: unknown): IntakeDraft['category'] {
++  if (value !== null && !PRODUCT_CATEGORIES.some(row => row.id === value)) invalid();
++  return value as IntakeDraft['category'];
++}
++function paoSource(value: unknown): PaoSource {
++  if (value !== 'label' && value !== 'catalog' && value !== 'category_default' && value !== 'unknown') invalid();
++  return value;
++}
++function score(value: unknown, max: number): number | null {
++  if (value === null) return null;
++  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > max) invalid();
++  return value;
++}
++function decodeForm(value: unknown): ManualIntakeForm {
++  const row = record(value, ['name', 'brand', 'barcode', 'ingredients', 'category', 'eightDigitFormat', 'addedVia']);
++  if (row.addedVia !== 'manual' || (row.eightDigitFormat !== null && row.eightDigitFormat !== 'ean8' && row.eightDigitFormat !== 'upc_e')) invalid();
++  return Object.freeze({ name: text(row.name, 120), brand: text(row.brand, 120), barcode: text(row.barcode, 20),
++    ingredients: text(row.ingredients, 16_000, true), category: category(row.category),
++    eightDigitFormat: row.eightDigitFormat, addedVia: 'manual' });
++}
++function decodeIntake(value: unknown): IntakeDraft {
++  const row = record(value, Object.keys(createIntakeDraft()));
++  if (row.addedVia !== 'manual') invalid();
++  const quality = row.catalogMatchQuality;
++  if (quality !== null && !['manual', 'verified', 'usable', 'limited', 'unverified', 'blocked'].includes(quality as string)) invalid();
++  if (!Array.isArray(row.ingredients) || row.ingredients.length > 500) invalid();
++  const ingredients = row.ingredients.map(entry => nonempty(entry, 256));
++  Object.freeze(ingredients);
++  let recovery: IntakeDraft['catalogRecoveryToken'] = null;
++  if (row.catalogRecoveryToken !== null) {
++    const token = record(row.catalogRecoveryToken, ['barcode', 'productId']);
++    recovery = Object.freeze({ barcode: nonempty(token.barcode, 20), productId: nonempty(token.productId, 128) });
++  }
++  return Object.freeze({ name: text(row.name, 120), brand: nullableText(row.brand, 120),
++    category: category(row.category), barcode: nullableText(row.barcode, 20),
++    catalogProductId: nullableText(row.catalogProductId, 128), catalogSourceId: nullableText(row.catalogSourceId, 128),
++    catalogSource: nullableText(row.catalogSource, 128), catalogSourceName: nullableText(row.catalogSourceName, 256),
++    catalogSourceRef: nullableText(row.catalogSourceRef, 512), catalogSourceUrl: nullableText(row.catalogSourceUrl, 2048),
++    catalogSourceSnapshotDate: date(row.catalogSourceSnapshotDate), catalogMatchQuality: quality as IntakeDraft['catalogMatchQuality'],
++    dataQualityScore: score(row.dataQualityScore, 100), ingredientParseStatus: nullableText(row.ingredientParseStatus, 80),
++    ingredientParseConfidence: score(row.ingredientParseConfidence, 1), parserVersion: nullableText(row.parserVersion, 128),
++    sourceDisclosureAckAt: row.sourceDisclosureAckAt === null ? null : timestamp(row.sourceDisclosureAckAt),
++    ingredients, addedVia: 'manual', paoMonths: row.paoMonths === null ? null : integer(row.paoMonths, 1, 120),
++    paoSource: paoSource(row.paoSource), expiryDate: date(row.expiryDate), catalogRecoveryToken: recovery });
++}
++function decodeOpening(value: unknown): ManualIntakeOpening {
++  const row = record(value, ['mode', 'selectedDate', 'paoMonths', 'paoSource', 'customPaoText']);
++  const mode = row.mode;
++  if (mode !== null && mode !== 'just' && mode !== 'pick' && mode !== 'unopened') invalid();
++  return Object.freeze({ mode, selectedDate: date(row.selectedDate),
++    paoMonths: row.paoMonths === null ? null : integer(row.paoMonths, 1, 120),
++    paoSource: paoSource(row.paoSource), customPaoText: text(row.customPaoText, 3) });
++}
++function decodeSubmission(value: unknown): ManualIntakeSubmission {
++  const keys = Object.keys(createIntakeDraft()).filter(key => key !== 'catalogRecoveryToken');
++  const row = record(value, [...keys, 'operationId', 'openedAt', 'isOpened']);
++  const { operationId, openedAt, isOpened, ...payload } = row;
++  const intake = decodeIntake({ ...payload, catalogRecoveryToken: null });
++  if (typeof isOpened !== 'boolean' || !intake.name.trim()) invalid();
++  const openingDate = date(openedAt);
++  if (isOpened !== (openingDate !== null)) invalid();
++  const { catalogRecoveryToken: _recovery, ...product } = intake;
++  return Object.freeze({ ...product, operationId: uuid(operationId), openedAt: openingDate, isOpened });
++}
++export function decodeManualIntakeDraftFields(value: unknown): ManualIntakeDraftFields {
++  const row = record(value, ['form', 'intake', 'phase', 'opening', 'attempted']);
++  if (row.phase !== 'manual' && row.phase !== 'opened') invalid();
++  const form = decodeForm(row.form), intake = decodeIntake(row.intake), opening = decodeOpening(row.opening);
++  let attempted: ManualIntakeDraftFields['attempted'] = null;
++  if (row.attempted !== null) {
++    const attempt = record(row.attempted, ['input']);
++    const input = decodeSubmission(attempt.input);
++    if (row.phase !== 'opened' || opening.mode === null || input.isOpened !== (opening.mode !== 'unopened') ||
++        (opening.mode === 'pick' && input.openedAt !== opening.selectedDate)) invalid();
++    const { catalogRecoveryToken: _recovery, ...expected } = intake;
++    if (JSON.stringify(input) !== JSON.stringify({ ...expected, name: intake.name.trim(),
++      paoMonths: opening.paoMonths, paoSource: opening.paoSource, operationId: input.operationId,
++      openedAt: input.openedAt, isOpened: input.isOpened })) invalid();
++    attempted = Object.freeze({ input });
++  }
++  return Object.freeze({ form, intake, phase: row.phase, opening, attempted });
++}
++export function makeManualIntakeDraft(value: Omit<ManualIntakeDraft, 'contentHash'>): ManualIntakeDraft {
++  const row = record(value, ['id', 'revision', 'createdAt', 'updatedAt', 'operationId', 'fields']);
++  const createdAt = timestamp(row.createdAt), updatedAt = timestamp(row.updatedAt);
++  if (updatedAt < createdAt) invalid();
++  const fields = decodeManualIntakeDraftFields(row.fields), operationId = uuid(row.operationId);
++  if (fields.attempted !== null && fields.attempted.input.operationId !== operationId) invalid();
++  const body = { id: uuid(row.id), revision: integer(row.revision, 1), createdAt, updatedAt, operationId, fields };
++  return Object.freeze({ ...body, contentHash: bytesToHex(sha256(utf8ToBytes(JSON.stringify(body)))) });
++}
++export function decodeManualIntakeDraftCollection(raw: string | null, ownerUserId: string, processingEpoch?: number): ManualIntakeDraftCollection {
++  nonempty(ownerUserId, 128);
++  if (raw === null) return Object.freeze({ schemaVersion: 1, provenance: 'owner_unconfirmed_manual_intake', ownerUserId,
++    processingEpoch: integer(processingEpoch, 1), drafts: Object.freeze([]) });
++  if (raw.length > MANUAL_INTAKE_DRAFT_MAX_BYTES || utf8ToBytes(raw).length > MANUAL_INTAKE_DRAFT_MAX_BYTES) invalid();
++  let parsed: unknown;
++  try { parsed = JSON.parse(raw) as unknown; } catch { invalid(); }
++  const row = record(parsed, ['schemaVersion', 'provenance', 'ownerUserId', 'processingEpoch', 'drafts']);
++  if (row.schemaVersion !== 1 || row.provenance !== 'owner_unconfirmed_manual_intake') invalid();
++  if (row.ownerUserId !== ownerUserId || (processingEpoch !== undefined && row.processingEpoch !== processingEpoch)) throw new Error(MANUAL_INTAKE_DRAFT_AUTHORITY);
++  const epoch = integer(row.processingEpoch, 1);
++  if (!Array.isArray(row.drafts) || row.drafts.length > MANUAL_INTAKE_DRAFT_LIMIT) invalid();
++  const drafts = row.drafts.map(entry => {
++    const checked = record(entry, ['id', 'revision', 'createdAt', 'updatedAt', 'operationId', 'fields', 'contentHash']);
++    const { contentHash, ...body } = checked;
++    const draft = makeManualIntakeDraft(body as Omit<ManualIntakeDraft, 'contentHash'>);
++    if (draft.contentHash !== contentHash) invalid();
++    return draft;
++  });
++  if (new Set(drafts.map(draft => draft.id)).size !== drafts.length ||
++      new Set(drafts.map(draft => draft.operationId)).size !== drafts.length) invalid();
++  return Object.freeze({ schemaVersion: 1, provenance: 'owner_unconfirmed_manual_intake', ownerUserId,
++    processingEpoch: epoch, drafts: Object.freeze(drafts) });
++}
+diff --git a/apps/mobile/src/features/shelf/manualIntakeDraftStore.ts b/apps/mobile/src/features/shelf/manualIntakeDraftStore.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3d678b4737f51684429b86a4a998372d2d970fd0
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/manualIntakeDraftStore.ts
+@@ -0,0 +1,102 @@
++import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
++import { classifyAgePolicyReceipt } from '@/features/onboarding/ageGateStore';
++import { hasCurrentHealthDataCollectionConsentBytes } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_LIFECYCLE_KEY, parseHealthDataLifecycleRecord } from '@/features/healthConsent/lifecycleStore';
++import { assertOriginalHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { updatePrivateItemWithSources } from '@/lib/storage/privateKV';
++import {
++  MANUAL_INTAKE_DRAFT_KEY, MANUAL_INTAKE_DRAFT_AUTHORITY, MANUAL_INTAKE_DRAFT_CONFLICT, MANUAL_INTAKE_DRAFT_LIMIT,
++  decodeManualIntakeDraftCollection, decodeManualIntakeDraftFields, makeManualIntakeDraft,
++  type ManualIntakeDraft, type ManualIntakeDraftFields, type ManualIntakeDraftCollection,
++} from './manualIntakeDraftCodec';
++
++const CONSENT_KEY = 'layerwell.healthDataCollectionConsent.v1';
++export const MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS = [AGE_POLICY_RECEIPT_KEY, CONSENT_KEY, HEALTH_DATA_LIFECYCLE_KEY] as const;
++
++/** Reserved admission records are verified before any private draft payload. */
++export function manualIntakeDraftAuthorization(lease: HealthDataWriteLease) {
++  return {
++    keys: MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS,
++    validate(values: ReadonlyMap<string, string | null>) {
++      assertOriginalHealthDataWriteLease(lease);
++      if (classifyAgePolicyReceipt(values.get(AGE_POLICY_RECEIPT_KEY) ?? null) !== 'current' ||
++          !hasCurrentHealthDataCollectionConsentBytes(values.get(CONSENT_KEY) ?? null)) throw new Error(MANUAL_INTAKE_DRAFT_AUTHORITY);
++      const lifecycle = parseHealthDataLifecycleRecord(values.get(HEALTH_DATA_LIFECYCLE_KEY) ?? '');
++      if (lifecycle.ownerUserId !== lease.ownerUserId || lifecycle.processingEpoch !== lease.epoch ||
++          lifecycle.state !== 'active' || lifecycle.activationRoutePending) throw new Error(MANUAL_INTAKE_DRAFT_AUTHORITY);
++    },
++  };
++}
++export function assertExactManualIntakeDraft(raw: string | null, lease: HealthDataWriteLease, expected: ManualIntakeDraft): void {
++  const current = decodeManualIntakeDraftCollection(raw, lease.ownerUserId, lease.epoch).drafts.find(row => row.id === expected.id);
++  if (!current || JSON.stringify(current) !== JSON.stringify(expected)) throw new Error(MANUAL_INTAKE_DRAFT_CONFLICT);
++}
++export async function loadManualIntakeDrafts(lease: HealthDataWriteLease): Promise<ManualIntakeDraftCollection> {
++  const assertCurrent = () => assertOriginalHealthDataWriteLease(lease);
++  assertCurrent();
++  let result: ManualIntakeDraftCollection | undefined;
++  await updatePrivateItemWithSources(MANUAL_INTAKE_DRAFT_KEY, MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS, values => {
++    const raw = values.get(MANUAL_INTAKE_DRAFT_KEY) ?? null;
++    result = decodeManualIntakeDraftCollection(raw, lease.ownerUserId, lease.epoch);
++    return raw;
++  }, assertCurrent, undefined, undefined, manualIntakeDraftAuthorization(lease));
++  assertCurrent();
++  return result!;
++}
++
++/** Explicit Save Draft or Add write-ahead snapshot. No per-keystroke writes. */
++export async function saveManualIntakeDraft(lease: HealthDataWriteLease, request: Readonly<{
++  id: string;
++  expected: ManualIntakeDraft | null;
++  operationId: string;
++  fields: ManualIntakeDraftFields;
++}>, assertCallerCurrent: () => void): Promise<ManualIntakeDraft> {
++  const assertCurrent = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  assertCurrent();
++  const fields = decodeManualIntakeDraftFields(request.fields);
++  // Snapshot every caller value before the first await, including the CAS proof.
++  const expected = request.expected ? JSON.stringify(request.expected) : null;
++  const id = request.id, operationId = request.operationId;
++  let result: ManualIntakeDraft | undefined;
++  await updatePrivateItemWithSources(MANUAL_INTAKE_DRAFT_KEY, MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS, values => {
++    assertCurrent();
++    const raw = values.get(MANUAL_INTAKE_DRAFT_KEY) ?? null;
++    const collection = decodeManualIntakeDraftCollection(raw, lease.ownerUserId, lease.epoch);
++    const existing = collection.drafts.find(row => row.id === id);
++    if ((existing ? JSON.stringify(existing) : null) !== expected ||
++        (existing && existing.operationId !== operationId) ||
++        collection.drafts.some(row => row.id !== id && row.operationId === operationId)) throw new Error(MANUAL_INTAKE_DRAFT_CONFLICT);
++    // Once Add has been attempted, a retry must keep the entire original
++    // snapshot. Even edits to raw fields could falsely describe what was saved.
++    if (existing?.fields.attempted && JSON.stringify(existing.fields) !== JSON.stringify(fields)) throw new Error(MANUAL_INTAKE_DRAFT_CONFLICT);
++    if (existing && JSON.stringify(existing.fields) === JSON.stringify(fields)) {
++      result = existing;
++      return raw;
++    }
++    if (!existing && collection.drafts.length >= MANUAL_INTAKE_DRAFT_LIMIT) throw new Error(MANUAL_INTAKE_DRAFT_CONFLICT);
++    const now = new Date().toISOString();
++    result = makeManualIntakeDraft({ id, revision: (existing?.revision ?? 0) + 1,
++      createdAt: existing?.createdAt ?? now, updatedAt: now, operationId, fields });
++    const next = JSON.stringify({ ...collection, drafts: [...collection.drafts.filter(row => row.id !== id), result] });
++    decodeManualIntakeDraftCollection(next, lease.ownerUserId, lease.epoch);
++    return next;
++  }, assertCurrent, undefined, undefined, manualIntakeDraftAuthorization(lease));
++  assertCurrent();
++  return result!;
++}
++
++/** An explicit discard affects only this exact saved revision. Completion
++ * retirement additionally requires canonical Shelf proof in the submit path. */
++export async function discardManualIntakeDraft(lease: HealthDataWriteLease, expected: ManualIntakeDraft, assertCallerCurrent: () => void): Promise<void> {
++  const assertCurrent = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  assertCurrent();
++  const accepted = JSON.stringify(expected), acceptedId = expected.id;
++  await updatePrivateItemWithSources(MANUAL_INTAKE_DRAFT_KEY, MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS, values => {
++    assertCurrent();
++    const raw = values.get(MANUAL_INTAKE_DRAFT_KEY) ?? null;
++    const collection = decodeManualIntakeDraftCollection(raw, lease.ownerUserId, lease.epoch);
++    assertExactManualIntakeDraft(raw, lease, JSON.parse(accepted) as ManualIntakeDraft);
++    return JSON.stringify({ ...collection, drafts: collection.drafts.filter(row => row.id !== acceptedId) });
++  }, assertCurrent, undefined, undefined, manualIntakeDraftAuthorization(lease));
++  assertCurrent();
++}
+diff --git a/apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts b/apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..d67cc813864d03396306913270445d13457dbd5d
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/manualIntakeDraftUI21.test.ts
+@@ -0,0 +1,319 @@
++import { createElement, StrictMode, useLayoutEffect } from 'react';
++import { act, create, type ReactTestRenderer } from 'react-test-renderer';
++import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { adultLifecycle26, close26, flush26, grant26, ports26, profile26, reset26 } from './firstValue26TestPorts';
++import AsyncStorage from '@react-native-async-storage/async-storage';
++import ManualAddScreen from '@/app/shelf/manual';
++import OpenedDateScreen from '@/app/shelf/opened';
++import ManualIntakeDraftsScreen from '@/app/shelf/intake-drafts';
++import ShelfLayout from '@/app/shelf/_layout';
++import { Button } from '@/components/ui/Button';
++import { IntakeProvider, useIntake } from './IntakeContext';
++import { loadManualIntakeDrafts, saveManualIntakeDraft } from './manualIntakeDraftStore';
++import { MANUAL_INTAKE_DRAFT_KEY } from './manualIntakeDraftCodec';
++import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { activeHealthProcessingLeaseSnapshot, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
++import { setPrivateItem, waitForPrivateKVWritesToSettle } from '@/lib/storage/privateKV';
++import { loadShelf } from './store';
++
++let screen: ReactTestRenderer | undefined, client: QueryClient;
++let intake: ReturnType<typeof useIntake>;
++function Probe() { const current = useIntake(); useLayoutEffect(() => { intake = current; }, [current]); return null; }
++function tree() {
++  return createElement(StrictMode, null, createElement(QueryClientProvider, { client },
++    createElement(IntakeProvider, null, createElement(Probe), createElement(ShelfLayout))));
++}
++async function settle() { await waitForPrivateKVWritesToSettle(); await flush26(); }
++async function route(name: 'manual' | 'opened' | 'intake-drafts', fresh = false) {
++  if (fresh) {
++    await act(async () => screen?.unmount()); screen = undefined; client.clear();
++    client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity, gcTime: Infinity } } });
++    await grant26();
++  }
++  ports26.routeName = name;
++  ports26.routeChild = createElement(name === 'manual' ? ManualAddScreen : name === 'opened' ? OpenedDateScreen : ManualIntakeDraftsScreen);
++  await act(async () => { if (screen) screen.update(tree()); else screen = create(tree()); });
++  await settle();
++}
++function input(label: string) { return screen!.root.findAllByType('TextInput' as never).find(node => node.props.accessibilityLabel === label)!; }
++function button(label: string) { return screen!.root.findAllByType(Button).find(node => node.props.label === label)!; }
++function action(label: string) { return screen!.root.findAllByType('Pressable' as never).find(node => node.props.accessibilityLabel === label)!; }
++function visible() { return JSON.stringify(screen!.toJSON()); }
++async function press(label: string) { await act(async () => { await button(label).props.onPress(); }); await settle(); }
++async function edit(label: string, value: string) { await act(async () => input(label).props.onChangeText(value)); }
++async function resume() {
++  await press('Resume saved intake draft');
++  const pushed = ports26.push.mock.calls.at(-1)![0] as { params: { intakeId: string } };
++  ports26.params = pushed.params; await route('manual');
++}
++async function continueOpening() {
++  await press('Continue'); ports26.params = { intakeId: intake.sessionId! }; await route('opened');
++}
++beforeEach(async () => { client = await reset26(); await adultLifecycle26(); await profile26(); });
++afterEach(async () => {
++  ports26.failRead = null; ports26.failWrite = null; ports26.release?.();
++  await act(async () => screen?.unmount()); screen = undefined;
++  vi.useRealTimers();
++  await waitForPrivateKVWritesToSettle(); await close26(client); vi.restoreAllMocks();
++});
++
++it('explicitly saves incomplete original inputs, marks later edits unsaved and recovers only the saved revision in a fresh runtime', async () => {
++  await route('manual');
++  await edit('Brand', '  Original brand  '); await edit('Barcode, optional', '96385074');
++  await act(async () => action('Eight-digit barcode type, EAN-8').props.onPress());
++  await edit('Ingredients', ' Aqua,\nGlycerin ');
++  await press('Save intake draft on this device');
++  expect(visible()).toContain('Saved draft revision 1.');
++  expect(visible()).not.toContain('Unsaved changes');
++  const saved = (await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts[0]!;
++  expect(saved.fields.form.name).toBe(''); expect(saved.fields.form.ingredients).toBe(' Aqua,\nGlycerin ');
++  expect(saved.fields.form.eightDigitFormat).toBe('ean8'); expect(await loadShelf()).toHaveLength(0);
++  await edit('Brand', 'Later unsaved brand'); expect(visible()).toContain('Unsaved changes');
++  await route('intake-drafts', true); expect(visible()).toContain('Incomplete product');
++  await resume();
++  expect(input('Product name').props.value).toBe(''); expect(input('Brand').props.value).toBe('  Original brand  ');
++  expect(input('Ingredients').props.value).toBe(' Aqua,\nGlycerin ');
++  expect(action('Eight-digit barcode type, EAN-8').props.accessibilityState.checked).toBe(true);
++  expect(action('Eight-digit barcode type, EAN-8').props['aria-checked']).toBe(true);
++  expect(action('Eight-digit barcode type, UPC-E').props['aria-checked']).toBe(false);
++  expect(visible()).not.toContain('Unsaved changes');
++  expect(intake.sessionId).not.toBeNull(); expect(button('Continue').props.disabled).toBe(true);
++});
++
++it('restores opening choices for fresh review, explicitly adds once, and retires only after canonical Shelf readback', async () => {
++  await route('manual'); await edit('Product name', '  Saved synthetic product  ');
++  await edit('Ingredients', 'Aqua, Glycerin'); await press('Save intake draft on this device');
++  const first = (await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts[0]!;
++  await continueOpening();
++  await act(async () => action('Pick a date').props.onPress());
++  await edit('Exact opened date', '2026-10-01');
++  await act(async () => action('Edit period after opening').props.onPress());
++  await edit('PAO months printed on label', '17');
++  await act(async () => action('Confirm label PAO value').props.onPress());
++  await press('Save intake draft on this device');
++  expect(visible()).toContain('Saved intake revision 2.');
++  expect(visible()).not.toContain('Unsaved changes');
++  await route('intake-drafts', true); await resume();
++  expect(input('Product name').props.value).toBe('  Saved synthetic product  ');
++  await continueOpening(); expect(input('Exact opened date').props.value).toBe('2026-10-01');
++  expect(visible()).toContain('17 months'); expect(await loadShelf()).toHaveLength(0);
++  const add = button('Add to shelf').props.onPress;
++  await act(async () => { await Promise.all([add(), add()]); }); await settle();
++  const products = await loadShelf(); expect(products).toHaveLength(1);
++  expect(products[0]).toMatchObject({ id: first.operationId, name: 'Saved synthetic product', paoMonths: 17, openedAt: '2026-10-01' });
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toHaveLength(0);
++  expect(intake.sessionId).toBeNull(); expect(ports26.replace).toHaveBeenCalledTimes(1);
++});
++
++it('keeps unavailable and invalid storage distinct from verified empty and permits exact discard after refresh', async () => {
++  await route('intake-drafts'); expect(visible()).toContain('No saved intake drafts.');
++  await route('manual'); await edit('Brand', 'Unconfirmed private brand'); await press('Save intake draft on this device');
++  ports26.failRead = MANUAL_INTAKE_DRAFT_KEY; await route('intake-drafts');
++  expect(visible()).toContain('unavailable or unreadable'); expect(visible()).not.toContain('No saved intake drafts.');
++  ports26.failRead = null; await press('Refresh saved intake drafts');
++  const lease = captureHealthDataWriteLease(), collection = await loadManualIntakeDrafts(lease);
++  await setPrivateItem(MANUAL_INTAKE_DRAFT_KEY, JSON.stringify({ ...collection, schemaVersion: 2 }));
++  await press('Refresh saved intake drafts'); expect(visible()).toContain('unsupported or invalid');
++  expect(visible()).not.toContain('No saved intake drafts.');
++  await setPrivateItem(MANUAL_INTAKE_DRAFT_KEY, JSON.stringify(collection));
++  await press('Refresh saved intake drafts'); await press('Review intake draft discard'); await press('Keep intake draft');
++  expect((await loadManualIntakeDrafts(lease)).drafts).toHaveLength(1);
++  await press('Review intake draft discard'); await press('Confirm intake draft discard');
++  expect(visible()).toContain('No saved intake drafts.'); expect(await loadShelf()).toHaveLength(0);
++});
++
++it('refuses a captured discard against a concurrent successor without removing either private revision', async () => {
++  await route('manual'); await edit('Brand', 'Original brand'); await press('Save intake draft on this device');
++  await route('intake-drafts'); await press('Review intake draft discard');
++  const discard = button('Confirm intake draft discard').props.onPress;
++  const lease = captureHealthDataWriteLease(), saved = (await loadManualIntakeDrafts(lease)).drafts[0]!;
++  const next = await saveManualIntakeDraft(lease, { ...saved, expected: saved,
++    fields: { ...saved.fields, form: { ...saved.fields.form, brand: 'Successor brand' } } }, () => undefined);
++  await act(async () => discard()); await settle();
++  expect(visible()).toContain('saved revision changed');
++  expect(button('Confirm intake draft discard')).toBeUndefined();
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([next]);
++});
++
++it('retires old Save callbacks on form unmount and owner regrant without borrowing a new runtime capability', async () => {
++  await route('manual'); await edit('Product name', 'Private unsaved');
++  const oldSave = button('Save intake draft on this device').props.onPress;
++  await route('intake-drafts'); await act(async () => oldSave()); await settle();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toHaveLength(0);
++  await route('manual'); await edit('Product name', 'Private before regrant');
++  const retired = button('Save intake draft on this device').props.onPress;
++  await act(async () => { await grant26(); retired(); }); await settle();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toHaveLength(0);
++});
++
++it('reviews the original date of a recovered Just opened attempt instead of claiming today', async () => {
++  await route('manual'); await edit('Product name', 'Original dated attempt'); await press('Save intake draft on this device');
++  const lease = captureHealthDataWriteLease(), saved = (await loadManualIntakeDrafts(lease)).drafts[0]!;
++  const { catalogRecoveryToken: _token, ...input } = saved.fields.intake;
++  await saveManualIntakeDraft(lease, { ...saved, expected: saved, fields: {
++    ...saved.fields, phase: 'opened', opening: { ...saved.fields.opening, mode: 'just' },
++    attempted: { input: { ...input, operationId: saved.operationId, openedAt: '2026-10-01', isOpened: true } },
++  } }, () => undefined);
++  await route('intake-drafts', true); await resume(); await continueOpening();
++  expect(visible()).toContain('Original Add date: 2026-10-01');
++  expect(action('Just opened it').props.accessibilityHint).toBe('Original attempt opened date: 2026-10-01');
++  expect(button('Save intake draft on this device').props.disabled).toBe(true);
++  await press('Add to shelf');
++  expect((await loadShelf())[0]?.openedAt).toBe('2026-10-01');
++});
++
++it('masks saved inventory at passive lease expiry and retires captured resume/discard callbacks without reading or changing draft bytes', async () => {
++  await route('manual'); await edit('Product name', 'Private inventory before expiry');
++  await press('Save intake draft on this device');
++  await act(async () => screen?.unmount()); screen = undefined;
++  const active = activeHealthProcessingLeaseSnapshot()!;
++  setActiveHealthProcessingEpoch(active.epoch, { ...active, serverVerifiedAt: new Date().toISOString() });
++  vi.useFakeTimers();
++  ports26.routeName = 'intake-drafts'; ports26.routeChild = createElement(ManualIntakeDraftsScreen);
++  await act(async () => { screen = create(tree()); });
++  await act(async () => waitForPrivateKVWritesToSettle());
++  expect(visible()).toContain('Private inventory before expiry');
++  const resume = button('Resume saved intake draft').props.onPress;
++  await act(async () => button('Review intake draft discard').props.onPress());
++  const discard = button('Confirm intake draft discard').props.onPress;
++  const before = new Map(ports26.bytes), reads = vi.spyOn(AsyncStorage, 'getItem');
++  const expiresAt = activeHealthProcessingLeaseSnapshot()!.expiresAt!;
++  await act(async () => { await vi.advanceTimersByTimeAsync(expiresAt - Date.now() + 2); });
++  expect(visible()).toContain('Draft access retired.');
++  expect(visible()).not.toContain('Private inventory before expiry');
++  expect(button('Resume saved intake draft')).toBeUndefined();
++  expect(button('Confirm intake draft discard')).toBeUndefined();
++  await act(async () => { resume(); discard(); await waitForPrivateKVWritesToSettle(); });
++  expect(reads.mock.calls.some(([key]) => key === MANUAL_INTAKE_DRAFT_KEY)).toBe(false);
++  expect(ports26.bytes).toEqual(before);
++  expect(ports26.push).not.toHaveBeenCalled();
++});
++
++it('requires explicit cancellation, keeps working text and retires an older leave confirmation', async () => {
++  await route('manual'); await edit('Product name', 'Unsaved cancellation example');
++  const before = new Map(ports26.bytes);
++  await act(async () => action('Cancel').props.onPress());
++  expect(ports26.back).not.toHaveBeenCalled();
++  expect(visible()).toContain('Keep your intake draft?');
++  const staleLeave = button('Leave without saving edits').props.onPress;
++  await press('Keep editing intake');
++  expect(input('Product name').props.value).toBe('Unsaved cancellation example');
++  await edit('Brand', 'Successor edit');
++  await act(async () => staleLeave()); await settle();
++  expect(ports26.back).not.toHaveBeenCalled();
++  expect(input('Brand').props.value).toBe('Successor edit');
++  expect(ports26.bytes).toEqual(before);
++  await act(async () => action('Cancel').props.onPress());
++  await press('Leave without saving edits');
++  expect(ports26.back).toHaveBeenCalledTimes(1);
++  expect(intake.readManualForm(intake.draft)).toBeNull();
++});
++
++it('saves incomplete text before leaving, refuses storage failure, and leaves the saved revision intact on later cancellation', async () => {
++  await route('manual'); await edit('Brand', 'Incomplete owner input');
++  await act(async () => action('Cancel').props.onPress());
++  ports26.failWrite = MANUAL_INTAKE_DRAFT_KEY;
++  await press('Save intake draft and leave');
++  expect(ports26.back).not.toHaveBeenCalled(); expect(visible()).toContain('unconfirmed');
++  ports26.failWrite = null; await press('Save intake draft and leave');
++  expect(ports26.back).toHaveBeenCalledTimes(1);
++  const lease = captureHealthDataWriteLease(), saved = (await loadManualIntakeDrafts(lease)).drafts[0]!;
++  expect(saved.fields.form.brand).toBe('Incomplete owner input');
++  await route('intake-drafts'); await resume(); await edit('Brand', 'Unsaved replacement');
++  await act(async () => action('Cancel').props.onPress()); await press('Leave without saving edits');
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([saved]);
++  expect(await loadShelf()).toHaveLength(0);
++});
++
++it('retires cancellation controls on navigation blur/refocus and same-owner regrant', async () => {
++  await route('manual'); await edit('Product name', 'Navigation private draft');
++  await act(async () => action('Cancel').props.onPress());
++  const leave = button('Leave without saving edits').props.onPress;
++  await route('intake-drafts'); await route('manual');
++  await act(async () => leave()); await settle(); expect(ports26.back).not.toHaveBeenCalled();
++  await act(async () => action('Cancel').props.onPress());
++  const saveLeave = button('Save intake draft and leave').props.onPress;
++  await act(async () => { await grant26(); await saveLeave(); }); await settle();
++  expect(ports26.back).not.toHaveBeenCalled();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toHaveLength(0);
++});
++
++it('identifies each inventory action and exposes opening radio state to assistive technology', async () => {
++  await route('manual'); await edit('Product name', 'Repeated product'); await press('Save intake draft on this device');
++  const first = (await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts[0]!;
++  await saveManualIntakeDraft(captureHealthDataWriteLease(), { id: 'b3c442cc-d5d5-4666-8777-888888888888', operationId: 'b3c442cc-d5d5-4666-8777-999999999999', expected: null, fields: first.fields }, () => undefined);
++  await route('intake-drafts');
++  const resumes = screen!.root.findAllByType(Button).filter(node => node.props.label === 'Resume saved intake draft');
++  expect(resumes).toHaveLength(2);
++  expect(resumes[0]!.props.accessibilityLabel).toContain('Repeated product');
++  expect(resumes[0]!.props.accessibilityLabel).not.toBe(resumes[1]!.props.accessibilityLabel);
++  await resume(); await continueOpening();
++  expect(action('Not opened yet').props.accessibilityState.checked).toBe(false);
++  await act(async () => action('Not opened yet').props.onPress());
++  expect(action('Not opened yet').props['aria-checked']).toBe(true);
++  expect(action('Not opened yet').props.accessibilityState.checked).toBe(true);
++});
++
++it('keeps opening choices in working memory on Back, and saves before explicit opening-screen departure', async () => {
++  await route('manual'); await edit('Product name', 'Opening recovery example'); await edit('Ingredients', 'Aqua; Glycerin');
++  await continueOpening();
++  await act(async () => action('Pick a date').props.onPress()); await edit('Exact opened date', '2026-10-01');
++  const before = new Map(ports26.bytes);
++  await route('manual'); await continueOpening();
++  expect(input('Exact opened date').props.value).toBe('2026-10-01');
++  expect(ports26.bytes).toEqual(before);
++  expect(visible()).toContain('Ingredient entries to save:');
++  expect(visible()).toContain('does not apply a routine or record product use');
++  await act(async () => action('Close').props.onPress());
++  expect(ports26.back).not.toHaveBeenCalled();
++  const stale = button('Leave without saving edits').props.onPress;
++  await press('Keep editing intake');
++  await act(async () => stale()); expect(ports26.back).not.toHaveBeenCalled();
++  await act(async () => action('Close').props.onPress()); await press('Save intake draft and leave');
++  expect(ports26.back).toHaveBeenCalledTimes(1);
++  const saved = (await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts[0]!;
++  expect(saved.fields.opening).toMatchObject({ mode: 'pick', selectedDate: '2026-10-01' });
++  expect(saved.fields.attempted).toBeNull(); expect(await loadShelf()).toHaveLength(0);
++});
++
++it('does not revive a canceled discard confirmation when the same saved row is selected again', async () => {
++  await route('manual'); await edit('Product name', 'Saved discard ABA'); await press('Save intake draft on this device');
++  await route('intake-drafts'); await press('Review intake draft discard');
++  const oldDiscard = button('Confirm intake draft discard').props.onPress;
++  const oldKeep = button('Keep intake draft').props.onPress;
++  await press('Keep intake draft'); await press('Review intake draft discard');
++  const before = new Map(ports26.bytes);
++  await act(async () => { oldDiscard(); oldKeep(); }); await settle();
++  expect(ports26.bytes).toEqual(before);
++  expect(button('Confirm intake draft discard')).toBeDefined();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toHaveLength(1);
++  await press('Confirm intake draft discard');
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toHaveLength(0);
++});
++
++it('refuses captured background category and save controls while the leave dialog owns focus', async () => {
++  await route('manual'); await edit('Product name', 'One dialog only');
++  const category = action('Category').props.onPress, save = button('Save intake draft on this device').props.onPress;
++  await act(async () => action('Cancel').props.onPress());
++  const before = new Map(ports26.bytes);
++  await act(async () => { category(); await save(); }); await settle();
++  expect(screen!.root.findAllByProps({ role: 'dialog', accessibilityLabel: 'Choose product category' })).toHaveLength(0);
++  expect(ports26.bytes).toEqual(before);
++});
++
++it('retires a save-and-leave during a held source read without lending a successor consent grant', async () => {
++  await route('manual'); await edit('Brand', 'Held incomplete input');
++  await act(async () => action('Cancel').props.onPress());
++  const save = button('Save intake draft and leave').props.onPress;
++  const keep = button('Keep editing intake').props.onPress, leave = button('Leave without saving edits').props.onPress;
++  ports26.holdRead = MANUAL_INTAKE_DRAFT_KEY;
++  let pending: Promise<void>;
++  await act(async () => { pending = save(); await flush26(); });
++  expect(ports26.release).not.toBeNull();
++  await act(async () => { keep(); leave(); await grant26(); });
++  await act(async () => { ports26.release?.(); await pending; }); await settle();
++  expect(ports26.back).not.toHaveBeenCalled();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toHaveLength(0);
++  expect(await loadShelf()).toHaveLength(0);
++});
+diff --git a/apps/mobile/src/features/shelf/manualIntakeDrafts.test.ts b/apps/mobile/src/features/shelf/manualIntakeDrafts.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ff9de8d9698677c86b97bf43842296a94d26a984
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/manualIntakeDrafts.test.ts
+@@ -0,0 +1,338 @@
++import { adultLifecycle26, close26, grant26, ports26, reset26 } from './firstValue26TestPorts';
++import { randomUUID } from 'node:crypto';
++import AsyncStorage from '@react-native-async-storage/async-storage';
++import type { QueryClient } from '@tanstack/react-query';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { claimLocalDataOwnership } from '@/lib/auth/sessionOwner';
++import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
++import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { activeHealthProcessingLeaseSnapshot, clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
++import { getPrivateItem, setPrivateItem, removePrivateItem, waitForPrivateKVWritesToSettle } from '@/lib/storage/privateKV';
++import { PRIVATE_KV_CONTENT_KEY_NAME } from '@/lib/storage/privateKVContentKey';
++import { setAgeVerified } from '@/features/onboarding/ageGateStore';
++import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
++import { collectLocalDeviceExportData } from '@/features/settings/localDeviceExport';
++import { createIntakeDraft } from './intakeSession';
++import {
++  MANUAL_INTAKE_DRAFT_KEY as KEY, MANUAL_INTAKE_DRAFT_CONFLICT,
++  decodeManualIntakeDraftCollection, decodeManualIntakeDraftFields, makeManualIntakeDraft,
++  type ManualIntakeDraftFields,
++} from './manualIntakeDraftCodec';
++import { discardManualIntakeDraft, loadManualIntakeDrafts, saveManualIntakeDraft } from './manualIntakeDraftStore';
++import { submitDurableManualIntake } from './manualIntakeSubmission';
++import { addProduct, loadShelf, removeProduct } from './store';
++
++vi.mock('expo-file-system/legacy', () => ({ documentDirectory: null, cacheDirectory: null }));
++let client: QueryClient;
++function fields(): ManualIntakeDraftFields {
++  return {
++    form: { name: '  Synthetic cleanser  ', brand: ' Original brand ', barcode: '96385074',
++      ingredients: ' Aqua,\nGlycerin ', category: 'cleanser', eightDigitFormat: 'ean8', addedVia: 'manual' },
++    intake: createIntakeDraft({ name: 'Synthetic cleanser', brand: 'Original brand', barcode: '96385074',
++      category: 'cleanser', ingredients: ['Aqua', 'Glycerin'], addedVia: 'manual',
++      ingredientParseStatus: 'parsed', ingredientParseConfidence: 1, parserVersion: 'synthetic-test-parser' }),
++    phase: 'manual', opening: { mode: null, selectedDate: null, paoMonths: null, paoSource: 'unknown', customPaoText: '' }, attempted: null,
++  };
++}
++function request(nextFields = fields()) {
++  return { id: randomUUID(), expected: null, operationId: randomUUID(), fields: nextFields };
++}
++async function saved(nextFields = fields()) {
++  const lease = captureHealthDataWriteLease();
++  return { lease, draft: await saveManualIntakeDraft(lease, request(nextFields), () => undefined) };
++}
++async function attempted() {
++  const lease = captureHealthDataWriteLease();
++  const value = request();
++  const { catalogRecoveryToken: _recovery, ...intake } = value.fields.intake;
++  const next: ManualIntakeDraftFields = { ...value.fields, phase: 'opened',
++    opening: { mode: 'unopened', selectedDate: null, paoMonths: null, paoSource: 'unknown', customPaoText: '' },
++    attempted: { input: { ...intake, operationId: value.operationId, isOpened: false, openedAt: null } } };
++  return { lease, draft: await saveManualIntakeDraft(lease, { ...value, fields: next }, () => undefined) };
++}
++beforeEach(async () => {
++  vi.stubGlobal('__DEV__', true);
++  client = await reset26(); await claimLocalDataOwnership('synthetic-first-value-a'); await adultLifecycle26();
++});
++afterEach(async () => {
++  vi.restoreAllMocks(); ports26.failWrite = null; ports26.failRead = null;
++  await waitForPrivateKVWritesToSettle(); await close26(client); vi.unstubAllGlobals();
++});
++
++it('round trips raw inputs, provenance and incomplete choices with purpose-bound encryption under a fresh runtime lease', async () => {
++  const { draft, lease } = await saved();
++  const ciphertext = ports26.bytes.get(KEY)!;
++  expect(ciphertext).toContain('xchacha20poly1305:purpose-bound:v2');
++  expect(ciphertext).not.toContain('Synthetic cleanser'); expect(ciphertext).not.toContain(lease.ownerUserId);
++  await grant26();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toEqual([draft]);
++  expect(draft.fields.form).toEqual(fields().form);
++  expect(await loadShelf()).toEqual([]);
++});
++it('permits an empty name, unresolved barcode choice and incomplete PAO text without creating a product', async () => {
++  const value = fields();
++  const { lease, draft } = await saved({ ...value, form: { ...value.form, name: '', eightDigitFormat: null },
++    intake: createIntakeDraft(), opening: { ...value.opening, customPaoText: '0' } });
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([draft]);
++  expect(await loadShelf()).toEqual([]);
++});
++it('strictly validates every field, version, bound and integrity hash while refusing OCR or runtime references', async () => {
++  const { draft, lease } = await saved();
++  const raw = (await getPrivateItem(KEY))!;
++  const envelope = JSON.parse(raw);
++  for (const altered of [
++    { ...envelope, schemaVersion: 2 }, { ...envelope, extra: true },
++    { ...envelope, drafts: [...envelope.drafts, ...envelope.drafts] },
++    { ...envelope, drafts: [{ ...draft, contentHash: '0'.repeat(64) }] },
++    { ...envelope, drafts: Array.from({ length: 21 }, () => draft) },
++  ]) expect(() => decodeManualIntakeDraftCollection(JSON.stringify(altered), lease.ownerUserId, lease.epoch)).toThrow();
++  const original = fields();
++  for (const altered of [
++    { ...original, lease }, { ...original, form: { ...original.form, addedVia: 'ocr' } },
++    { ...original, intake: { ...original.intake, addedVia: 'ocr' } },
++    { ...original, form: { ...original.form, ingredients: 'x'.repeat(16_001) } },
++    { ...original, opening: { ...original.opening, selectedDate: '2026-02-30' } },
++    { ...original, intake: { ...original.intake, cameraUri: 'local-file' } },
++    { ...original, intake: { ...original.intake, ingredientParseConfidence: Number.NaN } },
++  ]) expect(() => decodeManualIntakeDraftFields(altered)).toThrow();
++  expect(() => decodeManualIntakeDraftCollection('', lease.ownerUserId, lease.epoch)).toThrow();
++  expect(() => decodeManualIntakeDraftCollection(' '.repeat(1_000_001), lease.ownerUserId, lease.epoch)).toThrow();
++  expect(() => makeManualIntakeDraft({ ...draft, id: 'not-an-id' })).toThrow();
++});
++it('CAS keeps a successor intact against old save/discard commands and operation identity replacement', async () => {
++  const { lease, draft } = await saved();
++  const successorFields = { ...draft.fields, form: { ...draft.fields.form, name: 'Successor raw text' } };
++  const successor = await saveManualIntakeDraft(lease, { ...draft, expected: draft, fields: successorFields }, () => undefined);
++  await expect(discardManualIntakeDraft(lease, draft, () => undefined)).rejects.toThrow(MANUAL_INTAKE_DRAFT_CONFLICT);
++  await expect(saveManualIntakeDraft(lease, { ...draft, expected: draft }, () => undefined)).rejects.toThrow(MANUAL_INTAKE_DRAFT_CONFLICT);
++  await expect(saveManualIntakeDraft(lease, { ...successor, expected: successor, operationId: randomUUID() }, () => undefined)).rejects.toThrow(MANUAL_INTAKE_DRAFT_CONFLICT);
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([successor]);
++});
++it('serializes concurrent saves and allows only one revision to win', async () => {
++  const { lease, draft } = await saved();
++  const saves = ['first', 'second'].map(name => saveManualIntakeDraft(lease, { ...draft, expected: draft,
++    fields: { ...draft.fields, form: { ...draft.fields.form, name } } }, () => undefined));
++  const outcomes = await Promise.allSettled(saves);
++  expect(outcomes.filter(result => result.status === 'fulfilled')).toHaveLength(1);
++  expect(outcomes.filter(result => result.status === 'rejected')).toHaveLength(1);
++  expect((await loadManualIntakeDrafts(lease)).drafts[0]!.revision).toBe(2);
++});
++it('refuses a second draft claiming the same stable submission identity', async () => {
++  const { lease, draft } = await saved();
++  await expect(saveManualIntakeDraft(lease, { ...request(), operationId: draft.operationId }, () => undefined)).rejects.toThrow(MANUAL_INTAKE_DRAFT_CONFLICT);
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([draft]);
++});
++it('refuses a retired caller before payload reads and a copied lease cannot borrow authority', async () => {
++  const { lease, draft } = await saved();
++  const read = vi.spyOn(AsyncStorage, 'getItem');
++  await expect(saveManualIntakeDraft(lease, { ...draft, expected: draft }, () => { throw new Error('RETIRED_CALLER'); })).rejects.toThrow('RETIRED_CALLER');
++  await expect(discardManualIntakeDraft({ ...lease }, draft, () => undefined)).rejects.toThrow();
++  expect(read.mock.calls.some(([key]) => key === KEY)).toBe(false);
++});
++it.each(['adult', 'consent', 'lifecycle'] as const)('refuses %s authority before reading draft or Shelf payloads', async kind => {
++  await saved();
++  if (kind === 'adult') await setAgeVerified(false);
++  if (kind === 'consent') await setHealthDataCollectionConsentLocal({ granted: false, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.declineText });
++  if (kind === 'lifecycle') await removePrivateItem('layerwell.healthDataLifecycle.v1');
++  const read = vi.spyOn(AsyncStorage, 'getItem');
++  await expect(loadManualIntakeDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(read.mock.calls.filter(([key]) => key === KEY || key === 'layerwell.shelf.v1')).toEqual([]);
++});
++it('retires old callbacks on same-owner regrant and A-B-A transitions while permitting fresh recovery', async () => {
++  const { lease, draft } = await saved(); await grant26();
++  await expect(discardManualIntakeDraft(lease, draft, () => undefined)).rejects.toThrow();
++  await grant26('synthetic-other-owner');
++  const read = vi.spyOn(AsyncStorage, 'getItem');
++  await expect(loadManualIntakeDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(read.mock.calls.some(([key]) => key === KEY)).toBe(false);
++  await grant26();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts).toEqual([draft]);
++  await expect(saveManualIntakeDraft(lease, { ...draft, expected: draft }, () => undefined)).rejects.toThrow();
++});
++it('refuses a retired persisted processing epoch without rewriting ciphertext', async () => {
++  await saved(); const before = ports26.bytes.get(KEY);
++  await adultLifecycle26(26);
++  const active = activeHealthProcessingLeaseSnapshot()!;
++  clearActiveHealthProcessingEpoch(); setActiveHealthProcessingEpoch(26, { ownerUserId: active.ownerUserId!, accountGeneration: active.accountGeneration! });
++  await expect(loadManualIntakeDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(ports26.bytes.get(KEY)).toBe(before);
++});
++it('distinguishes storage-read failure from empty and preserves source until a successful retry', async () => {
++  const { lease, draft } = await saved(); const before = ports26.bytes.get(KEY);
++  ports26.failRead = KEY;
++  await expect(loadManualIntakeDrafts(lease)).rejects.toThrow();
++  await expect(saveManualIntakeDraft(lease, { ...draft, expected: draft }, () => undefined)).rejects.toThrow();
++  expect(ports26.bytes.get(KEY)).toBe(before);
++  ports26.failRead = null;
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([draft]);
++});
++it('does not announce a successful save when native storage omits the write', async () => {
++  const original = AsyncStorage.setItem.bind(AsyncStorage);
++  vi.spyOn(AsyncStorage, 'setItem').mockImplementation(async (key, value) => { if (key !== KEY) await original(key, value); });
++  await expect(saveManualIntakeDraft(captureHealthDataWriteLease(), request(), () => undefined)).rejects.toThrow();
++  expect(ports26.bytes.has(KEY)).toBe(false);
++});
++it('preserves ciphertext with a missing key and never creates a recovery key', async () => {
++  await saved(); const before = ports26.bytes.get(KEY); ports26.bytes.delete(PRIVATE_KV_CONTENT_KEY_NAME);
++  await expect(loadManualIntakeDrafts(captureHealthDataWriteLease())).rejects.toThrow();
++  expect(ports26.bytes.get(KEY)).toBe(before); expect(ports26.bytes.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
++});
++it('rejects unsupported and plaintext records without migration or empty fallback', async () => {
++  const { lease } = await saved(); const raw = (await getPrivateItem(KEY))!;
++  await setPrivateItem(KEY, JSON.stringify({ ...JSON.parse(raw), schemaVersion: 2 }));
++  const before = ports26.bytes.get(KEY);
++  await expect(loadManualIntakeDrafts(lease)).rejects.toThrow(); expect(ports26.bytes.get(KEY)).toBe(before);
++  ports26.bytes.set(KEY, raw);
++  await expect(loadManualIntakeDrafts(lease)).rejects.toThrow(); expect(ports26.bytes.get(KEY)).toBe(raw);
++});
++it('freezes the attempted product identity and complete payload across saved retries', async () => {
++  const { lease, draft } = await attempted();
++  const same = await saveManualIntakeDraft(lease, { ...draft, expected: draft }, () => undefined);
++  expect(same).toEqual(draft);
++  await expect(saveManualIntakeDraft(lease, { ...draft, expected: draft,
++    fields: { ...draft.fields, form: { ...draft.fields.form, name: 'New attempt' } } }, () => undefined)).rejects.toThrow(MANUAL_INTAKE_DRAFT_CONFLICT);
++  await grant26();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts[0]!.fields.attempted).toEqual(draft.fields.attempted);
++});
++it('preserves original UPC-E, opening date, custom PAO and existing manual provenance exactly', async () => {
++  const original = fields();
++  const next: ManualIntakeDraftFields = { ...original,
++    form: { ...original.form, barcode: '00425261', eightDigitFormat: 'upc_e' }, phase: 'opened',
++    intake: createIntakeDraft({ ...original.intake, barcode: '004210000526', catalogSource: 'user_local',
++      catalogMatchQuality: 'manual', sourceDisclosureAckAt: '2026-01-01T00:00:00.000Z' }),
++    opening: { mode: 'pick', selectedDate: '2026-01-02', paoMonths: 15, paoSource: 'label', customPaoText: '15' } };
++  const { draft } = await saved(next); await grant26();
++  expect((await loadManualIntakeDrafts(captureHealthDataWriteLease())).drafts[0]!.fields).toEqual(next);
++  expect(draft.fields.intake.addedVia).toBe('manual');
++});
++it('does not submit an unattempted or superseded draft, even when its current owner is valid', async () => {
++  const { lease, draft } = await saved();
++  await expect(submitDurableManualIntake(lease, draft, () => undefined)).rejects.toThrow();
++  const savedAttempt = await attempted();
++  await discardManualIntakeDraft(lease, savedAttempt.draft, () => undefined);
++  await expect(submitDurableManualIntake(lease, savedAttempt.draft, () => undefined)).rejects.toThrow();
++  expect(await loadShelf()).toEqual([]);
++});
++it('adds the exact product once, canonically verifies it, and retires only its saved draft', async () => {
++  const { lease, draft } = await attempted(); const other = await saved();
++  const outcomes = await Promise.allSettled([submitDurableManualIntake(lease, draft, () => undefined), submitDurableManualIntake(lease, draft, () => undefined)]);
++  expect(outcomes.some(value => value.status === 'fulfilled')).toBe(true);
++  const products = await loadShelf();
++  expect(products).toHaveLength(1); expect(products[0]).toMatchObject({ id: draft.operationId, name: draft.fields.intake.name });
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([other.draft]);
++});
++it('recognizes an already committed exact operation after restart without creating another product', async () => {
++  const { draft } = await attempted();
++  await addProduct(draft.fields.attempted!.input); await grant26();
++  const lease = captureHealthDataWriteLease(); const recovered = (await loadManualIntakeDrafts(lease)).drafts[0]!;
++  const product = await submitDurableManualIntake(lease, recovered, () => undefined);
++  expect(product.id).toBe(draft.operationId); expect(await loadShelf()).toHaveLength(1);
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([]);
++});
++it('fails closed on a different product under the same operation ID without retiring the saved draft', async () => {
++  const { lease, draft } = await attempted();
++  await addProduct({ ...draft.fields.attempted!.input, name: 'Conflicting product' });
++  await expect(submitDurableManualIntake(lease, draft, () => undefined)).rejects.toThrow(MANUAL_INTAKE_DRAFT_CONFLICT);
++  expect(await loadShelf()).toHaveLength(1); expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([draft]);
++});
++it('keeps an uncertain committed product until exact recovery resolves the draft, then permits deletion', async () => {
++  const { lease, draft } = await attempted();
++  await addProduct(draft.fields.attempted!.input);
++  await expect(removeProduct(draft.operationId)).rejects.toThrow();
++  expect(await loadShelf()).toHaveLength(1); expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([draft]);
++  await grant26(); const fresh = captureHealthDataWriteLease();
++  await submitDurableManualIntake(fresh, (await loadManualIntakeDrafts(fresh)).drafts[0]!, () => undefined);
++  expect((await removeProduct(draft.operationId))?.id).toBe(draft.operationId);
++  expect(await loadShelf()).toEqual([]);
++});
++it('permits deliberate discard before deleting an uncertain product and refuses the obsolete Add callback', async () => {
++  const { lease, draft } = await attempted();
++  await addProduct(draft.fields.attempted!.input);
++  await discardManualIntakeDraft(lease, draft, () => undefined);
++  await removeProduct(draft.operationId);
++  await expect(submitDurableManualIntake(lease, draft, () => undefined)).rejects.toThrow(MANUAL_INTAKE_DRAFT_CONFLICT);
++  expect(await loadShelf()).toEqual([]);
++});
++it('does not remove a product when the saved draft source is unsupported', async () => {
++  const { draft } = await attempted(); await addProduct(draft.fields.attempted!.input);
++  const before = ports26.bytes.get('layerwell.shelf.v1');
++  await setPrivateItem(KEY, JSON.stringify({ ...JSON.parse((await getPrivateItem(KEY))!), schemaVersion: 2 }));
++  const unsupported = ports26.bytes.get(KEY);
++  await expect(removeProduct(draft.operationId)).rejects.toThrow();
++  expect(ports26.bytes.get('layerwell.shelf.v1')).toBe(before); expect(ports26.bytes.get(KEY)).toBe(unsupported);
++});
++it('retains the exact attempted draft after canonical readback failure then safely retries in a fresh runtime', async () => {
++  const { lease, draft } = await attempted();
++  const original = AsyncStorage.getItem.bind(AsyncStorage);
++  let committedReads = 0;
++  vi.spyOn(AsyncStorage, 'getItem').mockImplementation(async key => {
++    // The native write verifier reads first. Refuse a later source read after
++    // persisted Shelf bytes exist, before the durable draft can retire.
++    if (key === 'layerwell.shelf.v1' && ports26.bytes.has(key) && ++committedReads >= 2) throw new Error('SYNTHETIC_CANONICAL_READ_REFUSED');
++    return original(key);
++  });
++  await expect(submitDurableManualIntake(lease, draft, () => undefined)).rejects.toThrow();
++  expect(ports26.bytes.has(KEY)).toBe(true);
++  vi.restoreAllMocks(); await grant26();
++  const fresh = captureHealthDataWriteLease();
++  const recovered = (await loadManualIntakeDrafts(fresh)).drafts[0]!;
++  expect(recovered.operationId).toBe(draft.operationId);
++  await submitDurableManualIntake(fresh, recovered, () => undefined);
++  expect(await loadShelf()).toHaveLength(1); expect((await loadManualIntakeDrafts(fresh)).drafts).toEqual([]);
++});
++it('retains recovery when a native Shelf write rejects after storing bytes and reuses the same operation on retry', async () => {
++  const { lease, draft } = await attempted();
++  const original = AsyncStorage.setItem.bind(AsyncStorage);
++  let rejectOnce = true;
++  vi.spyOn(AsyncStorage, 'setItem').mockImplementation(async (key, value) => {
++    await original(key, value);
++    if (key === 'layerwell.shelf.v1' && rejectOnce) {
++      rejectOnce = false;
++      throw new Error('SYNTHETIC_WRITE_RESULT_UNCERTAIN');
++    }
++  });
++  await expect(submitDurableManualIntake(lease, draft, () => undefined)).rejects.toThrow();
++  vi.restoreAllMocks(); await grant26();
++  const fresh = captureHealthDataWriteLease(), recovered = (await loadManualIntakeDrafts(fresh)).drafts[0]!;
++  expect(recovered.operationId).toBe(draft.operationId);
++  await submitDurableManualIntake(fresh, recovered, () => undefined);
++  expect(await loadShelf()).toHaveLength(1); expect((await loadManualIntakeDrafts(fresh)).drafts).toEqual([]);
++});
++it('retains a committed product and exact draft when the caller retires after native dispatch, then recovers once', async () => {
++  const { lease, draft } = await attempted();
++  const original = AsyncStorage.setItem.bind(AsyncStorage);
++  let release!: () => void, entered!: () => void;
++  const gate = new Promise<void>(resolve => { release = resolve; });
++  const dispatched = new Promise<void>(resolve => { entered = resolve; });
++  let held = false, callerCurrent = true;
++  vi.spyOn(AsyncStorage, 'setItem').mockImplementation(async (key, value) => {
++    await original(key, value);
++    if (key === 'layerwell.shelf.v1' && !held) { held = true; entered(); await gate; }
++  });
++  const pending = submitDurableManualIntake(lease, draft, () => {
++    if (!callerCurrent) throw new Error('SYNTHETIC_EDITOR_RETIRED_AFTER_DISPATCH');
++  });
++  const rejected = expect(pending).rejects.toThrow('SYNTHETIC_EDITOR_RETIRED_AFTER_DISPATCH');
++  await dispatched; const committedBytes = ports26.bytes.get('layerwell.shelf.v1');
++  callerCurrent = false; release(); await rejected; vi.restoreAllMocks();
++  expect(ports26.bytes.get('layerwell.shelf.v1')).toBe(committedBytes);
++  expect((await loadShelf()).map(product => product.id)).toEqual([draft.operationId]);
++  expect((await loadManualIntakeDrafts(lease)).drafts).toEqual([draft]);
++  await grant26(); const fresh = captureHealthDataWriteLease();
++  const recovered = (await loadManualIntakeDrafts(fresh)).drafts[0]!;
++  await submitDurableManualIntake(fresh, recovered, () => undefined);
++  expect((await loadShelf()).map(product => product.id)).toEqual([draft.operationId]);
++  expect((await loadManualIntakeDrafts(fresh)).drafts).toEqual([]);
++});
++it('exports raw saved drafts through verified-owner rights authority while processing is paused and refuses foreign or invalid source', async () => {
++  const { lease, draft } = await saved(); const bytes = await getPrivateItem(KEY);
++  clearActiveHealthProcessingEpoch();
++  const collect = (owner = lease.ownerUserId) => runAccountGenerationOperation(account => collectLocalDeviceExportData(account, owner));
++  const result = await collect();
++  expect(result.sections.shelf_and_routine.unconfirmed_manual_intake_drafts).toMatchObject({ drafts: [{ id: draft.id, fields: draft.fields }] });
++  expect(JSON.stringify(result.sections.shelf_and_routine.unconfirmed_manual_intake_drafts)).not.toContain(lease.ownerUserId);
++  await expect(collect('synthetic-other-owner')).rejects.toThrow();
++  await grant26(); await setPrivateItem(KEY, JSON.stringify({ ...JSON.parse(bytes!), schemaVersion: 2 })); clearActiveHealthProcessingEpoch();
++  await expect(collect()).rejects.toThrow();
++});
+diff --git a/apps/mobile/src/features/shelf/manualIntakeRecovery.ts b/apps/mobile/src/features/shelf/manualIntakeRecovery.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ecb93aaf9ec6edc6a53e207a73c7a6428b9fcd0a
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/manualIntakeRecovery.ts
+@@ -0,0 +1,34 @@
++import { randomUUID } from 'expo-crypto';
++import { parseIngredientText } from '@/features/catalog/ingredientParser';
++import { normalizeManualBarcode } from '@/features/native/camera/barcode';
++import type { ManualIntakeForm, ManualIntakeRecovery } from './IntakeContext';
++import { createIntakeDraft, type IntakeDraft } from './intakeSession';
++
++export function newManualIntakeRecovery(draft: IntakeDraft): ManualIntakeRecovery {
++  return {
++    id: randomUUID(), operationId: randomUUID(), saved: null,
++    opening: { mode: null, selectedDate: null, paoMonths: draft.paoMonths,
++      paoSource: draft.paoSource, customPaoText: '' },
++  };
++}
++
++/** A decoded save can have a different object key order from the form state. */
++export function sameManualIntakeForm(left: ManualIntakeForm, right: ManualIntakeForm): boolean {
++  return left.name === right.name && left.brand === right.brand && left.barcode === right.barcode &&
++    left.eightDigitFormat === right.eightDigitFormat && left.category === right.category &&
++    left.ingredients === right.ingredients && left.addedVia === right.addedVia;
++}
++
++/** Keep raw inputs separately; normalization never upgrades their provenance. */
++export function normalizeManualIntakeForm(form: ManualIntakeForm, original: IntakeDraft): IntakeDraft {
++  const parsed = form.ingredients.trim() ? parseIngredientText(form.ingredients) : null;
++  return createIntakeDraft({
++    ...original,
++    name: form.name.trim(), brand: form.brand.trim() || null,
++    barcode: normalizeManualBarcode(form.barcode, form.eightDigitFormat)?.lookupValue ?? null,
++    category: form.category, ingredients: parsed?.tokens.map(token => token.displayName) ?? [],
++    ingredientParseStatus: parsed?.status ?? null,
++    ingredientParseConfidence: parsed?.confidence ?? null,
++    parserVersion: parsed?.parserVersion ?? null, addedVia: form.addedVia,
++  });
++}
+diff --git a/apps/mobile/src/features/shelf/manualIntakeSubmission.ts b/apps/mobile/src/features/shelf/manualIntakeSubmission.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..eb6402fdce15b803e4ac9b5a18121fa72ae2c478
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/manualIntakeSubmission.ts
+@@ -0,0 +1,2 @@
++// Keep the public intake workflow separate while using Shelf's canonical codec.
++export { submitDurableManualIntake } from './store';
+diff --git a/apps/mobile/src/features/shelf/mutations.ts b/apps/mobile/src/features/shelf/mutations.ts
+index 149dfc1760a0fe9c9722e3684336ee64ebf86f6c..adc185a1a993fbd1411bd9cea5918aa06d1cbdce 100644
+--- a/apps/mobile/src/features/shelf/mutations.ts
++++ b/apps/mobile/src/features/shelf/mutations.ts
+@@ -61,9 +61,10 @@ export function useShelfMutations() {
+     async confirmBottleObservation(
+       input: ConfirmOwnedBottleVersionInput38,
+       assertBeforeNativeWrite: () => void,
++      durableDraft?: Parameters<typeof confirmOwnedBottleVersion38>[2],
+     ): Promise<OwnedBottleHistorySnapshot38> {
+       return runShelfMutation(async (lease) => {
+-        const snapshot = await confirmOwnedBottleVersion38(input, assertBeforeNativeWrite);
++        const snapshot = await confirmOwnedBottleVersion38(input, assertBeforeNativeWrite, durableDraft);
+         lease.assertCurrent();
+         await invalidate(lease);
+         lease.assertCurrent();
+diff --git a/apps/mobile/src/features/shelf/openingClock.campaign25.test.ts b/apps/mobile/src/features/shelf/openingClock.campaign25.test.ts
+index 2b7509564cf7a1fe53c2840917565612031c3f4b..f78019a893a06748ab819aa941b0fecb56f235ed 100644
+--- a/apps/mobile/src/features/shelf/openingClock.campaign25.test.ts
++++ b/apps/mobile/src/features/shelf/openingClock.campaign25.test.ts
+@@ -3,6 +3,8 @@ import { createElement, useLayoutEffect, useRef } from 'react';
+ import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
+ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+ import { afterAll, afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { setAgeVerified } from '@/features/onboarding/ageGateStore';
++import { writeHealthDataLifecycle } from '@/features/healthConsent/lifecycleStore';
+ 
+ // Keep one loaded module across local midnight and Toronto's 25-hour DST day.
+ vi.useFakeTimers({ toFake: ['Date'] });
+@@ -68,6 +70,11 @@ async function savedDate() {
+ beforeEach(async () => {
+   vi.setSystemTime(new Date('2026-11-02T10:00:00-05:00'));
+   client = await reset25();
++  await setAgeVerified(true);
++  await writeHealthDataLifecycle({ ownerUserId: 'synthetic-first-value-a', processingEpoch: 25,
++    state: 'active', operationId: null, idempotencyKey: null, localCleanupComplete: false,
++    activationRoutePending: false, verificationReason: null, verificationResumeState: null,
++    serverVerifiedAt: null });
+   await profile25();
+   await shelf25();
+ });
+diff --git a/apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts b/apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts
+index 44abfc8fc04bfa67ec007fc2e2ac7eafdb248f94..b554bac0040796cf5ca284c569f1a5faf318da56 100644
+--- a/apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts
++++ b/apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts
+@@ -4,6 +4,10 @@ import { beginAccountGenerationBoundary, endAccountGenerationBoundary, runAccoun
+ import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+ import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
+ import { getPrivateItem } from '@/lib/storage/privateKV';
++import { setAgeVerified } from '@/features/onboarding/ageGateStore';
++import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
++import { writeHealthDataLifecycle } from '@/features/healthConsent/lifecycleStore';
+ 
+ import { FORMULA38_INVALID, FORMULA38_OWNER_MISMATCH, FORMULA38_STALE, type FormulaObservation38 } from './formulaVersion38';
+ import { createOwnedProductVersion38, historySnapshot38, sameObservation38, validateOwnedBottleHistory38, type OwnedBottleHistory38, type ProductIdentitySource38 } from './ownedBottleVersion38';
+@@ -20,7 +24,7 @@ const ports = vi.hoisted(() => ({
+ vi.mock('expo-crypto', () => ({ randomUUID: vi.fn(() => `38000000-0000-4000-8000-${String(++ports.id).padStart(12, '0')}`) }));
+ vi.mock('react-native-get-random-values', () => ({}));
+ vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
+-vi.mock('expo-secure-store', () => ({
++vi.mock('expo-secure-store', () => ({ WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
+   isAvailableAsync: vi.fn(async () => true),
+   getItemAsync: vi.fn(async (key: string) => {
+     if (ports.rejectKeyRead) throw new Error('SYNTHETIC_KEY_UNAVAILABLE');
+@@ -154,6 +158,16 @@ describe('history38 through real encrypted privateKV and health/account leases',
+   });
+   afterEach(() => { vi.useRealTimers(); });
+ 
++  async function authorizeRemoval() {
++    // Product deletion now also guards unresolved manual intake submissions.
++    // Establish the persisted authority required before reading that source.
++    await setAgeVerified(true);
++    await setHealthDataCollectionConsentLocal({ granted: true, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.fullText });
++    await writeHealthDataLifecycle({ ownerUserId: 'owner-a', processingEpoch: 1, state: 'active',
++      operationId: null, idempotencyKey: null, localCleanupComplete: false,
++      activationRoutePending: false, verificationReason: null, verificationResumeState: null, serverVerifiedAt: null });
++  }
++
+   async function inputFor(id: string): Promise<ConfirmOwnedBottleVersionInput38> {
+     const snapshot = await loadOwnedBottleHistory38(id);
+     if (!snapshot) throw new Error('TEST_PRODUCT_MISSING');
+@@ -262,6 +276,7 @@ describe('history38 through real encrypted privateKV and health/account leases',
+   });
+ 
+   it('refuses an old encrypted history read that settles after the unit was deleted', async () => {
++    await authorizeRemoval();
+     const owned = await addProduct({ name: 'Synthetic encrypted cream', addedVia: 'manual' });
+     await confirmOwnedBottleVersion38(await inputFor(owned.id));
+     let release!: () => void; let signal!: () => void;
+@@ -278,6 +293,7 @@ describe('history38 through real encrypted privateKV and health/account leases',
+   });
+ 
+   it('keeps exactly one winner for CAS and deletes local version bytes despite prior mirror operations', async () => {
++    await authorizeRemoval();
+     const owned = await addProduct({ name: 'Synthetic encrypted cream', addedVia: 'manual' });
+     const input = await inputFor(owned.id);
+     const results = await Promise.allSettled([confirmOwnedBottleVersion38(input), confirmOwnedBottleVersion38({ ...input, variant: 'Other variant' })]);
+diff --git a/apps/mobile/src/features/shelf/recordedFormulaComparison.test.ts b/apps/mobile/src/features/shelf/recordedFormulaComparison.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ff4e1834922fafc59c8dc6c63ccee22936a0539f
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/recordedFormulaComparison.test.ts
+@@ -0,0 +1,155 @@
++import { expect, it } from 'vitest';
++import {
++  createOwnedProductVersion38,
++  historySnapshot38,
++  type ProductIdentitySource38,
++} from './ownedBottleVersion38';
++import { compareRecordedFormulaVersions } from './recordedFormulaComparison';
++
++const product: ProductIdentitySource38 = {
++  id: 'bottle',
++  name: 'Cream',
++  brand: null,
++  barcode: null,
++  category: 'serum',
++  addedVia: 'manual',
++  catalogSource: null,
++  catalogMatchQuality: null,
++  ingredientParseStatus: null,
++  createdAt: '2026-11-01T12:00:00.000Z',
++  updatedAt: '2026-11-01T12:00:00.000Z',
++};
++function history(labels: (string | null)[], owner = 'owner') {
++  const versions = labels.map((label, index) =>
++    createOwnedProductVersion38(
++      product,
++      owner,
++      {
++        confirmation: label === null ? 'retain_unknown' : 'confirm_label',
++        labelText: label,
++        market: 'US',
++        variant: null,
++        observedOn: '2026-11-01',
++      },
++      null,
++      `2026-11-0${index + 1}T12:00:00.000Z`,
++    ),
++  );
++  // Build genuine chain, including the previous formula and owned-version IDs.
++  for (let index = 1; index < versions.length; index++)
++    versions[index] = createOwnedProductVersion38(
++      product,
++      owner,
++      {
++        confirmation: labels[index] === null ? 'retain_unknown' : 'confirm_label',
++        labelText: labels[index]!,
++        market: 'US',
++        variant: null,
++        observedOn: '2026-11-01',
++      },
++      versions[index - 1]!,
++      `2026-11-0${index + 1}T12:00:00.000Z`,
++    );
++  return historySnapshot38(product, {
++    productId: product.id,
++    ownerUserId: owner,
++    revision: versions.length,
++    currentVersionId: versions.at(-1)!.id,
++    versions,
++  });
++}
++it('compares two authentic observations on one bottle without claiming manufacturer reformulation', () => {
++  const snapshot = history(['Aqua, Glycerin', 'Aqua, Panthenol']);
++  const result = compareRecordedFormulaVersions(
++    snapshot,
++    snapshot,
++    snapshot.versions[0]!.id,
++    snapshot.versions[1]!.id,
++    'owner',
++  )!;
++  expect(result.onlyFirst).toEqual(['Glycerin']);
++  expect(result.onlySecond).toEqual(['Panthenol']);
++  expect(result.sameRecord).toBe(false);
++  expect(result.manufacturerFormulaDifference).toBe('UNCONFIRMED');
++});
++it('never infers a new formula from order, dates, names, or a different observation ID', () => {
++  const snapshot = history(['Aqua, Glycerin', 'glycerin, aqua']);
++  const result = compareRecordedFormulaVersions(
++    snapshot,
++    snapshot,
++    snapshot.versions[0]!.id,
++    snapshot.versions[1]!.id,
++    'owner',
++  )!;
++  expect(result.onlyFirst).toEqual([]);
++  expect(result.onlySecond).toEqual([]);
++  expect(result.manufacturerFormulaDifference).toBe('UNCONFIRMED');
++  expect(
++    compareRecordedFormulaVersions(
++      snapshot,
++      snapshot,
++      snapshot.currentVersionId,
++      snapshot.currentVersionId,
++      'owner',
++    )?.sameRecord,
++  ).toBe(true);
++});
++it('keeps unknown label identity unknown without substituting current Shelf ingredients', () => {
++  const snapshot = history(['Aqua, Glycerin', null]);
++  const result = compareRecordedFormulaVersions(
++    snapshot,
++    snapshot,
++    snapshot.versions[0]!.id,
++    snapshot.versions[1]!.id,
++    'owner',
++  )!;
++  expect(result.onlyFirst).toBeNull();
++  expect(result.onlySecond).toBeNull();
++});
++it('refuses foreign owners, altered provenance, missing selections and corrupt history', () => {
++  const snapshot = history(['Aqua, Glycerin']);
++  expect(
++    compareRecordedFormulaVersions(
++      snapshot,
++      snapshot,
++      snapshot.currentVersionId,
++      snapshot.currentVersionId,
++      'other',
++    ),
++  ).toBeNull();
++  expect(
++    compareRecordedFormulaVersions(
++      snapshot,
++      snapshot,
++      'missing',
++      snapshot.currentVersionId,
++      'owner',
++    ),
++  ).toBeNull();
++  const corrupt = JSON.parse(JSON.stringify(snapshot));
++  corrupt.versions[0].formulaVersion.labelText = 'Invented';
++  expect(
++    compareRecordedFormulaVersions(
++      corrupt,
++      snapshot,
++      corrupt.currentVersionId,
++      snapshot.currentVersionId,
++      'owner',
++    ),
++  ).toBeNull();
++});
++it('preserves optional label sections and bracketed ingredient text without synonym inference', () => {
++  const snapshot = history([
++    'Aqua, Iron Oxides (CI 77491, CI 77492)',
++    'Aqua; may contain: Iron Oxides (CI 77491, CI 77492)',
++  ]);
++  const result = compareRecordedFormulaVersions(
++    snapshot,
++    snapshot,
++    snapshot.versions[0]!.id,
++    snapshot.versions[1]!.id,
++    'owner',
++  )!;
++  expect(result.onlyFirst).toEqual(['Iron Oxides (CI 77491, CI 77492)']);
++  expect(result.onlySecond).toEqual(['may_contain: Iron Oxides (CI 77491, CI 77492)']);
++});
+diff --git a/apps/mobile/src/features/shelf/recordedFormulaComparison.ts b/apps/mobile/src/features/shelf/recordedFormulaComparison.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4ff8cf2f81e67aaa18d77181c006175c0337070f
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/recordedFormulaComparison.ts
+@@ -0,0 +1,67 @@
++import { parseIngredientText } from '@/features/catalog/ingredientParser';
++
++import {
++  validateOwnedBottleHistory38,
++  type OwnedBottleHistorySnapshot38,
++} from './ownedBottleVersion38';
++
++/** IDs authenticate owner observations, never a manufacturer's formulation identity. */
++export function compareRecordedFormulaVersions(
++  first: OwnedBottleHistorySnapshot38,
++  second: OwnedBottleHistorySnapshot38,
++  firstVersionId: string | null,
++  secondVersionId: string | null,
++  ownerUserId: string,
++) {
++  try {
++    for (const snapshot of [first, second]) {
++      if (snapshot.ownedUnitId !== snapshot.productId || !snapshot.currentVersionId) return null;
++      validateOwnedBottleHistory38({
++        productId: snapshot.productId,
++        ownerUserId,
++        revision: snapshot.revision,
++        currentVersionId: snapshot.currentVersionId,
++        versions: snapshot.versions,
++      });
++    }
++  } catch {
++    return null;
++  }
++  const left = first.versions.find((version) => version.id === firstVersionId);
++  const right = second.versions.find((version) => version.id === secondVersionId);
++  if (!left || !right) return null;
++  const confirmed = [left, right].every(
++    (version) =>
++      version.formulaVersion.labelStatus === 'user_confirmed_label' &&
++      version.basis === 'label_in_hand',
++  );
++  const entries = (text: string | null) => {
++    const result = new Map<string, string>();
++    for (const token of parseIngredientText(text ?? '').tokens) {
++      // Preserve section qualifiers; an optional "may contain" entry is not a main ingredient.
++      const display = `${token.section === 'main' ? '' : `${token.section}: `}${token.rawToken}`;
++      const key = display.trim().replace(/\s+/gu, ' ').toLowerCase();
++      if (key && !result.has(key)) result.set(key, display);
++    }
++    return result;
++  };
++  const leftEntries = confirmed
++    ? entries(left.formulaVersion.labelText)
++    : new Map<string, string>();
++  const rightEntries = confirmed
++    ? entries(right.formulaVersion.labelText)
++    : new Map<string, string>();
++  const comparable = confirmed && leftEntries.size > 0 && rightEntries.size > 0;
++  return {
++    left,
++    right,
++    sameRecord: left.id === right.id,
++    manufacturerFormulaDifference: 'UNCONFIRMED' as const,
++    onlyFirst: comparable
++      ? [...leftEntries].filter(([key]) => !rightEntries.has(key)).map(([, text]) => text)
++      : null,
++    onlySecond: comparable
++      ? [...rightEntries].filter(([key]) => !leftEntries.has(key)).map(([, text]) => text)
++      : null,
++  };
++}
+diff --git a/apps/mobile/src/features/shelf/retainedSafety.integration.test.ts b/apps/mobile/src/features/shelf/retainedSafety.integration.test.ts
+index d21df2bd008af8a38db30d48458c52d94ce4ddc5..1bce5966da402fbb1412e819c27ef80f237b8f15 100644
+--- a/apps/mobile/src/features/shelf/retainedSafety.integration.test.ts
++++ b/apps/mobile/src/features/shelf/retainedSafety.integration.test.ts
+@@ -12,7 +12,7 @@ const native = vi.hoisted(() => ({
+ vi.mock('react-native-get-random-values', () => ({}));
+ vi.mock('react-native', () => ({ Platform: { OS: 'web' } }));
+ vi.mock('expo-crypto', () => ({ randomUUID }));
+-vi.mock('expo-secure-store', () => ({}));
++vi.mock('expo-secure-store', () => ({ WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,}));
+ vi.mock('@/features/today/useToday', () => ({ localDateString: () => '2026-10-20' }));
+ vi.mock('@/features/scheduler/profile', () => ({ readProfileBits: async () => ({}) }));
+ vi.mock('@/features/intelligence/overrides', () => ({ getConflictChoices: async () => ({}) }));
+@@ -117,6 +117,15 @@ describe('retained encrypted Shelf with real account and health fences', () => {
+     expect(await d.age.getAgePolicyReceiptStatus()).toBe('current');
+     await expect(d.shelf.loadShelf()).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+     d.epoch.setActiveHealthProcessingEpoch(1, { ownerUserId: 'owner-a', accountGeneration: 0 });
++    // Persist the original synthetic authority so removal can inspect pending
++    // manual-intake drafts after the fresh runtime restores this same owner.
++    const { HEALTH_DATA_CONSENT } = await import('@/features/onboarding/consentCopy');
++    const { setHealthDataCollectionConsentLocal } = await import('@/features/onboarding/healthConsentStore');
++    const { writeHealthDataLifecycle } = await import('@/features/healthConsent/lifecycleStore');
++    await setHealthDataCollectionConsentLocal({ granted: true, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.fullText });
++    await writeHealthDataLifecycle({ ownerUserId: 'owner-a', processingEpoch: 1, state: 'active',
++      operationId: null, idempotencyKey: null, localCleanupComplete: false, activationRoutePending: false,
++      verificationReason: null, verificationResumeState: null, serverVerifiedAt: null });
+     const [one, duplicate] = await Promise.all([
+       d.shelf.addProduct(input),
+       d.shelf.addProduct(input),
+diff --git a/apps/mobile/src/features/shelf/savedProductCompare.test.ts b/apps/mobile/src/features/shelf/savedProductCompare.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8bd74e9c1a8a0b9ef2af2647b87e4f3f5f688e03
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/savedProductCompare.test.ts
+@@ -0,0 +1,166 @@
++import * as React from 'react';
++import { act, create, type ReactTestRenderer } from 'react-test-renderer';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++
++import { SavedProductCompare } from './SavedProductCompare';
++
++const state = vi.hoisted(() => ({
++  authority: { generation: 1 } as { generation: number } | null,
++  listeners: new Set<() => void>(),
++  query: {
++    data: undefined as unknown,
++    isPending: false,
++    isError: false,
++    isFetching: false,
++    refetch: vi.fn(),
++  },
++}));
++vi.mock('react-native', () => ({
++  View: 'View',
++  TextInput: 'TextInput',
++  Modal: 'Modal',
++  Pressable: 'Pressable',
++  ScrollView: 'ScrollView',
++}));
++vi.mock('react-native-safe-area-context', () => ({
++  useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
++}));
++vi.mock('@/components/ui', () => ({
++  Button: 'Button',
++  Text: 'Text',
++  StateLoading: 'StateLoading',
++  StateNotice: 'StateNotice',
++}));
++vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
++  activeHealthProcessingLeaseSnapshot: () => state.authority,
++  subscribeActiveHealthProcessingLeaseChanges: (callback: () => void) => {
++    state.listeners.add(callback);
++    return () => state.listeners.delete(callback);
++  },
++}));
++vi.mock('@/lib/accessibility/useReduceMotionPreference', () => ({
++  useReduceMotionPreference: () => true,
++  motionAwareModalAnimation: () => 'none',
++}));
++vi.mock('./useShelf', () => ({ useShelf: () => state.query }));
++vi.mock('./store', () => ({ loadOwnedBottleHistory38: vi.fn() }));
++vi.mock('expo-router', () => ({ router: { push: vi.fn() } }));
++
++let renderer: ReactTestRenderer;
++const product = (id: string, status = 'active') => ({
++  id,
++  name: `Cream ${id}`,
++  brand: 'Élan',
++  category: null,
++  status,
++  isOpened: false,
++  openedAt: null,
++  paoMonths: null,
++  paoSource: 'unknown',
++  expiryDate: null,
++  expirySource: 'unknown',
++  addedVia: 'manual',
++  ingredients: ['Aqua'],
++});
++async function render() {
++  await act(async () => {
++    renderer = create(React.createElement(SavedProductCompare));
++  });
++}
++async function press(label: string) {
++  const node = renderer.root
++    .findAll((node) => ['Pressable', 'Button'].includes(String(node.type)))
++    .find((node) => node.props.accessibilityLabel?.startsWith(label) || node.props.label === label);
++  expect(node, label).toBeDefined();
++  await act(async () => {
++    node!.props.onPress();
++  });
++}
++function visible() {
++  return JSON.stringify(renderer.toJSON());
++}
++beforeEach(() => {
++  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
++  state.authority = { generation: 1 };
++  state.query.isError = false;
++  state.query.isPending = false;
++  state.query.data = {
++    items: [{ product: product('a') }],
++    archive: [{ product: product('b', 'finished') }],
++  };
++});
++afterEach(async () => {
++  if (renderer) await act(async () => renderer.unmount());
++});
++
++it('opens a free comparison of current active and archived products, rejects duplicate selection', async () => {
++  await render();
++  await press('Compare saved products');
++  await press('Select Cream a, Élan');
++  const duplicate = renderer.root.findAll(
++    (node) =>
++      node.props.accessibilityLabel === 'Select Cream a, Élan, active, result 1, already selected',
++  )[0]!;
++  expect(duplicate.props.disabled).toBe(true);
++  await press('Select Cream b, Élan');
++  expect(visible()).toContain('PRESENT IN BOTH SAVED LISTS');
++  expect(visible()).toContain('Finished');
++  await press('Close comparison');
++  await press('Compare saved products');
++  expect(visible()).not.toContain('PRESENT IN BOTH SAVED LISTS');
++});
++
++it('distinguishes separate bottles with the same name and brand', async () => {
++  state.query.data = {
++    items: [{ product: product('a') }, { product: { ...product('b'), name: 'Cream a' } }],
++    archive: [],
++  };
++  await render();
++  await press('Compare saved products');
++  await press('Select Cream a, Élan, active, result 1');
++  await press('Select Cream a, Élan, active, result 2');
++  expect(visible()).toContain('PRESENT IN BOTH SAVED LISTS');
++});
++
++it('uses Unicode name/brand search and recovers after a no-match query', async () => {
++  await render();
++  await press('Compare saved products');
++  const input = () => renderer.root.findByType('TextInput' as unknown as React.ElementType);
++  await act(async () => input().props.onChangeText('missing'));
++  expect(visible()).toContain('No saved products match');
++  await act(async () => input().props.onChangeText('elan'));
++  expect(visible()).toContain('Select Cream b, Élan');
++});
++
++it('removes selections and query text when authority changes and refuses a closed authority', async () => {
++  await render();
++  await press('Compare saved products');
++  await press('Select Cream a, Élan');
++  await act(async () => {
++    state.authority = { generation: 2 };
++    state.listeners.forEach((callback) => callback());
++  });
++  expect(visible()).not.toContain('Cream a');
++  await press('Compare saved products');
++  expect(visible()).toContain('Choose a product');
++  await act(async () => {
++    state.authority = null;
++    state.listeners.forEach((callback) => callback());
++  });
++  expect(renderer.toJSON()).toBeNull();
++});
++
++it('withholds facts on read failure and does not retain a removed product', async () => {
++  await render();
++  await press('Compare saved products');
++  await press('Select Cream a, Élan');
++  await press('Select Cream b, Élan');
++  state.query.data = { items: [{ product: product('a') }], archive: [] };
++  await act(async () => renderer.update(React.createElement(SavedProductCompare)));
++  expect(visible()).not.toContain('PRESENT IN BOTH SAVED LISTS');
++  expect(visible()).not.toContain('Cream b');
++  state.query.isError = true;
++  await act(async () => renderer.update(React.createElement(SavedProductCompare)));
++  expect(visible()).not.toContain('Cream a');
++  expect(visible()).toContain('Shelf data unavailable');
++});
+diff --git a/apps/mobile/src/features/shelf/savedProductComparison.test.ts b/apps/mobile/src/features/shelf/savedProductComparison.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b7285700d0bde56a5128bde21e4865a63a8647d6
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/savedProductComparison.test.ts
+@@ -0,0 +1,98 @@
++import { describe, expect, it } from 'vitest';
++
++import { compareSavedProducts, type ComparableProduct } from './savedProductComparison';
++
++const first: ComparableProduct = {
++  id: 'first',
++  name: 'Daily cream',
++  brand: null,
++  category: 'moisturiser_jar',
++  status: 'active',
++  isOpened: true,
++  openedAt: null,
++  paoMonths: 6,
++  paoSource: 'label',
++  expiryDate: '2027-04-15',
++  expirySource: 'printed',
++  addedVia: 'manual',
++  ingredients: [' Aqua ', 'Glycerin', 'GLYCERIN', 'Niacinamide'],
++};
++const second: ComparableProduct = {
++  ...first,
++  id: 'second',
++  name: 'Evening cream',
++  brand: 'Other',
++  status: 'finished',
++  ingredients: ['aqua', 'glycerin', 'Panthenol'],
++};
++
++describe('saved product comparison', () => {
++  it('requires two distinct products still present in the current admitted snapshot', () => {
++    expect(compareSavedProducts([first, second], first.id, first.id)).toBeNull();
++    expect(compareSavedProducts([first], first.id, second.id)).toBeNull();
++    expect(compareSavedProducts([], first.id, second.id)).toBeNull();
++  });
++
++  it('compares current saved facts without modifying or ranking either product', () => {
++    const result = compareSavedProducts([first, second], first.id, second.id)!;
++    expect(result.left).toBe(first);
++    expect(result.right).toBe(second);
++    expect(result.rows).toContainEqual({ label: 'Brand', left: 'Not recorded', right: 'Other' });
++    expect(result.rows).toContainEqual({ label: 'Status', left: 'Active', right: 'Finished' });
++    expect(result.rows).toContainEqual({ label: 'Opened date', left: 'Unknown', right: 'Unknown' });
++    expect(first.ingredients).toEqual([' Aqua ', 'Glycerin', 'GLYCERIN', 'Niacinamide']);
++  });
++
++  it('matches only trimmed case-insensitive saved ingredient names, preserving first spelling/order', () => {
++    expect(compareSavedProducts([first, second], first.id, second.id)?.sharedIngredients).toEqual([
++      'Aqua',
++      'Glycerin',
++    ]);
++    const other = { ...second, ingredients: ['Sodium Hyaluronate'] };
++    const similar = { ...first, ingredients: ['Hyaluronic Acid'] };
++    expect(compareSavedProducts([similar, other], first.id, second.id)?.sharedIngredients).toEqual(
++      [],
++    );
++  });
++
++  it('keeps missing ingredient data distinct from no overlapping saved entries', () => {
++    const missing = { ...second, ingredients: [] };
++    expect(
++      compareSavedProducts([first, missing], first.id, second.id)?.sharedIngredients,
++    ).toBeNull();
++  });
++
++  it('does not promote legacy or computed dates to a printed package expiry', () => {
++    const unknown = {
++      ...second,
++      expirySource: 'unknown' as const,
++      paoSource: 'category_default' as const,
++    };
++    const result = compareSavedProducts([first, unknown], first.id, second.id)!;
++    expect(result.rows).toContainEqual({
++      label: 'Printed expiry',
++      left: '2027-04-15',
++      right: 'Not recorded',
++    });
++    expect(result.rows).toContainEqual({
++      label: 'Period after opening',
++      left: '6 months · label',
++      right: 'Not recorded',
++    });
++    const malformed = { ...first, expiryDate: '2027-02-31' };
++    expect(compareSavedProducts([malformed, unknown], first.id, second.id)?.rows).toContainEqual({
++      label: 'Printed expiry',
++      left: 'Not recorded',
++      right: 'Not recorded',
++    });
++  });
++
++  it('shows unopened separately from an opened bottle with an unknown date', () => {
++    const unopened = { ...second, isOpened: false, openedAt: null };
++    expect(compareSavedProducts([first, unopened], first.id, second.id)?.rows).toContainEqual({
++      label: 'Opened date',
++      left: 'Unknown',
++      right: 'Unopened',
++    });
++  });
++});
+diff --git a/apps/mobile/src/features/shelf/savedProductComparison.ts b/apps/mobile/src/features/shelf/savedProductComparison.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1de3a3a8bb15105d0d3c12f703c7108f76a46e5e
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/savedProductComparison.ts
+@@ -0,0 +1,84 @@
++import { categoryLabel } from './categories';
++import { validLocalDate } from './freshness';
++import type { ShelfProduct } from './store';
++
++export type ComparableProduct = Pick<
++  ShelfProduct,
++  | 'id'
++  | 'name'
++  | 'brand'
++  | 'category'
++  | 'status'
++  | 'isOpened'
++  | 'openedAt'
++  | 'paoMonths'
++  | 'paoSource'
++  | 'expiryDate'
++  | 'expirySource'
++  | 'addedVia'
++  | 'ingredients'
++>;
++
++function facts(product: ComparableProduct): Record<string, string> {
++  return {
++    Brand: product.brand || 'Not recorded',
++    Category: categoryLabel(product.category) ?? 'Not recorded',
++    Status: { active: 'Active', finished: 'Finished', discarded: 'Discarded' }[product.status],
++    'Opened date': !product.isOpened ? 'Unopened' : (validLocalDate(product.openedAt) ?? 'Unknown'),
++    'Printed expiry':
++      product.expirySource === 'printed'
++        ? (validLocalDate(product.expiryDate) ?? 'Not recorded')
++        : 'Not recorded',
++    'Period after opening':
++      product.paoMonths !== null &&
++      (product.paoSource === 'label' || product.paoSource === 'catalog')
++        ? `${product.paoMonths} months · ${product.paoSource}`
++        : 'Not recorded',
++    'Added through': {
++      manual: 'Manual entry',
++      onboarding: 'Onboarding',
++      barcode: 'Barcode',
++      search: 'Catalog search',
++      ocr: 'Label text',
++    }[product.addedVia],
++  };
++}
++
++/** Compare recorded text only. No synonym inference, completeness claim,
++ * compatibility, clinical ranking, quota, persistence or provider lookup. */
++export function compareSavedProducts<T extends ComparableProduct>(
++  products: readonly T[],
++  leftId: string | null,
++  rightId: string | null,
++) {
++  if (!leftId || !rightId || leftId === rightId) return null;
++  const left = products.find((product) => product.id === leftId);
++  const right = products.find((product) => product.id === rightId);
++  if (!left || !right) return null;
++  const leftFacts = facts(left);
++  const rightFacts = facts(right);
++  const ingredientKey = (text: string) => text.trim().replace(/\s+/gu, ' ').toLowerCase();
++  const leftIngredients = new Map<string, string>();
++  for (const text of left.ingredients) {
++    const key = ingredientKey(text);
++    if (key && !leftIngredients.has(key)) leftIngredients.set(key, text.trim());
++  }
++  const rightIngredients = new Set(
++    right.ingredients.filter((text) => text.trim()).map(ingredientKey),
++  );
++  // Keep the first recorded spelling as well as the source's order.
++  const sharedIngredients =
++    leftIngredients.size && rightIngredients.size
++      ? [...leftIngredients].filter(([key]) => rightIngredients.has(key)).map(([, text]) => text)
++      : null;
++  return {
++    left,
++    right,
++    sharedIngredients,
++    rows: Object.entries(leftFacts).map(([label, value]) => ({
++      label,
++      left: value,
++      right: rightFacts[label]!,
++    })),
++  };
++}
+diff --git a/apps/mobile/src/features/shelf/shareAppointmentBrief.test.ts b/apps/mobile/src/features/shelf/shareAppointmentBrief.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..2b37d61f6b943568ccf88cd20c11e1db51a41a41
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/shareAppointmentBrief.test.ts
+@@ -0,0 +1,168 @@
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import {
++  beginAccountGenerationBoundary,
++  endAccountGenerationBoundary,
++  runAccountGenerationOperation,
++} from '@/lib/auth/accountGeneration';
++import {
++  clearActiveHealthProcessingEpoch,
++  setActiveHealthProcessingEpoch,
++} from '@/lib/consent/healthProcessingEpoch';
++import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { buildAppointmentBrief } from './appointmentBrief';
++import { shareReviewedAppointmentBrief } from './shareAppointmentBrief';
++// This unit suite retains its original loader/admission negatives. The real
++// fixed-source queue and races are exercised in briefSourceFence.test.ts.
++vi.mock('./briefSourceFence', () => ({ captureBriefSourceProof: async () => ({}),
++  dispatchWithBriefSourceProof: async (_proof: unknown, _lease: unknown, guard: () => void, dispatch: () => Promise<unknown>) => { guard(); return dispatch(); } }));
++
++const ports = vi.hoisted(() => ({ load: vi.fn(), share: vi.fn(), records: vi.fn() }));
++vi.mock('./store', () => ({ loadShelf: ports.load }));
++vi.mock('react-native', () => ({ Share: { share: ports.share, sharedAction: 'sharedAction' } }));
++vi.mock('./appointmentBriefRecords', async importOriginal => ({
++  ...await importOriginal<typeof import('./appointmentBriefRecords')>(), loadAppointmentBriefRecords: ports.records,
++}));
++const product = {
++  id: 'one',
++  name: 'Selected cream',
++  brand: null,
++  status: 'active' as const,
++  isOpened: true,
++  openedAt: null,
++  finishedAt: null,
++};
++let generation: number;
++beforeEach(async () => {
++  generation = await runAccountGenerationOperation((lease) => lease.generation);
++  setActiveHealthProcessingEpoch(1, {
++    ownerUserId: 'private-owner-a',
++    accountGeneration: generation,
++  });
++  ports.load.mockReset().mockResolvedValue([product]);
++  ports.share.mockReset().mockResolvedValue({ action: 'sharedAction' });
++  ports.records.mockReset().mockResolvedValue([]);
++});
++afterEach(() => clearActiveHealthProcessingEpoch());
++function review() {
++  const selection = {
++    productIds: ['one'],
++    includeDates: true,
++    observations: '',
++    questions: 'My question',
++  };
++  return {
++    selection,
++    preparedOn: '2026-11-14',
++    text: buildAppointmentBrief([product], selection, '2026-11-14'),
++    lease: captureHealthDataWriteLease(),
++  };
++}
++it('rechecks the canonical selected records and shares exactly reviewed text, with no account identifier', async () => {
++  const accepted = review();
++  expect(await shareReviewedAppointmentBrief(accepted, () => {})).toBe(true);
++  expect(ports.load).toHaveBeenCalledOnce();
++  expect(ports.share).toHaveBeenCalledExactlyOnceWith({
++    title: 'My factual appointment brief',
++    message: accepted.text,
++  });
++  expect(accepted.text).not.toContain('private-owner');
++});
++
++it.each(['corrected', 'retracted', 'unavailable'] as const)('refuses a selected observation that is now %s', async (reason) => {
++  const record = { id: 'observation:one', kind: 'observation' as const, title: 'Today entry 1', lines: ['Selected note'], available: true };
++  const base = review();
++  const selection = { ...base.selection, recordIds: [record.id] };
++  const accepted = { ...base, selection, text: buildAppointmentBrief([product], selection, base.preparedOn, [record]) };
++  if (reason === 'unavailable') ports.records.mockRejectedValueOnce(new Error('unavailable'));
++  else ports.records.mockResolvedValueOnce([]);
++  await expect(shareReviewedAppointmentBrief(accepted, () => {})).rejects.toThrow();
++  expect(ports.share).not.toHaveBeenCalled();
++});
++
++it('revalidates and shares a selected current record, but rejects owner retirement during its read', async () => {
++  const record = { id: 'routine:one', kind: 'routine' as const, title: 'Saved plan 1', lines: ['Morning snapshot'], available: true };
++  const base = review(); const selection = { ...base.selection, recordIds: [record.id] };
++  const accepted = { ...base, selection, text: buildAppointmentBrief([product], selection, base.preparedOn, [record]) };
++  ports.records.mockResolvedValueOnce([record]);
++  expect(await shareReviewedAppointmentBrief(accepted, () => {})).toBe(true);
++  ports.share.mockClear();
++  ports.records.mockImplementationOnce(async () => { clearActiveHealthProcessingEpoch(); return [record]; });
++  await expect(shareReviewedAppointmentBrief(accepted, () => {})).rejects.toThrow();
++  expect(ports.share).not.toHaveBeenCalled();
++});
++it('checks the original use commitment at handoff even when the visible brief text matches', async () => {
++  const record = { id: 'actual-use:one', kind: 'actual-use' as const, title: 'Recorded use 1', lines: ['Observed local day'], available: true, commitment: 'a'.repeat(64) };
++  const base = review();
++  const selection = { ...base.selection, recordIds: [record.id] };
++  const accepted = { ...base, selection, useSource: { id: record.id, commitment: record.commitment },
++    text: buildAppointmentBrief([product], selection, base.preparedOn, [record]) };
++  ports.records.mockResolvedValueOnce([{ ...record, commitment: 'b'.repeat(64) }]);
++  await expect(shareReviewedAppointmentBrief(accepted, () => {})).rejects.toThrow('INVALID_OR_STALE');
++  expect(ports.share).not.toHaveBeenCalled();
++  ports.records.mockResolvedValueOnce([record]);
++  expect(await shareReviewedAppointmentBrief(accepted, () => {})).toBe(true);
++});
++it.each(['deleted', 'changed'] as const)(
++  'refuses %s source records before any handoff',
++  async (kind) => {
++    const accepted = review();
++    ports.load.mockResolvedValue(kind === 'deleted' ? [] : [{ ...product, name: 'Changed' }]);
++    await expect(shareReviewedAppointmentBrief(accepted, () => {})).rejects.toThrow();
++    expect(ports.share).not.toHaveBeenCalled();
++  },
++);
++it.each(['withdrawal', 'owner', 'account'] as const)(
++  'refuses %s during a held source read',
++  async (kind) => {
++    const accepted = review();
++    let release!: (value: (typeof product)[]) => void;
++    let entered!: () => void;
++    const reading = new Promise<void>(resolve => { entered = resolve; });
++    ports.load.mockImplementation(
++      () =>
++        new Promise((resolve) => {
++          release = resolve;
++          entered();
++        }),
++    );
++    const sharing = shareReviewedAppointmentBrief(accepted, () => {});
++    const refused = expect(sharing).rejects.toThrow();
++    await reading;
++    if (kind === 'withdrawal') clearActiveHealthProcessingEpoch();
++    else if (kind === 'account') beginAccountGenerationBoundary();
++    else
++      setActiveHealthProcessingEpoch(2, {
++        ownerUserId: 'private-owner-b',
++        accountGeneration: generation,
++      });
++    release([product]);
++    try {
++      await refused;
++      expect(ports.share).not.toHaveBeenCalled();
++    } finally {
++      if (kind === 'account') endAccountGenerationBoundary();
++    }
++  },
++);
++it('refuses a dismissed/stale review after reading and never adopts replacement approval', async () => {
++  const accepted = review();
++  let current = true;
++  ports.load.mockImplementation(async () => {
++    current = false;
++    return [product];
++  });
++  await expect(
++    shareReviewedAppointmentBrief(accepted, () => {
++      if (!current) throw new Error('retired');
++    }),
++  ).rejects.toThrow('retired');
++  expect(ports.share).not.toHaveBeenCalled();
++});
++it('reports system dismissal without fabricating delivery and propagates a failed share for UI recovery', async () => {
++  ports.share.mockResolvedValueOnce({ action: 'dismissedAction' });
++  expect(await shareReviewedAppointmentBrief(review(), () => {})).toBe(false);
++  ports.share.mockRejectedValueOnce(new Error('synthetic unavailable'));
++  await expect(shareReviewedAppointmentBrief(review(), () => {})).rejects.toThrow(
++    'synthetic unavailable',
++  );
++});
+diff --git a/apps/mobile/src/features/shelf/shareAppointmentBrief.ts b/apps/mobile/src/features/shelf/shareAppointmentBrief.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ac828d99e06588c152ebeee0f1584ab1514d6a79
+--- /dev/null
++++ b/apps/mobile/src/features/shelf/shareAppointmentBrief.ts
+@@ -0,0 +1,78 @@
++import { Share } from 'react-native';
++
++import {
++  assertOriginalHealthDataWriteLease,
++  runHealthDataOperation,
++  type HealthDataWriteLease,
++} from '@/lib/consent/healthDataWriteAdmission';
++
++import { buildAppointmentBrief, type AppointmentBriefSelection } from './appointmentBrief';
++import { loadShelf } from './store';
++import { loadAppointmentBriefRecords, matchBriefUseSource, type BriefUseSource, type DiaryBriefAccess } from './appointmentBriefRecords';
++import { captureBriefSourceProof, dispatchWithBriefSourceProof, type BriefSourceProof } from './briefSourceFence';
++
++export type ReviewedAppointmentBrief = Readonly<{
++  selection: AppointmentBriefSelection;
++  preparedOn: string;
++  text: string;
++  lease: HealthDataWriteLease;
++  diaryAccess?: DiaryBriefAccess;
++  useSource?: BriefUseSource;
++}>;
++
++/** Text-only native sharing creates no plaintext cache file or second storage system.
++ * Once explicitly handed to another app, a recipient's copy cannot be revoked. */
++export async function shareReviewedAppointmentBrief(
++  review: ReviewedAppointmentBrief,
++  assertReviewCurrent: () => void,
++): Promise<boolean> {
++  if (review.selection.includePhoto) throw new Error('APPOINTMENT_BRIEF_INVALID_OR_STALE');
++  const assertCurrent = () => {
++    assertOriginalHealthDataWriteLease(review.lease);
++    assertReviewCurrent();
++    if (review.selection.recordIds?.some((id) => id.startsWith('diary:'))) {
++      if (!review.diaryAccess) throw new Error('APPOINTMENT_BRIEF_INVALID_OR_STALE');
++      review.diaryAccess.assertCurrent();
++    }
++  };
++  assertCurrent();
++  return runHealthDataOperation(review.lease.ownerUserId, async (lease) => {
++    assertCurrent();
++    const proof = await revalidateAppointmentBrief(review, assertCurrent);
++    lease.assertCurrent(); assertCurrent();
++    const result = await dispatchWithBriefSourceProof(proof, review.lease, assertCurrent, () => Share.share({
++      title: 'My factual appointment brief',
++      message: review.text,
++    }));
++    lease.assertCurrent();
++    assertCurrent();
++    return result.action === Share.sharedAction;
++  });
++}
++
++/** Common preflight for the text and explicitly selected image export paths. */
++export async function revalidateAppointmentBrief(review: ReviewedAppointmentBrief, assertReviewCurrent: () => void): Promise<BriefSourceProof> {
++  const assertCurrent = () => { assertOriginalHealthDataWriteLease(review.lease); assertReviewCurrent(); };
++  assertCurrent();
++  const proof = await captureBriefSourceProof(review.lease, review.selection.recordIds, review.selection.includePhoto === true);
++  assertCurrent();
++  try {
++    const products = await loadShelf();
++    assertCurrent();
++    const records = review.selection.recordIds?.length
++      ? await loadAppointmentBriefRecords(review.lease, products, review.diaryAccess) : [];
++    assertCurrent();
++    if (review.useSource && (!review.selection.recordIds?.includes(review.useSource.id) || !matchBriefUseSource(records, review.useSource))) {
++      throw new Error('APPOINTMENT_BRIEF_INVALID_OR_STALE');
++    }
++    if (buildAppointmentBrief(products, review.selection, review.preparedOn, records) !== review.text) {
++      throw new Error('APPOINTMENT_BRIEF_INVALID_OR_STALE');
++    }
++  } catch (error) {
++    assertCurrent();
++    if (error instanceof Error && error.message === 'APPOINTMENT_BRIEF_INVALID_OR_STALE') throw error;
++    throw new Error('APPOINTMENT_BRIEF_SOURCE_UNAVAILABLE');
++  }
++  assertCurrent();
++  return proof;
++}
+diff --git a/apps/mobile/src/features/shelf/shelfRoutes.test.ts b/apps/mobile/src/features/shelf/shelfRoutes.test.ts
+index cf9be233241f5524c525e03dddfbb32f7b1fdff5..84111bcf77c194d36151ebe273d51346191481d8 100644
+--- a/apps/mobile/src/features/shelf/shelfRoutes.test.ts
++++ b/apps/mobile/src/features/shelf/shelfRoutes.test.ts
+@@ -812,7 +812,8 @@ describe('Shelf route mobile contracts', () => {
+       "compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3'",
+     );
+     expect(source).toContain('compactManualPhone');
+-    expect(source).toMatch(/accessibilityLabel="Ingredients"[\s\S]*?value=\{ingredients\}[\s\S]*?if \(canAct\(\)\) setIngredients\(next\);[\s\S]*?multiline/);
++    expect(source).toMatch(/accessibilityLabel="Ingredients"[\s\S]*?value=\{ingredients\}[\s\S]*?editForm\(\{ ingredients: next \}\);[\s\S]*?multiline/);
++    expect(source).toMatch(/function editForm[\s\S]*?if \(!canAct\(\)\) return;[\s\S]*?retainManualForm\(draft, next\)/);
+     expect(source).toContain('keyboardShouldPersistTaps="handled"');
+     expect(source).toContain(
+       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
+@@ -854,7 +855,11 @@ describe('Shelf route mobile contracts', () => {
+     expect(source).toContain(
+       "const initialBarcode = useIncomingDraft ? (draft.barcode ?? '') : '';",
+     );
+-    expect(source).toContain('const [barcode, setBarcode] = useState(initialBarcode);');
++    // The shared transient form now owns this same editable raw barcode. Its
++    // mounted regressions verify format choice, malformed refusal and Back.
++    expect(source).toContain('const [form, setForm] = useState<ManualIntakeForm>');
++    expect(source).toContain('barcode: initialBarcode,');
++    expect(source).toMatch(/const \{[^}]*barcode, eightDigitFormat[^}]*\} = form;/);
+     expect(source).toContain('const normalizedBarcode = barcode.trim()');
+     expect(source).toContain('normalizeManualBarcode(barcode, eightDigitFormat)');
+     expect(source).toContain('const barcodeInvalid =');
+@@ -1287,6 +1292,7 @@ describe('real bottle-history screen privacy retirement', () => {
+     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+     let id = 'synthetic-unit-a';
+     let generation = 1;
++    let publishedHealth = { generation };
+     const confirm = vi.fn();
+     const makeShelf = () => ({ data: { sourceGeneration: generation, items: [{ id, product: {
+       id, name: 'Synthetic balm', brand: null, ingredients: [], addedVia: 'manual',
+@@ -1294,16 +1300,28 @@ describe('real bottle-history screen privacy retirement', () => {
+     let shelf = makeShelf();
+     const useShelfMock = () => shelf;
+     const mocked = [
+-      'react-native', '@/components/ui', 'expo-router', '@tanstack/react-query',
++      '@/features/shelf/BottleUseHistory', 'react-native', '@/components/ui', 'expo-router', 'expo-router/react-navigation', '@tanstack/react-query',
+       '@/features/shelf/useShelf', '@/features/shelf/mutations', '@/features/shelf/store',
+-      '@/lib/consent/healthDataWriteAdmission', '@/features/today/useToday',
++      '@/lib/consent/healthDataWriteAdmission', '@/lib/consent/healthProcessingEpoch', '@/features/today/useToday',
++      'expo-crypto', '@/features/shelf/bottleDraftStore',
+     ];
++    // This draft-retirement fixture controls canonical reads; use-history runs
++    // with real storage and component events in bottleUseHistory.test.ts.
++    vi.doMock('@/features/shelf/BottleUseHistory', () => ({ BottleUseHistory: () => null }));
++    vi.doMock('expo-crypto', () => ({ randomUUID: () => '11111111-1111-4111-8111-111111111111' }));
++    vi.doMock('@/features/shelf/bottleDraftStore', () => ({ loadBottleDrafts: vi.fn(), saveBottleDraft: vi.fn(), discardBottleDraft: vi.fn() }));
+     vi.doMock('react-native', () => ({ View: 'View', ScrollView: 'ScrollView', TextInput: 'TextInput' }));
+     vi.doMock('@/components/ui', () => ({ Button: 'Button', RouteIconButton: 'RouteIconButton', Screen: 'Screen', Text: 'Text' }));
+     vi.doMock('expo-router', () => ({
+       router: {}, useLocalSearchParams: () => ({ id }),
++      useNavigation: () => ({ dispatch: vi.fn() }),
+       useFocusEffect: (callback: () => (() => void)) => useEffect(callback, [callback]),
+     }));
++    vi.doMock('expo-router/react-navigation', () => ({ usePreventRemove: vi.fn() }));
++    vi.doMock('@/lib/consent/healthProcessingEpoch', () => ({
++      activeHealthProcessingLeaseSnapshot: () => publishedHealth,
++      subscribeActiveHealthProcessingLeaseChanges: () => () => {},
++    }));
+     vi.doMock('@/features/shelf/useShelf', () => ({ useShelf: useShelfMock }));
+     vi.doMock('@/features/shelf/mutations', () => ({ useShelfMutations: () => ({ confirmBottleObservation: confirm }) }));
+     vi.doMock('@/features/shelf/store', () => ({ loadOwnedBottleHistory38: vi.fn() }));
+@@ -1313,15 +1331,18 @@ describe('real bottle-history screen privacy retirement', () => {
+       assertHealthDataWriteLease: (lease: { generation: number }) => {
+         if (lease.generation !== generation) throw new Error('RETIRED_SYNTHETIC_LEASE');
+       },
+-      runCurrentHealthDataOperation: vi.fn(),
++      assertOriginalHealthDataWriteLease: (lease: { generation: number }) => {
++        if (lease.generation !== generation) throw new Error('RETIRED_SYNTHETIC_LEASE');
++      },
++      runHealthDataOperation: vi.fn(),
+     }));
+     vi.doMock('@tanstack/react-query', () => ({
+       onlineManager: { subscribe: () => () => {}, isOnline: () => true },
+       useQueryClient: () => ({ getQueryData: () => shelf.data, getQueryState: () => ({ status: 'success', fetchStatus: 'idle' }) }),
+-      useQuery: () => ({ data: { generation, snapshot: {
+-        productId: id, ownedUnitId: id, productUpdatedAt: '', productIdentityHash: '',
++      useQuery: ({ queryKey }: { queryKey: string[] }) => ({ data: queryKey[0] === 'bottle-drafts' ? { drafts: [] } : { generation, snapshot: {
++        productId: id, ownedUnitId: id, productUpdatedAt: '2026-11-01T00:00:00.000Z', productIdentityHash: 'a'.repeat(64),
+         revision: 0, currentVersionId: null, currentVersion: null, versions: [], localOnly: true,
+-      } }, isError: false, isFetching: false, isPending: false, refetch: vi.fn() }),
++      } }, isError: false, isFetching: false, isPending: false, isSuccess: true, refetch: vi.fn() }),
+     }));
+     let screen: ReactTestRenderer | undefined;
+     try {
+@@ -1332,7 +1353,7 @@ describe('real bottle-history screen privacy retirement', () => {
+         await act(async () => screen!.root.findByProps({ label: 'I have the printed label' }).props.onPress());
+         await act(async () => screen!.root.findByProps({ accessibilityLabel: 'Ingredient label as printed' }).props.onChangeText('PRIVATE SYNTHETIC LABEL'));
+         expect(JSON.stringify(screen!.toJSON())).toContain('PRIVATE SYNTHETIC LABEL');
+-        if (boundary === 'health-generation') generation += 1;
++        if (boundary === 'health-generation') { generation += 1; publishedHealth = { generation }; }
+         else id = 'synthetic-unit-b';
+         shelf = makeShelf();
+         await act(async () => screen!.update(createElement(Route)));
+diff --git a/apps/mobile/src/features/shelf/store.test.ts b/apps/mobile/src/features/shelf/store.test.ts
+index f2019ac06ef972d0e7c8d15917da92c7bc31bca5..de16609acddaf0f983bc103606a6d4f920b2e5df 100644
+--- a/apps/mobile/src/features/shelf/store.test.ts
++++ b/apps/mobile/src/features/shelf/store.test.ts
+@@ -1,4 +1,8 @@
+ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { setAgeVerified } from '@/features/onboarding/ageGateStore';
++import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
++import { writeHealthDataLifecycle } from '@/features/healthConsent/lifecycleStore';
+ 
+ import {
+   clearActiveHealthProcessingEpoch,
+@@ -40,6 +44,7 @@ import {
+ 
+ const mocks = vi.hoisted(() => ({
+   storage: new Map<string, string>(),
++  authorityStorage: new Map<string, string>(),
+   nextId: 0,
+   tails: new Map<string, Promise<void>>(),
+   updateFailure: null as Error | null,
+@@ -54,6 +59,23 @@ vi.mock('expo-crypto', () => ({
+ }));
+ 
+ vi.mock('@/lib/storage/privateKV', () => ({
++  setPrivateItem: vi.fn(async (key: string, value: string) => { mocks.storage.set(key, value); }),
++  updatePrivateItemWithSources: vi.fn(async (
++    key: string, sources: readonly string[], update: (values: ReadonlyMap<string, string | null>) => string | null,
++    guard: () => void, _prepare: unknown, _publish: unknown,
++    authority: { validate: (values: ReadonlyMap<string, string | null>) => void },
++    beforeNativeWrite?: () => void,
++  ) => {
++    const { updatePrivateItem } = await import('@/lib/storage/privateKV');
++    await updatePrivateItem(key, () => {
++      guard();
++      const values = new Map([...new Set([key, ...sources])].map(source => [source, mocks.storage.get(source) ?? mocks.authorityStorage.get(source) ?? null]));
++      authority.validate(values);
++      const next = update(values);
++      beforeNativeWrite?.();
++      return next;
++    });
++  }),
+   getPrivateItem: vi.fn(async (key: string) => {
+     if (mocks.readFailure) throw mocks.readFailure;
+     return mocks.storage.get(key) ?? null;
+@@ -159,8 +181,9 @@ function catalogRecoveryInput(
+ }
+ 
+ describe('shelf local store recovery', () => {
+-  beforeEach(() => {
++  beforeEach(async () => {
+     mocks.storage.clear();
++    mocks.authorityStorage.clear();
+     mocks.nextId = 0;
+     mocks.tails.clear();
+     mocks.updateFailure = null;
+@@ -169,6 +192,15 @@ describe('shelf local store recovery', () => {
+     mocks.skipCommit = false;
+     mocks.readFailure = null;
+     setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
++    await setAgeVerified(true);
++    await setHealthDataCollectionConsentLocal({ granted: true, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.fullText });
++    await writeHealthDataLifecycle({ ownerUserId: 'user-a', processingEpoch: 1, state: 'active',
++      operationId: null, idempotencyKey: null, localCleanupComplete: false, activationRoutePending: false,
++      verificationReason: null, verificationResumeState: null, serverVerifiedAt: null });
++    // Keep this existing Shelf-only adapter's byte-count assertions exact;
++    // current admission receipts live in a separate synthetic authority port.
++    for (const [key, value] of mocks.storage) mocks.authorityStorage.set(key, value);
++    mocks.storage.clear();
+   });
+ 
+   afterEach(() => {
+diff --git a/apps/mobile/src/features/shelf/store.ts b/apps/mobile/src/features/shelf/store.ts
+index 5049a116081ab1385ea7f0803cb14248afa4cc6a..7e8aa369884c2d09221789fc18cb4e69fd074a69 100644
+--- a/apps/mobile/src/features/shelf/store.ts
++++ b/apps/mobile/src/features/shelf/store.ts
+@@ -2,8 +2,14 @@ import { randomUUID } from 'expo-crypto';
+ 
+ import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@layerwell/types';
+ import type { CatalogQualityGrade } from '@/features/catalog/quality';
+-import { captureHealthDataWriteLease, runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
++import { assertOriginalHealthDataWriteLease, captureHealthDataWriteLease, runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
++import { getPrivateItem, removePrivateItem, updatePrivateItem, updatePrivateItemWithSources } from '@/lib/storage/privateKV';
++import type { HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { BOTTLE_DRAFT_KEY, BOTTLE_DRAFT_CONFLICT, type BottleDraft } from './bottleDraftCodec';
++import {
++  MANUAL_INTAKE_DRAFT_KEY, MANUAL_INTAKE_DRAFT_CONFLICT,
++  decodeManualIntakeDraftCollection, type ManualIntakeDraft,
++} from './manualIntakeDraftCodec';
+ 
+ import {
+   currentLocalDate,
+@@ -1180,6 +1186,18 @@ export function loadShelf(): Promise<ShelfProduct[]> {
+   });
+ }
+ 
++/** Device-only owner observation. No catalog/mirror/provider is consulted. */
++export function loadCurrentOwnedBottleVersions38(): Promise<readonly import('./ownedBottleVersion38').OwnedProductVersion38[]> {
++  return runCurrentHealthDataOperation(async lease => {
++    lease.assertCurrent();
++    const raw = await getPrivateItem(KEY);
++    lease.assertCurrent();
++    const decoded = decodeShelfState(raw);
++    lease.assertCurrent();
++    return Object.freeze(decoded.ownedBottleHistories.map(history => history.versions.at(-1)!));
++  });
++}
++
+ /** Device-only owner observation. No catalog/mirror/provider is consulted. */
+ export function loadOwnedBottleHistory38(productId: string): Promise<OwnedBottleHistorySnapshot38 | null> {
+   return runCurrentHealthDataOperation(async (lease) => {
+@@ -1196,14 +1214,24 @@ export function loadOwnedBottleHistory38(productId: string): Promise<OwnedBottle
+   });
+ }
+ 
++/** Pure snapshot from already reserved/authenticated Shelf bytes. */
++export function bottleHistorySnapshotFromBytes(raw: string | null, productId: string): OwnedBottleHistorySnapshot38 | null {
++  const decoded = decodeShelfState(raw);
++  const product = decoded.products.find(candidate => candidate.id === productId);
++  return product ? historySnapshot38(product, decoded.ownedBottleHistories.find(history => history.productId === productId)) : null;
++}
++
+ /** Append and pointer CAS share the existing encrypted Shelf transaction.
+  * Formula observations never enter the unrelated user_products replay schema. */
+ export function confirmOwnedBottleVersion38(
+   input: ConfirmOwnedBottleVersionInput38,
+   assertBeforeNativeWrite?: () => void,
++  durableDraft?: Readonly<{ expected: BottleDraft; lease: HealthDataWriteLease }>,
+ ): Promise<OwnedBottleHistorySnapshot38> {
+   return runCurrentHealthDataOperation(async (lease) => {
+     const expectedKeys = ['productId', 'expectedUpdatedAt', 'expectedProductIdentityHash', 'expectedRevision', 'expectedCurrentVersionId', 'confirmation', 'labelText', 'market', 'variant', 'observedOn'];
++    input = { ...input };
++    durableDraft = durableDraft ? { lease: durableDraft.lease, expected: JSON.parse(JSON.stringify(durableDraft.expected)) as BottleDraft } : undefined;
+     if (!isRecord(input) || !hasExactKeys(input, expectedKeys) || !Number.isSafeInteger(input.expectedRevision) || input.expectedRevision < 0 ||
+         !/^[0-9a-f]{64}$/.test(input.expectedProductIdentityHash) ||
+         (input.expectedCurrentVersionId !== null && !/^owned38:[0-9a-f]{64}$/.test(input.expectedCurrentVersionId))) throw new Error(FORMULA38_INVALID);
+@@ -1211,7 +1239,7 @@ export function confirmOwnedBottleVersion38(
+     const ts = nowISO();
+     let committed: OwnedBottleHistorySnapshot38 | null = null;
+     let outboxChanged = false;
+-    await updatePrivateItem(KEY, (current) => {
++    const transform = (current: string | null) => {
+       lease.assertCurrent();
+       const decoded = decodeShelfState(current, ts);
+       const product = decoded.products.find((candidate) => candidate.id === input.productId);
+@@ -1245,7 +1273,27 @@ export function confirmOwnedBottleVersion38(
+         ownedBottleHistories,
+         originalShelfBytes: decoded.ownedBottleHistories.length === 0 ? current : decoded.originalShelfBytes,
+       });
+-    }, undefined, assertBeforeNativeWrite);
++    };
++    if (durableDraft) {
++      const draftLease = durableDraft.lease;
++      const { bottleDraftAuthorization, BOTTLE_DRAFT_AUTHORIZATION_KEYS, assertExactBottleDraft } = await import('./bottleDraftStore');
++      const expected = durableDraft.expected;
++      const source = expected.source, fields = expected.fields;
++      if (source.productId !== input.productId || source.productUpdatedAt !== input.expectedUpdatedAt ||
++          source.productIdentityHash !== input.expectedProductIdentityHash || source.revision !== input.expectedRevision ||
++          source.currentVersionId !== input.expectedCurrentVersionId || !fields.mode ||
++          (fields.mode === 'label' ? 'confirm_label' : 'retain_unknown') !== input.confirmation ||
++          (fields.mode === 'label' ? fields.label : null) !== input.labelText ||
++          (fields.market || null) !== input.market || (fields.variant || null) !== input.variant ||
++          (fields.observed || null) !== input.observedOn) throw new Error(BOTTLE_DRAFT_CONFLICT);
++      const guard = () => { lease.assertCurrent(); assertBeforeNativeWrite?.(); };
++      await updatePrivateItemWithSources(KEY, [BOTTLE_DRAFT_KEY, ...BOTTLE_DRAFT_AUTHORIZATION_KEYS], values => {
++        assertExactBottleDraft(values.get(BOTTLE_DRAFT_KEY) ?? null, draftLease, expected);
++        return transform(values.get(KEY) ?? null);
++      }, guard, undefined, undefined, bottleDraftAuthorization(draftLease));
++    } else {
++      await updatePrivateItem(KEY, transform, undefined, assertBeforeNativeWrite);
++    }
+     lease.assertCurrent();
+     if (outboxChanged) notifyShelfMirrorOutboxChanged();
+     // A returned storage promise alone cannot prove persistence. Read the
+@@ -1285,51 +1333,55 @@ function normalizeProductForWrite(
+   );
+ }
+ 
++function shelfProductForIntake(input: NewShelfProduct, ts: string, today = currentLocalDate()): ShelfProduct {
++  const productId = (input.operationId ?? randomUUID()).toLowerCase();
++  if (!validCanonicalOperationId(productId)) {
++    throw new Error(SHELF_STATE_INVALID);
++  }
++  const freshness = normalizeShelfFreshness(input, today);
++  const candidate: ShelfProduct = {
++    id: productId,
++    name: input.name,
++    brand: input.brand ?? null,
++    category: input.category ?? null,
++    barcode: input.barcode ?? null,
++    catalogProductId: input.catalogProductId ?? null,
++    catalogSourceId: input.catalogSourceId ?? null,
++    catalogSource: input.catalogSource ?? (input.addedVia === 'manual' ? 'user_local' : null),
++    catalogSourceName: input.catalogSourceName ?? null,
++    catalogSourceRef: input.catalogSourceRef ?? null,
++    catalogSourceUrl: input.catalogSourceUrl ?? null,
++    catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
++    catalogMatchQuality:
++      input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
++    dataQualityScore: input.dataQualityScore ?? null,
++    ingredientParseStatus: input.ingredientParseStatus ?? null,
++    ingredientParseConfidence: input.ingredientParseConfidence ?? null,
++    parserVersion: input.parserVersion ?? null,
++    sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
++    ingredients: input.ingredients ?? [],
++    ...freshness,
++    legacyUnverifiedExpiryDate: null,
++    status: 'active',
++    finishedAt: null,
++    addedVia: input.addedVia,
++    repurchaseCount: 1,
++    replacementRootId: productId,
++    replacesProductId: null,
++    replacementLineageAmbiguous: false,
++    thumbnailPath: null,
++    createdAt: ts,
++    updatedAt: ts,
++  };
++  const product = normalizeShelfProduct(candidate, ts);
++  if (!product) throw new Error(SHELF_STATE_INVALID);
++  return product;
++}
++
+ export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
+   return runCurrentHealthDataOperation(async (lease) => {
+     const ts = nowISO();
+-    const today = currentLocalDate();
+-    const productId = (input.operationId ?? randomUUID()).toLowerCase();
+-    if (!validCanonicalOperationId(productId)) {
+-      throw new Error(SHELF_STATE_INVALID);
+-    }
+-    const freshness = normalizeShelfFreshness(input, today);
+-    const candidate: ShelfProduct = {
+-      id: productId,
+-      name: input.name,
+-      brand: input.brand ?? null,
+-      category: input.category ?? null,
+-      barcode: input.barcode ?? null,
+-      catalogProductId: input.catalogProductId ?? null,
+-      catalogSourceId: input.catalogSourceId ?? null,
+-      catalogSource: input.catalogSource ?? (input.addedVia === 'manual' ? 'user_local' : null),
+-      catalogSourceName: input.catalogSourceName ?? null,
+-      catalogSourceRef: input.catalogSourceRef ?? null,
+-      catalogSourceUrl: input.catalogSourceUrl ?? null,
+-      catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
+-      catalogMatchQuality:
+-        input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
+-      dataQualityScore: input.dataQualityScore ?? null,
+-      ingredientParseStatus: input.ingredientParseStatus ?? null,
+-      ingredientParseConfidence: input.ingredientParseConfidence ?? null,
+-      parserVersion: input.parserVersion ?? null,
+-      sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
+-      ingredients: input.ingredients ?? [],
+-      ...freshness,
+-      legacyUnverifiedExpiryDate: null,
+-      status: 'active',
+-      finishedAt: null,
+-      addedVia: input.addedVia,
+-      repurchaseCount: 1,
+-      replacementRootId: productId,
+-      replacesProductId: null,
+-      replacementLineageAmbiguous: false,
+-      thumbnailPath: null,
+-      createdAt: ts,
+-      updatedAt: ts,
+-    };
+-    const product = normalizeShelfProduct(candidate, ts);
+-    if (!product) throw new Error(SHELF_STATE_INVALID);
++    const product = shelfProductForIntake(input, ts);
+     let committed = product;
+     let outboxChanged = false;
+     lease.assertCurrent();
+@@ -1358,6 +1410,91 @@ export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
+   });
+ }
+ 
++/** The saved attempt is the only submission authority. Its operation and entire
++ * caller payload survive process termination, including uncertain native writes.
++ * Recovery never turns a matching identifier alone into a successful product. */
++export async function submitDurableManualIntake(
++  lease: HealthDataWriteLease,
++  expected: ManualIntakeDraft,
++  assertCallerCurrent: () => void,
++): Promise<ShelfProduct> {
++  const assertCurrent = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  assertCurrent();
++  // Capture before the first await; caller mutations cannot change the review.
++  const accepted = JSON.parse(JSON.stringify(expected)) as ManualIntakeDraft;
++  const assertAuthority = () => assertOriginalHealthDataWriteLease(lease);
++  const input = accepted.fields.attempted?.input;
++  if (!input || input.operationId !== accepted.operationId || input.addedVia !== 'manual') {
++    throw new Error(MANUAL_INTAKE_DRAFT_CONFLICT);
++  }
++  const { manualIntakeDraftAuthorization, MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS, assertExactManualIntakeDraft } = await import('./manualIntakeDraftStore');
++  assertCurrent();
++  const authorization = manualIntakeDraftAuthorization(lease);
++  const sources = [MANUAL_INTAKE_DRAFT_KEY, ...MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS];
++  const ts = nowISO();
++  const product = shelfProductForIntake(input, ts);
++  let committed: ShelfProduct | undefined;
++  let outboxChanged = false;
++  const matches = (actual: ShelfProduct) => {
++    // Generated timestamps are excluded from the caller payload. All factual
++    // values and lifecycle fields must still be exactly canonical and unchanged.
++    const wanted = shelfProductForIntake(input, actual.createdAt);
++    return JSON.stringify(actual) === JSON.stringify(wanted);
++  };
++  await updatePrivateItemWithSources(KEY, sources, values => {
++    assertCurrent();
++    assertExactManualIntakeDraft(values.get(MANUAL_INTAKE_DRAFT_KEY) ?? null, lease, accepted);
++    const raw = values.get(KEY) ?? null;
++    const decoded = decodeShelfState(raw, ts);
++    const existing = decoded.products.find(row => row.id === accepted.operationId);
++    if (existing) {
++      if (!matches(existing)) throw new Error(MANUAL_INTAKE_DRAFT_CONFLICT);
++      committed = existing;
++      return raw;
++    }
++    const namesOperation = (operation: ShelfMirrorOperation) =>
++      (operation.kind === 'upsert' ? operation.payload.id : operation.productId) === accepted.operationId;
++    if (decoded.mirrorOutbox.some(namesOperation) || decoded.terminal.some(row => namesOperation(row.operation))) {
++      throw new Error(MANUAL_INTAKE_DRAFT_CONFLICT);
++    }
++    const prepared = prepareShelfStateForWrite(decoded, ts);
++    appendMirrorUpsert(prepared.mirrorOutbox, product, ts);
++    outboxChanged = true;
++    committed = product;
++    return encodeShelfState([product, ...prepared.products], prepared.mirrorOutbox, prepared.terminal, prepared);
++  }, assertAuthority, undefined, undefined, authorization, assertCurrent);
++  assertCurrent();
++  if (outboxChanged) notifyShelfMirrorOutboxChanged();
++  // A distinct canonical read is required even when the write promise succeeds.
++  let readback: ShelfProduct | undefined;
++  await updatePrivateItemWithSources(KEY, sources, values => {
++    assertCurrent();
++    assertExactManualIntakeDraft(values.get(MANUAL_INTAKE_DRAFT_KEY) ?? null, lease, accepted);
++    const raw = values.get(KEY) ?? null;
++    readback = decodeShelfState(raw).products.find(row => row.id === accepted.operationId);
++    if (!readback || !committed || !matches(readback) || JSON.stringify(readback) !== JSON.stringify(committed)) {
++      throw new Error('MANUAL_INTAKE_READBACK_UNCONFIRMED');
++    }
++    return raw;
++  }, assertCurrent, undefined, undefined, authorization);
++  assertCurrent();
++  // Recheck both exact saved revision and canonical source under the same lock
++  // that retires the draft. A successor or modified product remains recoverable.
++  await updatePrivateItemWithSources(MANUAL_INTAKE_DRAFT_KEY, [KEY, ...MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS], values => {
++    assertCurrent();
++    const raw = values.get(MANUAL_INTAKE_DRAFT_KEY) ?? null;
++    assertExactManualIntakeDraft(raw, lease, accepted);
++    const currentProduct = decodeShelfState(values.get(KEY) ?? null).products.find(row => row.id === accepted.operationId);
++    if (!currentProduct || !readback || !matches(currentProduct) || JSON.stringify(currentProduct) !== JSON.stringify(readback)) {
++      throw new Error('MANUAL_INTAKE_READBACK_UNCONFIRMED');
++    }
++    const collection = decodeManualIntakeDraftCollection(raw, lease.ownerUserId, lease.epoch);
++    return JSON.stringify({ ...collection, drafts: collection.drafts.filter(row => row.id !== accepted.id) });
++  }, assertCurrent, undefined, undefined, authorization);
++  assertCurrent();
++  return readback!;
++}
++
+ export async function updateProduct(
+   id: string,
+   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
+@@ -1520,15 +1657,28 @@ export async function removeProduct(
+   id: string,
+   assertBeforeNativeWrite?: () => void,
+ ): Promise<ShelfProduct | null> {
++  const admitted = captureHealthDataWriteLease();
+   return runCurrentHealthDataOperation(async (lease) => {
++    const { manualIntakeDraftAuthorization, MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS } = await import('./manualIntakeDraftStore');
++    const guard = () => { assertOriginalHealthDataWriteLease(admitted); lease.assertCurrent(); };
++    guard();
+     const ts = nowISO();
+     let removed: ShelfProduct | null = null;
+     let outboxChanged = false;
+     lease.assertCurrent();
+-    await updatePrivateItem(
++    await updatePrivateItemWithSources(
+       KEY,
+-      (current) => {
+-        lease.assertCurrent();
++      [MANUAL_INTAKE_DRAFT_KEY, ...MANUAL_INTAKE_DRAFT_AUTHORIZATION_KEYS],
++      (values) => {
++        guard();
++        const drafts = decodeManualIntakeDraftCollection(values.get(MANUAL_INTAKE_DRAFT_KEY) ?? null, admitted.ownerUserId, admitted.epoch);
++        // A pending attempt is the durable idempotency proof. Resolve it or
++        // explicitly discard it before removing the row; otherwise a restart
++        // cannot distinguish a never-written product from an acknowledged delete.
++        if (drafts.drafts.some(draft => draft.operationId === id && draft.fields.attempted !== null)) {
++          throw new Error('MANUAL_INTAKE_SUBMISSION_UNRESOLVED');
++        }
++        const current = values.get(KEY) ?? null;
+         const decoded = decodeShelfState(current, ts);
+         const prepared = prepareShelfStateForWrite(decoded, ts);
+         const items = prepared.products;
+@@ -1552,7 +1702,10 @@ export async function removeProduct(
+           ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
+           : current;
+       },
++      guard,
++      undefined,
+       undefined,
++      manualIntakeDraftAuthorization(admitted),
+       assertBeforeNativeWrite,
+     );
+     lease.assertCurrent();
+diff --git a/apps/mobile/src/features/subscription/ProGate.tsx b/apps/mobile/src/features/subscription/ProGate.tsx
+index e79dbbd1408a1521b231e8c98c4bc4523eca6127..8bc662b7ffa3370893909ef748b3700d3d1a4e4a 100644
+--- a/apps/mobile/src/features/subscription/ProGate.tsx
++++ b/apps/mobile/src/features/subscription/ProGate.tsx
+@@ -16,12 +16,18 @@ import { PAYWALL_FEEDBACK, PaywallFeedback, type PaywallFeedbackState } from './
+ import { planPriceDisplay } from './priceDisplay';
+ import { useEntitlement, useEntitlementActions } from './useEntitlement';
+ import { useSubscriptionOffering } from './useSubscriptionOffering';
++import { isFreeRecordFeature } from './gatedRoutes';
+ 
+ // Feature gate (docs/08 §3.2/§4). When the user is Pro (incl. the reverse trial /
+ // carded trial), render the feature; otherwise render a calm, honest contextual
+ // paywall framed around THIS feature, with the same compliance posture. Dismissible,
+ // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
+ export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
++  if (isFreeRecordFeature(feature)) return <>{children}</>;
++  return <PaidFeatureGate feature={feature}>{children}</PaidFeatureGate>;
++}
++
++function PaidFeatureGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
+   const { fontScale = 1, height, width } = useWindowDimensions();
+   const isFocused = useIsFocused();
+   const pathname = usePathname();
+diff --git a/apps/mobile/src/features/subscription/copy.ts b/apps/mobile/src/features/subscription/copy.ts
+index 959873255dee4a3d1724ae0de01dad1d403d688c..5c8719a043004f0b404e92693490792d38fe47f3 100644
+--- a/apps/mobile/src/features/subscription/copy.ts
++++ b/apps/mobile/src/features/subscription/copy.ts
+@@ -34,9 +34,9 @@ export const PAYWALL_COPY = {
+     subhead: `Everything below is part of ${BRAND.proName}.`,
+     valueProps: [
+       'Routine builder. Your products and missing steps',
+-      'Ingredient and shelf details, with source status',
+-      'Private photo timeline. On-device only',
+-      'Reminders and a forgiving streak',
++      'Reviewed conflict explanations, when eligible',
++      'Cadence and recovery tools, when independently admitted',
++      'Optional local reminder scheduling',
+     ],
+     annualBadge: 'Annual · best value',
+     cta: 'Start free trial',
+@@ -52,7 +52,7 @@ export const PAYWALL_COPY = {
+     exploreTitle: 'Explore first. 7 days of Pro',
+     exploreBody: 'No credit card. See your routine work, then decide.',
+     continueFreeTitle: 'Continue with the free plan',
+-    continueFreeBody: 'No purchase. Pro features stay locked until you choose a plan.',
++    continueFreeBody: 'No purchase. Ordinary edits, local photos, history and your standard brief remain available. Paid intelligence features stay locked.',
+     trustBlock:
+       'Health-related guidance requires independent professional review before availability · photos stay on your device · no data sales',
+   },
+@@ -150,7 +150,7 @@ export const PAYWALL_COPY = {
+     body: 'Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up.',
+     kept: ['Your routine & cycle. Kept', 'Your photos. On your phone', 'Your shelf & streak. Kept'],
+     floorNote:
+-      'On free, you keep the quiz result and shelf view. Interaction-specific guidance requires completed independent professional review before it can be available.',
++      'On free, you keep ordinary edits, local photos, your history, standard briefs and data rights. Interaction-specific guidance requires completed independent professional review before it can be available.',
+     renewCta: 'Renew Pro',
+     declineCta: 'Keep using free',
+   },
+@@ -187,8 +187,8 @@ export const PAYWALL_COPY = {
+ /** Contextual upsell copy, framed around the specific gated feature (design 04). */
+ export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> = {
+   photo_timeline: {
+-    title: 'Unlock your private photo timeline.',
+-    body: `Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of ${BRAND.proName}.`,
++    title: 'Your private photo records are free.',
++    body: 'Local photos, notes and manual comparisons remain available before and after subscription expiry. No measurement or score is promised.',
+   },
+   scheduler: {
+     title: 'Build and track your routine.',
+diff --git a/apps/mobile/src/features/subscription/freeRecordGate.test.ts b/apps/mobile/src/features/subscription/freeRecordGate.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f39a461a4d7c0a1ffb57b48ce8d88882317d5e4
+--- /dev/null
++++ b/apps/mobile/src/features/subscription/freeRecordGate.test.ts
+@@ -0,0 +1,36 @@
++import * as React from 'react';
++import { act, create } from 'react-test-renderer';
++import { expect, it, vi } from 'vitest';
++import { ProGate } from './ProGate';
++
++const ports = vi.hoisted(() => ({ reads: 0, state: undefined as undefined | { isPro: boolean; expired?: boolean; evidenceStatus?: string } }));
++vi.mock('expo-crypto', () => ({}));
++vi.mock('expo-secure-store', () => ({ WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,}));
++vi.mock('./PaywallFeedback', () => ({ PaywallFeedback: 'PaywallFeedback', PAYWALL_FEEDBACK: {} }));
++vi.mock('./ComplianceRow', () => ({ ComplianceRow: 'ComplianceRow' }));
++vi.mock('react-native', () => ({ Platform: { OS: 'web' }, Pressable: 'Pressable', ScrollView: 'ScrollView', View: 'View', useWindowDimensions: () => ({ width: 375, height: 667, fontScale: 1 }) }));
++vi.mock('expo-router', () => ({ router: {}, useIsFocused: () => true, usePathname: () => '/progress' }));
++vi.mock('@/components/ui', () => ({ RouteIconButton: 'RouteIconButton', Screen: 'Screen', Text: 'Text' }));
++vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
++vi.mock('@/lib/env', () => ({ env: { customProGrantEnabled: false, supabaseUrl: 'https://project.supabase.co' }, isSupabaseConfigured: false }));
++vi.mock('./useEntitlement', () => ({ useEntitlement: () => { ports.reads++; return { data: ports.state, isLoading: false }; }, useEntitlementActions: () => ({ startReverseTrial: {}, startTrial: {} }) }));
++vi.mock('./useSubscriptionOffering', () => ({ useSubscriptionOffering: () => ({ data: { status: 'unavailable' } }) }));
++
++it.each(['absent', 'expired', 'unavailable'])('renders free photo records without consulting or inventing %s entitlement', async (status) => {
++  vi.stubGlobal('React', React); vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
++  ports.state = { isPro: false, expired: status === 'expired', evidenceStatus: status }; ports.reads = 0;
++  let tree: ReturnType<typeof create>;
++  const props: React.ComponentProps<typeof ProGate> = { feature: 'photo_timeline', children: React.createElement('Record', null, 'Private source gates still apply') };
++  await act(async () => { tree = create(React.createElement(ProGate, props)); });
++  expect(JSON.stringify(tree!.toJSON())).toContain('Private source gates still apply');
++  expect(ports.reads).toBe(0); expect(ports.state.isPro).toBe(false);
++  await act(async () => tree!.unmount()); vi.unstubAllGlobals();
++});
++it('continues to withhold paid intelligence when provider authority is unknown', async () => {
++  vi.stubGlobal('React', React); vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true); ports.state = undefined;
++  let tree: ReturnType<typeof create>;
++  const props: React.ComponentProps<typeof ProGate> = { feature: 'full_routine', children: React.createElement('Paid', null, 'No unverified access') };
++  await act(async () => { tree = create(React.createElement(ProGate, props)); });
++  expect(JSON.stringify(tree!.toJSON())).toContain('Checking your access'); expect(JSON.stringify(tree!.toJSON())).not.toContain('No unverified access');
++  await act(async () => tree!.unmount()); vi.unstubAllGlobals();
++});
+diff --git a/apps/mobile/src/features/subscription/gatedRoutes.test.ts b/apps/mobile/src/features/subscription/gatedRoutes.test.ts
+index d16f5461d3b3e1b182cd86c57b12693e8546262d..a194754b95f59d326d089916a83a23686eed782c 100644
+--- a/apps/mobile/src/features/subscription/gatedRoutes.test.ts
++++ b/apps/mobile/src/features/subscription/gatedRoutes.test.ts
+@@ -1,12 +1,11 @@
+ import { describe, expect, it } from 'vitest';
+ 
+-import { routineGateFeatureForPath } from './gatedRoutes';
++import { isFreeRecordFeature, routineGateFeatureForPath } from './gatedRoutes';
+ 
+ describe('routine route gate mapping', () => {
+   it('uses the full-routine paywall for routine intelligence routes', () => {
+     for (const path of [
+       '/routine/plan',
+-      '/routine/reorder',
+       '/routine/ramp',
+       '/routine/tolerance',
+       '/routine/adaptation',
+@@ -15,11 +14,16 @@ describe('routine route gate mapping', () => {
+     }
+   });
+ 
+-  it('uses the reminders paywall for streak routes', () => {
+-    for (const path of ['/routine/streak', '/routine/welcome-back']) {
+-      expect(routineGateFeatureForPath(path)).toBe('reminders_widgets');
++  it('keeps factual recovery history available without a reminder entitlement', () => {
++    for (const path of ['/routine/welcome-back', '/routine/welcome-back?from=notification#history']) {
++      expect(routineGateFeatureForPath(path)).toBeNull();
+     }
+   });
++  it('keeps ordinary record edits/history/photos free without granting paid intelligence', () => {
++    for (const path of ['/routine/reorder', '/routine/streak?from=you', '/routine/records']) expect(routineGateFeatureForPath(path)).toBeNull();
++    expect(isFreeRecordFeature('photo_timeline')).toBe(true);
++    for (const feature of ['full_routine', 'scheduler', 'reminders_widgets', 'conflict_checks'] as const) expect(isFreeRecordFeature(feature)).toBe(false);
++  });
+ 
+   it('does not put the unavailable widgets route behind a paywall', () => {
+     expect(routineGateFeatureForPath('/routine/widgets')).toBeNull();
+diff --git a/apps/mobile/src/features/subscription/gatedRoutes.ts b/apps/mobile/src/features/subscription/gatedRoutes.ts
+index 9eaad919e78195f6553d0a95508b058f5449f2a1..3e4b58a03aac32262bf3de506e406d3848e15a9f 100644
+--- a/apps/mobile/src/features/subscription/gatedRoutes.ts
++++ b/apps/mobile/src/features/subscription/gatedRoutes.ts
+@@ -1,14 +1,17 @@
+ import type { GatedFeature } from '@layerwell/types';
+ 
+-const REMINDERS_ROUTINE_ROUTES = new Set(['streak', 'welcome-back']);
++const FREE_RECORD_ROUTES = new Set(['widgets', 'reorder', 'streak', 'records', 'welcome-back']);
++
++/** Frozen V2 contract: local photos are owner records, never a Plus grant. */
++export function isFreeRecordFeature(feature: GatedFeature): boolean {
++  return feature === 'photo_timeline';
++}
+ 
+ export function routineGateFeatureForPath(pathname: string): GatedFeature | null {
+   const pathOnly = pathname.split(/[?#]/, 1)[0] ?? '';
+   const routeName = pathOnly.split('/').filter(Boolean).at(-1);
+ 
+-  if (routeName === 'widgets') return null;
++  if (routeName && FREE_RECORD_ROUTES.has(routeName)) return null;
+ 
+-  return routeName && REMINDERS_ROUTINE_ROUTES.has(routeName)
+-    ? 'reminders_widgets'
+-    : 'full_routine';
++  return 'full_routine';
+ }
+diff --git a/apps/mobile/src/features/subscription/proGatedRoutes.test.ts b/apps/mobile/src/features/subscription/proGatedRoutes.test.ts
+index 2e39be652ae6a198dfefc073ae0dcf7ac2e41bc1..178b85c3cf0084c7f0e04d83e0fef8409a41f50e 100644
+--- a/apps/mobile/src/features/subscription/proGatedRoutes.test.ts
++++ b/apps/mobile/src/features/subscription/proGatedRoutes.test.ts
+@@ -123,12 +123,14 @@ describe('Pro-gated route contracts', () => {
+   it('keeps the welcome-back primary action buffered above the phone bottom edge', () => {
+     const source = readAppRoute('routine/welcome-back.tsx');
+ 
+-    expect(source).toContain('<View className="pb-4 pt-2">');
++    expect(source).toContain('<View className="gap-3 pb-4 pt-2">');
+     expect(source).toContain(
+-      "<Button label={WELCOME_BACK.cta} onPress={() => router.replace('/(tabs)/today')} />",
++      "<Button label=\"Back to Today\" onPress={() => router.replace('/(tabs)/today')} />",
+     );
++    expect(source).toContain('Missing entries do not tell us whether you used your products.');
++    expect(source).not.toContain('WELCOME_BACK');
+     expect(source).not.toContain(
+-      "\n      <Button label={WELCOME_BACK.cta} onPress={() => router.replace('/(tabs)/today')} />\n    </Screen>",
++      "\n      <Button label=\"Back to Today\" onPress={() => router.replace('/(tabs)/today')} />\n    </Screen>",
+     );
+   });
+ 
+diff --git a/apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx b/apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..12d100081a003fe4f218afb6a0c3da1b1ee3e010
+--- /dev/null
++++ b/apps/mobile/src/features/today/OptionalChangeDraftInventory.tsx
+@@ -0,0 +1,202 @@
++import { useFocusEffect } from 'expo-router';
++import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
++import { View } from 'react-native';
++
++import { Button, Text } from '@/components/ui';
++import { assertOriginalHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { activeHealthProcessingLeaseSnapshot, subscribeActiveHealthProcessingLeaseChanges } from '@/lib/consent/healthProcessingEpoch';
++import { colors } from '@/theme/tokens';
++
++import type { OptionalChangeDraft, OptionalChangeDraftCollection } from './optionalChangeDraftCodec';
++import { discardOptionalChangeDraft, loadOptionalChangeDrafts } from './optionalChangeDraftStore';
++import { observationCategoryLabel } from './observationHistory';
++
++type Props = {
++  lease: HealthDataWriteLease;
++  isSourceCurrent: () => boolean;
++  onResume: (saved: OptionalChangeDraft) => Promise<void>;
++  onClose: () => void;
++  dark?: boolean;
++};
++
++function authorityRefusal(error: unknown): boolean {
++  return error instanceof Error && /AUTHORITY|ADMISSION|OWNER|RETIRED|EPOCH|FOREIGN|HEALTH_DATA_LIFECYCLE|CONSENT|AGE_POLICY/.test(error.message);
++}
++
++function recoveryMessage(error: unknown): string {
++  const code = error instanceof Error ? error.message : '';
++  if (authorityRefusal(error))
++    return 'Saved change draft access is retired. Current adult eligibility, owner and health-processing permission must be verified before reading drafts.';
++  if (/INVALID|UNSUPPORTED|PURPOSE_BINDING/.test(code))
++    return 'Saved change data is unsupported or invalid. Nothing was reset or treated as an empty collection.';
++  if (/CONFLICT|STALE/.test(code))
++    return 'This saved revision or its source changed. Refresh and select the current draft before resuming or discarding.';
++  return 'Saved change draft storage is unavailable or unreadable. Nothing was reset. Refresh to retry; missing recovery keys are never recreated here.';
++}
++
++/** This inventory never appends history. Resume hands one freshly verified
++ * saved revision to the editor for current-history reconciliation and review. */
++export function OptionalChangeDraftInventory({ lease, isSourceCurrent, onResume, onClose, dark = false }: Props) {
++  const health = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);
++  const [collection, setCollection] = useState<OptionalChangeDraftCollection | null>(null);
++  const collectionRef = useRef<OptionalChangeDraftCollection | null>(null);
++  const [selected, setSelected] = useState<OptionalChangeDraft | null>(null);
++  const selectedRef = useRef<OptionalChangeDraft | null>(null);
++  const [message, setMessage] = useState<string | null>(null);
++  const [busy, setBusy] = useState(false);
++  const [needsRefresh, setNeedsRefresh] = useState(true);
++  const [authorityDenied, setAuthorityDenied] = useState(false);
++  const [, notifyExpiry] = useState(0);
++  const currentRead = useRef(false);
++  const flight = useRef<object | null>(null);
++  const focus = useRef(0), visible = useRef(false);
++  const [renderedFocus, setRenderedFocus] = useState(0);
++  const ink = dark ? colors.cream : colors.ink;
++  const muted = dark ? 'rgba(244,239,231,0.72)' : colors.muted;
++  useEffect(() => {
++    if (lease.expiresAt === null) return;
++    const timer = setTimeout(() => notifyExpiry(value => value + 1), Math.max(0, lease.expiresAt - Date.now()) + 1);
++    return () => clearTimeout(timer);
++  }, [lease.expiresAt]);
++
++  const refresh = useCallback(async () => {
++    if (flight.current || !visible.current) return;
++    const acceptedFocus = focus.current, attempt = {};
++    const guard = () => {
++      assertOriginalHealthDataWriteLease(lease);
++      if (!visible.current || focus.current !== acceptedFocus || !isSourceCurrent())
++        throw new Error('OPTIONAL_CHANGE_DRAFT_STALE');
++    };
++    flight.current = attempt; currentRead.current = false;
++    setBusy(true); setNeedsRefresh(true); setMessage(null);
++    try {
++      guard();
++      const result = await loadOptionalChangeDrafts(lease);
++      guard();
++      if (flight.current !== attempt) return;
++      collectionRef.current = result; setCollection(result);
++      selectedRef.current = null; setSelected(null);
++      setAuthorityDenied(false);
++      currentRead.current = true; setNeedsRefresh(false);
++    } catch (error) {
++      if (visible.current && focus.current === acceptedFocus && flight.current === attempt) {
++        setAuthorityDenied(authorityRefusal(error));
++        setMessage(recoveryMessage(error));
++      }
++    } finally {
++      if (flight.current === attempt) { flight.current = null; setBusy(false); }
++    }
++  }, [lease, isSourceCurrent]);
++
++  useFocusEffect(useCallback(() => {
++    visible.current = true; focus.current += 1; setRenderedFocus(focus.current);
++    void refresh();
++    return () => {
++      visible.current = false; focus.current += 1; flight.current = null;
++      currentRead.current = false; collectionRef.current = null; selectedRef.current = null;
++      setCollection(null); setSelected(null); setMessage(null); setNeedsRefresh(true);
++    };
++  }, [refresh]));
++
++  let admitted = false;
++  try {
++    assertOriginalHealthDataWriteLease(lease);
++    admitted = health?.generation === lease.generation && isSourceCurrent();
++  } catch { /* An old view never borrows fresh owner or consent authority. */ }
++
++  function assertVisible() {
++    assertOriginalHealthDataWriteLease(lease);
++    if (!visible.current || focus.current !== renderedFocus || !isSourceCurrent())
++      throw new Error('OPTIONAL_CHANGE_DRAFT_STALE');
++  }
++
++  async function actOnDraft(expected: OptionalChangeDraft, action: 'resume' | 'discard') {
++    if (flight.current || !currentRead.current || !collectionRef.current?.drafts.includes(expected)) return;
++    const acceptedCollection = collectionRef.current, attempt = {};
++    const guard = () => {
++      assertVisible();
++      if (collectionRef.current !== acceptedCollection || !currentRead.current ||
++          (action === 'discard' && selectedRef.current !== expected))
++        throw new Error('OPTIONAL_CHANGE_DRAFT_STALE');
++    };
++    try { guard(); } catch { return; }
++    flight.current = attempt; setBusy(true); setMessage(null);
++    try {
++      if (action === 'discard') {
++        await discardOptionalChangeDraft(lease, expected, guard); guard();
++        const result = await loadOptionalChangeDrafts(lease); guard();
++        collectionRef.current = result; setCollection(result);
++        selectedRef.current = null; setSelected(null);
++      } else {
++        const result = await loadOptionalChangeDrafts(lease); guard();
++        const exact = result.drafts.find(row => row.id === expected.id);
++        if (!exact || JSON.stringify(exact) !== JSON.stringify(expected))
++          throw new Error('OPTIONAL_CHANGE_DRAFT_CONFLICT');
++        await onResume(exact);
++      }
++    } catch (error) {
++      if (visible.current && focus.current === renderedFocus && flight.current === attempt) {
++        setAuthorityDenied(authorityRefusal(error));
++        currentRead.current = false; setNeedsRefresh(true); setMessage(recoveryMessage(error));
++      }
++    } finally {
++      if (flight.current === attempt) { flight.current = null; setBusy(false); }
++    }
++  }
++
++  return <View className="mt-4 gap-3 rounded-card border border-hairline p-4"
++    style={{ backgroundColor: dark ? colors.nightSurface : colors.paperRaised }}>
++    <Text variant="titleSm" accessibilityRole="header" style={{ color: ink }}>Saved change drafts</Text>
++    <Text variant="bodySm" style={{ color: muted }}>
++      Unconfirmed factual notes, corrections and retractions saved on this device. Resume preserves your original text and reads current history for a fresh review. No record is appended automatically.
++    </Text>
++    <Button label="Back to optional changes" variant={dark ? 'inverseGhost' : 'ghost'} disabled={busy} onPress={() => {
++      if (flight.current) return;
++      try { assertVisible(); onClose(); } catch { /* Retired navigation callback. */ }
++    }} />
++    {!admitted || authorityDenied ? <Text accessibilityRole="alert" style={{ color: ink }}>
++      Saved change draft access is retired. Reopen with current adult, owner and privacy access.
++    </Text> : <>
++      <Button label="Refresh saved change drafts" variant={dark ? 'inverse' : 'primary'} disabled={busy} onPress={() => {
++        try { assertVisible(); void refresh(); } catch { /* A previous focus cannot refresh this view. */ }
++      }} />
++      {busy ? <Text accessibilityLiveRegion="polite" style={{ color: ink }}>Verifying saved change draft storage.</Text> : null}
++      {message ? <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: ink }}>{message}</Text> : null}
++      {needsRefresh && collection ? <Text variant="bodySm" style={{ color: muted }}>
++        Previously verified drafts are shown below for reference. Refresh successfully before using their actions.
++      </Text> : null}
++      {!needsRefresh && collection?.drafts.length === 0 ? <Text style={{ color: ink }}>No saved change drafts.</Text> : null}
++      {collection?.drafts.map(row => <View key={row.id} className="gap-2 rounded-[12px] border border-hairline p-4">
++        <Text variant="body" className="font-sans-semibold" style={{ color: ink }}>
++          {row.fields.kind === 'note' ? 'Factual note draft' : row.fields.kind === 'correction' ? 'Correction draft' : 'Retraction draft'}
++        </Text>
++        <Text variant="bodySm" style={{ color: muted }}>
++          Observed {row.fields.observedOn || 'date not entered'}. {row.fields.category ? observationCategoryLabel(row.fields.category) : 'Category not selected'}.
++        </Text>
++        <Text selectable style={{ color: ink }}>{row.fields.text || 'No factual text entered.'}</Text>
++        <Text variant="bodySm" style={{ color: muted }}>Saved revision {row.revision} on {row.updatedAt}. Last reviewed history revision {row.fields.sourceRevision}.</Text>
++        {row.fields.targetEventId ? <Text selectable variant="label" style={{ color: muted }}>Original target event {row.fields.targetEventId}</Text> : null}
++        {row.fields.attempted ? <Text variant="bodySm" style={{ color: ink }}>A confirmation was attempted. Resume checks for the exact existing event before any further confirmation.</Text> : null}
++        <Button label="Resume saved change draft" accessibilityHint={`Resume ${row.fields.kind} draft saved ${row.updatedAt}, revision ${row.revision}`}
++          variant={dark ? 'inverse' : 'primary'} disabled={busy || needsRefresh || selected !== null} onPress={() => void actOnDraft(row, 'resume')} />
++        <Button label="Review change draft discard" accessibilityHint={`Review discarding saved ${row.fields.kind} draft revision ${row.revision}`}
++          variant={dark ? 'inverseGhost' : 'inverse'} disabled={busy || needsRefresh || selected !== null} onPress={() => {
++            if (flight.current || !currentRead.current || !collectionRef.current?.drafts.includes(row)) return;
++            try { assertVisible(); } catch { return; }
++            selectedRef.current = row; setSelected(row);
++          }} />
++        {selected === row ? <View className="gap-2">
++          <Text accessibilityRole="alert" style={{ color: ink }}>Discard only this saved revision? Any event already recorded stays in history. Other drafts and unsaved editor text are not removed.</Text>
++          <Button label="Confirm change draft discard" variant={dark ? 'inverse' : 'primary'} disabled={busy || needsRefresh}
++            onPress={() => void actOnDraft(row, 'discard')} />
++          <Button label="Keep change draft" variant={dark ? 'inverseGhost' : 'inverse'} disabled={busy} onPress={() => {
++            if (flight.current || selectedRef.current !== row) return;
++            try { assertVisible(); } catch { return; }
++            selectedRef.current = null; setSelected(null);
++          }} />
++        </View> : null}
++      </View>)}
++    </>}
++    <Text variant="bodySm" style={{ color: muted }}>Only explicitly saved revisions survive reload. Withdrawal or clearing local private data removes these drafts. Local exports may include them; exports are not recovery backups.</Text>
++  </View>;
++}
+diff --git a/apps/mobile/src/features/today/OptionalChangePanel41.test.tsx b/apps/mobile/src/features/today/OptionalChangePanel41.test.tsx
+index 9bcd6513be3bb0dbf630fb0d9387be683730a1c1..2ac24006732bc775dcd74ce42792a4dcb3274e25 100644
+--- a/apps/mobile/src/features/today/OptionalChangePanel41.test.tsx
++++ b/apps/mobile/src/features/today/OptionalChangePanel41.test.tsx
+@@ -7,6 +7,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, it, vi } from 'vi
+ import { OptionalChangePanel41 } from './OptionalChangePanel41';
+ import type { OptionalChangeEvent41, OptionalChangeInput41 } from './optionalChange41';
+ import type { OptionalChangeSnapshot41 } from './completionsStore';
++import { makeOptionalChangeDraft, type OptionalChangeDraft, type OptionalChangeDraftFields } from './optionalChangeDraftCodec';
+ import type { HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
+ 
+ type Node41 = { type: unknown; props: Record<string, unknown>; children: (Node41 | string)[]; findAll: (test: (node: Node41) => boolean) => Node41[] };
+@@ -17,6 +18,7 @@ const { act, create } = createRequire(import.meta.url)('react-test-renderer') as
+ const ports = vi.hoisted(() => ({
+   active: undefined as HealthDataWriteLease | undefined, sourceCurrent: true,
+   get: vi.fn(), append: vi.fn(), sequence: 0, blur: undefined as (() => void) | undefined,
++  saveDraft: vi.fn(), refreshDraft: vi.fn(), readDraftHistory: vi.fn(), submitDraft: vi.fn(),
+ }));
+ vi.mock('react-native', () => ({ TextInput: 'TextInput', View: 'View' }));
+ vi.mock('@/components/ui', () => ({ Button: 'Button', Text: 'Text' }));
+@@ -28,7 +30,16 @@ vi.mock('expo-router', async () => {
+     ports.blur = callback(); return ports.blur;
+   }, [callback]) };
+ });
+-vi.mock('./completionsStore', () => ({ getOptionalChanges41: ports.get, appendOptionalChange41: ports.append }));
++
++vi.mock('./completionsStore', () => ({
++  getOptionalChanges41: ports.get, appendOptionalChange41: ports.append,
++  submitDurableOptionalChange: ports.submitDraft,
++}));
++vi.mock('./optionalChangeDraftStore', () => ({
++  saveOptionalChangeDraft: ports.saveDraft, refreshOptionalChangeDraft: ports.refreshDraft,
++  readOptionalChangeDraftHistory: ports.readDraftHistory,
++}));
++vi.mock('./OptionalChangeDraftInventory', () => ({ OptionalChangeDraftInventory: 'OptionalChangeDraftInventory' }));
+ vi.mock('./useToday', () => ({ localDateString: () => '2026-11-02' }));
+ vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+   assertHealthDataWriteLease: (expected: HealthDataWriteLease) => {
+@@ -93,13 +104,162 @@ beforeEach(() => {
+   ports.active = { ownerUserId: 'owner-a', accountGeneration: 1, generation: 1, epoch: 1, expiresAt: null };
+   ports.sourceCurrent = true; ports.sequence = 0; ports.blur = undefined;
+   disk = initial(); ports.get.mockReset(); ports.append.mockReset();
++  for (const port of [ports.saveDraft, ports.refreshDraft, ports.readDraftHistory, ports.submitDraft]) {
++    port.mockReset();
++    port.mockRejectedValue(new Error('DURABLE_ADAPTER_NOT_CONFIGURED'));
++  }
+   ports.get.mockImplementation(async () => disk);
+   ports.append.mockImplementation(async (input: OptionalChangeInput41, _lease: HealthDataWriteLease, current: () => void) => { current(); return commit(input); });
+   client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity } } });
+ });
+ afterEach(async () => { await flush(() => { renderer?.unmount(); }); renderer = undefined; client.clear(); });
+ 
++describe('collapsed optional change draft entry', () => {
++  const entryView = (lease: HealthDataWriteLease, isSourceCurrent: () => boolean, dark = false) =>
++    React.createElement(QueryClientProvider, { client }, React.createElement(OptionalChangePanel41, {
++      key: 'same-entry', lease, isSourceCurrent, dark,
++    }));
++  const inventories = () => renderer!.root.findAll(node => node.type === 'OptionalChangeDraftInventory');
++  const fields = () => renderer!.root.findAll(node => node.type === 'TextInput');
++  function noMutation() {
++    for (const port of [ports.saveDraft, ports.refreshDraft, ports.submitDraft, ports.append])
++      assert.equal(port.mock.calls.length, 0);
++    assert.equal(disk.events.length, 0);
++  }
++
++  it.each([false, true])('shows the collapsed heading and both conventional buttons (dark: %s)', async dark => {
++    await flush(() => { renderer = create(entryView(ports.active!, () => ports.sourceCurrent, dark)); });
++    const headings = renderer!.root.findAll(node => node.type === 'Text' && node.props.accessibilityRole === 'header');
++    assert.equal(headings.length, 1); assert.equal(words(headings[0]!), 'Your optional change notes');
++    assert.equal(button('Record a change (optional)').props.variant, dark ? 'inverse' : 'primary');
++    const saved = button('Saved change drafts');
++    assert.equal(saved.props.variant, dark ? 'inverseGhost' : 'inverse');
++    assert.equal(saved.props.accessibilityHint, 'Opens saved factual notes, corrections and retractions.');
++    assert.equal(saved.props.disabled ?? false, false);
++    assert.equal(inventories().length, 0); assert.equal(fields().length, 0);
++    assert.equal(ports.get.mock.calls.length, 0); assert.equal(ports.readDraftHistory.mock.calls.length, 0);
++    noMutation();
++  });
++
++  it('opens the existing inventory directly with original authority and returns to optional changes without an editor or mutation', async () => {
++    const lease = ports.active!, source = () => ports.sourceCurrent, original = JSON.stringify(disk);
++    await flush(() => { renderer = create(entryView(lease, source)); });
++    await press('Saved change drafts');
++    assert.equal(inventories().length, 1); assert.equal(fields().length, 0);
++    assert.equal(inventories()[0]!.props.lease, lease); assert.equal(inventories()[0]!.props.isSourceCurrent, source);
++    assert.equal(ports.readDraftHistory.mock.calls.length, 0);
++    assert.ok(ports.get.mock.calls.length > 0);
++    for (const call of ports.get.mock.calls) assert.equal(call[0], lease);
++    assert.equal(JSON.stringify(disk), original); noMutation();
++    await flush(() => { (inventories()[0]!.props.onClose as () => void)(); });
++    assert.equal(inventories().length, 0); assert.equal(fields().length, 0);
++    assert.match(words(renderer!.root), /Your optional change notes/);
++    button('Record a change (optional)'); button('Saved change drafts'); noMutation();
++  });
++
++  it('keeps the primary entry opening history before an explicitly requested new note', async () => {
++    await flush(() => { renderer = create(entryView(ports.active!, () => ports.sourceCurrent)); });
++    await press('Record a change (optional)');
++    assert.equal(inventories().length, 0); assert.equal(fields().length, 0);
++    assert.ok(ports.get.mock.calls.length > 0); noMutation();
++    await press('Record a change (optional)');
++    assert.equal(renderer!.root.findAll(node => node.type === 'TextInput' && node.props.accessibilityLabel === 'Observed local date').length, 1);
++    await press('Other personal note');
++    assert.equal(renderer!.root.findAll(node => node.type === 'TextInput' && node.props.accessibilityLabel === 'Your factual note').length, 1);
++    assert.equal(inventories().length, 0); noMutation();
++  });
++
++  it.each(['owner', 'account', 'grant', 'expiry', 'withdrawal', 'source', 'blur'] as const)(
++    'refuses the captured saved entry after normal %s retirement without opening or reading under successor authority', async transition => {
++      const originalLease = ports.active!, originalSource = () => ports.sourceCurrent;
++      await flush(() => { renderer = create(entryView(originalLease, originalSource)); });
++      const oldEntry = button('Saved change drafts').props.onPress as () => void;
++      if (transition === 'source') ports.sourceCurrent = false;
++      else if (transition === 'blur') await flush(() => ports.blur?.());
++      else ports.active = transition === 'withdrawal' ? undefined : { ...originalLease,
++        generation: originalLease.generation + 1,
++        ownerUserId: transition === 'owner' ? 'owner-b' : originalLease.ownerUserId,
++        accountGeneration: transition === 'account' ? originalLease.accountGeneration + 1 : originalLease.accountGeneration,
++        expiresAt: transition === 'expiry' ? Date.now() - 1 : null };
++      const successorSource = vi.fn(() => true);
++      await flush(() => renderer!.update(entryView(ports.active ?? originalLease, successorSource)));
++      await flush(oldEntry);
++      assert.equal(inventories().length, 0); assert.equal(fields().length, 0);
++      assert.equal(successorSource.mock.calls.length, 0);
++      assert.equal(ports.get.mock.calls.length, 0); assert.equal(ports.readDraftHistory.mock.calls.length, 0);
++      noMutation();
++    });
++
++  it('retains the accepted entry lease and source callback when the same panel instance receives successor props', async () => {
++    const originalLease = ports.active!, originalSource = () => ports.sourceCurrent;
++    await flush(() => { renderer = create(entryView(originalLease, originalSource)); });
++    await press('Saved change drafts');
++    const reads = ports.get.mock.calls.length;
++    ports.active = { ...originalLease, ownerUserId: 'owner-b', generation: originalLease.generation + 1 };
++    const successorSource = vi.fn(() => true);
++    await flush(() => renderer!.update(entryView(ports.active!, successorSource)));
++    assert.equal(inventories().length, 1);
++    assert.equal(inventories()[0]!.props.lease, originalLease);
++    assert.equal(inventories()[0]!.props.isSourceCurrent, originalSource);
++    assert.equal(successorSource.mock.calls.length, 0); assert.equal(ports.get.mock.calls.length, reads);
++    assert.equal(ports.readDraftHistory.mock.calls.length, 0); noMutation();
++  });
++
++  it('closes direct inventory on focus retirement and permits only a fresh explicit entry after remount', async () => {
++    await flush(() => { renderer = create(entryView(ports.active!, () => ports.sourceCurrent)); });
++    const leave = ports.blur!, oldEntry = button('Saved change drafts').props.onPress as () => void;
++    await press('Saved change drafts'); assert.equal(inventories().length, 1);
++    await flush(leave); assert.equal(inventories().length, 0); assert.equal(fields().length, 0);
++    const reads = ports.get.mock.calls.length;
++    ports.active = { ...ports.active!, ownerUserId: 'owner-b', generation: ports.active!.generation + 1 };
++    const source = () => true;
++    await flush(() => renderer!.update(entryView(ports.active!, source)));
++    await flush(oldEntry); assert.equal(inventories().length, 0); assert.equal(ports.get.mock.calls.length, reads);
++    await flush(() => renderer!.unmount());
++    await flush(() => { renderer = create(entryView(ports.active!, source)); });
++    assert.equal(inventories().length, 0); await press('Saved change drafts');
++    assert.equal(inventories().length, 1); assert.equal(inventories()[0]!.props.lease, ports.active);
++    assert.equal(inventories()[0]!.props.isSourceCurrent, source); noMutation();
++  });
++});
++
+ describe('optional change panel41 actual interaction', () => {
++  it('searches factual history, separates current observations and preserves corrections and retractions', async () => {
++    await mount(); await draft('Original report'); await press('Confirm and save this change');
++    await press('Correct entry 1'); await press('Other personal note'); await fill('Your factual note', 'Updated report');
++    await press('Review this change'); await press('Confirm and save this change');
++    const before = JSON.stringify(disk);
++    assert.match(words(renderer!.root), /Earlier observation/);
++    await press('Show current observations');
++    assert.match(words(renderer!.root), /Updated report/); assert.doesNotMatch(words(renderer!.root), /Original report/);
++    await fill('Find recorded changes', 'not recorded');
++    assert.match(words(renderer!.root), /No recorded changes match/);
++    await press('Clear recorded change search');
++    await fill('Find recorded changes', '2026-11-02');
++    assert.match(words(renderer!.root), /Updated report/);
++    await press('Clear recorded change search');
++    assert.equal(JSON.stringify(disk), before);
++    await press('Retract entry 2'); await fill('Retraction reason', 'Withdraw this report');
++    await press('Review this change'); await press('Confirm and save this change');
++    assert.match(words(renderer!.root), /No current observations/);
++    await press('Show all recorded entries');
++    assert.match(words(renderer!.root), /Original report/); assert.match(words(renderer!.root), /Updated report/);
++    assert.match(words(renderer!.root), /Retracted observation/); assert.match(words(renderer!.root), /Retraction record/);
++    assert.equal(disk.events.length, 3);
++  });
++  it('pages longer histories without writing or revealing them under retired authority', async () => {
++    for (let n = 1; n <= 12; n++) commit({ id: `41000000-0000-4000-8000-${String(n).padStart(12, '0')}`,
++      expectedRevision: disk.revision, expectedSourceProof: disk.sourceProof, expectedSourceBytes: disk.sourceBytes,
++      observedOn: '2026-11-02', category: 'personal_note', text: `Report number ${n}.`, kind: 'note', targetEventId: null, confirmation: true });
++    await mount();
++    assert.doesNotMatch(words(renderer!.root), /Report number 12\./);
++    await press('Show more recorded changes'); assert.match(words(renderer!.root), /Report number 12\./);
++    const oldInput = renderer!.root.findAll((node) => node.type === 'TextInput' && node.props.accessibilityLabel === 'Find recorded changes')[0]!;
++    ports.sourceCurrent = false;
++    await flush(() => { (oldInput.props.onChangeText as (value: string) => void)('Report'); renderer!.update(view()); });
++    assert.doesNotMatch(words(renderer!.root), /Report number/);
++    assert.equal(ports.append.mock.calls.length, 0);
++  });
+   it('offers a visible inline entry before initializing private history or opening an editor', async () => {
+     await flush(() => { renderer = create(view()); });
+     assert.equal(button('Record a change (optional)').props.disabled ?? false, false);
+@@ -136,6 +296,30 @@ describe('optional change panel41 actual interaction', () => {
+     assert.equal(ports.append.mock.calls[0]![0].expectedSourceBytes, 'source after original check-off');
+     assert.equal(ports.append.mock.calls[0]![0].expectedSourceProof, 'd'.repeat(64));
+   });
++  it.each(['correction', 'retraction', 'same-text ABA'] as const)(
++    'does not let an old history control adopt unseen %s events when opening a draft', async transition => {
++      await mount(); await draft('Original visible report'); await press('Confirm and save this change');
++      const captured = button('Correct entry 1').props.onPress as () => void;
++      const original = disk.events[0]!;
++      const external = (text: string, kind: OptionalChangeInput41['kind'], targetEventId: string) => commit({
++        id: `41000000-0000-4000-8000-${String(++ports.sequence).padStart(12, '0')}`,
++        expectedRevision: disk.revis

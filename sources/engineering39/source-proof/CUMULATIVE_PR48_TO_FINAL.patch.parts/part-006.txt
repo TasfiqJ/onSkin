@@ -1,0 +1,2803 @@
+_SOURCE44_STALE = 'PLAN_SOURCE44_STALE';
+@@ -46,6 +47,7 @@ type SourceProof44 = Readonly<{
+   lease: HealthDataWriteLease;
+   originalLease: HealthDataWriteLease;
+   expected: ReadonlyMap<string, string | null>;
++  formulas: ReadonlyMap<string, FormulaAtUse | null>;
+ }>;
+ // Exact source bytes and authority stay private in memory. A copied or forged
+ // snapshot cannot borrow the current owner's lease or manufacture a proof.
+@@ -66,6 +68,7 @@ export async function capturePlanSource44(
+   assertCurrent();
+   let snapshot: PlanSourceSnapshot44 | undefined;
+   let expected: ReadonlyMap<string, string | null> | undefined;
++  const formulas = new Map<string, FormulaAtUse | null>();
+   await updatePrivateItemWithSources(
+     ORDER_KEY,
+     SOURCE_KEYS,
+@@ -77,12 +80,13 @@ export async function capturePlanSource44(
+       for (const key of [SOURCE_KEYS[0], SOURCE_KEYS[1], SOURCE_KEYS[3]]) {
+         if (values.get(key) == null) throw new Error(PLAN_SOURCE44_UNAVAILABLE);
+       }
+-      const [products, profileRead, choices, order, consent] = await Promise.all([
++      const [products, profileRead, choices, order, consent, bottles] = await Promise.all([
+         loadShelf(),
+         readStoredSkinProfile(),
+         loadConflictChoices(),
+         loadRoutineOrderOverrides(lease),
+         hasCurrentHealthDataCollectionConsent(),
++        loadCurrentOwnedBottleVersions38(),
+       ]);
+       assertCurrent();
+       if (!consent || profileRead.status !== 'available') {
+@@ -90,6 +94,11 @@ export async function capturePlanSource44(
+       }
+       const active = products.filter((product) => product.status === 'active');
+       if (active.length === 0) throw new Error(PLAN_SOURCE44_UNAVAILABLE);
++      for (const product of active) {
++        const version = bottles.find(bottle => bottle.ownedUnitId === product.id);
++        formulas.set(product.id, version ? Object.freeze({ ownedVersionId: version.id,
++          ownedVersionHash: version.contentHash, formula: version.formulaVersion }) : null);
++      }
+       const profile = profileRead.profile;
+       const status = profile.result.pregnancyStatus;
+       // Match useShelf/usePlan's exact name+INCI/category projection. Stored
+@@ -125,10 +134,19 @@ export async function capturePlanSource44(
+   );
+   assertCurrent();
+   if (!snapshot || !expected) throw new Error(PLAN_SOURCE44_UNAVAILABLE);
+-  proofs.set(snapshot, Object.freeze({ lease, originalLease: expectedLease, expected }));
++  proofs.set(snapshot, Object.freeze({ lease, originalLease: expectedLease, expected, formulas }));
+   return snapshot;
+ }
+ 
++/** Only an original source proof may supply the observation for a new use. The
++ * enclosing transaction compares exact Shelf bytes again before committing. */
++export function formulaAtPlanSource(snapshot: PlanSourceSnapshot44, originalLease: HealthDataWriteLease, productId: string): FormulaAtUse | null {
++  const proof = proofs.get(snapshot);
++  if (!proof || proof.originalLease !== originalLease || !proof.formulas.has(productId)) throw new Error(PLAN_SOURCE44_STALE);
++  assertOriginalHealthDataWriteLease(originalLease);
++  return proof.formulas.get(productId) ?? null;
++}
++
+ function validatedOrder(value: RoutineOrderOverrides, activeIds: readonly string[]): RoutineOrderOverrides {
+   const keys = value && typeof value === 'object' ? Object.keys(value).sort() : [];
+   const active = new Set(activeIds);
+@@ -145,6 +163,30 @@ function validatedOrder(value: RoutineOrderOverrides, activeIds: readonly string
+ }
+ 
+ /** Opt-in existing order write, never a historical-plan append or UI action. */
++export async function saveRoutineOrderTransactionWithSource44(
++  snapshot: PlanSourceSnapshot44, originalLease: HealthDataWriteLease, transaction: RoutineOrderSaveTransaction,
++): Promise<RoutineOrderOverrides> {
++  const proof = proofs.get(snapshot);
++  if (!proof || proof.originalLease !== originalLease) throw new Error(PLAN_SOURCE44_STALE);
++  const assertCurrent = () => { assertOriginalHealthDataWriteLease(originalLease); assertHealthDataWriteLease(proof.lease); };
++  assertCurrent();
++  let committed: RoutineOrderOverrides | undefined;
++  await updatePrivateItemWithSources(ORDER_KEY, SOURCE_KEYS, (values) => {
++    assertCurrent();
++    // Only the order key may advance independently; all canonical inputs stay exact.
++    if (SOURCE_KEYS.some((key) => key !== ORDER_KEY && values.get(key) !== proof.expected.get(key))) throw new Error(PLAN_SOURCE44_STALE);
++    committed = mergeRoutineOrderTransaction(values.get(ORDER_KEY) ?? null, transaction);
++    for (const phase of ['am', 'pm'] as const) {
++      if (JSON.stringify(transaction.previous[phase]) !== JSON.stringify(transaction.next[phase]) &&
++          transaction.next[phase].some((id) => !snapshot.activeProductIds.includes(id))) throw new Error(PLAN_SOURCE44_INVALID_ORDER);
++    }
++    return committed.am.length || committed.pm.length ? JSON.stringify(committed) : null;
++  }, assertCurrent);
++  assertCurrent();
++  if (!committed) throw new Error(PLAN_SOURCE44_STALE);
++  return committed;
++}
++
+ export async function savePlanOrderWithSource44(
+   snapshot: PlanSourceSnapshot44,
+   nextOrder: RoutineOrderOverrides,
+@@ -188,3 +230,30 @@ export async function appendPlanHistoryWithSources44(
+   }, assertCurrent);
+   assertCurrent();
+ }
++
++/** Reserve and verify exact original facts without exposing the underlying proof. */
++export function bindActualRoutineSource44(snapshot: PlanSourceSnapshot44, originalLease: HealthDataWriteLease) {
++  const proof = proofs.get(snapshot);
++  if (!proof || proof.originalLease !== originalLease) throw new Error(PLAN_SOURCE44_STALE);
++  const guard = () => { assertOriginalHealthDataWriteLease(originalLease); assertHealthDataWriteLease(proof.lease); };
++  return { keys: SOURCE_KEYS, guard, validate(values: ReadonlyMap<string, string | null>) {
++    guard();
++    if (SOURCE_KEYS.some(source => values.get(source) !== proof.expected.get(source))) throw new Error(PLAN_SOURCE44_STALE);
++  } };
++}
++
++/** Completion is outside the source hash, avoiding self-referential provenance. */
++export async function updateActualRoutineWithSources(
++  snapshot: PlanSourceSnapshot44, originalLease: HealthDataWriteLease,
++  transform: (raw: string | null) => string,
++): Promise<void> {
++  const source = bindActualRoutineSource44(snapshot, originalLease);
++  const { guard } = source;
++  guard();
++  const key = 'layerwell.completions.v1';
++  await updatePrivateItemWithSources(key, source.keys, values => {
++    source.validate(values);
++    return transform(values.get(key) ?? null);
++  }, guard);
++  guard();
++}
+diff --git a/apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts b/apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts
+index 221b50c5db3ee04613060e1f75553772a87bcd16..d7387d7baefe1dead06c3eadd63d5a5ec98cb6da 100644
+--- a/apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts
++++ b/apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts
+@@ -23,7 +23,7 @@ const ports = vi.hoisted(() => ({
+ }));
+ vi.mock('react-native-get-random-values', () => ({}));
+ vi.mock('expo-crypto', () => ({ randomUUID }));
+-vi.mock('expo-secure-store', () => ({}));
++vi.mock('expo-secure-store', () => ({ WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,}));
+ vi.mock('react-native', () => ({
+   Platform: { OS: 'web' },
+   AppState: {
+@@ -119,6 +119,25 @@ afterEach(async () => {
+   onlineManager.setOnline(true);
+ });
+ 
++it('distinguishes confirmed no history, hydration, read refusal and retired authority', async () => {
++  ports.bytes.delete('layerwell.completions.v1');
++  ports.hold = true;
++  await mount();
++  expect(source.readState).toBe('loading');
++  expect(source.data).toBeUndefined();
++  await act(async () => { ports.release?.(); }); await flush();
++  expect(source.readState).toBe('ready'); expect(source.data?.streak).toBe(0);
++  ports.fail = true;
++  await act(async () => { await source.refetch(); }); await flush();
++  expect(source.readState).toBe('unavailable'); expect(source.data).toBeUndefined();
++  ports.fail = false;
++  await act(async () => { await source.refetch(); }); await flush();
++  await act(async () => { await grant(); }); await flush();
++  expect(source.readState).toBe('access-changed'); expect(source.data).toBeUndefined();
++  await act(async () => { clearActiveHealthProcessingEpoch(); });
++  expect(source.readState).toBe('access-closed'); expect(source.data).toBeUndefined();
++});
++
+ it.each(['synthetic-progress-b', 'synthetic-progress-a'])(
+   'never carries cached totals into a new grant for %s',
+   async (owner) => {
+diff --git a/apps/mobile/src/features/routine/reorder.continuity.test.ts b/apps/mobile/src/features/routine/reorder.continuity.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..259e969675818a898156300c2f1d49be919abc7e
+--- /dev/null
++++ b/apps/mobile/src/features/routine/reorder.continuity.test.ts
+@@ -0,0 +1,173 @@
++import * as React from 'react';
++import { act, create, type ReactTestRenderer } from 'react-test-renderer';
++import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
++import {
++  BaseNavigationContainer,
++  createNavigationContainerRef,
++  createNavigatorFactory,
++  useNavigationBuilder,
++  useNavigation,
++  usePreventRemove,
++} from 'expo-router/build/react-navigation/core';
++import { StackRouter } from 'expo-router/build/react-navigation/routers';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import {
++  close26,
++  flush26,
++  ports26,
++  profile26,
++  reset26,
++  shelf26,
++} from '@/features/shelf/firstValue26TestPorts';
++import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
++import { loadRoutineOrderOverrides } from './orderStore';
++import { capturePlanSource44 } from './planSourceFence44';
++import { savePlanHistory45, loadPlanHistory45 } from './planHistory45';
++import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
++import { localDateString } from '@/features/today/useToday';
++
++let ReorderScreen: React.ComponentType;
++
++// Real React Navigation, usePlan, source admission, encrypted stores and save.
++// Only native adapters use the established synthetic owner fixture. No paid
++// entitlement or enclosing Pro gate is fabricated by this component test.
++vi.mock('expo-router/build/react-navigation/core/NavigationContext', async (original) =>
++  original(),
++);
++vi.doMock('expo-router', () => ({
++  useNavigation: () => useNavigation(),
++  useLocalSearchParams: () => ({ phase: 'am' }),
++  router: { canGoBack: () => true, back: () => navigation.goBack(), replace: () => undefined },
++}));
++vi.doMock('expo-router/react-navigation', () => ({
++  usePreventRemove: (...args: Parameters<typeof usePreventRemove>) => usePreventRemove(...args),
++}));
++const navigation = createNavigationContainerRef<{ Destination: undefined; Editor: undefined }>();
++function PlainStack(props: Parameters<typeof useNavigationBuilder>[1]) {
++  const { state, descriptors, NavigationContent } = useNavigationBuilder(StackRouter, props);
++  return React.createElement(
++    NavigationContent,
++    null,
++    state.routes.map((route) =>
++      React.createElement(React.Fragment, { key: route.key }, descriptors[route.key]!.render()),
++    ),
++  );
++}
++const Stack = createNavigatorFactory(PlainStack)();
++const Host = BaseNavigationContainer as React.ComponentType<
++  React.PropsWithChildren<Omit<React.ComponentProps<typeof BaseNavigationContainer>, 'children'>>
++>;
++function Destination() {
++  return React.createElement('Destination', null, 'Destination');
++}
++let client: QueryClient;
++let renderer: ReactTestRenderer | undefined;
++async function mount() {
++  await act(async () => {
++    renderer = create(
++      React.createElement(
++        QueryClientProvider,
++        { client },
++        React.createElement(
++          Host,
++          {
++            ref: navigation,
++            initialState: { index: 1, routes: [{ name: 'Destination' }, { name: 'Editor' }] },
++          },
++          React.createElement(
++            Stack.Navigator,
++            null,
++            React.createElement(Stack.Screen, { name: 'Destination', component: Destination }),
++            React.createElement(Stack.Screen, { name: 'Editor', component: ReorderScreen }),
++          ),
++        ),
++      ),
++    );
++  });
++  for (let n = 0; n < 5; n++) await flush26();
++}
++const text = () => JSON.stringify(renderer!.toJSON());
++async function press(label: string) {
++  const nodes = renderer!.root.findAll(
++    (node) =>
++      node.type === ('Pressable' as never) &&
++      (node.props.accessibilityLabel === label ||
++        JSON.stringify(
++          node.children.map((child) => (typeof child === 'string' ? child : child.props.children)),
++        ) === JSON.stringify([label])),
++  );
++  expect(nodes, label).toHaveLength(1);
++  expect(nodes[0]!.props.disabled ?? false).toBe(false);
++  await act(async () => {
++    nodes[0]!.props.onPress();
++  });
++  await flush26();
++}
++const steps = () =>
++  renderer!.root.findAll(
++    (node) =>
++      node.type === ('Pressable' as never) &&
++      node.props.accessibilityHint === 'Select to reveal Earlier and Later controls',
++  );
++beforeEach(async () => {
++  vi.stubGlobal('React', React);
++  vi.stubGlobal('__DEV__', true);
++  vi.spyOn((await import('@/theme/haptics')).haptics, 'success').mockImplementation(() => {});
++  ReorderScreen = (await import('@/app/routine/reorder')).default;
++  client = await reset26();
++  await profile26();
++  await (
++    await import('@/lib/auth/sessionOwner')
++  ).claimLocalDataOwnership('synthetic-first-value-a');
++  await shelf26();
++});
++afterEach(async () => {
++  await act(async () => {
++    renderer?.unmount();
++  });
++  renderer = undefined;
++  await close26(client);
++  vi.restoreAllMocks();
++  vi.unstubAllGlobals();
++});
++it('keeps a real dirty editor on native navigation, commits explicit Save, then reloads Today facts and immutable history', async () => {
++  await mount();
++  const initial = steps();
++  expect(initial.length).toBeGreaterThan(1);
++  const first = initial[0]!.props.accessibilityLabel;
++  await press(first);
++  await press('Later');
++  const lease = captureHealthDataWriteLease();
++  const before = new Map(ports26.bytes);
++  await act(async () => {
++    navigation.goBack();
++  });
++  await flush26();
++  expect(text()).toContain('Unsaved routine order');
++  expect(navigation.getCurrentRoute()?.name).toBe('Editor');
++  await press('Keep editing routine order');
++  expect(ports26.bytes).toEqual(before);
++  const intended = steps().map((node) => node.props.accessibilityLabel.split('. Step ')[0]);
++  await press('Save');
++  for (let n = 0; n < 40 && navigation.getCurrentRoute()?.name === 'Editor'; n++) await flush26();
++  expect(navigation.getCurrentRoute()?.name, text()).toBe('Destination');
++  const order = await loadRoutineOrderOverrides(lease);
++  expect(order.am.length).toBeGreaterThan(1);
++  const source = await capturePlanSource44(lease);
++  expect(source.am.map((row) => row.name)).toEqual(intended);
++  const { randomUUID } = await import('node:crypto');
++  const history = await savePlanHistory45(source, lease, {
++    id: randomUUID(),
++    createdAt: new Date().toISOString(),
++  });
++  const key = stepKey('AM', source.am[0]!.productId);
++  const day = localDateString();
++  expect((await toggleCompletion(key, day)).inserted).toBe(true);
++  expect((await toggleCompletion(key, day)).inserted).toBe(false);
++  client.clear();
++  expect(await getCompletedSteps(day)).toEqual(new Set([key]));
++  expect(await loadPlanHistory45(lease)).toEqual(history);
++  clearActiveHealthProcessingEpoch();
++  await expect(loadRoutineOrderOverrides(lease)).rejects.toThrow();
++});
+diff --git a/apps/mobile/src/features/routine/reorder.g2.test.ts b/apps/mobile/src/features/routine/reorder.g2.test.ts
+index d0cda93d4e9de922e21bfc178729a63b131ebc31..249818d87fd0547eec1bc3acab68a157146d1869 100644
+--- a/apps/mobile/src/features/routine/reorder.g2.test.ts
++++ b/apps/mobile/src/features/routine/reorder.g2.test.ts
+@@ -31,14 +31,23 @@ const mocks = vi.hoisted(() => ({
+   save: vi.fn(), cancelQueries: vi.fn(), setQueryData: vi.fn(),
+   refetchQueries: vi.fn(), invalidateQueries: vi.fn(), back: vi.fn(),
+   track: vi.fn(), success: vi.fn(), select: vi.fn(),
++  prevent: false, blockedExit: undefined as undefined | ((event: { data: { action: { type: string } } }) => void), dispatch: vi.fn(),
+ }));
+ vi.mock('react-native', () => ({
+   Platform: { OS: 'ios' }, Pressable: 'Pressable', ScrollView: 'ScrollView', View: 'View',
+ }));
+ vi.mock('@/components/ui', () => ({ Screen: 'Screen', Text: 'Text' }));
+-vi.mock('expo-router', () => ({ router: {}, useLocalSearchParams: () => ({ phase: 'am' }) }));
++vi.mock('expo-router', () => ({ router: {}, useLocalSearchParams: () => ({ phase: 'am' }), useNavigation: () => ({ dispatch: mocks.dispatch }) }));
++vi.mock('expo-router/react-navigation', () => ({ usePreventRemove: (prevent: boolean, callback: typeof mocks.blockedExit) => {
++  mocks.prevent = prevent; mocks.blockedExit = callback;
++} }));
+ vi.mock('@tanstack/react-query', () => ({ useQueryClient: () => mocks }));
+ vi.mock('@/features/routine/usePlan', () => ({ usePlan: () => mocks.plan }));
++vi.mock('@/features/routine/planSourceFence44', () => ({ capturePlanSource44: async () => ({
++  source: 'local', sourceHash: 'a'.repeat(64), activeProductIds: mocks.plan?.data?.activeProductIds ?? [],
++  am: mocks.plan?.data?.plan.am.map(({ productId, name }) => ({ productId, name })) ?? [],
++  pm: mocks.plan?.data?.plan.pm.map(({ productId, name }) => ({ productId, name })) ?? [],
++}) }));
+ vi.mock('@/lib/storage/privateKV', () => ({ getPrivateItem: vi.fn(), updatePrivateItem: vi.fn() }));
+ vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+   assertHealthDataWriteLease: (lease: HealthDataWriteLease) => {
+@@ -85,10 +94,10 @@ function plan(am: PlanStep[], pm: PlanStep[]): GeneratedPlan {
+     conflictCoverageStatus: 'compatible', unsupportedConflictPairs: [],
+   };
+ }
+-function ready(): PlanHookResult {
++function ready(): PlanHookResult & { isSourceCurrent: () => boolean; retry: () => Promise<void> } {
+   const canonicalPlan = plan([step('a'), step('b')], [step('p'), step('q')]);
+   return {
+-    orderLease: mocks.active, isLoading: false, isError: false, sourceReady: true, isExample: false,
++    orderLease: mocks.active, isLoading: false, isError: false, sourceReady: true, isExample: false, isSourceCurrent: () => true, retry: async () => undefined,
+     data: {
+       plan: canonicalPlan, canonicalPlan, isExample: false, profileLabel: 'Test',
+       orderOverrides: { schemaVersion: 1, am: [], pm: ['hidden', 'p', 'q', 'removed'] },
+@@ -144,10 +153,11 @@ function noSuccess() {
+ }
+ 
+ beforeEach(() => {
++  mocks.prevent = false; mocks.blockedExit = undefined; mocks.dispatch.mockReset();
+   for (const mock of [mocks.save, mocks.cancelQueries, mocks.setQueryData, mocks.refetchQueries,
+     mocks.invalidateQueries, mocks.back, mocks.track, mocks.success, mocks.select]) mock.mockReset();
+   mocks.active = { generation: 1, epoch: 1, ownerUserId: 'a', accountGeneration: 0, expiresAt: null };
+-  mocks.plan = ready();
++    mocks.plan = ready();
+   mocks.cancelQueries.mockResolvedValue(undefined);
+   mocks.refetchQueries.mockResolvedValue(undefined);
+   mocks.invalidateQueries.mockResolvedValue(undefined);
+@@ -159,6 +169,40 @@ afterEach(async () => {
+ });
+ 
+ describe('G2 routine reorder editor behavior', () => {
++  it('masks an obsolete draft after same-ID source changes and requires explicit reload', async () => {
++    await mount(); await reverseAM();
++    const current = mocks.plan!;
++    const changed = plan([{ ...step('a'), name: 'Renamed source' }, step('b')], [step('p'), step('q')]);
++    mocks.plan = { ...current, data: { ...current.data!, plan: changed, canonicalPlan: changed } };
++    await flush(() => renderer!.update(React.createElement(ReorderScreen)));
++    assert.match(text(renderer!.root), /The outdated draft has not been applied/);
++    assert.equal(renderer!.root.findAll((node) => node.props.accessibilityHint === 'Select to reveal Earlier and Later controls').length, 0);
++    assert.equal(mocks.save.mock.calls.length, 0);
++    await press('Discard outdated draft and reload source');
++    assert.ok(text(renderer!.root).includes('Renamed source'));
++    assert.equal(mocks.save.mock.calls.length, 0);
++  });
++  it('requires an explicit choice before navigation drops an unsaved order', async () => {
++    await mount(); assert.equal(mocks.prevent, false);
++    await reverseAM(); assert.equal(mocks.prevent, true);
++    await flush(() => { mocks.blockedExit!({ data: { action: { type: 'GO_BACK' } } }); });
++    assert.match(text(renderer!.root), /Unsaved routine order/);
++    await press('Keep editing routine order');
++    assert.deepEqual(visibleOrder(), ['b', 'a']); assert.equal(mocks.dispatch.mock.calls.length, 0);
++    await flush(() => { mocks.blockedExit!({ data: { action: { type: 'GO_BACK' } } }); });
++    await press('Discard routine changes and leave');
++    assert.equal(mocks.prevent, false); assert.deepEqual(mocks.dispatch.mock.calls[0], [{ type: 'GO_BACK' }]);
++    assert.equal(mocks.save.mock.calls.length, 0);
++  });
++  it('does not accept a captured discard callback after owner authority retires', async () => {
++    await mount(); await reverseAM();
++    await flush(() => { mocks.blockedExit!({ data: { action: { type: 'GO_BACK' } } }); });
++    const discard = button('Discard routine changes and leave').props.onPress as () => void;
++    mocks.active = undefined;
++    await flush(discard);
++    assert.equal(mocks.dispatch.mock.calls.length, 0); assert.equal(mocks.back.mock.calls.length, 0);
++    assert.equal(mocks.save.mock.calls.length, 0);
++  });
+   it('disables Save during initial loading, including a forced stale handler invocation', async () => {
+     mocks.plan = { ...ready(), data: undefined, isLoading: true, sourceReady: false };
+     await mount();
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..d98e84541950bfb27ddbab37f0c2f8e22cd9e2dd
+--- /dev/null
++++ b/apps/mobile/src/features/routine/routineDecisionRecovery32.test.ts
+@@ -0,0 +1,765 @@
++import { adultLifecycle26, close26, grant26, ports26, profile26, reset26 } from '@/features/shelf/firstValue26TestPorts';
++import AsyncStorage from '@react-native-async-storage/async-storage';
++import type { QueryClient } from '@tanstack/react-query';
++import { randomUUID } from 'node:crypto';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { addProduct, confirmOwnedBottleVersion38, loadOwnedBottleHistory38, updateProduct } from '@/features/shelf/store';
++import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
++import { beginAccountGenerationBoundary, endAccountGenerationBoundary, runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
++import { claimLocalDataOwnership } from '@/lib/auth/sessionOwner';
++import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
++import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
++import { HEALTH_DATA_LIFECYCLE_KEY } from '@/features/healthConsent/lifecycleStore';
++import { applyCurrentActualRoutine, clearCurrentActualRoutine, getActualRoutineSnapshot, toggleCompletion } from '@/features/today/completionsStore';
++import { localDateString } from '@/features/today/useToday';
++import { collectLocalDeviceExportData } from '@/features/settings/localDeviceExport';
++import { ROUTINE_DECISION_COMMIT_KEY, ROUTINE_DECISION_JOURNAL_KEYS, ROUTINE_DECISION_PAGE_KEYS, ROUTINE_DECISION_SLOT_KEYS } from '@/lib/storage/routineDecisionStorageLocations';
++import { capturePlanSource44 } from './planSourceFence44';
++import { acknowledgeRoutineDecision, captureRecordedRoutineUseEvidence, captureResolvedRoutineEvidence, inspectSavedRoutineDecision, loadRoutineDecisions, prepareCurrentRoutineApply, prepareRoutineDecision, prepareRoutineDecisionRetirement, publishRoutineDecisionRetirement, retrySavedRoutineDecision } from './routineDecisionRecoveryStore';
++import { ROUTINE_DECISION_KEY as KEY, ROUTINE_DECISION_LIMIT, decodeRoutineDecisions, decodeRoutineDecisionJournal, encodeRoutineDecisionPage,
++  newRoutineDecisionPage, makeSavedRoutineDecision, makeRoutineDecisionCommit, stageRoutineDecisionPage,
++  routineDecisionHash, type RoutineDecision, type RoutineDecisionPage } from './routineDecisionRecoveryCodec';
++import { OwnerRoutineCustody, type OriginalRoutineRecord } from '../../../../professional-web/src/ownerRoutineCustody';
++import { ProfessionalAccessError, type Grant } from '../../../../professional-web/src/authority';
++import { custodyFixture } from '../../../../professional-web/src/test/custodyFixture';
++import { EncryptedWorkspaceRepository, workspaceRecordKey } from '../../../../professional-web/src/encryptedWorkspaceRepository';
++import { createPrevisitApi } from '../../../../professional-web/src/previsitApi';
++import { emptyGrants, transitionGrant } from '../../../../professional-web/src/grants';
++import type { OwnerRoutinePrevisitReceipt } from '../../../../professional-web/src/ownerRoutinePrevisit';
++vi.mock('expo-file-system/legacy', () => ({ documentDirectory: null, cacheDirectory: null }));
++vi.mock('@/features/notifications/deliver', () => ({ scheduleTrialReminder: async () => {}, waitForHealthNotificationOperationsToSettle: async () => {} }));
++vi.mock('@/features/notifications/nativeMutation', () => ({ clearNativeNotificationsForAccountIsolation: async () => {} }));
++vi.mock('@/features/photos/encryptedStorage', () => ({ beginEncryptedPhotoAccountBoundary: () => {}, endEncryptedPhotoAccountBoundary: () => {}, clearEncryptedPhotoStorage: async () => {}, waitForEncryptedPhotoWritesToSettle: async () => {} }));
++vi.mock('@/features/photos/sensitiveImageMemory', () => ({ purgeSensitiveImageMemory: () => {} }));
++vi.mock('@/features/widgets/lifecycleCoordinator', () => ({ clearRoutineWidgetLifecycleForPrivacy: async () => {} }));
++vi.mock('@/lib/iap/revenuecat', () => ({ resetRevenueCatIdentity: async () => {} }));
++vi.mock('expo-network', () => ({ getNetworkStateAsync: async () => ({ isConnected: false }), addNetworkStateListener: () => ({ remove() {} }) }));
++
++const guard = () => {};
++const LEDGER = 'layerwell.completions.v1', CONTENT_KEY = 'layerwell.private_kv.content_key.v1';
++let client: QueryClient, product: string;
++beforeEach(async () => { vi.stubGlobal('__DEV__',true); client=await reset26(); await adultLifecycle26(); await profile26(); await claimLocalDataOwnership('synthetic-first-value-a');
++  product=(await addProduct({name:'Synthetic32 original cleanser',category:'cleanser',addedVia:'manual'})).id; });
++afterEach(async () => { ports26.release?.(); vi.restoreAllMocks(); await close26(client); vi.unstubAllGlobals(); });
++async function applyDecision() {
++  const lease=captureHealthDataWriteLease(), proof=await capturePlanSource44(lease);
++  const command: RoutineDecision={kind:'apply',facts:proof,request:{id:randomUUID(),createdAt:new Date().toISOString(),expectedParentHash:null}};
++  return {lease,proof,command};
++}
++async function prepareApply() { const f=await applyDecision(); return {...f,saved:await prepareRoutineDecision(f.lease,f.command,guard)}; }
++async function applied() { const f=await prepareApply(); await retrySavedRoutineDecision(f.lease,f.saved,guard); return {...f,ledger:await getActualRoutineSnapshot(f.lease)}; }
++
++it('does not consume recovery capacity when an exact reviewed source is already current', async () => {
++  const f = await applied();
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  const before = new Map(ports26.bytes);
++  for (let i = 0; i <= ROUTINE_DECISION_LIMIT; i++) {
++    const request = { id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: f.ledger.versions.at(-1)!.contentHash };
++    await expect(prepareCurrentRoutineApply(f.lease, { kind: 'apply', facts: f.proof, request }, guard)).resolves.toEqual({ kind: 'no_change' });
++  }
++  expect(await getActualRoutineSnapshot(f.lease)).toEqual(f.ledger);
++  expect((await loadRoutineDecisions(f.lease)).decisions).toHaveLength(1);
++  expect(ports26.bytes).toEqual(before);
++});
++
++it('requires original and current source proof before reporting no change', async () => {
++  const f = await applied();
++  const request = { id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: f.ledger.versions.at(-1)!.contentHash };
++  await expect(prepareCurrentRoutineApply(f.lease, { kind: 'apply', facts: { ...f.proof }, request }, guard)).rejects.toThrow('PLAN_SOURCE44_STALE');
++  await addProduct({ name: 'Synthetic33 changed source', category: 'cleanser', addedVia: 'manual' });
++  const before = new Map(ports26.bytes);
++  await expect(prepareCurrentRoutineApply(f.lease, { kind: 'apply', facts: f.proof, request }, guard)).rejects.toThrow('PLAN_SOURCE44_STALE');
++  expect(ports26.bytes).toEqual(before);
++});
++
++it('preparation and readback precede dispatch, survive fresh runtime leases, and cannot serialize the source capability',async()=>{
++  const f=await applyDecision(); expect(ports26.bytes.has(KEY)).toBe(false);
++  const saved=await prepareRoutineDecision(f.lease,f.command,guard);
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(0);
++  const fresh=captureHealthDataWriteLease();
++  expect((await loadRoutineDecisions(fresh)).decisions[0]).toEqual(saved);
++  expect(ports26.bytes.get(KEY)).not.toContain(f.command.request.id);
++  await expect(applyCurrentActualRoutine(JSON.parse(JSON.stringify(f.proof)),fresh,f.command.request)).rejects.toThrow('PLAN_SOURCE44_STALE');
++  await retrySavedRoutineDecision(fresh,saved,guard); await retrySavedRoutineDecision(fresh,saved,guard);
++  const ledger=await getActualRoutineSnapshot(fresh);
++  expect(ledger.versions).toHaveLength(1); expect(ledger.versions[0]).toMatchObject({id:f.command.request.id,createdAt:'createdAt' in f.command.request?f.command.request.createdAt:undefined,parentHash:null}); expect(ledger.uses).toHaveLength(0);
++});
++it('inspection after commit/ack loss is byte-identical and acknowledgement is a separate guarded operation',async()=>{
++  const f=await applied(), bytes=new Map(ports26.bytes);
++  expect(await inspectSavedRoutineDecision(f.lease,f.saved,guard)).toMatchObject({kind:'recorded_current'});
++  expect(ports26.bytes).toEqual(bytes);
++  ports26.failWrite=ROUTINE_DECISION_COMMIT_KEY;
++  await expect(acknowledgeRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow(); ports26.failWrite=null;
++  expect((await loadRoutineDecisions(f.lease)).decisions).toEqual([f.saved]);
++  await acknowledgeRoutineDecision(f.lease,f.saved,guard);
++  const receipt = (await loadRoutineDecisions(f.lease)).decisions[0]!;
++  expect(receipt).toMatchObject({command:f.command,acknowledged:true,contentHash:f.saved.contentHash,
++    outcome:{sequence:1,commandHash:f.saved.contentHash,recordHash:f.ledger.versions[0]!.contentHash}});
++  await expect(retrySavedRoutineDecision(f.lease,receipt,guard)).rejects.toThrow('ACKNOWLEDGED_INSPECT_ONLY');
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow('ACKNOWLEDGED_INSPECT_ONLY');
++  const current = new Map(ports26.bytes);
++  await expect(acknowledgeRoutineDecision(f.lease, f.saved, guard)).resolves.toBeUndefined();
++  expect(ports26.bytes).toEqual(current);
++  expect(ports26.bytes.get(LEDGER)).toBe(bytes.get(LEDGER)); expect(ports26.bytes.get(CONTENT_KEY)).toBe(bytes.get(CONTENT_KEY));
++});
++it('not-found remains unknown and cannot acknowledge or retire the only command evidence',async()=>{
++  const f=await prepareApply(), before=new Map(ports26.bytes);
++  expect(await inspectSavedRoutineDecision(f.lease,f.saved,guard)).toEqual({kind:'not_found'});
++  await expect(acknowledgeRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow(); expect(ports26.bytes).toEqual(before);
++});
++it('captures exact archive input only after authenticated acknowledgement and never changes the live history', async () => {
++  const f = await applied();
++  await expect(captureResolvedRoutineEvidence(f.lease, f.command.request.id, guard)).rejects.toThrow('ROUTINE_DECISION_CONFLICT');
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  const before = new Map(ports26.bytes);
++  const evidence = await captureResolvedRoutineEvidence(f.lease, f.command.request.id, guard);
++  expect(evidence).toMatchObject({ id: f.command.request.id, kind: 'resolved_command', sourceHash: f.saved.contentHash });
++  expect(JSON.parse(evidence.bytes)).toMatchObject({ ownerUserId: f.lease.ownerUserId, processingEpoch: f.lease.epoch,
++    saved: { command: f.command, outcome: { recordHash: f.ledger.versions[0]!.contentHash } }, target: f.ledger.versions[0] });
++  expect(ports26.bytes).toEqual(before);
++  await grant26('synthetic-first-value-b');
++  await expect(captureResolvedRoutineEvidence(f.lease, f.command.request.id, guard)).rejects.toThrow();
++});
++it('connects a real mobile decision and exact durable outcome to serial encrypted custody under a synthetic owner grant', async () => {
++  const f = await applied();
++  const scope = { ownerId: f.lease.ownerUserId, healthEpoch: f.lease.epoch };
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  const captured = await captureResolvedRoutineEvidence(f.lease, f.command.request.id, guard);
++  const original = { ...captured, previousReceipt: null } satisfies OriginalRoutineRecord;
++  const fixture = await custodyFixture();
++  const commitment = routineDecisionHash(['owner-routine-original-v1', scope, original]);
++  let withdrawn = false;
++  let issued: string | undefined;
++  const custody = new OwnerRoutineCustody(fixture.custody, async (_tx, access) => {
++    if (access.purpose !== 'owner_routine_history' || access.scope.ownerId !== scope.ownerId || access.scope.healthEpoch !== scope.healthEpoch ||
++        (withdrawn ? access.action !== 'tombstone' : access.action === 'tombstone')) throw new ProfessionalAccessError('health');
++    if (access.action === 'append' || access.action === 'inspect' || access.action === 'restore') {
++      const current = await captureResolvedRoutineEvidence(f.lease, captured.id, guard);
++      if (access.originalHash !== routineDecisionHash(['owner-routine-original-v1', scope, { ...current, previousReceipt: null }]) ||
++          (access.action === 'restore' && access.receiptHash !== issued)) throw new ProfessionalAccessError('grant');
++    }
++  });
++  await custody.open(scope);
++  await expect(custody.append(scope, { ...original, bytes: 'altered evidence' })).rejects.toThrow('GRANT');
++  fixture.controls.loseCommitReply = true;
++  await expect(custody.append(scope, original)).rejects.toThrow('UNAVAILABLE');
++  fixture.controls.loseCommitReply = false;
++  const durable = new Map(fixture.records());
++  const receipt = await custody.append(scope, original);
++  issued = receipt.hash;
++  expect(receipt).toEqual({ sequence: 1, recordedAt: fixture.controls.now, originalHash: commitment,
++    hash: routineDecisionHash(['owner-routine-receipt-v1', scope, 1, fixture.controls.now, commitment]) });
++  expect(fixture.records()).toEqual(durable);
++  expect([...durable.values()].join('')).not.toContain(captured.bytes);
++  const historical = await custody.inspect(scope, original.id, commitment);
++  expect(historical).toEqual({ original, receipt });
++  expect(JSON.parse(historical!.original.bytes)).toMatchObject({ saved: { command: f.command }, target: f.ledger.versions[0] });
++  const unresolved = await prepareRoutineDecision(f.lease, { kind: 'clear', request: { id: randomUUID(),
++    createdAt: new Date().toISOString(), expectedParentHash: f.ledger.versions[0]!.contentHash } }, guard);
++  const beforeRetirement = new Map(ports26.bytes);
++  await expect(prepareRoutineDecisionRetirement(f.lease, original, async () => null, guard)).rejects.toThrow('ROUTINE_DECISION_CONFLICT');
++  const plan = await prepareRoutineDecisionRetirement(f.lease, original, async (id, hash) => {
++    const retained = await custody.inspect(scope, id, hash);
++    if (!retained || retained.receipt.hash !== issued || retained.original.kind !== 'resolved_command') return null;
++    return { original: { ...retained.original, kind: retained.original.kind }, receipt: retained.receipt };
++  }, guard);
++  expect(plan.retired).toEqual({ id: original.id, originalHash: commitment, receiptHash: issued });
++  const candidate = new Map<string, string>();
++  const refs = plan.replacementPages.map((raw, slot) => {
++    const staged = stageRoutineDecisionPage(raw);
++    candidate.set(ROUTINE_DECISION_SLOT_KEYS[slot]!, staged);
++    return { slot, hash: routineDecisionHash(staged) };
++  });
++  candidate.set(ROUTINE_DECISION_COMMIT_KEY, JSON.stringify(makeRoutineDecisionCommit(scope.ownerId, scope.healthEpoch,
++    refs, JSON.parse(plan.expectedCommit), plan.expectedCommit)));
++  const active = decodeRoutineDecisionJournal(candidate, scope.ownerId, scope.healthEpoch);
++  expect([...active.entries.values()].map(entry => entry.saved)).toEqual([unresolved]);
++  expect(ports26.bytes).toEqual(beforeRetirement);
++  expect(await getActualRoutineSnapshot(f.lease)).toEqual(f.ledger);
++  withdrawn = true;
++  await custody.tombstone(scope);
++  await expect(custody.inspect(scope, original.id, commitment)).rejects.toThrow('HEALTH');
++  await expect(custody.restore(scope, original, receipt)).rejects.toThrow('HEALTH');
++  await grant26('synthetic-first-value-b');
++  await expect(captureResolvedRoutineEvidence(f.lease, original.id, guard)).rejects.toThrow();
++});
++it('reviews exact mobile routine, retraction and bottle observation evidence through the granted previsit API', async () => {
++  const bottle = (await loadOwnedBottleHistory38(product))!;
++  await confirmOwnedBottleVersion38({ productId: product, expectedUpdatedAt: bottle.productUpdatedAt,
++    expectedProductIdentityHash: bottle.productIdentityHash, expectedRevision: bottle.revision,
++    expectedCurrentVersionId: bottle.currentVersionId, confirmation: 'confirm_label', labelText: 'Aqua, Glycerin',
++    market: 'Canada', variant: null, observedOn: localDateString() });
++  const f = await applied();
++  const scope = { ownerId: f.lease.ownerUserId, healthEpoch: f.lease.epoch };
++  const fixture = await custodyFixture();
++  let latest: OriginalRoutineRecord | undefined;
++  const archive = new OwnerRoutineCustody(fixture.custody, async (_tx, access) => {
++    if (JSON.stringify(access.scope) !== JSON.stringify(scope)) throw new ProfessionalAccessError('health');
++    if (access.action === 'append' && (!latest || access.originalHash !== routineDecisionHash(['owner-routine-original-v1', scope, latest]))) {
++      throw new ProfessionalAccessError('grant');
++    }
++  });
++  await archive.open(scope);
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  latest = { ...await captureResolvedRoutineEvidence(f.lease, f.saved.command.request.id, guard), previousReceipt: null };
++  const appliedReceipt = await archive.append(scope, latest);
++  const custodyCheckpoint = () => fixture.custody.transaction(tx => OwnerRoutineCustody.checkpoint(tx, scope));
++  let expectedCheckpoint = await custodyCheckpoint();
++  const pointers: OwnerRoutinePrevisitReceipt[] = [{ id: latest.id, receiptHash: appliedReceipt.hash }];
++  const usePointers: OwnerRoutinePrevisitReceipt[] = [...pointers];
++
++  const now = fixture.controls.now;
++  const grant: Grant = { ...scope, id: 'synthetic-grant', workspaceId: 'synthetic-practice', version: 1, epoch: 1,
++    expiresAt: now + 1000, consentReceiptId: 'synthetic-consent', fields: ['actual_routine', 'use_events', 'formulas'], purposes: ['pre_visit'],
++    permissions: ['read', 'export'], status: 'active' };
++  const issued = await transitionGrant(emptyGrants(scope.ownerId), { ...scope, actorId: scope.ownerId, current: true, adult: true,
++    deletionPending: false, consentReceiptId: grant.consentReceiptId }, { id: randomUUID(), expectedRevision: 0, kind: 'accept',
++    previousGrantId: null, grant, confirmed: true }, now);
++  await fixture.custody.transaction(tx => tx.write(workspaceRecordKey.grants(scope.ownerId), issued));
++  let granted = true;
++  const subjectId = 'synthetic-practitioner';
++  const repository = new EncryptedWorkspaceRepository(fixture.custody, {
++    authority: async () => ({ grant: granted ? grant : null, billing: 'unknown',
++      session: { subjectId, ownerId: null, workspaceId: grant.workspaceId, epoch: 1, startedAt: now, lastActivityAt: now,
++        stepUpAt: now, aal: 2, totp: true, adult: true, revoked: false },
++      membership: { subjectId, workspaceId: grant.workspaceId, roles: ['assigned_practitioner'], revision: 1, active: true },
++      assignment: { subjectId, ownerId: scope.ownerId, workspaceId: grant.workspaceId, active: true },
++      licence: { subjectId, jurisdiction: 'CA', verifiedAt: now, expiresAt: now + 1000 },
++      health: { ownerId: scope.ownerId, epoch: scope.healthEpoch, consentReceiptId: grant.consentReceiptId, active: true, deletionPending: false } }),
++    lifecycle: async () => ({ ownerId: scope.ownerId, epoch: 1, deletionPending: false }),
++    activationAvailable: async () => false,
++    planSource: async () => { throw Error('UNREQUESTED_SYNTHETIC_SOURCE'); },
++    previsitRoutineFreshness: async (_tx, current, checkpoint) => {
++      expect(current).toEqual(scope);
++      if (!expectedCheckpoint || checkpoint !== expectedCheckpoint) throw new ProfessionalAccessError('changed');
++    },
++    previsitRoutineReceipts: async (_tx, current, fields) => {
++      expect(current).toEqual(grant);
++      return fields.includes('use_events') || fields.includes('formulas')
++        ? [...usePointers, ...(fields.includes('actual_routine') ? pointers.slice(1) : [])] : pointers;
++    },
++  });
++  const origin = 'http://fixture.test';
++  const api = createPrevisitApi({ origin, repository, authenticate: async () => ({ token: 'synthetic-token', ownerId: scope.ownerId,
++    workspaceId: grant.workspaceId, grantVersion: 1, grantEpoch: 1, context: 'synthetic-context' }) });
++  const send = (body: object) => api(new Request(`${origin}/api/professional/previsit`, { method: 'POST', body: JSON.stringify(body),
++    headers: { Origin: origin, 'X-OnSkin-Request': 'previsit-v1', 'Content-Type': 'application/json' } }));
++  const load = { kind: 'source', context: null, fields: ['actual_routine'] };
++  const earlier = await send(load);
++  expect(earlier.status).toBe(200);
++  const before = await earlier.json();
++  expect(before.source.records).toMatchObject([{ id: pointers[0]!.id, sourceHash: f.ledger.versions[0]!.contentHash, sequence: 1 }]);
++  expect(JSON.stringify(before)).not.toContain('consentHash');
++  const review = (source: typeof before.source, index: number) => {
++    const { id, field, contentHash } = source.records[index];
++    return { kind: 'review', context: 'synthetic-context', grantVersion: 1, grantEpoch: 1, products: [], plans: [],
++      recordFields: source.fields, records: [{ id, field, contentHash }], recordSourceHash: source.recordSourceHash };
++  };
++
++  const version = f.ledger.versions[0]!;
++  const missingEvent = randomUUID();
++  await expect(captureRecordedRoutineUseEvidence(f.lease, missingEvent, guard)).rejects.toThrow('ROUTINE_DECISION_CONFLICT');
++  await toggleCompletion(`AM:${product}`, localDateString(), undefined, undefined,
++    { originalLease: f.lease, source: f.proof, versionId: version.id, versionHash: version.contentHash });
++  const use = (await getActualRoutineSnapshot(f.lease)).uses[0]!;
++  const beforeCapture = new Map(ports26.bytes);
++  latest = { ...await captureRecordedRoutineUseEvidence(f.lease, use.id, guard), previousReceipt: appliedReceipt.hash };
++  expect(ports26.bytes).toEqual(beforeCapture);
++  const useReceipt = await archive.append(scope, latest);
++  usePointers.push({ id: use.id, receiptHash: useReceipt.hash });
++  const loadUses = { ...load, fields: ['use_events'] };
++  const loadFormulas = { ...load, fields: ['formulas'] };
++  expect((await send(loadUses)).status).toBe(409);
++  expectedCheckpoint = await custodyCheckpoint();
++  const originalUse = await (await send(loadUses)).json();
++  expect(originalUse.source.records).toMatchObject([{ field: 'use_events', id: use.id, sourceHash: use.contentHash,
++    recordedAt: use.recordedAt, observedOn: use.observedOn, kind: 'use', routineVersion: 1 }]);
++  expect(originalUse.source.records).toHaveLength(1);
++  expect(JSON.stringify(originalUse)).not.toContain('Aqua');
++  const formulaOnly = await (await send(loadFormulas)).json();
++  expect(formulaOnly.source.records).toMatchObject([{ field: 'formulas', sourceHash: use.formulaAtUse!.formula.contentHash,
++    recordedAt: use.formulaAtUse!.formula.recordedAt, labelText: 'Aqua, Glycerin', labelStatus: 'user_confirmed_label', atUse: true }]);
++  expect(formulaOnly.source.records).toHaveLength(1);
++  const formulaReview = await send({ ...review(formulaOnly.source, 0), kind: 'export' });
++  expect(formulaReview.status).toBe(200);
++  expect((await formulaReview.json()).text).toContain('Aqua, Glycerin');
++  expect((await send({ ...load, fields: ['products'] })).status).toBe(403);
++
++  const correction = await prepareRoutineDecision(f.lease, { kind: 'retraction', event: use, expectedHash: use.contentHash,
++    request: { id: randomUUID(), recordedAt: new Date().toISOString() } }, guard);
++  await retrySavedRoutineDecision(f.lease, correction, guard);
++  await acknowledgeRoutineDecision(f.lease, correction, guard);
++  latest = { ...await captureResolvedRoutineEvidence(f.lease, correction.command.request.id, guard), previousReceipt: useReceipt.hash };
++  const correctionReceipt = await archive.append(scope, latest);
++  usePointers.splice(1, 0, { id: latest.id, receiptHash: correctionReceipt.hash });
++  expect((await send(review(originalUse.source, 0))).status).toBe(409);
++  expectedCheckpoint = await custodyCheckpoint();
++  expect((await send(review(originalUse.source, 0))).status).toBe(409);
++  const corrected = await (await send(loadUses)).json();
++  expect(corrected.source.records).toMatchObject([{ id: use.id, kind: 'use' }, { id: latest.id, kind: 'retraction', targetId: use.id }]);
++  const correctedExport = await send({ ...review(corrected.source, 0), kind: 'export' });
++  expect(correctedExport.status).toBe(200);
++  const correctedText = (await correctedExport.json()).text;
++  expect(correctedText).toContain('Earlier recorded use (retracted)');
++  expect(correctedText).not.toContain('Aqua');
++  const targetProof = usePointers.pop()!;
++  expect((await send(loadUses)).status).toBe(409);
++  usePointers.push(targetProof);
++
++  const clear = await prepareRoutineDecision(f.lease, { kind: 'clear', request: { id: randomUUID(), createdAt: new Date().toISOString(),
++    expectedParentHash: f.ledger.versions[0]!.contentHash } }, guard);
++  await retrySavedRoutineDecision(f.lease, clear, guard);
++  await acknowledgeRoutineDecision(f.lease, clear, guard);
++  latest = { ...await captureResolvedRoutineEvidence(f.lease, clear.command.request.id, guard), previousReceipt: correctionReceipt.hash };
++  const clearReceipt = await archive.append(scope, latest);
++  pointers.push({ id: latest.id, receiptHash: clearReceipt.hash });
++  expectedCheckpoint = await custodyCheckpoint();
++  expect((await send(review(before.source, 0))).status).toBe(409);
++  const after = await (await send(load)).json();
++  expect(after.source.records[1]).toMatchObject({ id: latest.id, disposition: 'owner_cleared', sequence: 2, am: [], pm: [] });
++  const reviewed = await send(review(after.source, 1));
++  expect(reviewed.status).toBe(200);
++  expect((await reviewed.json()).text).toContain('The owner cleared their applied routine');
++  expect((await send({ ...review(after.source, 1), kind: 'export' })).status).toBe(200);
++  const combined = await (await send({ ...load, fields: ['actual_routine', 'use_events', 'formulas'] })).json();
++  expect(combined.source.records.map((row: { field: string }) => row.field)).toEqual(['actual_routine', 'actual_routine', 'use_events', 'formulas', 'use_events']);
++
++  pointers[1] = { id: latest.id, receiptHash: appliedReceipt.hash };
++  expect((await send(load)).status).toBe(409);
++  pointers[1] = { id: latest.id, receiptHash: clearReceipt.hash };
++  const lastCheckpoint = expectedCheckpoint;
++  expect((await send({ ...review(corrected.source, 0), kind: 'export' })).status).toBe(200);
++  fixture.controls.beforeCommit = () => { expectedCheckpoint = null; };
++  expect((await send({ ...review(corrected.source, 0), kind: 'export' })).status).toBe(409);
++  fixture.controls.beforeCommit = null;
++  expectedCheckpoint = lastCheckpoint;
++  fixture.controls.beforeCommit = () => { granted = false; };
++  expect((await send(load)).status).toBe(403);
++  fixture.controls.beforeCommit = null;
++  granted = true;
++  await archive.tombstone(scope);
++  expectedCheckpoint = await custodyCheckpoint();
++  expect((await send(load)).status).toBe(409);
++  expect((await send(loadUses)).status).toBe(409);
++  await grant26('synthetic-first-value-b');
++  await expect(captureRecordedRoutineUseEvidence(f.lease, use.id, guard)).rejects.toThrow();
++});
++
++it('publishes a whole retirement suffix with a restart-recoverable receipt under the same archive transaction', async () => {
++  const f = await applied();
++  const scope = { ownerId: f.lease.ownerUserId, healthEpoch: f.lease.epoch };
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  const original = { ...await captureResolvedRoutineEvidence(f.lease, f.command.request.id, guard), previousReceipt: null };
++  const version = f.ledger.versions[0]!;
++  await toggleCompletion(`AM:${product}`, localDateString(), undefined, undefined,
++    { originalLease: f.lease, source: f.proof, versionId: version.id, versionHash: version.contentHash });
++  const use = (await getActualRoutineSnapshot(f.lease)).uses[0]!;
++  if (use.kind !== 'use') throw Error('SYNTHETIC_USE_NOT_RECORDED');
++  const correction = await prepareRoutineDecision(f.lease, { kind: 'retraction', event: use, expectedHash: use.contentHash,
++    request: { id: randomUUID(), recordedAt: new Date().toISOString() } }, guard);
++  await retrySavedRoutineDecision(f.lease, correction, guard);
++  await acknowledgeRoutineDecision(f.lease, correction, guard);
++  const unresolved = await prepareRoutineDecision(f.lease, { kind: 'clear', request: { id: randomUUID(),
++    createdAt: new Date().toISOString(), expectedParentHash: version.contentHash } }, guard);
++  const fixture = await custodyFixture();
++  const proofHash = routineDecisionHash(['owner-routine-original-v1', scope, original]);
++  const headKey = `owner-routine-record:v1:${scope.ownerId}:head`;
++  let anchor: string | null = null;
++  let retiredGrant = true;
++  let issuedHash: string | null = null;
++  const authorize: ConstructorParameters<typeof OwnerRoutineCustody>[1] = async (_tx, request) => {
++    if (request.scope.ownerId !== scope.ownerId || request.scope.healthEpoch !== scope.healthEpoch ||
++        request.purpose !== 'owner_routine_history') throw new ProfessionalAccessError('health');
++    if (request.action === 'open' || request.action === 'tombstone' || request.action === 'inventory') return;
++    if (request.action === 'recover' && request.receiptHash !== null && request.receiptHash === issuedHash) return;
++    if (request.originalHash !== proofHash || request.action === 'retire' && !retiredGrant) throw new ProfessionalAccessError('grant');
++  };
++  const connect = () => new OwnerRoutineCustody(fixture.custody, authorize, async (_tx, _scope, checkpoint) => {
++    if (checkpoint !== anchor) throw new ProfessionalAccessError('changed');
++  });
++  const refreshSyntheticAnchor = async () => {
++    const raw = await fixture.custody.transaction(tx => tx.read(headKey));
++    anchor = routineDecisionHash(['owner-routine-checkpoint-v1', scope.ownerId, raw]);
++  };
++  let custody = connect();
++  await custody.open(scope);
++  await refreshSyntheticAnchor();
++  const issued = await custody.append(scope, original);
++  issuedHash = issued.hash;
++  await refreshSyntheticAnchor();
++  const readArchive = async (id: string, hash: string) => {
++    const entry = await custody.inspect(scope, id, hash);
++    return entry?.original.kind === 'resolved_command'
++      ? { original: { ...entry.original, kind: entry.original.kind }, receipt: entry.receipt } : null;
++  };
++  const keys = [...ROUTINE_DECISION_JOURNAL_KEYS, 'layerwell.healthDataCollectionConsent.v1',
++    HEALTH_DATA_LIFECYCLE_KEY, AGE_POLICY_RECEIPT_KEY, LEDGER];
++  const mobileValues = new Map(await Promise.all(keys.map(async key => [key, await getPrivateItem(key)] as const)));
++  const live = decodeRoutineDecisionJournal(mobileValues, scope.ownerId, scope.healthEpoch);
++  const originalPage = live.pages[0]!;
++  const activeDecisions = [...live.entries.values()].map(entry => entry.saved).slice(1);
++  expect(activeDecisions).toMatchObject([{ command: correction.command, acknowledged: true }, unresolved]);
++  let previous: RoutineDecisionPage | undefined;
++  // Repartition authenticated commands to exercise a three-page suffix without
++  // unrelated filler or weakening the production page-size thresholds.
++  for (const [index, saved] of originalPage.collection.decisions.entries()) {
++    previous = { ...newRoutineDecisionPage({ ...originalPage.collection, decisions: [saved] }, previous),
++      outcomes: originalPage.outcomes.filter(outcome => outcome.commandHash === saved.contentHash) };
++    await setPrivateItem(ROUTINE_DECISION_SLOT_KEYS[index]!, stageRoutineDecisionPage(encodeRoutineDecisionPage(previous)!));
++  }
++  const refs = await Promise.all(ROUTINE_DECISION_SLOT_KEYS.slice(0, 3).map(async (key, slot) => ({ slot, hash: routineDecisionHash(await getPrivateItem(key)) })));
++  await setPrivateItem(ROUTINE_DECISION_COMMIT_KEY, JSON.stringify(makeRoutineDecisionCommit(scope.ownerId, scope.healthEpoch, refs, live.commit, live.commitRaw)));
++  const plan = await prepareRoutineDecisionRetirement(f.lease, original, readArchive, guard);
++  expect(plan.replacementPages).toHaveLength(1);
++  const prefix = `synthetic-active-routine:${scope.ownerId}:${scope.healthEpoch}:`;
++  const recordKey = (key: string) => prefix + key.replaceAll('.', '_');
++  const publicationKey = recordKey(`retirement:${original.id}`);
++  const activeSource = new Map(await Promise.all(keys.map(async key => [key, await getPrivateItem(key)] as const)));
++  await fixture.custody.transaction(async tx => {
++    for (const [key, value] of activeSource) if (value !== null) await tx.write(recordKey(key), value);
++  });
++  const transact: Parameters<typeof publishRoutineDecisionRetirement>[2] = (retired, stage, assertBeforeCommit) =>
++    custody.withVerifiedRetirement(scope, retired, async (tx, entry) => {
++      if (entry.original.kind !== 'resolved_command') throw new Error('SYNTHETIC_WRONG_KIND');
++      const read = async (key: string) => {
++        const value = await tx.read(key);
++        if (value !== null && typeof value !== 'string') throw new Error('SYNTHETIC_WRONG_TYPE');
++        return value;
++      };
++      const result = stage({ archived: { original: { ...entry.original, kind: entry.original.kind }, receipt: entry.receipt },
++        priorReceipt: await read(publicationKey), values: new Map(await Promise.all(keys.map(async key => [key, await read(recordKey(key))] as const))) });
++      for (const [key, value] of result.changes) {
++        if (value === null) await tx.erase!(recordKey(key));
++        else await tx.write(recordKey(key), value);
++      }
++      if (result.changes.size) await tx.write(publicationKey, result.receipt);
++      tx.beforeCommit(async () => { assertBeforeCommit(); });
++      return result.receipt;
++    });
++  const before = new Map(fixture.records());
++  const liveBefore = new Map(ports26.bytes);
++  const publish = (input = plan) => publishRoutineDecisionRetirement(f.lease, input, transact, guard);
++  await expect(new OwnerRoutineCustody(fixture.custody, authorize).withVerifiedRetirement(scope, plan.retired,
++    async () => { throw Error('UNEXPECTED'); })).rejects.toThrow('UNAVAILABLE');
++  await expect(publish({ ...plan, expectedCommit: 'stale' })).rejects.toThrow('UNAVAILABLE');
++  await expect(publish({ ...plan, replacementPages: [] })).rejects.toThrow('UNAVAILABLE');
++  fixture.controls.beforeCommit = () => { retiredGrant = false; };
++  await expect(publish()).rejects.toThrow('GRANT');
++  fixture.controls.beforeCommit = null;
++  retiredGrant = true;
++  expect(fixture.records()).toEqual(before);
++  const validAnchor = anchor;
++  anchor = 'stale synthetic checkpoint';
++  await expect(publish()).rejects.toThrow('CHANGED');
++  anchor = validAnchor;
++  fixture.controls.loseCommitReply = true;
++  await expect(publish()).rejects.toThrow('UNAVAILABLE');
++  fixture.controls.loseCommitReply = false;
++  const committed = new Map(fixture.records());
++  custody = connect();
++  const persistedPlan = JSON.parse(JSON.stringify(plan)) as typeof plan;
++  const publication = await publish(persistedPlan);
++  expect(publication).toMatch(/^[0-9a-f]{64}$/u);
++  await expect(publish({ ...plan, expectedCommit: 'changed after publication' })).rejects.toThrow('UNAVAILABLE');
++  expect(fixture.records()).toEqual(committed);
++  expect(committed.has(recordKey(ROUTINE_DECISION_SLOT_KEYS[2]!))).toBe(false);
++  const journal = await fixture.custody.transaction(async tx => new Map(await Promise.all(keys.map(async key => [key, await tx.read(recordKey(key)) as string | null] as const))));
++  const recovered = decodeRoutineDecisionJournal(journal, scope.ownerId, scope.healthEpoch);
++  expect(recovered.pages).toHaveLength(1);
++  expect([...recovered.entries.values()].map(entry => entry.saved)).toEqual(activeDecisions);
++  expect(journal.get(LEDGER)).toBe(activeSource.get(LEDGER));
++  expect(ports26.bytes).toEqual(liveBefore);
++  await expect(readArchive(original.id, proofHash)).resolves.toEqual({ original, receipt: issued });
++  const inventory = await custody.inventory(scope, null, 1);
++  expect(inventory).toEqual({ committedCount: 1, records: [{ id: original.id, receiptHash: issued.hash, present: true }], next: null });
++  const retained = inventory.records[0]!;
++  await expect(custody.recover(scope, retained.id, retained.receiptHash)).resolves.toEqual({ original, receipt: issued });
++  await expect(custody.recover(scope, randomUUID(), retained.receiptHash)).resolves.toBeNull();
++  await expect(custody.recover(scope, retained.id, '0'.repeat(64))).rejects.toThrow('GRANT');
++  await custody.tombstone(scope);
++  await refreshSyntheticAnchor();
++  await expect(publish(persistedPlan)).rejects.toThrow('CHANGED');
++  await expect(custody.recover(scope, retained.id, retained.receiptHash)).rejects.toThrow('CHANGED');
++});
++it('historical exact results remain inspectable, while changed predecessors cannot replay',async()=>{
++  const f=await applied(); await clearCurrentActualRoutine(f.lease,{id:randomUUID(),createdAt:new Date().toISOString(),expectedParentHash:f.ledger.versions[0]!.contentHash});
++  expect(await inspectSavedRoutineDecision(f.lease,f.saved,guard)).toMatchObject({kind:'recorded_historical'});
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(2);
++});
++it('does not consume recovery capacity clearing an already-cleared routine', async () => {
++  const f = await applied();
++  const ledger = await clearCurrentActualRoutine(f.lease, {
++    id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: f.ledger.versions[0]!.contentHash,
++  });
++  const before = new Map(ports26.bytes);
++  await expect(prepareRoutineDecision(f.lease, { kind: 'clear', request: {
++    id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: ledger.versions.at(-1)!.contentHash,
++  } }, guard)).rejects.toThrow();
++  expect(ports26.bytes).toEqual(before);
++});
++
++it('does not consume capacity for a fresh retraction of an already-retracted use', async () => {
++  const f = await applied();
++  const version = f.ledger.versions[0]!;
++  await toggleCompletion(`AM:${product}`, localDateString(), undefined, undefined,
++    { originalLease: f.lease, source: f.proof, versionId: version.id, versionHash: version.contentHash });
++  const target = (await getActualRoutineSnapshot(f.lease)).uses[0]!;
++  const command = { kind: 'retraction' as const, event: target, expectedHash: target.contentHash,
++    request: { id: randomUUID(), recordedAt: new Date().toISOString() } };
++  const saved = await prepareRoutineDecision(f.lease, command, guard);
++  await retrySavedRoutineDecision(f.lease, saved, guard);
++  const ledger = await getActualRoutineSnapshot(f.lease);
++  const before = new Map(ports26.bytes);
++  await expect(prepareRoutineDecision(f.lease, { ...command, expectedHash: ledger.uses.at(-1)!.contentHash,
++    request: { ...command.request, id: randomUUID() } }, guard)).rejects.toThrow();
++  expect(ports26.bytes).toEqual(before);
++  expect(await inspectSavedRoutineDecision(f.lease, saved, guard)).toMatchObject({ kind: 'recorded_current' });
++});
++
++it('does not prepare a new apply under an ID already used by immutable history', async () => {
++  const f = await applied();
++  const cleared = await clearCurrentActualRoutine(f.lease, {
++    id: randomUUID(), createdAt: new Date().toISOString(), expectedParentHash: f.ledger.versions[0]!.contentHash,
++  });
++  const before = new Map(ports26.bytes);
++  await expect(prepareCurrentRoutineApply(f.lease, { ...f.command, request: {
++    id: cleared.versions.at(-1)!.id, expectedParentHash: cleared.versions.at(-1)!.contentHash,
++    createdAt: new Date().toISOString(),
++  } }, guard)).rejects.toThrow();
++  expect(ports26.bytes).toEqual(before);
++});
++it('a new current source cannot acquire the old reviewed apply identity',async()=>{
++  const f=await prepareApply(); await updateProduct(product,{name:'Synthetic32 successor name'});
++  const before=new Map(ports26.bytes); await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow('SOURCE_CHANGED_INSPECT_ONLY');
++  expect(ports26.bytes).toEqual(before); expect((await loadRoutineDecisions(f.lease)).decisions[0]).toEqual(f.saved);
++});
++it('preserves the exact original clear and retraction identities, target and stream across retries',async()=>{
++  const f=await applied(), version=f.ledger.versions[0]!;
++  await toggleCompletion(`AM:${product}`,localDateString(),undefined,undefined,{originalLease:f.lease,source:f.proof,versionId:version.id,versionHash:version.contentHash});
++  const original=(await getActualRoutineSnapshot(f.lease)).uses[0]!;
++  const retract:RoutineDecision={kind:'retraction',event:original,expectedHash:original.contentHash,request:{id:randomUUID(),recordedAt:new Date().toISOString()}};
++  const retained=await prepareRoutineDecision(f.lease,retract,guard);
++  await retrySavedRoutineDecision(f.lease,retained,guard); await retrySavedRoutineDecision(f.lease,retained,guard);
++  expect((await getActualRoutineSnapshot(f.lease)).uses).toHaveLength(2);
++  expect((await getActualRoutineSnapshot(f.lease)).uses[0]).toEqual(original);
++  const clear:RoutineDecision={kind:'clear',request:{id:randomUUID(),createdAt:new Date().toISOString(),expectedParentHash:version.contentHash}};
++  const cleared=await prepareRoutineDecision(f.lease,clear,guard); await retrySavedRoutineDecision(f.lease,cleared,guard); await retrySavedRoutineDecision(f.lease,cleared,guard);
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(2);
++  expect((await loadRoutineDecisions(f.lease)).decisions.map(row=>row.command)).toContainEqual(retract);
++  const forged={...retained,command:{...retract,event:{...original,stepKey:`PM:${product}`}}};
++  await expect(retrySavedRoutineDecision(f.lease,forged,guard)).rejects.toThrow();
++});
++it.each(['prepare','inspect','acknowledge','retry'] as const)('retires %s under owner/account replacement while private read is pending',async phase=>{
++  const f=await applied();
++  ports26.holdRead=KEY;
++  const pending=phase==='prepare'?prepareRoutineDecision(f.lease,f.command,guard):phase==='inspect'?inspectSavedRoutineDecision(f.lease,f.saved,guard):
++    phase==='acknowledge'?acknowledgeRoutineDecision(f.lease,f.saved,guard):retrySavedRoutineDecision(f.lease,f.saved,guard);
++  const rejected=expect(pending).rejects.toThrow();
++  for(let i=0;i<50&&!ports26.release;i++) await new Promise(resolve=>setTimeout(resolve,0));
++  expect(ports26.release).not.toBeNull(); clearActiveHealthProcessingEpoch();
++  ports26.release?.(); await rejected; await grant26('synthetic-first-value-b'); await grant26();
++  await expect(prepareRoutineDecision(f.lease,f.command,guard)).rejects.toThrow();
++});
++it('withdrawal cleanup erases the purpose key and cannot resurrect old decisions after regrant',async()=>{
++  const f=await prepareApply();
++  const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
++  await clearHealthPurposeLocalData('synthetic-first-value-a');
++  expect(ports26.bytes.has(KEY)).toBe(false);
++  await grant26(); await adultLifecycle26(26);
++  const generation=await runAccountGenerationOperation(lease=>lease.generation);
++  setActiveHealthProcessingEpoch(26,{ownerUserId:'synthetic-first-value-a',accountGeneration:generation});
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++  const fresh=captureHealthDataWriteLease(); expect((await loadRoutineDecisions(fresh)).decisions).toHaveLength(0);
++  await expect(retrySavedRoutineDecision(fresh,f.saved,guard)).rejects.toThrow();
++});
++it('a new account generation cannot reuse an old admitted recovery callback',async()=>{
++  const f=await prepareApply(); beginAccountGenerationBoundary(); endAccountGenerationBoundary(); await grant26();
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++});
++it.each(['lost','replaced','tampered','unsupported','unreadable'] as const)('retains ambiguous evidence without rewriting or key recreation when %s',async kind=>{
++  const f=await prepareApply(), original=ports26.bytes.get(KEY)!;
++  if(kind==='lost') ports26.bytes.delete(CONTENT_KEY);
++  if(kind==='replaced') ports26.bytes.set(CONTENT_KEY,'00'.repeat(32));
++  if(kind==='tampered') {const raw=JSON.parse(original);raw.ciphertextHex=(parseInt(raw.ciphertextHex.slice(0,2),16)^1).toString(16).padStart(2,'0')+raw.ciphertextHex.slice(2);ports26.bytes.set(KEY,JSON.stringify(raw));}
++  if(kind==='unsupported') await setPrivateItem(KEY,JSON.stringify({schemaVersion:77,decisions:[]}));
++  if(kind==='unreadable') ports26.failRead=KEY;
++  const before=new Map(ports26.bytes); await expect(loadRoutineDecisions(f.lease)).rejects.toThrow();
++  await expect(retrySavedRoutineDecision(f.lease,f.saved,guard)).rejects.toThrow();
++  expect(ports26.bytes).toEqual(before);
++});
++it('retains a successful durable preparation whose bridge acknowledgement was lost, without dispatch',async()=>{
++  const f=await applyDecision(), set=AsyncStorage.setItem; let lost=false;
++  vi.spyOn(AsyncStorage,'setItem').mockImplementation(async(key,raw)=>{await set(key,raw);if(key===KEY&&!lost){lost=true;throw Error('synthetic32 lost acknowledgement');}});
++  await expect(prepareRoutineDecision(f.lease,f.command,guard)).rejects.toThrow();
++  vi.restoreAllMocks();
++  expect((await getActualRoutineSnapshot(f.lease)).versions).toHaveLength(0);
++  // The existing privateKV rollback/readback protocol may restore pre-write
++  // absence. If it retains evidence, it must be the exact original command.
++  const rows=(await loadRoutineDecisions(f.lease)).decisions;
++  expect(rows.length===0||rows[0]!.command.request.id===f.command.request.id).toBe(true);
++});
++it('exports strictly decoded original evidence under the existing owner rights path',async()=>{
++  const f=await prepareApply();
++  const exported=await runAccountGenerationOperation(lease=>collectLocalDeviceExportData(lease,'synthetic-first-value-a'));
++  expect(JSON.stringify(exported)).toContain(f.command.request.id);
++  expect(JSON.stringify(exported)).not.toContain(ports26.bytes.get(CONTENT_KEY));
++});
++it('refuses missing committed command ciphertext instead of reporting an empty journal', async () => {
++  const f = await prepareApply();
++  const before = new Map(ports26.bytes);
++  ports26.bytes.delete(KEY);
++  await expect(loadRoutineDecisions(f.lease)).rejects.toThrow();
++  await expect(runAccountGenerationOperation(lease => collectLocalDeviceExportData(lease, f.lease.ownerUserId))).rejects.toThrow();
++  ports26.bytes.set(KEY, before.get(KEY)!);
++  expect((await loadRoutineDecisions(f.lease)).decisions).toEqual([f.saved]);
++});
++it('ignores an unpublished replacement and refuses an older acknowledged page', async () => {
++  const f = await applied();
++  const firstSlot = ROUTINE_DECISION_PAGE_KEYS[0];
++  const replacementSlot = ROUTINE_DECISION_PAGE_KEYS[1];
++  const original = ports26.bytes.get(firstSlot)!;
++  const priorCommit = ports26.bytes.get(ROUTINE_DECISION_COMMIT_KEY);
++  ports26.failWrite = ROUTINE_DECISION_COMMIT_KEY;
++  await expect(acknowledgeRoutineDecision(f.lease, f.saved, guard)).rejects.toThrow();
++  ports26.failWrite = null;
++  expect(ports26.bytes.has(replacementSlot)).toBe(true);
++  expect(ports26.bytes.get(ROUTINE_DECISION_COMMIT_KEY)).toBe(priorCommit);
++  expect((await loadRoutineDecisions(f.lease)).decisions).toEqual([f.saved]);
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  const receipt = (await loadRoutineDecisions(f.lease)).decisions[0]!;
++  expect(receipt.outcome?.sequence).toBe(1);
++  const published = ports26.bytes.get(replacementSlot)!;
++  ports26.bytes.set(replacementSlot, original);
++  await expect(loadRoutineDecisions(f.lease)).rejects.toThrow();
++  ports26.bytes.set(replacementSlot, published);
++  ports26.bytes.delete(ROUTINE_DECISION_COMMIT_KEY);
++  await expect(loadRoutineDecisions(f.lease)).rejects.toThrow();
++});
++it('refuses when an acknowledged command loses the immutable ledger record it cites', async () => {
++  const f = await applied();
++  await acknowledgeRoutineDecision(f.lease, f.saved, guard);
++  const ledger = ports26.bytes.get(LEDGER)!;
++  ports26.bytes.delete(LEDGER);
++  const before = new Map(ports26.bytes);
++  await expect(loadRoutineDecisions(f.lease)).rejects.toThrow('ROUTINE_DECISION_CONFLICT');
++  await expect(runAccountGenerationOperation(lease => collectLocalDeviceExportData(lease, f.lease.ownerUserId))).rejects.toThrow('ROUTINE_DECISION_CONFLICT');
++  expect(ports26.bytes).toEqual(before);
++  ports26.bytes.set(LEDGER, ledger);
++  expect((await loadRoutineDecisions(f.lease)).decisions[0]?.acknowledged).toBe(true);
++});
++it('rolls over an unchanged full legacy page and keeps exact old and new commands',async()=>{
++  const f=await applyDecision(), owner=f.lease.ownerUserId;
++  const empty=decodeRoutineDecisions(null,owner,f.lease.epoch);
++  const consentHash=routineDecisionHash(await getPrivateItem('layerwell.healthDataCollectionConsent.v1'));
++  const original=makeSavedRoutineDecision(f.command,consentHash,owner,true);
++  const decisions=[original,...Array.from({length:ROUTINE_DECISION_LIMIT-1},()=>
++    makeSavedRoutineDecision({...f.command,request:{...f.command.request,id:randomUUID()}},consentHash,owner))];
++  await setPrivateItem(KEY,JSON.stringify({...empty,decisions}));
++  const legacyCiphertext=ports26.bytes.get(KEY);
++  expect(()=>makeSavedRoutineDecision({...f.command,extra:true} as RoutineDecision,consentHash,owner)).toThrow();
++  await expect(prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,createdAt:'2020-01-01T00:00:00.000Z'}},guard)).rejects.toThrow();
++  const prepared=await Promise.all([1,2].map(()=>prepareRoutineDecision(f.lease,{...f.command,request:{...f.command.request,id:randomUUID()}},guard)));
++  expect(ports26.bytes.get(KEY)).toBe(legacyCiphertext);
++  const retained=(await loadRoutineDecisions(f.lease)).decisions;
++  expect(retained.slice(0,decisions.length)).toEqual(decisions);
++  expect(retained.slice(decisions.length)).toEqual(expect.arrayContaining(prepared));
++  expect(retained).toHaveLength(102);
++  expect(retained[0]!.outcome).toBeUndefined();
++  const second=ROUTINE_DECISION_PAGE_KEYS[1];
++  expect(()=>decodeRoutineDecisionJournal(new Map([[second,null]]),owner)).not.toThrow();
++  const secondRaw=await getPrivateItem(second);
++  expect(secondRaw).not.toBeNull();
++  expect(()=>decodeRoutineDecisionJournal(new Map([[second,secondRaw]]),owner)).toThrow();
++  const committed = JSON.parse((await getPrivateItem(ROUTINE_DECISION_COMMIT_KEY))!);
++  const lastSlot = ROUTINE_DECISION_PAGE_KEYS[committed.pages[1].slot]!;
++  const lastCiphertext = ports26.bytes.get(lastSlot)!;
++  ports26.bytes.delete(lastSlot);
++  await expect(loadRoutineDecisions(f.lease)).rejects.toThrow();
++  ports26.bytes.set(lastSlot, lastCiphertext);
++  await retrySavedRoutineDecision(f.lease, prepared[1]!, guard);
++  await acknowledgeRoutineDecision(f.lease, prepared[1]!, guard);
++  expect((await loadRoutineDecisions(f.lease)).decisions.find(entry => entry.contentHash === prepared[1]!.contentHash)).toMatchObject({
++    acknowledged: true, outcome: { commandHash: prepared[1]!.contentHash, sequence: 1 },
++  });
++  expect(ports26.bytes.get(KEY)).toBe(legacyCiphertext);
++  const exported=await runAccountGenerationOperation(lease=>collectLocalDeviceExportData(lease,owner));
++  expect(JSON.stringify(exported)).toContain(prepared[1]!.command.request.id);
++  const {clearHealthPurposeLocalData}=await import('@/features/healthConsent/selectiveCleanup');
++  await clearHealthPurposeLocalData(owner);
++  expect(ROUTINE_DECISION_JOURNAL_KEYS.every(key=>!ports26.bytes.has(key))).toBe(true);
++});
++
++it('rolls over on the UTF-8 byte limit before the record count is reached', async () => {
++  const f=await applyDecision(), owner=f.lease.ownerUserId;
++  const consentHash=routineDecisionHash(await getPrivateItem('layerwell.healthDataCollectionConsent.v1'));
++  const empty=decodeRoutineDecisions(null,owner,f.lease.epoch);
++  const steps=Array.from({length:50},(_,index)=>({productId:`step${index}`,name:'界'.repeat(199)}));
++  const facts={...f.proof,am:steps,pm:steps,activeProductIds:steps.map(step=>step.productId)};
++  const decisions=Array.from({length:8},()=>makeSavedRoutineDecision({kind:'apply',facts,request:{...f.command.request,id:randomUUID()}},consentHash,owner));
++  const existing=JSON.stringify({...empty,decisions});
++  expect(Buffer.byteLength(existing)).toBeLessThan(512_000);
++  await setPrivateItem(KEY,existing);
++  await prepareRoutineDecision(f.lease,{kind:'apply',facts,request:f.command.request},guard);
++  expect(await getPrivateItem(KEY)).toBe(existing);
++  expect((await loadRoutineDecisions(f.lease)).decisions).toHaveLength(9);
++});
++
++it('takes an exact bounded snapshot of a full v2 journal and refuses overflow without eviction', async () => {
++  const f = await applyDecision();
++  const owner = f.lease.ownerUserId;
++  const consentHash = routineDecisionHash(await getPrivateItem('layerwell.healthDataCollectionConsent.v1'));
++  const empty = decodeRoutineDecisions(null, owner, f.lease.epoch);
++  let previous: RoutineDecisionPage | undefined;
++  for (const key of ROUTINE_DECISION_PAGE_KEYS) {
++    const decisions = Array.from({ length: ROUTINE_DECISION_LIMIT }, () =>
++      makeSavedRoutineDecision({ ...f.command, request: { ...f.command.request, id: randomUUID() } }, consentHash, owner));
++    previous = newRoutineDecisionPage({ ...empty, decisions }, previous);
++    await setPrivateItem(key, encodeRoutineDecisionPage(previous)!);
++  }
++  const before = new Map(ports26.bytes);
++  const startedAt = performance.now();
++  const result = await loadRoutineDecisions(f.lease);
++  const readMs = Math.round(performance.now() - startedAt);
++  const startedPrepare = performance.now();
++  await expect(prepareRoutineDecision(f.lease, f.command, guard)).rejects.toThrow('ROUTINE_DECISION_CAPACITY');
++  const refusalMs = Math.round(performance.now() - startedPrepare);
++  expect(result.decisions).toHaveLength(ROUTINE_DECISION_LIMIT * ROUTINE_DECISION_PAGE_KEYS.length);
++  expect(ports26.bytes).toEqual(before);
++  const ciphertextBytes = ROUTINE_DECISION_PAGE_KEYS.reduce((total, key) => total + Buffer.byteLength(before.get(key)!), 0);
++  console.info(JSON.stringify({ fixture: 'synthetic-full-v2-journal', commands: result.decisions.length, ciphertextBytes, readMs, refusalMs }));
++}, 15_000);
++
++it.each(['prepare','mutation','inspect','acknowledge'] as const)('purpose deletion wins while %s is pending and cannot resurrect original evidence',async phase=>{
++  const f=phase==='mutation'?await prepareApply():await applied();
++  ports26.holdRead=phase==='mutation'?LEDGER:KEY;
++  const pending=phase==='prepare'?prepareRoutineDecision(f.lease,f.command,guard):phase==='mutation'?retrySavedRoutineDecision(f.lease,f.saved,guard):
++    phase==='inspect'?inspectSavedRoutineDecision(f.lease,f.saved,guard):acknowledgeRoutineDecision(f.lease,f.saved,guard);
++  const refused=expect(pending).rejects.toThrow();
++  for(let i=0;i<50&&!ports26.release;i++) await new Promise(resolve=>setTimeout(resolve,0));
++  expect(ports26.release).not.toBeNull();
++  const {clearHealthPurposeLocalData}=await import('@/features/healthConsent/selectiveCleanup');
++  const cleanup=clearHealthPurposeLocalData('synthetic-first-value-a');
++  for(let i=0;i<5;i++) await Promise.resolve(); ports26.release?.();
++  await refused; await cleanup;
++  expect(ports26.bytes.has(KEY)).toBe(false); expect(ports26.bytes.has(LEDGER)).toBe(false);
++  await grant26(); await adultLifecycle26(26);
++  const generation=await runAccountGenerationOperation(lease=>lease.generation);
++  setActiveHealthProcessingEpoch(26,{ownerUserId:'synthetic-first-value-a',accountGeneration:generation});
++  await expect(retrySavedRoutineDecision(captureHealthDataWriteLease(),f.saved,guard)).rejects.toThrow();
++  expect(ports26.bytes.has(KEY)).toBe(false);
++});
++it('keeps a retraction historical after renewed use, refusing replay against the newer stream',async()=>{
++  const f=await applied(),version=f.ledger.versions[0]!;
++  const context={originalLease:f.lease,source:f.proof,versionId:version.id,versionHash:version.contentHash};
++  await toggleCompletion(`AM:${product}`,localDateString(),undefined,undefined,context);
++  const target=(await getActualRoutineSnapshot(f.lease)).uses[0]!;
++  const saved=await prepareRoutineDecision(f.lease,{kind:'retraction',event:target,expectedHash:target.contentHash,request:{id:randomUUID(),recordedAt:new Date().toISOString()}},guard);
++  await retrySavedRoutineDecision(f.lease,saved,guard);
++  await toggleCompletion(`AM:${product}`,localDateString(),undefined,undefined,context);
++  const before=new Map(ports26.bytes);
++  expect(await inspectSavedRoutineDecision(f.lease,saved,guard)).toMatchObject({kind:'recorded_historical'});
++  await expect(retrySavedRoutineDecision(f.lease,saved,guard)).rejects.toThrow();
++  expect(ports26.bytes).toEqual(before); expect((await getActualRoutineSnapshot(f.lease)).uses).toHaveLength(3);
++});
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..22eaf2a61e81c54cb6179e884c1149f7c9e0517c
+--- /dev/null
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryCodec.ts
+@@ -0,0 +1,227 @@
++import { bytesToHex, utf8ToBytes } from '@noble/ciphers/utils.js';
++import { sha256 } from '@noble/hashes/sha256';
++import { canonical41 } from '@/features/today/optionalChange41';
++import { decodePlanHistoryVersion45 } from './planHistory45';
++import { decodeActualRoutineUseEvidence, inspectActualRoutineApply, inspectActualRoutineCorrection, type ActualRoutineCorrection, type ActualRoutineLedger } from './actualRoutine';
++import type { PlanSourceSnapshot44 } from './planSourceFence44';
++import { ROUTINE_DECISION_COMMIT_KEY, ROUTINE_DECISION_PAGE_KEYS, ROUTINE_DECISION_SLOT_KEYS,
++  ROUTINE_DECISION_SPARE_KEY, ROUTINE_DECISION_STORAGE_KEY } from '@/lib/storage/routineDecisionStorageLocations';
++
++export const ROUTINE_DECISION_KEY = ROUTINE_DECISION_STORAGE_KEY;
++export const ROUTINE_DECISION_LIMIT = 100;
++export const ROUTINE_DECISION_INVALID = 'ROUTINE_DECISION_INVALID';
++export const ROUTINE_DECISION_CONFLICT = 'ROUTINE_DECISION_CONFLICT';
++export type RoutineDecision = ActualRoutineCorrection | Readonly<{
++  kind: 'apply'; facts: PlanSourceSnapshot44;
++  request: { id: string; createdAt: string; expectedParentHash: string | null };
++}>;
++export type RoutineDecisionOutcome = Readonly<{ commandHash: string; recordHash: string; sequence: number }>;
++export type SavedRoutineDecision = Readonly<{ command: RoutineDecision; consentHash: string; acknowledged: boolean; contentHash: string; outcome?: RoutineDecisionOutcome }>;
++export type RoutineDecisionCollection = Readonly<{
++  schemaVersion: 1; purpose: 'uncertain_local_actual_routine'; ownerUserId: string; processingEpoch: number;
++  decisions: readonly SavedRoutineDecision[];
++}>;
++function invalid(): never { throw new Error(ROUTINE_DECISION_INVALID); }
++const LEGACY_BYTES = 512_000;
++const PAGE_BYTES = 544_000;
++function row(value: unknown, keys: string[]): Record<string, unknown> {
++  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).sort().join('|') !== keys.sort().join('|')) invalid();
++  return value as Record<string, unknown>;
++}
++function uuid(value: unknown): string {
++  if (typeof value !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u.test(value)) invalid();
++  return value;
++}
++function instant(value: unknown): string {
++  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u.test(value) || !Number.isFinite(Date.parse(value)) || new Date(value).toISOString() !== value) invalid();
++  return value;
++}
++function digest(value: unknown): string {
++  if (typeof value !== 'string' || !/^[0-9a-f]{64}$/u.test(value)) invalid(); return value;
++}
++export function routineDecisionHash(value: unknown): string { return bytesToHex(sha256(utf8ToBytes(canonical41(value)))); }
++export function decodeRoutineDecision(value: unknown, owner: string): RoutineDecision {
++  const kind = (value as RoutineDecision | null)?.kind;
++  const command = row(value, kind === 'apply' ? ['kind','facts','request'] : kind === 'clear' ? ['kind','request'] : ['kind','event','expectedHash','request']);
++  if (kind === 'retraction') {
++    const request = row(command.request, ['id','recordedAt']);
++    return Object.freeze({ kind, event: decodeActualRoutineUseEvidence(command.event, owner), expectedHash: digest(command.expectedHash),
++      request: Object.freeze({ id: uuid(request.id), recordedAt: instant(request.recordedAt) }) });
++  }
++  if (kind !== 'apply' && kind !== 'clear') invalid();
++  const request = row(command.request, ['id','createdAt','expectedParentHash']);
++  const expectedParentHash = request.expectedParentHash === null && kind === 'apply' ? null : digest(request.expectedParentHash);
++  const accepted = Object.freeze({ id: uuid(request.id), createdAt: instant(request.createdAt), expectedParentHash });
++  if (kind === 'clear') return Object.freeze({ kind, request: Object.freeze({ ...accepted, expectedParentHash: expectedParentHash! }) });
++  const facts = row(command.facts, ['source','sourceHash','activeProductIds','am','pm']);
++  const activeIds = facts.activeProductIds;
++  const checked = decodePlanHistoryVersion45({ id: accepted.id, sequence: 1, createdAt: accepted.createdAt, sourceHash: facts.sourceHash, am: facts.am, pm: facts.pm }, 1);
++  if (facts.source !== 'local' || !Array.isArray(activeIds) || activeIds.length > 100 ||
++      activeIds.some(id => typeof id !== 'string' || !id || id.length > 128 || id.trim() !== id || /[\u0000-\u001f\u007f-\u009f\ud800-\udfff]/u.test(id)) ||
++      new Set(activeIds).size !== activeIds.length ||
++      [...checked.am,...checked.pm].some(step => !activeIds.includes(step.productId))) invalid();
++  return Object.freeze({ kind, request: accepted, facts: Object.freeze({ source: 'local', sourceHash: checked.sourceHash,
++    activeProductIds: Object.freeze([...activeIds]) as readonly string[], am: checked.am, pm: checked.pm }) });
++}
++export function makeSavedRoutineDecision(command: RoutineDecision, consentHash: string, owner: string, acknowledged = false): SavedRoutineDecision {
++  if (typeof acknowledged !== 'boolean') invalid();
++  const body = { command: decodeRoutineDecision(command, owner), consentHash: digest(consentHash), acknowledged };
++  return Object.freeze({ ...body, contentHash: routineDecisionHash(body) });
++}
++export function decodeRoutineDecisions(raw: string | null, ownerUserId: string, processingEpoch?: number): RoutineDecisionCollection {
++  if (!ownerUserId || ownerUserId.length > 128 || ownerUserId.trim() !== ownerUserId) invalid();
++  if (raw === null) {
++    if (!Number.isSafeInteger(processingEpoch) || processingEpoch! < 0) invalid();
++    return Object.freeze({ schemaVersion: 1, purpose: 'uncertain_local_actual_routine', ownerUserId, processingEpoch: processingEpoch!, decisions: Object.freeze([]) });
++  }
++  if (utf8ToBytes(raw).length > LEGACY_BYTES) invalid();
++  let value: unknown; try { value = JSON.parse(raw); } catch { invalid(); }
++  return decodeLegacyCollection(value, ownerUserId, processingEpoch);
++}
++
++function decodeLegacyCollection(value: unknown, ownerUserId: string, processingEpoch?: number): RoutineDecisionCollection {
++  const collection = row(value, ['schemaVersion','purpose','ownerUserId','processingEpoch','decisions']);
++  if (collection.schemaVersion !== 1 || collection.purpose !== 'uncertain_local_actual_routine' || collection.ownerUserId !== ownerUserId ||
++      !Number.isSafeInteger(collection.processingEpoch) || (collection.processingEpoch as number) < 0 ||
++      (processingEpoch !== undefined && collection.processingEpoch !== processingEpoch) || !Array.isArray(collection.decisions) || collection.decisions.length > ROUTINE_DECISION_LIMIT) invalid();
++  const decisions = collection.decisions.map(value => {
++    const entry = row(value, ['command','consentHash','acknowledged','contentHash']);
++    const saved = makeSavedRoutineDecision(entry.command as RoutineDecision, entry.consentHash as string, ownerUserId, entry.acknowledged as boolean);
++    if (saved.contentHash !== digest(entry.contentHash)) invalid();
++    return saved;
++  });
++  if (new Set(decisions.map(saved => saved.command.request.id)).size !== decisions.length) invalid();
++  return Object.freeze({ schemaVersion: 1, purpose: 'uncertain_local_actual_routine', ownerUserId,
++    processingEpoch: collection.processingEpoch as number, decisions: Object.freeze(decisions) });
++}
++
++export type RoutineDecisionPage = Readonly<{
++  schemaVersion: 2; collection: RoutineDecisionCollection; index: number;
++  previousPageHash: string | null; outcomes: readonly RoutineDecisionOutcome[];
++}>;
++
++function pageHash(page: RoutineDecisionPage): string {
++  const { index, previousPageHash, collection } = page;
++  return routineDecisionHash(['routine-decision-page-v2', index, previousPageHash, collection.ownerUserId,
++    collection.processingEpoch, collection.decisions.map(decision => decision.contentHash)]);
++}
++
++export function newRoutineDecisionPage(collection: RoutineDecisionCollection, previous?: RoutineDecisionPage): RoutineDecisionPage {
++  return { schemaVersion: 2, collection, index: previous ? previous.index + 1 : 0,
++    previousPageHash: previous ? pageHash(previous) : null, outcomes: [] };
++}
++
++export function encodeRoutineDecisionPage(page: RoutineDecisionPage): string | null {
++  // Leave space for a receipt for every command, including a nearly full v1
++  // page promoted in place. The original v1 byte bound applies to commands.
++  if (page.collection.decisions.length > ROUTINE_DECISION_LIMIT ||
++      utf8ToBytes(JSON.stringify(page.collection)).length > LEGACY_BYTES) return null;
++  const raw = JSON.stringify(page);
++  return utf8ToBytes(raw).length <= PAGE_BYTES ? raw : null;
++}
++
++type PageCommit = Readonly<{ slot: number; hash: string }>;
++export type RoutineDecisionCommit = Readonly<{
++  schemaVersion: 3; purpose: 'routine_decision_commit'; owner: string; epoch: number;
++  revision: number; predecessor: string | null; pages: readonly PageCommit[];
++}>;
++const STAGED_PAGE_PREFIX = 'v3\n';
++export function stageRoutineDecisionPage(raw: string): string { return STAGED_PAGE_PREFIX + raw; }
++
++export function makeRoutineDecisionCommit(owner: string, epoch: number, pages: readonly PageCommit[],
++  previous: RoutineDecisionCommit | null, previousRaw: string | null): RoutineDecisionCommit {
++  return { schemaVersion: 3, purpose: 'routine_decision_commit', owner, epoch, pages,
++    revision: (previous?.revision ?? -1) + 1, predecessor: previousRaw === null ? null : routineDecisionHash(previousRaw) };
++}
++
++function decodeCommit(raw: string, owner: string, epoch?: number): RoutineDecisionCommit {
++  if (raw.length > 2048) invalid();
++  let value: unknown; try { value = JSON.parse(raw); } catch { invalid(); }
++  const body = row(value, ['schemaVersion','purpose','owner','epoch','revision','predecessor','pages']);
++  if (body.schemaVersion !== 3 || body.purpose !== 'routine_decision_commit' || body.owner !== owner ||
++      !Number.isSafeInteger(body.epoch) || (body.epoch as number) < 0 || (epoch !== undefined && body.epoch !== epoch) ||
++      !Number.isSafeInteger(body.revision) || (body.revision as number) < 0 ||
++      !Array.isArray(body.pages) || body.pages.length > ROUTINE_DECISION_PAGE_KEYS.length ||
++      (body.revision === 0 ? body.predecessor !== null : digest(body.predecessor) !== body.predecessor)) invalid();
++  const pages = body.pages.map((value: unknown): PageCommit => {
++    const ref = row(value, ['slot','hash']);
++    if (!Number.isSafeInteger(ref.slot) || (ref.slot as number) < 0 || (ref.slot as number) >= ROUTINE_DECISION_SLOT_KEYS.length) invalid();
++    return { slot: ref.slot as number, hash: digest(ref.hash) };
++  });
++  if (new Set(pages.map(ref => ref.slot)).size !== pages.length) invalid();
++  return { schemaVersion: 3, purpose: 'routine_decision_commit', owner, epoch: body.epoch as number,
++    revision: body.revision as number, predecessor: body.predecessor as string | null, pages };
++}
++
++export function decodeRoutineDecisionJournal(values: ReadonlyMap<string, string | null>, owner: string, epoch?: number) {
++  const commitRaw = values.get(ROUTINE_DECISION_COMMIT_KEY) ?? null;
++  const commit = commitRaw === null ? null : decodeCommit(commitRaw, owner, epoch);
++  if (commit === null && values.get(ROUTINE_DECISION_SPARE_KEY) != null) invalid();
++  const slots = commit?.pages.map(ref => {
++    const raw = values.get(ROUTINE_DECISION_SLOT_KEYS[ref.slot]!);
++    if (raw == null || routineDecisionHash(raw) !== ref.hash) invalid();
++    return raw.startsWith(STAGED_PAGE_PREFIX) ? raw.slice(STAGED_PAGE_PREFIX.length) : raw;
++  });
++  const pages: RoutineDecisionPage[] = [];
++  const entries = new Map<string, { page: number; saved: SavedRoutineDecision }>();
++  const expectedEpoch = () => epoch ?? commit?.epoch ?? pages[0]?.collection.processingEpoch;
++  for (const [index, key] of ROUTINE_DECISION_PAGE_KEYS.entries()) {
++    const raw = slots === undefined ? values.get(key) : slots[index];
++    if (raw == null) continue;
++    if (index !== pages.length || !owner || owner.trim() !== owner || owner.length > 128 ||
++      utf8ToBytes(raw).length > PAGE_BYTES) invalid();
++    let value: unknown; try { value = JSON.parse(raw); } catch { invalid(); }
++    let page: RoutineDecisionPage;
++    if (index === 0 && (value as { schemaVersion?: unknown } | null)?.schemaVersion === 1) {
++      page = newRoutineDecisionPage(decodeRoutineDecisions(raw, owner, expectedEpoch()));
++    } else {
++      const fields = row(value, ['schemaVersion','collection','index','previousPageHash','outcomes']);
++      const previous = pages.at(-1);
++      if (fields.schemaVersion !== 2 || fields.index !== index || fields.previousPageHash !== (previous ? pageHash(previous) : null) ||
++          !Array.isArray(fields.outcomes) || fields.outcomes.length > ROUTINE_DECISION_LIMIT ||
++          utf8ToBytes(JSON.stringify(fields.collection ?? null)).length > LEGACY_BYTES) invalid();
++      const collection = decodeLegacyCollection(fields.collection, owner, expectedEpoch());
++      if (collection.decisions.length === 0) invalid();
++      const outcomes = fields.outcomes.map((value: unknown) => {
++        const receipt = row(value, ['commandHash','recordHash','sequence']);
++        if (!Number.isSafeInteger(receipt.sequence) || (receipt.sequence as number) < 1) invalid();
++        return Object.freeze({ commandHash: digest(receipt.commandHash), recordHash: digest(receipt.recordHash), sequence: receipt.sequence as number });
++      });
++      page = { schemaVersion: 2, collection, index, previousPageHash: fields.previousPageHash as string | null, outcomes };
++    }
++    const outcomes = new Map(page.outcomes.map(outcome => [outcome.commandHash, outcome]));
++    if (outcomes.size !== page.outcomes.length) invalid();
++    for (const decision of page.collection.decisions) {
++      const id = decision.command.request.id, outcome = outcomes.get(decision.contentHash);
++      if (entries.has(id)) invalid();
++      entries.set(id, { page: index, saved: outcome ? Object.freeze({ ...decision, acknowledged: true, outcome }) : decision });
++      outcomes.delete(decision.contentHash);
++    }
++    if (outcomes.size) invalid();
++    pages.push(page);
++  }
++  return { pages, entries, commit, commitRaw };
++}
++
++export function inspectRoutineDecision(ledger: ActualRoutineLedger, command: RoutineDecision) {
++  return command.kind === 'apply' ? inspectActualRoutineApply(ledger, command.facts, command.request) : inspectActualRoutineCorrection(ledger, command);
++}
++
++/** Resolve recorded pointers to the exact immutable target. This is a local
++ * evidence index, not a freshness proof or permission to archive or retire. */
++export function resolveRoutineDecisionOutcomes(journal: ReturnType<typeof decodeRoutineDecisionJournal>, ledger: ActualRoutineLedger | undefined) {
++  const resolved: { commandId: string; commandHash: string; recordKind: 'routine_version' | 'use_event'; sequence: number; recordHash: string }[] = [];
++  for (const { saved } of journal.entries.values()) {
++    if (!saved.outcome) continue;
++    const uses = saved.command.kind === 'retraction';
++    const record = (uses ? ledger?.uses : ledger?.versions)?.[saved.outcome.sequence - 1];
++    const result = ledger && inspectRoutineDecision(ledger, saved.command);
++    if (record?.id !== saved.command.request.id || record?.contentHash !== saved.outcome.recordHash ||
++        result?.sequence !== saved.outcome.sequence || result.kind !== 'recorded_current' && result.kind !== 'recorded_historical') {
++      throw Error(ROUTINE_DECISION_CONFLICT);
++    }
++    resolved.push({ commandId: record.id, commandHash: saved.contentHash, recordKind: uses ? 'use_event' : 'routine_version',
++      sequence: saved.outcome.sequence, recordHash: record.contentHash });
++  }
++  return resolved;
++}
+diff --git a/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8abbf82471fe5400def85d92782a304f1f3d8edc
+--- /dev/null
++++ b/apps/mobile/src/features/routine/routineDecisionRecoveryStore.ts
+@@ -0,0 +1,398 @@
++import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
++import { classifyAgePolicyReceipt } from '@/features/onboarding/ageGateStore';
++import { hasCurrentHealthDataCollectionConsentBytes } from '@/features/onboarding/healthConsentStore';
++import { HEALTH_DATA_LIFECYCLE_KEY, parseHealthDataLifecycleRecord } from '@/features/healthConsent/lifecycleStore';
++import { assertOriginalHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
++import { updatePrivateItemWithSources } from '@/lib/storage/privateKV';
++import { ROUTINE_DECISION_COMMIT_KEY, ROUTINE_DECISION_JOURNAL_KEYS, ROUTINE_DECISION_PAGE_KEYS,
++  ROUTINE_DECISION_SLOT_KEYS } from '@/lib/storage/routineDecisionStorageLocations';
++import { actualRoutineSnapshotFromBytes, getActualRoutineSnapshot, applyCurrentActualRoutine, clearCurrentActualRoutine, retractActualRoutineUse } from '@/features/today/completionsStore';
++import { applyActualRoutine, clearActualRoutine, decodeActualRoutineEnvelope, encodeActualRoutineEnvelope,
++  retractActualUse, type ActualRoutineLedger } from './actualRoutine';
++import { bindActualRoutineSource44, capturePlanSource44 } from './planSourceFence44';
++import { ROUTINE_DECISION_CONFLICT, decodeRoutineDecision, decodeRoutineDecisions, decodeRoutineDecisionJournal,
++  encodeRoutineDecisionPage, newRoutineDecisionPage, makeSavedRoutineDecision, routineDecisionHash,
++  makeRoutineDecisionCommit, stageRoutineDecisionPage, resolveRoutineDecisionOutcomes, inspectRoutineDecision, ROUTINE_DECISION_LIMIT,
++  type RoutineDecision, type SavedRoutineDecision, type RoutineDecisionPage } from './routineDecisionRecoveryCodec';
++
++const CONSENT_KEY = 'layerwell.healthDataCollectionConsent.v1';
++const COMPLETION_KEY = 'layerwell.completions.v1';
++const AUTH_KEYS = [AGE_POLICY_RECEIPT_KEY, CONSENT_KEY, HEALTH_DATA_LIFECYCLE_KEY] as const;
++function authorization(lease: HealthDataWriteLease) {
++  return { keys: AUTH_KEYS, validate(values: ReadonlyMap<string,string|null>) {
++    assertOriginalHealthDataWriteLease(lease);
++    if (classifyAgePolicyReceipt(values.get(AGE_POLICY_RECEIPT_KEY) ?? null) !== 'current' || !hasCurrentHealthDataCollectionConsentBytes(values.get(CONSENT_KEY) ?? null)) throw Error(ROUTINE_DECISION_CONFLICT);
++    const lifecycle = parseHealthDataLifecycleRecord(values.get(HEALTH_DATA_LIFECYCLE_KEY) ?? '');
++    if (lifecycle.ownerUserId !== lease.ownerUserId || lifecycle.processingEpoch !== lease.epoch || lifecycle.state !== 'active' || lifecycle.activationRoutePending) throw Error(ROUTINE_DECISION_CONFLICT);
++  } };
++}
++function collection(values: ReadonlyMap<string,string|null>, lease: HealthDataWriteLease) {
++  const saved = decodeRoutineDecisionJournal(values, lease.ownerUserId, lease.epoch);
++  const consentHash = routineDecisionHash(values.get(CONSENT_KEY));
++  for (const { saved: entry } of saved.entries.values()) {
++    if (entry.consentHash !== consentHash) throw Error(ROUTINE_DECISION_CONFLICT);
++  }
++  const ledger = saved.pages.some(page => page.outcomes.length)
++    ? actualRoutineSnapshotFromBytes(values.get(COMPLETION_KEY) ?? null, lease.ownerUserId) : undefined;
++  const resolved = ledger ? resolveRoutineDecisionOutcomes(saved, ledger) : [];
++  return { ...saved, ledger, resolved };
++}
++function exact(entries: ReturnType<typeof collection>['entries'], expected: SavedRoutineDecision) {
++  const found = entries.get(expected.command.request.id);
++  if (!found) throw Error(ROUTINE_DECISION_CONFLICT);
++  const { outcome, ...retained } = found.saved;
++  const beforeReceipt = outcome ? { ...retained, acknowledged: false } : retained;
++  const candidateHash = routineDecisionHash(expected);
++  if (routineDecisionHash(found.saved) !== candidateHash && routineDecisionHash(beforeReceipt) !== candidateHash) {
++    throw Error(ROUTINE_DECISION_CONFLICT);
++  }
++  return found;
++}
++let journalWrites: Promise<void> = Promise.resolve();
++
++// A new page is staged in a slot outside the committed inventory. The small
++// encrypted commit record is the only publication point. Interruption leaves
++// the old inventory readable, or the new inventory with its exact staged page.
++async function updateJournal(lease: HealthDataWriteLease, sources: readonly string[], guard: () => void,
++  transform: (values: ReadonlyMap<string,string|null>, journal: ReturnType<typeof collection>) => { page: number; raw: string } | undefined): Promise<void> {
++  const keys = [...AUTH_KEYS, ...ROUTINE_DECISION_JOURNAL_KEYS, ...sources];
++  const update = (key: string, fn: (values: ReadonlyMap<string,string|null>) => string | null) =>
++    updatePrivateItemWithSources(key, keys, fn, guard, undefined, undefined, authorization(lease), guard);
++
++  const operation = journalWrites.then(async () => {
++    guard();
++    let slot: number | undefined;
++    await update(ROUTINE_DECISION_COMMIT_KEY, values => {
++      const journal = collection(values, lease);
++      const next = transform(values, journal);
++      if (!next) return journal.commitRaw;
++      const refs = journal.commit?.pages ?? journal.pages.map((_, index) => ({
++        slot: index, hash: routineDecisionHash(values.get(ROUTINE_DECISION_SLOT_KEYS[index]!)),
++      }));
++      slot = ROUTINE_DECISION_SLOT_KEYS.findIndex((_, index) => !refs.some(ref => ref.slot === index));
++      if (slot < 0) throw Error(ROUTINE_DECISION_CONFLICT);
++      return journal.commitRaw ?? JSON.stringify(makeRoutineDecisionCommit(lease.ownerUserId, lease.epoch, refs, null, null));
++    });
++    if (slot === undefined) return;
++    const key = ROUTINE_DECISION_SLOT_KEYS[slot]!;
++    let prepared: { prior: string; bytes: string; page: number } | undefined;
++    await update(key, values => {
++      const journal = collection(values, lease);
++      const { commit, commitRaw } = journal;
++      if (!commit || !commitRaw || commit.pages.some(ref => ref.slot === slot)) throw Error(ROUTINE_DECISION_CONFLICT);
++      const next = transform(values, journal);
++      if (!next) return values.get(key) ?? null;
++      prepared = { prior: commitRaw, bytes: stageRoutineDecisionPage(next.raw), page: next.page };
++      return prepared.bytes;
++    });
++    if (!prepared) return;
++    const staged = prepared;
++    await update(ROUTINE_DECISION_COMMIT_KEY, values => {
++      const journal = collection(values, lease);
++      const { commit, commitRaw } = journal;
++      if (!commit || commitRaw !== staged.prior || values.get(key) !== staged.bytes) throw Error(ROUTINE_DECISION_CONFLICT);
++      const next = transform(values, journal);
++      if (!next || next.page !== staged.page || stageRoutineDecisionPage(next.raw) !== staged.bytes) throw Error(ROUTINE_DECISION_CONFLICT);
++      const refs = [...commit.pages];
++      refs[staged.page] = { slot: slot!, hash: routineDecisionHash(staged.bytes) };
++      return JSON.stringify(makeRoutineDecisionCommit(lease.ownerUserId, lease.epoch, refs, commit, commitRaw));
++    });
++    guard();
++  });
++  journalWrites = operation.catch(() => {});
++  await operation;
++}
++async function readJournal(lease: HealthDataWriteLease, assertCallerCurrent: () => void = () => {}) {
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  let result: ReturnType<typeof collection> | undefined;
++  await updatePrivateItemWithSources(ROUTINE_DECISION_COMMIT_KEY, [...AUTH_KEYS, ...ROUTINE_DECISION_JOURNAL_KEYS, COMPLETION_KEY], values => {
++    guard();
++    result = collection(values, lease);
++    return values.get(ROUTINE_DECISION_COMMIT_KEY) ?? null;
++  }, guard, undefined, undefined, authorization(lease));
++  guard(); return result!;
++}
++export async function loadRoutineDecisions(lease: HealthDataWriteLease) {
++  const { entries } = await readJournal(lease);
++  return { decisions: Array.from(entries.values(), entry => entry.saved) };
++}
++
++/** Exact owner-side archive input. The custodian must supply the archive
++ * predecessor and verify the live authority and original evidence separately.
++ * Reading this input neither publishes it nor reopens the original command. */
++export async function captureResolvedRoutineEvidence(lease: HealthDataWriteLease, id: string, assertCallerCurrent: () => void) {
++  const journal = await readJournal(lease, assertCallerCurrent);
++  assertOriginalHealthDataWriteLease(lease); assertCallerCurrent();
++  return resolvedEvidence(journal, lease, id);
++}
++
++/** Read the exact original check-off under the current purpose and owner. A
++ * retraction uses the separate acknowledged command capture. */
++export async function captureRecordedRoutineUseEvidence(lease: HealthDataWriteLease, id: string, assertCallerCurrent: () => void) {
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  guard();
++  let event: ActualRoutineLedger['uses'][number] | undefined;
++  await updatePrivateItemWithSources(COMPLETION_KEY, AUTH_KEYS, values => {
++    guard();
++    const raw = values.get(COMPLETION_KEY) ?? null;
++    event = actualRoutineSnapshotFromBytes(raw, lease.ownerUserId).uses.find(candidate => candidate.id === id);
++    return raw;
++  }, guard, undefined, undefined, authorization(lease));
++  guard();
++  if (!event || event.kind !== 'use') throw Error(ROUTINE_DECISION_CONFLICT);
++  return Object.freeze({ id, kind: 'use_event' as const, sourceHash: event.contentHash,
++    bytes: JSON.stringify({ schemaVersion: 1, ownerUserId: lease.ownerUserId, processingEpoch: lease.epoch, target: event }) });
++}
++
++function resolvedEvidence(journal: Awaited<ReturnType<typeof readJournal>>, lease: HealthDataWriteLease, id: string) {
++  const link = journal.resolved.find(record => record.commandId === id);
++  const saved = journal.entries.get(id)?.saved;
++  if (!link || !saved || !journal.ledger) throw Error(ROUTINE_DECISION_CONFLICT);
++  const target = (link.recordKind === 'use_event' ? journal.ledger.uses : journal.ledger.versions)[link.sequence - 1];
++  return Object.freeze({ id, kind: 'resolved_command' as const, sourceHash: link.commandHash,
++    bytes: JSON.stringify({ schemaVersion: 1, ownerUserId: lease.ownerUserId, processingEpoch: lease.epoch, saved, target }) });
++}
++
++type ArchiveInput = ReturnType<typeof resolvedEvidence> & Readonly<{ previousReceipt: string | null }>;
++type ArchiveReadback = Readonly<{
++  original: ArchiveInput;
++  receipt: Readonly<{ sequence: number; recordedAt: number; originalHash: string; hash: string }>;
++}>;
++
++function verifyRetirementArchive(lease: HealthDataWriteLease, archived: ArchiveReadback | null) {
++  const scope = { ownerId: lease.ownerUserId, healthEpoch: lease.epoch };
++  if (!archived) throw Error(ROUTINE_DECISION_CONFLICT);
++  const { receipt } = archived;
++  if (!Number.isSafeInteger(receipt.sequence) || receipt.sequence < 1 ||
++      !Number.isSafeInteger(receipt.recordedAt) || receipt.recordedAt < 0 ||
++      receipt.originalHash !== routineDecisionHash(['owner-routine-original-v1', scope, archived.original]) ||
++      receipt.hash !== routineDecisionHash(['owner-routine-receipt-v1', scope, receipt.sequence, receipt.recordedAt, receipt.originalHash])) {
++    throw Error(ROUTINE_DECISION_CONFLICT);
++  }
++  return { id: archived.original.id, originalHash: receipt.originalHash, receiptHash: receipt.hash };
++}
++
++function requireOriginalEvidence(journal: ReturnType<typeof collection>, lease: HealthDataWriteLease, candidate: ArchiveInput) {
++  const expected = resolvedEvidence(journal, lease, candidate.id);
++  if (candidate.kind !== expected.kind || candidate.sourceHash !== expected.sourceHash || candidate.bytes !== expected.bytes) {
++    throw Error(ROUTINE_DECISION_CONFLICT);
++  }
++}
++
++function replacementPages(journal: ReturnType<typeof collection>, candidate: ArchiveInput) {
++  const first = journal.pages[0]!;
++  const decisions = journal.pages.flatMap(page => page.collection.decisions).filter(saved => saved.command.request.id !== candidate.id);
++  const receipts = new Map(journal.pages.flatMap(page => page.outcomes).map(outcome => [outcome.commandHash, outcome]));
++  let previous: RoutineDecisionPage | undefined;
++  const replacement: string[] = [];
++  let start = 0;
++  while (start < decisions.length) {
++    // Pack the largest ordered prefix accepted by the existing count and byte
++    // limits. Moving later commands forward makes interior capacity reusable.
++    let low = 1;
++    let high = Math.min(ROUTINE_DECISION_LIMIT, decisions.length - start);
++    let best: { page: RoutineDecisionPage; raw: string; count: number } | undefined;
++    while (low <= high) {
++      const count = Math.floor((low + high) / 2);
++      const batch = decisions.slice(start, start + count);
++      const page = { ...newRoutineDecisionPage({ ...first.collection, decisions: batch }, previous),
++        outcomes: batch.flatMap(saved => receipts.get(saved.contentHash) ?? []) };
++      const raw = encodeRoutineDecisionPage(page);
++      if (raw === null) high = count - 1;
++      else { best = { page, raw, count }; low = count + 1; }
++    }
++    if (!best || replacement.length === journal.pages.length) throw Error(ROUTINE_DECISION_CONFLICT);
++    replacement.push(best.raw);
++    previous = best.page;
++    start += best.count;
++  }
++  return replacement;
++}
++
++/** Prepare an exact replacement against a current independent archive read. */
++export async function prepareRoutineDecisionRetirement(lease: HealthDataWriteLease, original: ArchiveInput,
++  readCurrentArchive: (id: string, originalHash: string) => Promise<ArchiveReadback | null>, assertCallerCurrent: () => void) {
++  const candidate = Object.freeze({ ...original });
++  const journal = await readJournal(lease, assertCallerCurrent);
++  if (!journal.commitRaw || !journal.commit) throw Error(ROUTINE_DECISION_CONFLICT);
++  requireOriginalEvidence(journal, lease, candidate);
++  const scope = { ownerId: lease.ownerUserId, healthEpoch: lease.epoch };
++  const originalHash = routineDecisionHash(['owner-routine-original-v1', scope, candidate]);
++  const archived = await readCurrentArchive(candidate.id, originalHash);
++  const retired = verifyRetirementArchive(lease, archived);
++  if (retired.originalHash !== originalHash) throw Error(ROUTINE_DECISION_CONFLICT);
++  const current = await readJournal(lease, assertCallerCurrent);
++  if (current.commitRaw !== journal.commitRaw) throw Error(ROUTINE_DECISION_CONFLICT);
++  requireOriginalEvidence(current, lease, candidate);
++  return Object.freeze({ expectedCommit: journal.commitRaw, retired: Object.freeze(retired),
++    replacementPages: Object.freeze(replacementPages(current, candidate)) });
++}
++
++type RetirementPlan = Awaited<ReturnType<typeof prepareRoutineDecisionRetirement>>;
++
++/** Serial-store contract, exercised with the existing encrypted custodian.
++ * The host must verify archive membership, freshness and retirement authority
++ * in the same transaction as staging all writes and the receipt. The normal
++ * mobile writer does not expose this operation. */
++export function publishRoutineDecisionRetirement(lease: HealthDataWriteLease, input: RetirementPlan,
++  transact: (retired: RetirementPlan['retired'], stage: (snapshot: {
++    values: ReadonlyMap<string, string | null>;
++    archived: ArchiveReadback;
++    priorReceipt: string | null;
++  }) => { receipt: string; changes: ReadonlyMap<string, string | null> }, assertBeforeCommit: () => void) => Promise<string>,
++  assertCallerCurrent: () => void) {
++  const plan = Object.freeze({ ...input, retired: Object.freeze({ ...input.retired }), replacementPages: Object.freeze([...input.replacementPages]) });
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); };
++  guard();
++  return transact(plan.retired, ({ values, archived, priorReceipt }) => {
++    guard();
++    authorization(lease).validate(values);
++    const retired = verifyRetirementArchive(lease, archived);
++    if (routineDecisionHash(retired) !== routineDecisionHash(plan.retired)) throw Error(ROUTINE_DECISION_CONFLICT);
++    const journal = collection(values, lease);
++    if (!journal.commit) throw Error(ROUTINE_DECISION_CONFLICT);
++    const intent = routineDecisionHash(['routine-retirement-v1', lease.ownerUserId, lease.epoch, plan]);
++    if (priorReceipt !== null) {
++      if (priorReceipt !== intent || journal.entries.has(retired.id)) throw Error(ROUTINE_DECISION_CONFLICT);
++      return { receipt: intent, changes: new Map() };
++    }
++    if (journal.commitRaw !== plan.expectedCommit) throw Error(ROUTINE_DECISION_CONFLICT);
++    requireOriginalEvidence(journal, lease, archived.original);
++    const replacement = replacementPages(journal, archived.original);
++    if (routineDecisionHash(replacement) !== routineDecisionHash(plan.replacementPages)) throw Error(ROUTINE_DECISION_CONFLICT);
++    const changes = new Map<string, string | null>();
++    const refs = replacement.map((raw, index) => {
++      const slot = journal.commit!.pages[index]!.slot;
++      const bytes = stageRoutineDecisionPage(raw);
++      changes.set(ROUTINE_DECISION_SLOT_KEYS[slot]!, bytes);
++      return { slot, hash: routineDecisionHash(bytes) };
++    });
++    for (const key of ROUTINE_DECISION_SLOT_KEYS) {
++      if (!changes.has(key)) changes.set(key, null);
++    }
++    changes.set(ROUTINE_DECISION_COMMIT_KEY, JSON.stringify(makeRoutineDecisionCommit(lease.ownerUserId, lease.epoch,
++      refs, journal.commit, journal.commitRaw)));
++    const successor = collection(new Map([...values, ...changes]), lease);
++    if (successor.entries.has(retired.id) || successor.entries.size !== journal.entries.size - 1) throw Error(ROUTINE_DECISION_CONFLICT);
++    for (const [key, value] of changes) {
++      if ((values.get(key) ?? null) === value) changes.delete(key);
++    }
++    return { receipt: intent, changes };
++  }, guard).then(receipt => { guard(); return receipt; });
++}
++/** Write-ahead evidence only. This function cannot dispatch the mutation and
++ * never puts a live source capability or runtime lease in persistent storage. */
++export async function prepareRoutineDecision(lease: HealthDataWriteLease, command: RoutineDecision, assertCallerCurrent: () => void): Promise<SavedRoutineDecision> {
++  return (await prepareDecision(lease, command, assertCallerCurrent))!;
++}
++
++export async function prepareCurrentRoutineApply(lease: HealthDataWriteLease, command: Extract<RoutineDecision, { kind: 'apply' }>, assertCallerCurrent: () => void) {
++  const source = bindActualRoutineSource44(command.facts, lease);
++  const evidence = await prepareDecision(lease, command, assertCallerCurrent, source);
++  return evidence ? { kind: 'prepared' as const, evidence } : { kind: 'no_change' as const };
++}
++
++async function prepareDecision(lease: HealthDataWriteLease, command: RoutineDecision, assertCallerCurrent: () => void,
++  source?: ReturnType<typeof bindActualRoutineSource44>): Promise<SavedRoutineDecision | null> {
++  const accepted = decodeRoutineDecision(command, lease.ownerUserId);
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); source?.guard(); assertCallerCurrent(); }; guard();
++  let result: SavedRoutineDecision | null | undefined;
++  await updateJournal(lease, [COMPLETION_KEY, ...(source?.keys ?? [])], guard, (values, { entries, pages }) => {
++    source?.validate(values);
++    const candidate = makeSavedRoutineDecision(accepted, routineDecisionHash(values.get(CONSENT_KEY)), lease.ownerUserId);
++    if (entries.has(accepted.request.id)) { result = exact(entries, candidate).saved; return; }
++    const ledgerBytes = values.get(COMPLETION_KEY) ?? null;
++    const ledger = actualRoutineSnapshotFromBytes(ledgerBytes, lease.ownerUserId);
++    if (inspectRoutineDecision(ledger, accepted).kind !== 'not_found') throw Error(ROUTINE_DECISION_CONFLICT);
++    // Validate the proposed transition against the exact reserved ledger before
++    // using a recovery slot. Only the later guarded mutation can publish it.
++    let prospective: ActualRoutineLedger;
++    if (accepted.kind === 'retraction') {
++      const target = ledger.uses.find(row => row.id === accepted.event.id);
++      if (!target || target.kind !== 'use' || routineDecisionHash(target) !== routineDecisionHash(accepted.event)) throw Error(ROUTINE_DECISION_CONFLICT);
++      prospective = retractActualUse(ledger, target.id, accepted.expectedHash, accepted.request);
++    } else if (accepted.kind === 'clear') {
++      prospective = clearActualRoutine(ledger, accepted.request);
++    } else {
++      prospective = applyActualRoutine(ledger, accepted.facts, accepted.request);
++      // A no-change result requires the original live source proof as well.
++      if (source && prospective === ledger) {
++        result = null;
++        return;
++      }
++    }
++    if (prospective !== ledger) {
++      const envelope = decodeActualRoutineEnvelope(ledgerBytes, lease.ownerUserId);
++      encodeActualRoutineEnvelope(envelope ? envelope.completionBytes : ledgerBytes, prospective);
++    }
++    const empty = decodeRoutineDecisions(null, lease.ownerUserId, lease.epoch);
++    const last = pages.at(-1) ?? newRoutineDecisionPage(empty);
++    const append = (page: RoutineDecisionPage) => encodeRoutineDecisionPage({ ...page,
++      collection: { ...page.collection, decisions: [...page.collection.decisions, candidate] } });
++    const current = append(last);
++    result = candidate;
++    if (current !== null) return { page: last.index, raw: current };
++    const next = newRoutineDecisionPage(empty, last), raw = append(next);
++    if (next.index >= ROUTINE_DECISION_PAGE_KEYS.length || raw === null) throw Error('ROUTINE_DECISION_CAPACITY');
++    return { page: next.index, raw };
++  });
++  guard();
++  if (result === null) return null;
++  // Verify authenticated encrypted durable readback before dispatch is possible.
++  const readback = await readJournal(lease); guard();
++  return exact(readback.entries, result!).saved;
++}
++export async function inspectSavedRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void) {
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  const { saved } = exact((await readJournal(lease)).entries, expected); guard();
++  const ledger = await getActualRoutineSnapshot(lease); guard();
++  const outcome = inspectRoutineDecision(ledger, saved.command);
++  if (saved.outcome && (outcome.sequence !== saved.outcome.sequence || outcomeRecordHash(ledger, saved.command, outcome.sequence) !== saved.outcome.recordHash)) {
++    return { kind: 'conflict' } as const;
++  }
++  return outcome;
++}
++function outcomeRecordHash(ledger: ActualRoutineLedger, command: RoutineDecision, sequence: number) {
++  return (command.kind === 'retraction' ? ledger.uses : ledger.versions)[sequence - 1]?.contentHash;
++}
++/** Append the exact immutable record receipt after authenticated inspection.
++ * Legacy acknowledgements stay historical evidence, with no inferred receipt. */
++export async function acknowledgeRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void): Promise<void> {
++  const accepted = JSON.parse(JSON.stringify(expected)) as SavedRoutineDecision;
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  await updateJournal(lease, [COMPLETION_KEY], guard, (values, { pages, entries }) => {
++    const { page: index, saved: found } = exact(entries, accepted);
++    if (found.acknowledged) return;
++    const ledger = actualRoutineSnapshotFromBytes(values.get(COMPLETION_KEY) ?? null, lease.ownerUserId);
++    const outcome = inspectRoutineDecision(ledger, found.command);
++    if ((outcome.kind !== 'recorded_current' && outcome.kind !== 'recorded_historical') || outcome.sequence === undefined) throw Error(ROUTINE_DECISION_CONFLICT);
++    const recordHash = outcomeRecordHash(ledger, found.command, outcome.sequence);
++    if (recordHash === undefined) throw Error(ROUTINE_DECISION_CONFLICT);
++    const page = pages[index]!;
++    const raw = encodeRoutineDecisionPage({ ...page, outcomes: [...page.outcomes,
++      { commandHash: found.contentHash, recordHash, sequence: outcome.sequence }] });
++    if (raw === null) throw Error('ROUTINE_DECISION_CAPACITY');
++    return { page: index, raw };
++  });
++  guard();
++}
++/** Only explicit owner confirmation calls this. Reacquire an original current
++ * proof through capturePlanSource44; serialized facts cannot be that proof. */
++export async function retrySavedRoutineDecision(lease: HealthDataWriteLease, expected: SavedRoutineDecision, assertCallerCurrent: () => void): Promise<void> {
++  const guard = () => { assertOriginalHealthDataWriteLease(lease); assertCallerCurrent(); }; guard();
++  const { saved } = exact((await readJournal(lease)).entries, expected); guard();
++  if (saved.acknowledged) throw Error('ROUTINE_DECISION_ACKNOWLEDGED_INSPECT_ONLY');
++  const command = saved.command;
++  if (command.kind === 'apply') {
++    const fresh = await capturePlanSource44(lease); guard();
++    if (routineDecisionHash(fresh) !== routineDecisionHash(command.facts)) throw Error('ROUTINE_DECISION_SOURCE_CHANGED_INSPECT_ONLY');
++    await applyCurrentActualRoutine(fresh, lease, command.request);
++  } else if (command.kind === 'clear') {
++    await clearCurrentActualRoutine(lease, command.request);
++  } else {
++    const ledger = await getActualRoutineSnapshot(lease); guard();
++    if (routineDecisionHash(ledger.uses.find(row => row.id === command.event.id) ?? null) !== routineDecisionHash(command.event)) throw Error(ROUTINE_DECISION_CONFLICT);
++    await retractActualRoutineUse(lease, command.event.id, command.expectedHash, command.request);
++  }
++  guard();
++}
+diff --git a/apps/mobile/src/features/routine/routineRecords.test.ts b/apps/mobile/src/features/routine/routineRecords.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7d22e5938b7f586f0f50247447af3767d2434ea4
+--- /dev/null
++++ b/apps/mobile/src/features/routine/routineRecords.test.ts
+@@ -0,0 +1,55 @@
++import * as React from 'react';
++import { act, create, type ReactTestRenderer } from 'react-test-renderer';
++import { afterEach, expect, it, vi } from 'vitest';
++
++import RoutineRecordsScreen from '@/app/routine/records';
++import type { RecoverablePlanHookResult } from './usePlan';
++
++const ports = vi.hoisted(() => ({ source: undefined as unknown as RecoverablePlanHookResult, retry: vi.fn(async () => {}), back: vi.fn() }));
++vi.mock('react-native', () => ({ ScrollView: 'ScrollView', View: 'View' }));
++vi.mock('expo-router', () => ({ router: {}, useLocalSearchParams: () => ({}) }));
++vi.mock('@/components/ui', () => ({ Button: 'Button', RouteIconButton: 'RouteIconButton', Screen: 'Screen', Text: 'Text' }));
++vi.mock('./usePlan', () => ({ usePlan: () => ports.source }));
++vi.mock('./PlanHistoryPanel45', async () => {
++  const { createElement } = await import('react');
++  return { PlanHistoryPanel45: ({ canSave }: { canSave: boolean }) => createElement('PlanHistoryPanel45', { canSave }) };
++});
++vi.mock('@/lib/navigation/safeBack', () => ({ backOrReplace: ports.back, APP_YOU_ROUTE: '/(tabs)/you' }));
++let tree: ReactTestRenderer | undefined;
++afterEach(async () => { if (tree) await act(async () => tree!.unmount()); tree = undefined; vi.unstubAllGlobals(); });
++async function mount(overrides: Partial<RecoverablePlanHookResult> = {}) {
++  vi.stubGlobal('React', React); vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
++  ports.source = {
++    data: { plan: { am: [{ productId: 'a', name: 'Recorded cleanser', instruction: 'Never show advice here' }], pm: [] }, isExample: false, orderPersistenceUnavailable: false },
++    isLoading: false, isRefreshing: false, isError: false, isExample: false, sourceReady: true,
++    isSourceCurrent: () => true, retry: ports.retry, ...overrides,
++  } as RecoverablePlanHookResult;
++  await act(async () => { tree = create(React.createElement(RoutineRecordsScreen)); });
++}
++it('shows names and sequence only, with explicit snapshot saving through the existing history panel', async () => {
++  await mount();
++  const text = JSON.stringify(tree!.toJSON());
++  expect(text).toContain('Recorded cleanser'); expect(text).not.toContain('Never show advice here');
++  expect(text).toContain('It does not apply a plan');
++  expect(tree!.root.find(node => String(node.type) === 'PlanHistoryPanel45').props.canSave).toBe(true);
++});
++it.each(['loading', 'refreshing', 'failed', 'stale', 'example', 'owner-closed', 'order-unavailable'])('withholds source facts and saving when %s', async kind => {
++  await mount(kind === 'loading' ? { isLoading: true } : kind === 'refreshing' ? { isRefreshing: true } :
++    kind === 'failed' ? { isError: true } : kind === 'example' ? { isExample: true } :
++      kind === 'owner-closed' ? { sourceReady: false } : kind === 'order-unavailable' ?
++        { data: { plan: { am: [{ productId: 'a', name: 'Recorded cleanser' }], pm: [] }, isExample: false, orderPersistenceUnavailable: true } as unknown as RecoverablePlanHookResult['data'] } :
++        { isSourceCurrent: () => false });
++  expect(JSON.stringify(tree!.toJSON())).not.toContain('Recorded cleanser');
++  expect(tree!.root.find(node => String(node.type) === 'PlanHistoryPanel45').props.canSave).toBe(false);
++});
++it('offers explicit source recovery without creating a record', async () => {
++  await mount({ isError: true }); ports.retry.mockClear();
++  await act(async () => tree!.root.findAll(node => String(node.type) === 'Button')[0]!.props.onPress());
++  expect(ports.retry).toHaveBeenCalledTimes(1);
++  expect(tree!.root.find(node => String(node.type) === 'PlanHistoryPanel45').props.canSave).toBe(false);
++});
++it('returns a directly opened or reloaded record screen to its records hub', async () => {
++  await mount(); ports.back.mockClear();
++  await act(async () => tree!.root.find(node => String(node.type) === 'RouteIconButton').props.onPress());
++  expect(ports.back).toHaveBeenCalledWith(expect.anything(), '/(tabs)/you');
++});
+diff --git a/apps/mobile/src/features/routine/sequenceComparison.test.ts b/apps/mobile/src/features/routine/sequenceComparison.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a5af3b3fb862a53232ad5162ff73b4d3279198d
+--- /dev/null
++++ b/apps/mobile/src/features/routine/sequenceComparison.test.ts
+@@ -0,0 +1,29 @@
++import { expect, it } from 'vitest';
++import { sequenceComparisonLines } from './sequenceComparison';
++const a = { productId: 'a', name: 'Cleanser' }; const b = { productId: 'b', name: 'Moisturizer' };
++it('keeps absent actual evidence distinct from an explicitly empty phase', () => {
++  expect(sequenceComparisonLines(null, { am: [a], pm: [] }).join(' ')).toContain('first applied version');
++  expect(sequenceComparisonLines({ am: [], pm: [] }, { am: [a], pm: [] }).join(' ')).toContain('Morning: add Cleanser');
++});
++it('compares identity rather than same names and describes moving phases without rewriting use', () => {
++  const lines = sequenceComparisonLines({ am: [a], pm: [] }, { am: [{ ...a, productId: 'other' }], pm: [a] }).join(' ');
++  expect(lines).toContain('Morning: add Cleanser'); expect(lines).toContain('Morning: remove Cleanser');
++  expect(lines).toContain('Evening: add Cleanser'); expect(lines).toContain('Earlier versions and use entries stay unchanged');
++  expect(lines).not.toContain('same saved bottles');
++});
++it('distinguishes a rename from a new bottle and a real relative reorder from an inserted product', () => {
++  const original = { am: [a, b], pm: [] };
++  const renamed = sequenceComparisonLines(original, { am: [{ ...a, name: 'New factual label' }, b], pm: [] }).join(' ');
++  expect(renamed).toContain('recorded name changes from Cleanser to New factual label for the same saved bottle');
++  expect(renamed).not.toContain('Morning: add'); expect(renamed).not.toContain('relative order');
++  expect(sequenceComparisonLines(original, { am: [b, a], pm: [] }).join(' ')).toContain('relative order');
++  expect(sequenceComparisonLines(original, { am: [{ productId: 'c', name: 'New bottle' }, a, b], pm: [] }).join(' ')).not.toContain('relative order');
++});
++it('makes limits explicit even for matching sequences and does not mutate input snapshots', () => {
++  const input = Object.freeze({ am: Object.freeze([Object.freeze(a)]), pm: Object.freeze([]) }); const before = JSON.stringify(input);
++  const text = sequenceComparisonLines(input, input).join(' ');
++  expect(text).toContain('Morning: same saved bottles, recorded names and order');
++  expect(text).toContain('Bottle observations or other source facts may have changed');
++  expect(text).toContain('not a formula, compatibility or use comparison');
++  expect(JSON.stringify(input)).toBe(before);
++});
+diff --git a/apps/mobile/src/features/routine/sequenceComparison.ts b/apps/mobile/src/features/routine/sequenceComparison.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..23f6264733901306c50c4774d59d4a17b08af984
+--- /dev/null
++++ b/apps/mobile/src/features/routine/sequenceComparison.ts
+@@ -0,0 +1,30 @@
++import type { PlanHistoryStep45 } from './planHistory45';
++
++type Sequence = Readonly<{ am: readonly PlanHistoryStep45[]; pm: readonly PlanHistoryStep45[] }>;
++/** Free factual comparison of exact bottle identity, names, phase and relative
++ * order. No formula equivalence, use, compatibility or advanced advice inferred. */
++export function sequenceComparisonLines(previous: Sequence | null, reviewed: Sequence): readonly string[] {
++  if (!previous) return ['No previous owner-applied sequence is available for comparison. This will be the first applied version.'];
++  const lines: string[] = [];
++  for (const phase of ['am', 'pm'] as const) {
++    const label = phase === 'am' ? 'Morning' : 'Evening';
++    const before = previous[phase]; const after = reviewed[phase];
++    const oldIds = new Set(before.map(step => step.productId)); const newIds = new Set(after.map(step => step.productId));
++    const added = after.filter(step => !oldIds.has(step.productId)); const removed = before.filter(step => !newIds.has(step.productId));
++    for (const step of added) lines.push(`${label}: add ${step.name} to this phase.`);
++    for (const step of removed) lines.push(`${label}: remove ${step.name} from this phase. Earlier versions and use entries stay unchanged.`);
++    for (const step of after) {
++      const prior = before.find(item => item.productId === step.productId);
++      if (prior && prior.name !== step.name) lines.push(`${label}: recorded name changes from ${prior.name} to ${step.name} for the same saved bottle.`);
++    }
++    const oldOrder = before.filter(step => newIds.has(step.productId)).map(step => step.productId);
++    const newOrder = after.filter(step => oldIds.has(step.productId)).map(step => step.productId);
++    const reordered = JSON.stringify(oldOrder) !== JSON.stringify(newOrder);
++    if (reordered) lines.push(`${label}: relative order of retained bottles changes.`);
++    if (!added.length && !removed.length && !reordered && after.every(step => before.find(item => item.productId === step.productId)?.name === step.name)) {
++      lines.push(`${label}: same saved bottles, recorded names and order.`);
++    }
++  }
++  lines.push('Names and sequence only. Bottle observations or other source facts may have changed even when these sequences match. This is not a formula, compatibility or use comparison.');
++  return Object.freeze(lines);
++}
+diff --git a/apps/mobile/src/features/routine/usePlan.g2.test.ts b/apps/mobile/src/features/routine/usePlan.g2.test.ts
+index 110a3aac52a9f01c5ad6bd2daa2d316dd4173009..646c59f668b786f7317d7e0f27a0328ae660174a 100644
+--- a/apps/mobile/src/features/routine/usePlan.g2.test.ts
++++ b/apps/mobile/src/features/routine/usePlan.g2.test.ts
+@@ -252,3 +252,10 @@ describe('G2 routine order query integration', () => {
+     }
+   });
+ });
++
++// Existing source/owner fixtures explicitly represent an authenticated absence
++// of an applied actual routine. Real v5/store/Today integration has separate coverage.
++vi.mock('./actualRoutine', () => ({
++  loadActualRoutineSource: async (lease: HealthDataWriteLease) => ({ ledger: { schemaVersion: 1, ownerUserId: lease.ownerUserId, versions: [], uses: [] }, source: null }),
++  subscribeActualRoutineChanges: () => () => {},
++}));
+diff --git a/apps/mobile/src/features/routine/usePlan.ts b/apps/mobile/src/features/routine/usePlan.ts
+index 25d0800674375259218ba5e192553e1e99fe19f6..ba5fb23ba2abeb1d7f8c282020c59394dc907a59 100644
+--- a/apps/mobile/src/features/routine/usePlan.ts
++++ b/apps/mobile/src/features/routine/usePlan.ts
+@@ -1,5 +1,6 @@
+ import { useQuery, useQueryClient } from '@tanstack/react-query';
+-import { useMemo, useSyncExternalStore } from 'react';
++import { useEffect, useMemo, useSyncExternalStore } from 'react';
++import { loadActualRoutineSource, subscribeActualRoutineChanges, type ActualRoutineSource } from './actualRoutine';
+ 
+ import { useProfileBits } from '@/features/scheduler/profile';
+ import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
+@@ -49,6 +50,7 @@ const MAYA_PROFILE: RoutineGenerationProfile = {
+ };
+ 
+ export type PlanResult = {
++  actualRoutine?: ActualRoutineSource & { status: 'not-applied' | 'current' | 'needs-review' | 'cleared' };
+   plan: GeneratedPlan;
+   canonicalPlan: GeneratedPlan;
+   isExample: boolean;
+@@ -216,10 +218,32 @@ export function usePlan(): RecoverablePlanHookResult {
+       }
+     },
+   });
+-  const isLoading = shelf.isLoading || profile.isLoading || routineOrder.isLoading;
+-  const isError = shelf.isError || profile.isError || routineOrder.isError || inputProof.isError;
++  // An empty Shelf is not proof that the owner never applied (or cleared) a routine.
++  const actualRequired = orderLease !== undefined;
++  const actualKey = ['actualRoutine', authorityKey,
++    orderLease ? planInputQueryId(orderLease) : 'closed',
++    shelf.data ? planInputQueryId(shelf.data) : 'pending',
++    profile.data ? planInputQueryId(profile.data) : 'pending',
++    routineOrder.data ? planInputQueryId(routineOrder.data) : 'pending'] as const;
++  const actualEnabled = Boolean(orderLease && actualRequired && inputProof.data?.authorityKey === authorityKey &&
++    !shelf.isLoading && !profile.isLoading && !routineOrder.isLoading && !shelf.isError && !profile.isError && !routineOrder.isError);
++  const actual = useQuery({ queryKey: actualKey,
++    enabled: actualEnabled,
++    queryFn: async () => {
++      if (!orderLease) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
++      assertHealthDataWriteLease(orderLease);
++      const result = await loadActualRoutineSource(orderLease);
++      assertHealthDataWriteLease(orderLease);
++      return result;
++    }, retry: false, staleTime: Infinity, networkMode: 'always', structuralSharing: false,
++  });
++  useEffect(() => subscribeActualRoutineChanges(() => {
++    void queryClient.invalidateQueries({ queryKey: ['actualRoutine', authorityKey] });
++  }), [queryClient, authorityKey]);
++  const isLoading = shelf.isLoading || profile.isLoading || routineOrder.isLoading || (actualEnabled && actual.isPending);
++  const isError = shelf.isError || profile.isError || routineOrder.isError || inputProof.isError || (actualRequired && actual.isError);
+   const isRefreshing = Boolean(
+-    shelf.isFetching || profile.isFetching || routineOrder.isFetching || inputProof.isFetching,
++    shelf.isFetching || profile.isFetching || routineOrder.isFetching || inputProof.isFetching || (actualRequired && actual.isFetching),
+   );
+   const inputsReady = Boolean(
+     orderLease &&
+@@ -232,6 +256,8 @@ export function usePlan(): RecoverablePlanHookResult {
+     profile.data !== undefined &&
+     profile.data.source !== 'unavailable' &&
+     routineOrder.data !== undefined,
++    // The version read is authoritative, including confirmed absence. A failed
++    // completion record must not silently become an unversioned fallback.
+   );
+   function currentSourceCache(): boolean {
+     const proofData = inputProof.data;
+@@ -250,6 +276,7 @@ export function usePlan(): RecoverablePlanHookResult {
+         { key: ['skinProfileBits'], data: profile.data },
+         { key: routineOrderQueryKeyForLease(orderLease), data: routineOrder.data },
+         { key: inputProofKey, data: inputProof.data },
++        ...(actualRequired ? [{ key: actualKey, data: actual.data }] : []),
+       ].every(({ key, data }) => {
+         const current = queryClient.getQueryState(key);
+         return current?.status === 'success' && current.fetchStatus === 'idle' &&
+@@ -276,6 +303,7 @@ export function usePlan(): RecoverablePlanHookResult {
+       inputProof.refetch({ cancelRefetch: false, throwOnError: true }),
+       routineOrder.refetch({ cancelRefetch: true, throwOnError: true }),
+     ]);
++    if (actualRequired) await actual.refetch({ cancelRefetch: false, throwOnError: true });
+     assertHealthDataWriteLease(orderLease);
+     const nextShelf = queryClient.getQueryState(['shelf']);
+     const nextProfile = queryClient.getQueryState<{ source: string }>(['skinProfileBits']);
+@@ -293,7 +321,11 @@ export function usePlan(): RecoverablePlanHookResult {
+   // A successor editor must not initialize a new-authority draft from the old
+   // unscoped cache. Retain G2 data on same-authority refetch/error only after
+   // that authority has actually earned its input proof at least once.
+-  if (isLoading || !orderLease || routineOrder.data === undefined ||
++  // Keep current-authority canonical facts while the independent actual journal
++  // hydrates. Returning undefined here after an order save remounts G2's editor
++  // and loses its confirmed exit intent. Source readiness still denies every
++  // action until the actual journal read succeeds; absence is never inferred.
++  if (shelf.isLoading || profile.isLoading || routineOrder.isLoading || !orderLease || routineOrder.data === undefined ||
+       inputProof.data?.authorityKey !== authorityKey) {
+     // A failed/closed read is not a new empty routine. A genuine absent record
+     // is already represented by the store's successfully decoded empty value.
+@@ -332,6 +364,9 @@ export function usePlan(): RecoverablePlanHookResult {
+     // clinical sign-off; in dev the full starter matrix drives the plan.
+     const canonicalPlan = generatePlan(products, real, shelf.data?.conflictChoices);
+     const data: PlanResult = {
++      actualRoutine: actual.data ? { ...actual.data, status: actual.data.ledger.versions.at(-1)?.source === 'owner-cleared-local' ? 'cleared' : actual.data.ledger.versions.length === 0 ? 'not-applied' :
++        actual.data.source?.sourceHash === actual.data.ledger.versions.at(-1)?.sourceHash &&
++        JSON.stringify([actual.data.source?.am, actual.data.source?.pm]) === JSON.stringify([actual.data.ledger.versions.at(-1)?.am, actual.data.ledger.versions.at(-1)?.pm]) ? 'current' : 'needs-review' } : undefined,
+       plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
+       canonicalPlan,
+       isExample: false,
+@@ -350,12 +385,17 @@ export function usePlan(): RecoverablePlanHookResult {
+       isExample: false,
+     };
+   }
+-  const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE);
++  const cleared = actual.data?.ledger.versions.at(-1)?.source === 'owner-cleared-local';
++  const canonicalPlan: GeneratedPlan = cleared ? {
++    am: [], pm: [], cycle: null, ramp: [], safetyExclusions: [], cadenceWithheld: [], sequencingWithheld: [],
++    unplacedProducts: [], gaps: [], conflicts: [], conflictCoverageStatus: 'not_applicable', unsupportedConflictPairs: [],
++  } : generatePlan(MAYA_PRODUCTS, MAYA_PROFILE);
+   const data: PlanResult = {
++    actualRoutine: cleared && actual.data ? { ...actual.data, status: 'cleared' } : undefined,
+     plan: canonicalPlan,
+     canonicalPlan,
+-    isExample: true,
+-    profileLabel: routinePlanProfileLabel(null, true),
++    isExample: !cleared,
++    profileLabel: cleared ? 'APPLIED ROUTINE CLEARED' : routinePlanProfileLabel(null, true),
+     orderOverrides,
+     orderPersistenceUnavailable: routineOrder.isError,
+     activeProductIds: [],
+@@ -367,6 +407,6 @@ export function usePlan(): RecoverablePlanHookResult {
+     isLoading: false,
+     isError,
+     sourceReady,
+-    isExample: true,
++    isExample: !cleared,
+   };
+ }
+diff --git a/apps/mobile/src/features/routine/useProgress.ts b/apps/mobile/src/features/routine/useProgress.ts
+index 88848ca6f71c01dfb73431ec4ca4801e1d24f9b2..a636700234b5e7634b9e33a65a8c0126ad2c7216 100644
+--- a/apps/mobile/src/features/routine/useProgress.ts
++++ b/apps/mobile/src/features/routine/useProgress.ts
+@@ -1,4 +1,4 @@
+-import { onlineManager, useQuery } from '@tanstack/react-query';
++import { onlineManager, useQuery, useQueryClient } from '@tanstack/react-query';
+ import { useEffect, useState, useSyncExternalStore } from 'react';
+ 
+ import {
+@@ -10,7 +10,8 @@ import {
+   type HeatCell,
+   type WeekDay,
+ } from '@/features/streak/streak';
+-import { getCompletionSummary } from '@/features/today/completionsStore';
++import { getCompletionSummary, type CompletionSummary } from '@/features/today/completionsStore';
++import { subscribeActualRoutineChanges } from './actualRoutine';
+ import { currentCompletionSyncTimezone } from '@/features/today/completionSync';
+ import { useRoutineClock } from '@/features/today/useRoutineClock';
+ import { localDateString } from '@/features/today/useToday';
+@@ -47,6 +48,7 @@ export type { WeekDay, HeatCell } from '@/features/streak/streak';
+ export type DayState = WeekDay['state'];
+ 
+ export type ProgressData = {
++  actualActivity?: NonNullable<CompletionSummary['actualActivity']> & { today: number };
+   streak: number;
+   longest: number;
+   weeklyDone: number;
+@@ -119,6 +121,13 @@ async function loadServerAdherence(
+ }
+ 
+ export function useProgress() {
++  const client = useQueryClient();
++  useEffect(() => subscribeActualRoutineChanges(() => {
++    // Invalidation alone retains an initial in-flight read with no cached data.
++    // Retire that snapshot before asking for the newly committed activity.
++    void client.cancelQueries({ queryKey: ['progress'] }).then(() =>
++      client.invalidateQueries({ queryKey: ['progress'] }));
++  }), [client]);
+   const todayISO = useRoutineClock().localDate;
+   const published = useSyncExternalStore(
+     subscribeActiveHealthProcessingLeaseChanges,
+@@ -200,6 +209,8 @@ export function useProgress() {
+ 
+         lease.assertCurrent();
+         return {
++          ...(localSummary.actualActivity ? { actualActivity: { ...localSummary.actualActivity,
++            today: localSummary.actualActivity.days.find(day => day.date === todayISO)?.count ?? 0 } } : {}),
+           sourceGeneration: lease.generation,
+           streak: s.current,
+           longest,
+@@ -207,8 +218,8 @@ export function useProgress() {
+           week,
+           monthLabel: today.toLocaleDateString('en-US', { month: 'long' }),
+           heat: monthHeat(monthCounts, todayISO),
+-          graceUsed: s.freezeActive,
+-          lapsed: s.lapsed,
++          graceUsed: localSummary.actualActivity ? false : s.freezeActive,
++          lapsed: localSummary.actualActivity ? false : s.lapsed,
+           frozenDates: s.frozenDates,
+           serverStatus: server.status,
+         };
+@@ -218,8 +229,14 @@ export function useProgress() {
+   // React Query retains old totals on a read error; the existing route's
+   // unavailable/retry view must receive no purportedly current projection.
+   const retired = query.data !== undefined && query.data.sourceGeneration !== authority?.generation;
++  const readState = authority === null ? 'access-closed'
++    : query.isFetching ? 'loading'
++    : retired ? 'access-changed'
++    : query.isError ? 'unavailable'
++    : query.data === undefined ? 'loading' : 'ready';
+   return {
+     ...query,
++    readState,
+     isError: query.isError || retired,
+     data:
+       authority === null || retired || query.isFetching || query.isError ? undefined : query.data,
+diff --git a/apps/mobile/src/features/routine/useRamp.test.ts b/apps/mobile/src/features/routine/useRamp.test.ts
+index 645c1d7a02f8cd08f1fa7c7dc2ac4297a6740f3b..0b98e00955b1873f22022a7018279fe667588ba7 100644
+--- a/apps/mobile/src/features/routine/useRamp.test.ts
++++ b/apps/mobile/src/features/routine/useRamp.test.ts
+@@ -321,3 +321,10 @@ it('retained04 refreshes admitted local ramp state offline without pausing Today
+     assert.equal(mocks.stepUpRamp.mock.calls.length, 0);
+   } finally { onlineManager.setOnline(true); }
+ });
++
++// This fixture has no owner-applied plan. Actual-plan storage/authority and
++// bound-use paths execute with real encrypted stores in actualRoutineJourney.
++vi.mock('@/features/routine/actualRoutine', () => ({
++  loadActualRoutineSource: async (lease: { ownerUserId: string }) => ({ ledger: { schemaVersion: 1, ownerUserId: lease.ownerUserId, versions: [], uses: [] }, source: null }),
++  subscribeActualRoutineChanges: () => () => {},
++}));
+diff --git a/apps/mobile/src/features/scheduler/cycleReadiness.plan.test.ts b/apps/mobile/src/features/scheduler/cycleReadiness.plan.test.ts
+index 8ddb81c08a5f6784aeca082f7a6cbb23f5d11adf..b3004e6df561efe73f168000b215ad8d0123b3cb 100644
+--- a/apps/mobile/src/features/scheduler/cycleReadiness.plan.test.ts
++++ b/apps/mobile/src/features/scheduler/cycleReadiness.plan.test.ts
+@@ -1,4 +1,5 @@
+ import assert from 'node:assert/strict';
++import { randomUUID } from 'node:crypto';
+ import { createRequire } from 'node:module';
+ import * as React from 'react';
+ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+@@ -40,6 +41,8 @@ const mocks = vi.hoisted(() => ({
+     if (lease.expiresAt !== null && Date.now() >= lease.expiresAt) throw new Error('EXPIRED');
+   },
+ }));
++// Optional draft lifecycle imports require only the native UUID port here.
++vi.mock('expo-crypto', () => ({ randomUUID }));
+ vi.mock('react-native', () => ({
+   Platform: { OS: 'ios' }, View: 'View', ScrollView: 'ScrollView', Pressable: 'Pressable',
+   AppState: { addEventListener: () => ({ remove() {} }) },
+@@ -47,7 +50,16 @@ vi.mock('react-native', () => ({
+ }));
+ vi.mock('@/components/ui', () => ({ Button: 'Button', Screen: 'Screen', Text: 'Text',
+   RouteIconButton: 'RouteIconButton', TodayFocusHeader: 'TodayFocusHeader' }));
+-vi.mock('expo-router', () => ({ router: { replace: mocks.replace, push: vi.fn() } }));
++vi.mock('expo-router', async () => {
++  const { useEffect } = await import('react');
++  return {
++    router: { replace: mocks.replace, push: vi.fn() },
++    // Mounted Today is focused here: run the callback on mount and register
++    // its cleanup for unmount. These renderers do not simulate navigation blur;
++    // dedicated mounted panel tests separately cover normal focus retirement.
++    useFocusEffect: (callback: () => void | (() => void)) => useEffect(callback, [callback]),
++  };
++});
+ vi.mock('@/lib/navigation/safeBack', () => ({ APP_YOU_ROUTE: '/you', backOrReplace: mocks.back }));
+ vi.mock('@/theme/tokens', () => ({ colors: {} }));
+ vi.mock('@/theme/haptics', () => ({ haptics: { select: vi.fn(), success: mocks.success } }));
+@@ -550,3 +562,10 @@ describe('PLAN-R4 authority-scoped Start UI and committed capture', () => {
+     noStartFailure();
+   });
+ });
++
++// This fixture has no owner-applied plan. Actual-plan storage/authority and
++// bound-use paths execute with real encrypted stores in actualRoutineJourney.
++vi.mock('@/features/routine/actualRoutine', () => ({
++  loadActualRoutineSource: async (lease: { ownerUserId: string }) => ({ ledger: { schemaVersion: 1, ownerUserId: lease.ownerUserId, versions: [], uses: [] }, source: null }),
++  subscribeActualRoutineChanges: () => () => {},
++}));
+diff --git a/apps/mobile/src/features/settings/DataExportControls.test.ts b/apps/mobile/src/features/settings/DataExportControls.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..da6361769008b7d4c5644869cf77cc32e4d3c8cc
+--- /dev/null
++++ b/apps/mobile/src/features/settings/DataExportControls.test.ts
+@@ -0,0 +1,90 @@
++import { createElement } from 'react';
++import { act, create, type ReactTestRenderer } from 'react-test-renderer';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { beginAccountGenerationBoundary, endAccountGenerationBoundary } from '@/lib/auth/accountGeneration';
++import { DataExportControls } from './DataExportControls';
++
++const mocks = vi.hoisted(() => ({ export: vi.fn(), cleanup: vi.fn() }));
++vi.mock('react-native', () => ({ View: 'View' }));
++vi.mock('@/components/ui', () => ({ Button: 'Button', Text: 'Text' }));
++vi.mock('./actions', () => ({ exportDataWithOutcome: mocks.export }));
++vi.mock('@/lib/storage/plaintextStaging', () => ({ retryPlaintextStagingRecovery: mocks.cleanup }));
++let renderer: ReactTestRenderer | null = null;
++const button = (label: string) => renderer!.root.findByProps({ label }).props;
++async function mount(ownerUserId = 'owner-a', source?: unknown) {
++  await act(async () => { renderer = create(createElement(DataExportControls, { ownerUserId, source })); });
++}
++beforeEach(() => {
++  (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
++  mocks.export.mockReset().mockResolvedValue({ shared: false, cleanup: 'removed' });
++  mocks.cleanup.mockReset().mockResolvedValue(undefined);
++});
++afterEach(async () => { if (renderer) await act(async () => renderer?.unmount()); renderer = null; });
++
++describe('shared active and paused account export controls', () => {
++  it('does not let an old Cancel abort a later same-owner export', async () => {
++    let resolve!: (value: { shared: boolean; cleanup: string }) => void;
++    mocks.export.mockImplementation(() => new Promise(done => { resolve = done; }));
++    await mount();
++    await act(async () => button('Export my data').onPress());
++    const obsolete = button('Cancel export preparation').onPress;
++    await act(async () => resolve({ shared: false, cleanup: 'removed' }));
++    await act(async () => button('Export my data').onPress());
++    const signal = mocks.export.mock.calls[1][0] as AbortSignal;
++    await act(async () => obsolete());
++    expect(signal.aborted).toBe(false);
++    await act(async () => button('Cancel export preparation').onPress());
++    expect(signal.aborted).toBe(true);
++    await act(async () => resolve({ shared: false, cleanup: 'removed' }));
++  });
++
++  it('latches duplicate export presses and rejects an old cleanup retry', async () => {
++    mocks.export.mockResolvedValue({ shared: false, cleanup: 'pending' });
++    await mount();
++    const press = button('Export my data').onPress;
++    await act(async () => { press(); press(); });
++    expect(mocks.export).toHaveBeenCalledTimes(1);
++    const retry = button('Retry temporary export cleanup').onPress;
++    await act(async () => retry());
++    await act(async () => retry());
++    expect(mocks.cleanup).toHaveBeenCalledTimes(1);
++    expect(mocks.export).toHaveBeenCalledTimes(1);
++  });
++
++  it('keeps cleanup pending after a failed retry and never claims removal', async () => {
++    mocks.export.mockResolvedValue({ shared: true, cleanup: 'pending' });
++    mocks.cleanup.mockRejectedValue(new Error('synthetic storage unavailable'));
++    await mount();
++    await act(async () => button('Export my data').onPress());
++    expect(JSON.stringify(renderer!.toJSON())).toContain('does not confirm delivery');
++    await act(async () => button('Retry temporary export cleanup').onPress());
++    expect(button('Export my data').disabled).toBe(true);
++    expect(JSON.stringify(renderer!.toJSON())).toContain('cleanup is still pending');
++    expect(JSON.stringify(renderer!.toJSON())).not.toContain('file was removed');
++  });
++
++  it('retires a held export and ignores its result after source/owner replacement', async () => {
++    let resolve!: (value: { shared: boolean; cleanup: string }) => void;
++    mocks.export.mockImplementationOnce(() => new Promise(done => { resolve = done; }));
++    await mount();
++    await act(async () => button('Export my data').onPress());
++    const original = mocks.export.mock.calls[0][0] as AbortSignal;
++    await act(async () => renderer!.update(createElement(DataExportControls, { ownerUserId: 'owner-b', source: {} })));
++    expect(original.aborted).toBe(true);
++    await act(async () => button('Export my data').onPress());
++    expect(mocks.export).toHaveBeenCalledTimes(2);
++    await act(async () => resolve({ shared: true, cleanup: 'removed' }));
++    expect(JSON.stringify(renderer!.toJSON())).not.toContain('system sharing call completed');
++    expect(mocks.export).toHaveBeenCalledTimes(2);
++  });
++
++  it('refuses a captured export after A-to-B-to-A identity retirement', async () => {
++    await mount();
++    const obsolete = button('Export my data').onPress;
++    beginAccountGenerationBoundary(); endAccountGenerationBoundary();
++    beginAccountGenerationBoundary(); endAccountGenerationBoundary();
++    await act(async () => obsolete());
++    expect(mocks.export).not.toHaveBeenCalled();
++    expect(mocks.cleanup).not.toHaveBeenCalled();
++  });
++});
+diff --git a/apps/mobile/src/features/settings/DataExportControls.tsx b/apps/mobile/src/features/settings/DataExportControls.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..28dbae2ad0bc3e94c2dfeadba9cc14bf3adde398
+--- /dev/null
++++ b/apps/mobile/src/features/settings/DataExportControls.tsx
+@@ -0,0 +1,83 @@
++import { useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
++import { View } from 'react-native';
++
++import { Button, Text } from '@/components/ui';
++import { assertAccountIdentityGeneration, captureAccountIdentityGeneration } from '@/lib/auth/accountGeneration';
++import { activeHealthProcessingLeaseSnapshot, subscribeActiveHealthProcessingLeaseChanges } from '@/lib/consent/healthProcessingEpoch';
++import { retryPlaintextStagingRecovery } from '@/lib/storage/plaintextStaging';
++import { exportDataWithOutcome } from './actions';
++
++type ExportState = Readonly<{ scope: object; phase: 'idle' | 'preparing' | 'cleanup'; cleanupPending: boolean; feedback: string | null; operation?: object }>;
++
++/** The same account-rights export/recovery behavior in the active and paused
++ * shells. This scope only retires actions; storage still verifies its owner. */
++export function DataExportControls({ ownerUserId, source, disabled = false, onStart }: {
++  ownerUserId: string | null; source?: unknown; disabled?: boolean; onStart?: () => void;
++}) {
++  const identity = captureAccountIdentityGeneration();
++  const health = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);
++  const scope = useMemo(() => Object.freeze({ ownerUserId, identity, health, source }), [ownerUserId, identity, health, source]);
++  const liveScope = useRef<object | null>(scope);
++  const disabledRef = useRef(disabled);
++  useLayoutEffect(() => { disabledRef.current = disabled; }, [disabled]);
++  const flight = useRef<{ scope: object; controller: AbortController } | null>(null);
++  const [state, setState] = useState<ExportState>(() => ({ scope, phase: 'idle', cleanupPending: false, feedback: null }));
++  const liveState = useRef(state);
++  const publish = (next: ExportState) => { liveState.current = next; setState(next); };
++  useLayoutEffect(() => {
++    liveScope.current = scope;
++    if (liveState.current.scope !== scope) publish({ scope, phase: 'idle', cleanupPending: false, feedback: null });
++    return () => {
++      if (liveScope.current === scope) liveScope.current = null;
++      if (flight.current?.scope === scope) {
++        const retired = flight.current;
++        flight.current = null;
++        retired.controller.abort();
++      }
++    };
++  }, [scope]);
++  const current = () => {
++    try { assertAccountIdentityGeneration(identity); }
++    catch { return false; }
++    return liveScope.current === scope && activeHealthProcessingLeaseSnapshot() === health;
++  };
++  const shown = state.scope === scope ? state : { scope, phase: 'idle' as const, cleanupPending: false, feedback: null };
++
++  async function start(cleanupOnly: boolean, expected: ExportState) {
++    if (liveState.current !== expected || !current() || disabledRef.current || flight.current || (!cleanupOnly && liveState.current.scope === scope && liveState.current.cleanupPending)) return;
++    const operation = { scope, controller: new AbortController() };
++    flight.current = operation;
++    publish({ scope, phase: cleanupOnly ? 'cleanup' : 'preparing', cleanupPending: cleanupOnly, feedback: null, operation });
++    onStart?.();
++    try {
++      if (cleanupOnly) {
++        await retryPlaintextStagingRecovery();
++        if (current() && flight.current === operation) publish({ scope, phase: 'idle', cleanupPending: false,
++          feedback: 'Pending temporary-file cleanup completed. Copies in another app are unchanged.' });
++      } else {
++        const result = await exportDataWithOutcome(operation.controller.signal);
++        if (!current() || flight.current !== operation) return;
++        publish({ scope, phase: 'idle', cleanupPending: result.cleanup === 'pending', feedback:
++          `${result.shared ? 'The system sharing call completed. This does not confirm delivery.' : 'The export sheet is unavailable on this device.'} ${result.cleanup === 'pending'
++            ? 'Temporary-file removal is not confirmed. Retry cleanup before another export. Copies in another app cannot be recalled.'
++            : 'The temporary export file was removed.'}` });
++      }
++    } catch {
++      if (current() && flight.current === operation) publish({ scope, phase: 'idle', cleanupPending: true, feedback:
++        cleanupOnly ? 'Temporary-file cleanup is still pending. Retry when device storage is available. No new export was created.' :
++          `${operation.controller.signal.aborted ? 'Export preparation was canceled.' : 'Export could not be confirmed.'} Temporary-file cleanup is not confirmed. Retry cleanup before another export. Copies in another app cannot be recalled.` });
++    } finally {
++      if (flight.current === operation) flight.current = null;
++    }
++  }
++  return <View>
++    <Button className="mt-2" label={shown.phase === 'preparing' ? 'Preparing...' : 'Export my data'} variant="ghost"
++      disabled={disabled || shown.phase !== 'idle' || shown.cleanupPending} onPress={() => void start(false, shown)} />
++    {shown.phase === 'preparing' ? <Button label="Cancel export preparation" variant="ghost" onPress={() => {
++      if (current() && liveState.current === shown && shown.operation === flight.current) flight.current.controller.abort();
++    }} /> : null}
++    {shown.cleanupPending ? <Button label={shown.phase === 'cleanup' ? 'Removing temporary exports…' : 'Retry temporary export cleanup'} variant="ghost"
++      disabled={disabled || shown.phase !== 'idle'} onPress={() => void start(true, shown)} /> : null}
++    {shown.feedback ? <Text accessibilityRole="alert" accessibilityLiveRegion="polite" variant="bodySm" tone="muted" className="mt-3">{shown.feedback}</Text> : null}
++  </View>;
++}
+diff --git a/apps/mobile/src/features/settings/accountDeletionClientState.test.ts b/apps/mobile/src/features/settings/accountDeletionClientState.test.ts
+index 53174c74fa8a528708cadd0dba886cfa71a0cf5c..6093a94cce3ca2d60d7c74d129bb1184a7c82d12 100644
+--- a/apps/mobile/src/features/settings/accountDeletionClientState.test.ts
++++ b/apps/mobile/src/features/settings/accountDeletionClientState.test.ts
+@@ -22,7 +22,7 @@ vi.mock('expo-crypto', () => ({
+ }));
+ 
+ vi.mock('expo-secure-store', () => ({
+-  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'WHEN_UNLOCKED_THIS_DEVICE_ONLY',
++  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
+   isAvailableAsync: vi.fn(),
+   getItemAsync: vi.fn(),
+   setItemAsync: vi.fn(),
+@@ -77,7 +77,7 @@ describe('durable mobile account-deletion state', () => {
+     expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
+       ACCOUNT_DELETION_CLIENT_STATE_KEY,
+       JSON.stringify(record),
+-      { keychainAccessible: 'WHEN_UNLOCKED_THIS_DEVICE_ONLY' },
++      { keychainAccessible: 7 },
+     );
+     expect(isAccountActivityBlockedForDeletion()).toBe(true);
+   });
+@@ -116,7 +116,7 @@ describe('durable mobile account-deletion state', () => {
+     expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
+       ACCOUNT_DELETION_CLIENT_STATE_KEY,
+       JSON.stringify(next),
+-      { keychainAccessible: 'WHEN_UNLOCKED_THIS_DEVICE_ONLY' },
++      { keychainAccessible: 7 },
+     );
+   });
+ 
+@@ -238,7 +238,7 @@ describe('durable mobile account-deletion state', () => {
+     expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
+       ACCOUNT_DELETION_CLIENT_STATE_KEY,
+       JSON.stringify(completed),
+-      { keychainAccessible: 'WHEN_UNLOCKED_THIS_DEVICE_ONLY' },
++      { keychainAccessible: 7 },
+     );
+   });
+ 
+diff --git a/apps/mobile/src/features/settings/accountDeletionForeignOwnerPreservation.test.ts b/apps/mobile/src/features/settings/accountDeletionForeignOwnerPreservation.test.ts
+index 2e3ed43c147a5316082bd3bfee42438a8534222b..3821a89b7565699f1559194ffe1b212ed912245c 100644
+--- a/apps/mobile/src/features/settings/accountDeletionForeignOwnerPreservation.test.ts
++++ b/apps/mobile/src/features/settings/accountDeletionForeignOwnerPreservation.test.ts
+@@ -1,4 +1,5 @@
+ import { beforeEach, describe, expect, it, vi } from 'vitest';
++import AsyncStorage from '@react-native-async-storage/async-storage';
+ 
+ import { prepareLocalDataForSession } from '@/lib/auth/localAccountIsolation';
+ import {
+@@ -13,7 +14,7 @@ import {
+   retainLocalDataOwnerForSignedOutRestore,
+ } from '@/lib/auth/sessionOwner';
+ 
+-import { finalizeCompletedAccountDeletion } from './accountDeletionRecovery';
++import { completeAccountDeletionLocalSignOut, finalizeCompletedAccountDeletion } from './accountDeletionRecovery';
+ 
+ const OWNER_B = 'b2'.repeat(32);
+ const storage = new Map<string, string>();
+@@ -85,7 +86,8 @@ vi.mock('@/features/settings/localPrivateData', () => ({
+ }));
+ 
+ vi.mock('@/lib/analytics/track', () => ({ resetAnalyticsIdentity: vi.fn(async () => {}) }));
+-vi.mock('@/lib/auth/accountGeneration', () => ({
++vi.mock('@/lib/auth/accountGeneration', async (importOriginal) => ({
++  ...await importOriginal<typeof import('@/lib/auth/accountGeneration')>(),
+   beginAccountGenerationBoundary: vi.fn(),
+   endAccountGenerationBoundary: vi.fn(),
+   waitForAccountGenerationOperationsToSettle: vi.fn(async () => {}),
+@@ -344,4 +346,28 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
+       await clearLocalDataCleanupRequired();
+     }
+   });
++
++  it.each(['ownerless', 'retained-owner'] as const)(
++    'does not destroy the recovery session until the exact %s preservation proof is durably read back', async mode => {
++      storage.set('synthetic-private-record', 'retained synthetic ciphertext');
++      if (mode === 'retained-owner') await claimLocalDataOwnership('user-b');
++      const clearSession = vi.fn(async () => {});
++      const clearIsolatedState = vi.fn(async () => {});
++      const dependencies = { clearSession, clearIsolatedState,
++        clearAuthDerivedActivity: vi.fn(async () => {}),
++        retainLocalDataOwner: retainLocalDataOwnerForSignedOutRestore,
++        quarantineUnclaimedLocalData: quarantineUnclaimedLocalDataForSignedOutRestore };
++      const options = { clearSession: true, clearIsolatedState: false,
++        retainLocalDataOwner: mode === 'retained-owner', quarantineUnclaimedLocalData: mode === 'ownerless' };
++      vi.mocked(AsyncStorage.setItem).mockImplementationOnce(async () => {});
++      await expect(completeAccountDeletionLocalSignOut(dependencies, options)).rejects.toThrow('LOCAL_DATA_OWNER_PROOF_UNCONFIRMED');
++      expect(clearSession).not.toHaveBeenCalled();
++      expect(clearIsolatedState).not.toHaveBeenCalled();
++      expect(storage.get('synthetic-private-record')).toBe('retained synthetic ciphertext');
++      expect(storage.has(mode === 'ownerless' ? LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY : LOCAL_DATA_RETAINED_OWNER_HASH_KEY)).toBe(false);
++      await completeAccountDeletionLocalSignOut(dependencies, options);
++      expect(clearSession).toHaveBeenCalledTimes(1);
++      await expect(readLocalDataOwnership(null)).resolves.toBe('retained');
++      expect(storage.get('synthetic-private-record')).toBe('retained synthetic ciphertext');
++    });
+ });
+diff --git a/apps/mobile/src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts b/apps/mobile/src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts
+index 6b9e08c863142125584bf70597a974a22592d9d1..529b934bc854d7fc29b02cd969218bcf61cf84c6 100644
+--- a/apps/mobile/src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts
++++ b/apps/mobile/src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts
+@@ -41,7 +41,7 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
+   },
+ }));
+ vi.mock('expo-secure-store', () => ({
+-  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'when-unlocked',
++  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
+   isAvailableAsync: vi.fn(async () => true),
+   getItemAsync: vi.fn(),
+   setItemAsync: vi.fn(),
+diff --git a/apps/mobile/src/features/settings/actions.test.ts b/apps/mobile/src/features/settings/actions.test.ts
+index cee3a19e480cce12fea8b86bdd01951d56fb755a..fc53059e44c54e6a2adfa172c0a55241629bd011 100644
+--- a/apps/mobile/src/features/settings/actions.test.ts
++++ b/apps/mobile/src/features/settings/actions.test.ts
+@@ -9,10 +9,12 @@ import {
+   waitForAccountGenerationOperationsToSettle,
+ } from '@/lib/auth/accountGeneration';
+ import { BRAND } from '@/lib/brand';
++import { createPlaintextStagingCoordinator } from '@/lib/storage/plaintextStagingCore';
+ 
+ import {
+   deleteAccount,
+   exportData,
++  exportDataWithOutcome,
+   isAcceptedAccountDeletionLocalSignOutIncomplete,
+   isAccountDeletionAuthSessionUnavailable,
+   withdrawHealthDataConsent,
+@@ -223,6 +225,7 @@ const mocks = vi.hoisted(() => ({
+   startRevenueCatDeletionQuiesce: vi.fn(),
+   runWithSupabaseAccountDeletionRequestPermit: vi.fn(),
+   writeAsStringAsync: vi.fn(),
++  readAsStringAsync: vi.fn(),
+ }));
+ 
+ vi.mock('@/features/settings/accountDeletionBarrier', () => ({
+@@ -237,6 +240,7 @@ vi.mock('expo-file-system/legacy', () => ({
+   cacheDirectory: 'file://cache/',
+   deleteAsync: mocks.deleteAsync,
+   writeAsStringAsync: mocks.writeAsStringAsync,
++  readAsStringAsync: mocks.readAsStringAsync,
+ }));
+ 
+ vi.mock('expo-sharing', () => ({
+@@ -389,8 +393,14 @@ describe('settings data export', () => {
+     mocks.markPlaintextStagingState.mockResolvedValue(undefined);
+     mocks.signOut.mockResolvedValue(undefined);
+     mocks.writeAsStringAsync.mockResolvedValue(undefined);
++    mocks.readAsStringAsync.mockReset().mockImplementation(async (uri: string) => [...mocks.writeAsStringAsync.mock.calls].reverse().find(call => call[0] === uri)?.[1]);
+   });
+ 
++  it('refuses an unverified JSON export before native handoff and cleans the reserved file', async () => {
++    mocks.readAsStringAsync.mockResolvedValueOnce('truncated JSON');
++    await expect(exportData()).rejects.toThrow('FILE_WRITE_UNCONFIRMED');
++    expect(mocks.shareAsync).not.toHaveBeenCalled(); expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
++  });
+   it('writes, shares, and deletes a one-time export file when sharing is available', async () => {
+     mocks.sharingAvailable.mockResolvedValueOnce(true);
+     mocks.shareAsync.mockResolvedValueOnce(undefined);
+@@ -454,6 +464,44 @@ describe('settings data export', () => {
+     expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
+   });
+ 
++  it('uses the real staging journal to block a repeat export after failed removal, then recovers without a second retained file', async () => {
++    // Only device filesystem/storage ports are synthetic. The production export
++    // action and journal transitions run together, including a recreated coordinator.
++    const journal = new Map<string, string>();
++    const files = new Map<string, string>();
++    let sequence = 0;
++    let failRemoval = true;
++    const deps = {
++      cacheDirectory: 'file://cache/', createOperationId: () => (++sequence).toString(16).padStart(32, '0'), now: Date.now,
++      storage: { getItem: async (key: string) => journal.get(key) ?? null,
++        setItem: async (key: string, value: string) => { journal.set(key, value); },
++        removeItem: async (key: string) => { journal.delete(key); } },
++      fileSystem: { makeDirectoryAsync: async () => {}, getInfoAsync: async (uri: string) => ({ exists: uri.endsWith('/') || files.has(uri) }),
++        readDirectoryAsync: async (uri: string) => [...files.keys()].filter(key => key.startsWith(uri)).map(key => key.slice(uri.length)),
++        deleteAsync: async (uri: string) => { if (failRemoval) throw new Error('SYNTHETIC_REMOVAL_FAILED'); files.delete(uri); } },
++    };
++    const connect = () => {
++      const coordinator = createPlaintextStagingCoordinator(deps);
++      mocks.reservePlaintextStaging.mockImplementation(coordinator.reserve);
++      mocks.markPlaintextStagingState.mockImplementation(coordinator.markState);
++      mocks.cleanupPlaintextStaging.mockImplementation(coordinator.cleanup);
++      return coordinator;
++    };
++    connect();
++    mocks.writeAsStringAsync.mockImplementation(async (uri: string, text: string) => { files.set(uri, text); });
++    mocks.sharingAvailable.mockResolvedValue(true); mocks.shareAsync.mockResolvedValue(undefined);
++    await expect(exportDataWithOutcome()).resolves.toEqual({ shared: true, cleanup: 'pending' });
++    expect(files.size).toBe(1);
++    const resumed = connect();
++    await expect(exportDataWithOutcome()).rejects.toThrow('PLAINTEXT_STAGING_CLEANUP_REQUIRED');
++    expect(files.size).toBe(1); expect(sequence).toBe(1);
++    expect(mocks.writeAsStringAsync).toHaveBeenCalledTimes(1); expect(mocks.shareAsync).toHaveBeenCalledTimes(1);
++    failRemoval = false;
++    await expect(resumed.scavenge()).resolves.toBe(1);
++    await expect(exportDataWithOutcome()).resolves.toEqual({ shared: true, cleanup: 'removed' });
++    expect(files.size).toBe(0); expect(journal.size).toBe(0);
++  });
++
+   it('returns false and deletes the export file when native sharing is unavailable', async () => {
+     mocks.sharingAvailable.mockResolvedValueOnce(false);
+ 
+@@ -514,6 +562,16 @@ describe('settings data export', () => {
+ 
+     expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
+   });
++  it.each([true, false])('reports sharing=%s independently of unconfirmed temporary removal', async (shared) => {
++    mocks.sharingAvailable.mockResolvedValueOnce(shared);
++    mocks.shareAsync.mockResolvedValueOnce(undefined);
++    mocks.cleanupPlaintextStaging.mockRejectedValueOnce(new Error('cache busy'));
++    await expect(exportDataWithOutcome()).resolves.toEqual({ shared, cleanup: 'pending' });
++  });
++  it('reports confirmed removal separately when the share sheet is unavailable', async () => {
++    mocks.sharingAvailable.mockResolvedValueOnce(false);
++    await expect(exportDataWithOutcome()).resolves.toEqual({ shared: false, cleanup: 'removed' });
++  });
+ 
+   it('shares a clearly scoped device-only bundle when the backend is not configured', async () => {
+     mocks.isSupabaseConfigured = false;
+@@ -674,6 +732,99 @@ describe('settings data export', () => {
+     expect(mocks.shareAsync).not.toHaveBeenCalled();
+   });
+ 
++  it.each([
++    ['identity', 'account', 'resolve'], ['identity', 'account', 'reject'],
++    ['identity', 'cancel', 'resolve'], ['identity', 'cancel', 'reject'],
++    ['server', 'account', 'resolve'], ['server', 'account', 'reject'],
++    ['server', 'cancel', 'resolve'], ['server', 'cancel', 'reject'],
++  ] as const)('retires abort-ignoring export %s on %s and ignores late %s', async (stage, retirement, settlement) => {
++    const remote = deferred<unknown>(); const controller = new AbortController();
++    const read = stage === 'identity' ? mocks.getUser : mocks.invoke;
++    read.mockReturnValueOnce(remote.promise);
++    let outcome: unknown;
++    const pending = exportDataWithOutcome(controller.signal).catch(error => { outcome = error; });
++    await vi.waitFor(() => expect(read).toHaveBeenCalledOnce());
++    if (retirement === 'account') beginAccountGenerationBoundary();
++    else controller.abort();
++    try {
++      await vi.waitFor(() => expect(outcome).toMatchObject({ message: retirement === 'account' ? ACCOUNT_GENERATION_CHANGED : 'DATA_EXPORT_RETIRED' }), { timeout: 300 });
++      await waitForAccountGenerationOperationsToSettle();
++      expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
++      if (stage === 'server') expect(mocks.invoke.mock.calls[0]![1].signal.aborted).toBe(true);
++    } finally {
++      if (settlement === 'reject') remote.reject(new Error('synthetic late transport rejection'));
++      else remote.resolve(stage === 'identity' ? { data: { user: { id: 'user-1' } }, error: null }
++        : { data: completeServerExport(), error: null });
++      await pending;
++      if (retirement === 'account') endAccountGenerationBoundary();
++    }
++    await new Promise(resolve => setTimeout(resolve, 0));
++    expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
++    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
++    expect(mocks.shareAsync).not.toHaveBeenCalled();
++    if (stage === 'identity') expect(mocks.invoke).not.toHaveBeenCalled();
++  });
++
++  it.each(['identity', 'server'] as const)('observes cancellation when the %s read aborts and throws synchronously', async stage => {
++    const controller = new AbortController();
++    const read = stage === 'identity' ? mocks.getUser : mocks.invoke;
++    read.mockImplementationOnce(() => { controller.abort(); throw new Error('synthetic synchronous transport refusal'); });
++    await expect(exportDataWithOutcome(controller.signal)).rejects.toThrow('DATA_EXPORT_RETIRED');
++    await waitForAccountGenerationOperationsToSettle();
++    await new Promise(resolve => setTimeout(resolve, 0));
++    expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
++  });
++
++  it.each(['availability', 'handoff'] as const)('retires an abort-ignoring native export %s before the account cleanup drain', async (stage) => {
++    const native = deferred<boolean | void>();
++    mocks.sharingAvailable.mockResolvedValue(true);
++    if (stage === 'availability') mocks.sharingAvailable.mockReturnValueOnce(native.promise);
++    else mocks.shareAsync.mockReturnValueOnce(native.promise);
++    let outcome: unknown;
++    const pending = exportDataWithOutcome().then(value => { outcome = value; }, error => { outcome = error; });
++    await vi.waitFor(() => expect(stage === 'availability' ? mocks.sharingAvailable : mocks.shareAsync).toHaveBeenCalledOnce());
++    beginAccountGenerationBoundary();
++    try {
++      await vi.waitFor(() => expect(outcome).toMatchObject({ message: ACCOUNT_GENERATION_CHANGED }), { timeout: 300 });
++      await waitForAccountGenerationOperationsToSettle();
++      expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
++      if (stage === 'availability') expect(mocks.shareAsync).not.toHaveBeenCalled();
++    } finally {
++      native.resolve(stage === 'availability' ? true : undefined);
++      await pending;
++      endAccountGenerationBoundary();
++    }
++    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledTimes(1);
++  });
++
++  it.each(['availability', 'handoff'] as const)('cancels an abort-ignoring native export %s without waiting or sharing a later availability result', async (stage) => {
++    const native = deferred<boolean | void>();
++    const controller = new AbortController();
++    mocks.sharingAvailable.mockResolvedValue(true);
++    if (stage === 'availability') mocks.sharingAvailable.mockReturnValueOnce(native.promise);
++    else mocks.shareAsync.mockReturnValueOnce(native.promise);
++    let outcome: unknown;
++    const pending = exportDataWithOutcome(controller.signal).catch(error => { outcome = error; });
++    await vi.waitFor(() => expect(stage === 'availability' ? mocks.sharingAvailable : mocks.shareAsync).toHaveBeenCalledOnce());
++    controller.abort();
++    try {
++      await vi.waitFor(() => expect(outcome).toMatchObject({ message: 'DATA_EXPORT_RETIRED' }), { timeout: 300 });
++      await waitForAccountGenerationOperationsToSettle();
++      expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledTimes(1);
++    } finally { native.resolve(stage === 'availability' ? true : undefined); await pending; }
++    if (stage === 'availability') expect(mocks.shareAsync).not.toHaveBeenCalled();
++  });
++
++  it('observes retirement even when the native bridge aborts and throws synchronously', async () => {
++    const controller = new AbortController();
++    mocks.sharingAvailable.mockResolvedValue(true);
++    mocks.shareAsync.mockImplementationOnce(() => { controller.abort(); throw new Error('SYNTHETIC_NATIVE_BRIDGE_THROW'); });
++    await expect(exportDataWithOutcome(controller.signal)).rejects.toThrow('DATA_EXPORT_RETIRED');
++    await waitForAccountGenerationOperationsToSettle();
++    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledTimes(1);
++    await new Promise(resolve => setTimeout(resolve, 0));
++  });
++
+   it('rejects an A-to-B-to-A boundary during the local snapshot before staging plaintext', async () => {
+     const localSnapshot = deferred<unknown>();
+     mocks.collectLocalDeviceExportData.mockReturnValueOnce(localSnapshot.promise);
+@@ -766,15 +917,17 @@ describe('settings data export', () => {
+     expect(exportContract).toContain('!hasExactKeys(parsed, expectedTopLevelKeys)');
+     expect(actions).toContain('readLocalDataOwnership(expectedUserId)');
+     expect(actions).toContain("serverAccountDataStatus = 'included'");
+-    expect(source).toContain('onSuccess: (shared)');
+-    expect(source).toContain('if (!shared)');
+-    expect(source).toContain('title: EXPORT_UNAVAILABLE_TITLE');
+-    expect(source).toContain('message: EXPORT_UNAVAILABLE_MESSAGE');
+-    expect(source).toContain('title: EXPORT_FAILED_TITLE');
+-    expect(source).toContain('message,');
++    const controls = readSource('features/settings/DataExportControls.tsx');
++    expect(source).toContain('<DataExportControls ownerUserId={healthDataOwnerId}');
++    expect(controls).toContain('exportDataWithOutcome(operation.controller.signal)');
++    expect(controls).toContain("result.cleanup === 'pending'");
++    expect(controls).toContain('The export sheet is unavailable on this device.');
++    expect(controls).toContain('The temporary export file was removed.');
++    expect(controls).toContain('Retry temporary export cleanup');
++    expect(controls).toContain('This does not confirm delivery.');
++    expect(controls).toContain('Temporary-file cleanup is not confirmed.');
++    expect(controls).toContain('accessibilityRole="alert"');
+     expect(source).toContain('function InlineNoticeCard(');
+-    expect(source).toContain('accessibilityRole="alert"');
+-    expect(source).toContain('Export unavailable');
+     expect(source).toContain('Includes data saved to your account and on this device:');
+     expect(source).toContain('completion history, preferences, Progress notes,');
+     expect(source).toContain('pending or terminal shelf and completion sync records.');
+@@ -1642,12 +1795,13 @@ describe('settings account deletion and consent withdrawal', () => {
+   it('keeps You-tab destructiv

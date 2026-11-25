@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-11-25T15:36:39.609523+00:00",
+  "committed_head": "cd086e783ad6bddeefb035c59e8d26f28819fc11",
+  "committed_tree": "5d1eb077e119298e29ad6322f18993e0bdb3c68a",
+  "reviewed_baseline_head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+  "reviewed_baseline_tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+  "recent_commits": [
+    "cd086e783ad6bddeefb035c59e8d26f28819fc11 Carry authenticated mobile originals through persistent retirement and erasure",
+    "0e5facbce26aa7aa394f082a6808590cbc53684c Review exact applied and intended sequences in owner briefs and pre-visit reports",
+    "2a3cf31e56a2e9e314b54756e3072455f5dbfdaa Inspect exact catalog decision receipts through a dedicated read candidate",
+    "d67a912d062737595026bd7d2e66bc9865762499 Migrate canonical routine history and adjudicate witnessed custody attempts",
+    "6a5688d42cd40cddf7216b35f819769c9560ff05 Require verified custody freshness for professional archive review"
+  ],
+  "branch": "stage/m1-native-runtime47",
+  "worktree_clean": true,
+  "porcelain": [],
+  "interpretation": "Engineering40 uncommitted work observed. Author and running-session status must be reconciled before any new application assignment. No worktree edits made by this reset."
+}

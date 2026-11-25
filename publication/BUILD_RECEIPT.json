@@ -1,0 +1,13 @@
+{
+  "at": "2026-11-25T15:36:39.609523+00:00",
+  "manifest_entries_from_e39": 77,
+  "source_head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+  "source_tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+  "source_contract_sha256": "0578cb851f28aa26c289793fad76edd862d4222073e0fcc5c3b5210849026495",
+  "source_matrix_sha256": "1daafaa86df15dc14af8250a395ab86a7534f2d2a7738c0c0ce1555c1a91a7f0",
+  "feature_count": 38,
+  "gate_count": 18,
+  "application_worktree_modified_by_builder": false,
+  "working_changes_observed": [],
+  "statement": "No source acceptance added; no active process interrupted; no git index writes."
+}

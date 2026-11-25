@@ -1,3 +1,0 @@
-TypeError: Cannot read properties of null (reading 'sync')
-    at runOptionalChange41 (file:///<USER_HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/optional-change41.mjs:245:70)
-    at async run (file:///<USER_HOME>/Documents/ChatGPT/MasterV2Code/c16-candidate/scripts/e2e/onboarding-first-session.mjs:2031:7)

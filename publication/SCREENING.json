@@ -1,0 +1,7 @@
+{
+  "at": "2026-11-25T15:36:39.609523+00:00",
+  "automated_secret_pattern_findings": [],
+  "scope": "Public technical instructions, frozen source contract, exact code patches, synthetic-source evidence; no photos/screenshots/customer datasets copied. Home paths in reports sanitized; patches remain exact.",
+  "limitations": "Pattern scan is not a guarantee that no sensitive material exists. Review selected content before publication.",
+  "no_production_activation": true
+}

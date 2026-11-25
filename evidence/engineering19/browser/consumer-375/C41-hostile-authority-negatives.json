@@ -1,9 +1,0 @@
-{
-  "fixture": "deliberate synthetic closed epoch and forged owner; not positive account-switch qualification",
-  "closed": "HEALTH_DATA_WRITE_ADMISSION_CLOSED",
-  "forged": {
-    "newOwner": "ACTUAL_ROUTINE_INVALID",
-    "oldLease": "HEALTH_DATA_WRITE_OWNER_MISMATCH"
-  },
-  "ciphertextUnchanged": true
-}

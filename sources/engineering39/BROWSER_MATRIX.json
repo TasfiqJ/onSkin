@@ -1,0 +1,66 @@
+{
+  "source": {
+    "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4"
+  },
+  "status": "NOT_RUN",
+  "dbRuntime": "NOT_RUN",
+  "nativeDevice": "NOT_RUN",
+  "reason": "Prior loopback and browser connection failed on this host. No changed eligible environment or new browser qualification was observed.",
+  "viewports": [
+    [
+      375,
+      667
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      430,
+      932
+    ]
+  ],
+  "consumer": [
+    "initial provisioning interruption",
+    "fresh and existing profiles",
+    "journal rollover and receipts",
+    "missing pages",
+    "crash/restart and withdrawal",
+    "competing tabs",
+    "unrestricted PM tap and separate controlled duplicate",
+    "draft discovery and exact retry through preview",
+    "Shelf outage preserves editor",
+    "modal close and native back",
+    "exact use revalidation",
+    "keyboard, focus, large text, delivered targets and first-attempt outcomes"
+  ],
+  "professional": [
+    "default 503",
+    "review grouped or reopened placement",
+    "window shift, grant retirement and exact retry",
+    "read-only receipt inspection",
+    "keyboard and focus",
+    "mobile apply and clear archive membership",
+    "exact selected clear review and export",
+    "withdrawal at final source publication",
+    "tombstone and swapped receipt refusal",
+    "use-only source omits formula",
+    "formula-only exact observation",
+    "retraction requires fresh review",
+    "refreshed export preserves original-use correction",
+    "checkpoint retired before export publication"
+  ],
+  "operator": [
+    "claim authority",
+    "review and cancel",
+    "confirm and inspect session response",
+    "same-millisecond pagination",
+    "refresh and sign out",
+    "keyboard and focus"
+  ],
+  "priorProbeSource": {
+    "head": "3ae0ccb86c6f7def701b460c3ed932c0b5f2c870",
+    "tree": "e5578d72a5b0c0a4b3fc4b82f13d399aa6b9caca"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "label": "final-custody-restart",
+  "command": [
+    "node",
+    "--test",
+    "scripts/e2e/owner-custody-sqlite.test.mjs"
+  ],
+  "before": {
+    "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "start": "2026-11-25T04:40:11.864825+00:00",
+  "freeBytesBefore": 203191742464,
+  "externalCredentialsRemoved": true,
+  "dotenvDisabled": true,
+  "overrides": {},
+  "exit": 0,
+  "after": {
+    "head": "6a5688d42cd40cddf7216b35f819769c9560ff05",
+    "tree": "d98859e15c3dc36245eaba8b99ef1f4cda5ecbc4",
+    "branch": "stage/m1-native-runtime47",
+    "status": "",
+    "indexSha256": "d137db56e718f0ef4453d594ef66b9fbc0a525a55f07da23cdf3303fd0be42c8",
+    "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "end": "2026-11-25T04:40:25.123695+00:00",
+  "freeBytesAfter": 203150110720,
+  "logBytes": 1349,
+  "logSha256": "45f14149243a26be035b00912018746d22342853a845fa8d7d2b16e8c0d265af"
+}

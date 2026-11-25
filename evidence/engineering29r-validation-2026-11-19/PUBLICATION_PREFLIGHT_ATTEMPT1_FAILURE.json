@@ -1,9 +1,0 @@
-{
-  "recordedAt": "2026-11-19T16:28:49.589697+00:00",
-  "kind": "evidence-helper defect",
-  "request": "GET https://api.github.com/repos/TasfiqJ/onSkin/",
-  "response": "HTTP Error 404: Not Found",
-  "cause": "Repository root API endpoint included a trailing slash; protected-ref reads had already succeeded.",
-  "repair": "Removed trailing slash only for the root metadata request; no application source or remote state changed.",
-  "receipt": "Original Python traceback retained in the Codex tool transcript."
-}
